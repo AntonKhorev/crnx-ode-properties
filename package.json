@@ -1,0 +1,11 @@
+{
+  "name": "diffeq",
+  "private": true,
+  "scripts": {
+    "test": "mocha"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^2.4.5"
+  }
+}
