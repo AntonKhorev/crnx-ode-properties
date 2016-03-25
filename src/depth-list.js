@@ -7,13 +7,11 @@ module.exports=(dag,selectedNodes)=>{
 	const depthList=[]
 	const parents={}
 	const addAncestorDistance=(fromNode,toNode,distance)=>{
-		const oldDistance=ancestorNodeDistances[fromNode][toNode]
-		let newDistanve
-		if (oldDistance===undefined) {
-			newDistance=oldDistance
-		} else {
-			newDistance=Math.max(distance,oldDistance)
-		}
+		const oldDistance=ancestorDistances[fromNode][toNode]
+		const newDistance=(oldDistance===undefined
+			? distance
+			: Math.max(distance,oldDistance)
+		)
 		ancestorDistances[fromNode][toNode]=newDistance
 	}
 	const traverseNode=node=>{
