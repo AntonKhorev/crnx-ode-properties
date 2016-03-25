@@ -32,4 +32,17 @@ describe("depthList",()=>{
 			'B':{'A':true},
 		}])
 	})
+	it("selects node from node chain",()=>{
+		const result=depthList({
+			'A':{},
+			'B':{'A':true},
+		},{
+			'B':true,
+		})
+		assert.deepEqual(result,[[
+			['B'],
+		],{
+			'B':{},
+		}])
+	})
 })

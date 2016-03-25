@@ -15,7 +15,7 @@ module.exports=(dag,selectedNodes)=>{
 		ancestorDistances[fromNode][toNode]=newDistance
 	}
 	const traverseNode=node=>{
-		if (parents[node]) {
+		if (ancestorDistances[node]) {
 			return // already visited
 		}
 		ancestorDistances[node]={}
@@ -29,6 +29,9 @@ module.exports=(dag,selectedNodes)=>{
 				addAncestorDistance(node,ancestorNode,parentDistance+!!selectedNodes[parentNode])
 			}
 		}
+	}
+	for (let node in selectedNodes) {
+		traverseNode(node)
 		let depth=0
 		parents[node]={}
 		for (let ancestorNode in ancestorDistances[node]) {
@@ -44,9 +47,6 @@ module.exports=(dag,selectedNodes)=>{
 			depthList[depth]=[]
 		}
 		depthList[depth].push(node) // TODO sort by number of parents (desc), label (asc)
-	}
-	for (let node in selectedNodes) {
-		traverseNode(node)
 	}
 	return [depthList,parents]
 }
