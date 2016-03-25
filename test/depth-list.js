@@ -75,6 +75,50 @@ describe("depthList",()=>{
 			'B':{},
 		}])
 	})
+	it("selects 2 chains from 2 chains",()=>{
+		const result=depthList({
+			'A':{},
+			'B':{},
+			'C':{'A':true},
+			'D':{'B':true},
+		},{
+			'A':true,
+			'B':true,
+			'C':true,
+			'D':true,
+		})
+		assert.deepEqual(result,[[
+			['A','B'],
+			['C','D'],
+		],{
+			'A':{},
+			'B':{},
+			'C':{'A':true},
+			'D':{'B':true},
+		}])
+	})
+	it("selects 2 chains (reversed) from 2 chains",()=>{
+		const result=depthList({
+			'A':{},
+			'B':{},
+			'C':{'B':true},
+			'D':{'A':true},
+		},{
+			'A':true,
+			'B':true,
+			'C':true,
+			'D':true,
+		})
+		assert.deepEqual(result,[[
+			['A','B'],
+			['D','C'],
+		],{
+			'A':{},
+			'B':{},
+			'C':{'B':true},
+			'D':{'A':true},
+		}])
+	})
 	it("selects fork from fork",()=>{
 		const result=depthList({
 			'A':{},

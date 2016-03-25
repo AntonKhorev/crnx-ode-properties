@@ -30,7 +30,6 @@ module.exports=(dag,selectedNodes)=>{
 	}
 	const depthList=[]
 	const parents={}
-	const nParents=node=>Object.keys(parents[node]).length
 	for (let node in selectedNodes) {
 		traverseNode(node)
 		let depth=0
@@ -50,14 +49,19 @@ module.exports=(dag,selectedNodes)=>{
 		depthList[depth].push(node)
 	}
 	// sort nodes at each depth by
-	//	number of parents (desc)
-	//	label (asc)
+	//	lexicographic parent order
+	//	label
+	let nextParentOrder=0
+	const parentOrder={}
 	for (let depth in depthList) {
-		depthList[depth].sort((a,b)=>{
-			const nParentsCmp=nParents(b)-nParents(a)
-			if (nParentsCmp) return nParentsCmp
-			return a.localeCompare(b)
-		})
+		depthList[depth]=depthList[depth].map(node=>[
+			Object.keys(parents[node]).map(parentNode=>parentOrder[parentNode]).sort(),
+			node
+		]).sort().map(x=>x[1])
+		for (let i in depthList[depth]) {
+			const node=depthList[depth][i]
+			parentOrder[node]=nextParentOrder++
+		}
 	}
 	return [depthList,parents]
 }
