@@ -4,8 +4,6 @@
 // nodes = {nodeLabel:true,...}
 module.exports=(dag,selectedNodes)=>{
 	const ancestorDistances={} // {node:{ancestorNode:distance,...},...}; node is any node, ancestorNode is one of selectedNodes
-	const depthList=[]
-	const parents={}
 	const addAncestorDistance=(fromNode,toNode,distance)=>{
 		const oldDistance=ancestorDistances[fromNode][toNode]
 		const newDistance=(oldDistance===undefined
@@ -30,6 +28,9 @@ module.exports=(dag,selectedNodes)=>{
 			}
 		}
 	}
+	const depthList=[]
+	const parents={}
+	const nParents=node=>Object.keys(parents[node]).length
 	for (let node in selectedNodes) {
 		traverseNode(node)
 		let depth=0
@@ -46,7 +47,17 @@ module.exports=(dag,selectedNodes)=>{
 		if (depthList[depth]===undefined) {
 			depthList[depth]=[]
 		}
-		depthList[depth].push(node) // TODO sort by number of parents (desc), label (asc)
+		depthList[depth].push(node)
+	}
+	// sort nodes at each depth by
+	//	number of parents (desc)
+	//	label (asc)
+	for (let depth in depthList) {
+		depthList[depth].sort((a,b)=>{
+			const nParentsCmp=nParents(b)-nParents(a)
+			if (nParentsCmp) return nParentsCmp
+			return a.localeCompare(b)
+		})
 	}
 	return [depthList,parents]
 }
