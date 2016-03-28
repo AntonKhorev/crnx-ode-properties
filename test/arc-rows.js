@@ -69,7 +69,7 @@ describe("assertArcRowsStructure",()=>{
 	})
 })
 
-describe("dagRows",()=>{
+describe("arcRows",()=>{
 	it("makes no arcs for node",()=>{
 		const result=arcRows([
 			['A'],
@@ -90,6 +90,63 @@ describe("dagRows",()=>{
 		})
 		assertArcRowsStructure(result,[
 			[1,[[0,1],[0,2]]]
+		])
+	})
+	it("makes 2 arcs for 2 chains",()=>{
+		const result=arcRows([
+			['A','B'],
+			['C','D'],
+		],{
+			'A':{},
+			'B':{},
+			'C':{'A':true},
+			'D':{'B':true},
+		})
+		assertArcRowsStructure(result,[
+			[2,[[0,2],[1,3]]]
+		])
+	})
+	it("makes arcs for 3-chains",()=>{
+		const result=arcRows([
+			['A'],
+			['B'],
+			['C'],
+		],{
+			'A':{},
+			'B':{'A':true},
+			'C':{'B':true},
+		})
+		assertArcRowsStructure(result,[
+			[1,[[0,1]]],
+			[1,[[1,2]]],
+		])
+	})
+	it("makes 2 arcs for N-shape",()=>{
+		const result=arcRows([
+			['A','B'],
+			['C','D'],
+		],{
+			'A':{},
+			'B':{},
+			'C':{'A':true},
+			'D':{'A':true,'B':true},
+		})
+		assertArcRowsStructure(result,[
+			[2,[[0,2],[0,3],[1,3]]]
+		])
+	})
+	it("makes combined arc for fully connected parents and children",()=>{
+		const result=arcRows([
+			['A','B'],
+			['C','D'],
+		],{
+			'A':{},
+			'B':{},
+			'C':{'A':true,'B':true},
+			'D':{'A':true,'B':true},
+		})
+		assertArcRowsStructure(result,[
+			[1,[[0,2],[0,3],[1,2],[1,3]]]
 		])
 	})
 })
