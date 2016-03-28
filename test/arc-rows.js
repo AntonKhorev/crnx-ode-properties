@@ -92,6 +92,19 @@ describe("arcRows",()=>{
 			[1,[[0,1],[0,2]]]
 		])
 	})
+	it("makes combined arc for V-shape",()=>{
+		const result=arcRows([
+			['A','B'],
+			['C'],
+		],{
+			'A':{},
+			'B':{},
+			'C':{'A':true,'B':true},
+		})
+		assertArcRowsStructure(result,[
+			[1,[[0,2],[1,2]]]
+		])
+	})
 	it("makes 2 arcs for 2 chains",()=>{
 		const result=arcRows([
 			['A','B'],
