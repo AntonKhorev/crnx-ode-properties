@@ -33,7 +33,7 @@ module.exports=(nodeLabelLayers,arcLocationLayers)=>{
 		}
 	}
 	const drawArcDown=(i,j,k)=>{
-		for (;j<arcLayoutLayers[i].length;j++) {
+		for (j+=1;j<arcLayoutLayers[i].length;j++) {
 			arcLayoutLayers[i][j][k].bt=true
 		}
 	}
@@ -49,10 +49,10 @@ module.exports=(nodeLabelLayers,arcLocationLayers)=>{
 			arcLayoutLayers[i].push(makeBlankRow())
 		}
 		for (let j=0;j<arcLocationLayers[i].length;j++) {
-			const parentLocations=arcLocationLayers[i][0]
-			const childLocations=arcLocationLayers[i][1]
+			const parentLocations=arcLocationLayers[i][j][0]
+			const childLocations=arcLocationLayers[i][j][1]
 			let pi=0, ci=0
-			for (k=0;k<layoutWidth;k++) {
+			for (let k=0;k<layoutWidth;k++) {
 				if (k>head(parentLocations) && k<last(childLocations)) {
 					arcLayoutLayers[i][j][k].rl=true
 				}
