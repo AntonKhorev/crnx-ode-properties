@@ -237,12 +237,12 @@ describe("depthList",()=>{
 			'D':{'B':true},
 		}])
 	})
-	it("selects И-shape from N-shape",()=>{
+	it("selects N-shape from alpha-shape",()=>{
 		const result=depthList({
 			'A':{},
 			'B':{},
-			'C':{'A':true},
-			'D':{'A':true,'B':true},
+			'C':{'A':true,'B':true},
+			'D':{'A':true},
 		},{
 			'A':true,
 			'B':true,
@@ -255,8 +255,57 @@ describe("depthList",()=>{
 		],{
 			'A':{},
 			'B':{},
-			'C':{'A':true},
-			'D':{'A':true,'B':true},
+			'C':{'A':true,'B':true},
+			'D':{'A':true},
+		}])
+	})
+	it("sorts more than 10 nodes",()=>{
+		const result=depthList({
+			'A0':{},
+			'A1':{},
+			'A2':{},
+			'A3':{},
+			'A4':{},
+			'A5':{},
+			'A6':{},
+			'A7':{},
+			'A8':{},
+			'A9':{},
+			'B0':{},
+			'C':{'A2':true},
+			'D':{'B0':true},
+		},{
+			'A0':true,
+			'A1':true,
+			'A2':true,
+			'A3':true,
+			'A4':true,
+			'A5':true,
+			'A6':true,
+			'A7':true,
+			'A8':true,
+			'A9':true,
+			'B0':true,
+			'C':true,
+			'D':true,
+		})
+		assert.deepEqual(result,[[
+			['A0','A1','A2','A3','A4','A5','A6','A7','A8','A9','B0'],
+			['C','D'],
+		],{
+			'A0':{},
+			'A1':{},
+			'A2':{},
+			'A3':{},
+			'A4':{},
+			'A5':{},
+			'A6':{},
+			'A7':{},
+			'A8':{},
+			'A9':{},
+			'B0':{},
+			'C':{'A2':true},
+			'D':{'B0':true},
 		}])
 	})
 })
