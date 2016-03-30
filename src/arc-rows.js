@@ -31,7 +31,7 @@ module.exports=(depthList,parents)=>{ // TODO would prefer ordered parents list
 			const arcs=[]
 			for (let j=depthList[i].length-1;j>=0;j--) {
 				const node=depthList[i][j]
-				const parentXs=Object.keys(parents[node]).sort().map(parentNode=>xs[parentNode])
+				const parentXs=Object.keys(parents[node]).map(parentNode=>xs[parentNode]).sort((a,b)=>a-b)
 				arcs.push([parentXs,[xs[node]]])
 			}
 			for (let j=1;j<arcs.length;j++) {

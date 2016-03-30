@@ -162,4 +162,19 @@ describe("arcRows",()=>{
 			[1,[[0,2],[0,3],[1,2],[1,3]]]
 		])
 	})
+	it("supports unsorted parents",()=>{
+		const result=arcRows([
+			['B','A'],
+			['C'],
+		],{
+			'A':{},
+			'B':{},
+			'C':{'A':true,'B':true},
+		})
+		assert.deepEqual(result,[ // arc layers
+			[ // arc rows
+				[[0,1],[2]],
+			]
+		])
+	})
 })
