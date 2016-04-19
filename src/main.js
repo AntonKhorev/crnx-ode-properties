@@ -14,13 +14,28 @@ $(function(){
 			selectedNodes[id]=true
 		}
 		const theadLayout=new TheadLayout(dag,selectedNodes)
+		const writeThead=()=>{
+			const $thead=$("<thead>")
+			for (let i=0;i<theadLayout.nodeLayers.length;i++) {
+				$thead.append(
+					$("<tr>").append(
+						theadLayout.nodeLayers[i].map(cell=>{
+							const $cell=$("<th>")
+							if (cell.node!==undefined) {
+								$cell.append(
+									"<th>"+data[cell.node].name+"</th>"
+								)
+							}
+							return $cell
+						})
+					)
+				)
+			}
+			return $thead
+		}
 		$container.append(
 			$("<table>").append(
-				$("<thead>").append(
-					$("<tr>").append(
-						theadLayout.columns.map(id=>"<th>"+data[id].name+"</th>")
-					)
-				),
+				writeThead(),
 				$("<tbody>").append(
 					$("<tr>").append(
 						theadLayout.columns.map(id=>"<td>$$"+data[id].equation+"$$</td>")
