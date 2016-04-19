@@ -14,6 +14,13 @@ $(function(){
 			selectedNodes[id]=true
 		}
 		const theadLayout=new TheadLayout(dag,selectedNodes)
+		const setArcs=($cell,cell)=>{
+			;['bt','rl','rt','bl'].forEach(dir=>{
+				if (cell[dir]) {
+					$cell.append('+'+dir)
+				}
+			})
+		}
 		const writeThead=()=>{
 			const $thead=$("<thead>")
 			for (let i=0;i<theadLayout.nodeLayers.length;i++) {
@@ -22,14 +29,24 @@ $(function(){
 						theadLayout.nodeLayers[i].map(cell=>{
 							const $cell=$("<th>")
 							if (cell.node!==undefined) {
-								$cell.append(
-									"<th>"+data[cell.node].name+"</th>"
-								)
+								$cell.append(data[cell.node].name)
 							}
+							setArcs($cell,cell)
 							return $cell
 						})
 					)
 				)
+				if (i<theadLayout.arcLayers.length) {
+					$thead.append(
+						theadLayout.arcLayers[i].map(row=>$("<tr>").append(
+							row.map(cell=>{
+								const $cell=$("<th>")
+								setArcs($cell,cell)
+								return $cell
+							})
+						))
+					)
+				}
 			}
 			return $thead
 		}
