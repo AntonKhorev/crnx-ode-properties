@@ -1,13 +1,14 @@
 'use strict'
 
+const data=require('./data')
+
 $(function(){
 	$('.crnx-ode-properties').each(function(){
 		const $container=$(this)
-		$container.empty().append(
-			"$$\\frac{\\mathrm{d}y}{\\mathrm{d}t} = f(t,y)$$",
-			" ",
-			"$$\\frac{\\mathrm{d}y}{\\mathrm{d}t} = f_1(t) \\cdot f_2(y)$$"
-		)
+		$container.empty()
+		for (let id in data) {
+			$container.append("<div>$$"+data[id].equation+"$$</div>")
+		}
 		MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 	})
 })
