@@ -2,11 +2,18 @@
   "name": "crnx-ode-properties",
   "private": true,
   "scripts": {
+    "gulp": "gulp",
     "test": "mocha --recursive"
   },
   "license": "ISC",
   "devDependencies": {
+    "crnx-build": "github:antonkhorev/crnx-build#v0.1.4",
+    "gulp": "^3.9.1",
     "mocha": "^2.4.5"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "repository": "AntonKhorev/crnx-ode-properties",
+  "bugs": {
+    "url": "https://github.com/AntonKhorev/crnx-ode-properties/issues"
+  }
 }
