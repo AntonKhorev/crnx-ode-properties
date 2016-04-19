@@ -1,7 +1,7 @@
 'use strict'
 
 const assert=require('assert')
-const cellLayout=require('../src/cell-layout')
+const cellLayout=require('../../src/thead-layout/cell-layout')
 
 describe("cellLayout",()=>{
 	it("makes layout for node",()=>{

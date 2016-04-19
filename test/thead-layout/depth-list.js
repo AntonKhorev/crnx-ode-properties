@@ -1,7 +1,7 @@
 'use strict'
 
 const assert=require('assert')
-const depthList=require('../src/depth-list')
+const depthList=require('../../src/thead-layout/depth-list')
 
 describe("depthList",()=>{
 	it("selects node from node",()=>{

@@ -1,8 +1,8 @@
 {
-  "name": "diffeq",
+  "name": "crnx-ode-properties",
   "private": true,
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "license": "ISC",
   "devDependencies": {

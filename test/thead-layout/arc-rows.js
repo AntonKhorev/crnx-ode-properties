@@ -1,7 +1,7 @@
 'use strict'
 
 const assert=require('assert')
-const arcRows=require('../src/arc-rows')
+const arcRows=require('../../src/thead-layout/arc-rows')
 
 const assertArcsExpandTo=(arcs,expectedExpandedArcs)=>{
 	const expandedArcs=[]
