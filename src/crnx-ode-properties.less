@@ -3,6 +3,16 @@
 	table {
 		@cell-width: 200;
 		@cell-height: 20;
+		@cell-node-padding: 10;
+		@arc-arrow-width: 3;
+		.svg(@width,@height,@contents) {
+			@svg: "<svg xmlns='http://www.w3.org/2000/svg' width='@{width}' height='@{height}'>@{contents}</svg>";
+			@data: escape(@svg);
+			background-image: url("data:image/svg+xml;charset=utf-8,@{data}");
+		}
+		.arc(@width,@height,@d) {
+			.svg(@width,@height,"<path d='@{d}' fill='none' stroke='#000' stroke-width='2' />");
+		}
 		table-layout: fixed;
 		border-collapse: collapse;
 		td, th {
@@ -15,36 +25,43 @@
 			@cy: @cell-height;
 			@hcx: @cell-width/2;
 			@hcy: @cell-height/2;
-			.arc(@d) {
-				@path: "<path d='@{d}' fill='none' stroke='#000' stroke-width='2' />";
-				@svg: "<svg xmlns='http://www.w3.org/2000/svg' width='@{cx}' height='@{cy}'>@{path}</svg>";
-				@data: escape(@svg);
-				background-image: url("data:image/svg+xml;charset=utf-8,@{data}");
-			}
 			&.rt {
-				.arc("M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy} H @{cx}");
+				.arc(@cx,@cy,"M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy} H @{cx}");
 			}
 			&.bl {
-				.arc("M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy} H 0");
+				.arc(@cx,@cy,"M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy} H 0");
 			}
 			&.rl {
-				.arc("M 0 @{hcy} H @{cx}");
+				.arc(@cx,@cy,"M 0 @{hcy} H @{cx}");
 			}
 			&.rl.rt {
-				.arc("M 0 @{hcy} H @{cx} M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy}");
+				.arc(@cx,@cy,"M 0 @{hcy} H @{cx} M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy}");
 			}
 			&.rl.bl {
-				.arc("M 0 @{hcy} H @{cx} M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy}");
+				.arc(@cx,@cy,"M 0 @{hcy} H @{cx} M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy}");
 			}
 			&.bt {
-				.arc("M @{hcx} 0 V @{cy}");
+				.arc(@cx,@cy,"M @{hcx} 0 V @{cy}");
 			}
 			&.bt.rt {
-				.arc("M @{hcx} 0 V @{cy} M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy} H @{cx}");
+				.arc(@cx,@cy,"M @{hcx} 0 V @{cy} M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy} H @{cx}");
 			}
 			&.bt.bl {
-				.arc("M @{hcx} 0 V @{cy} M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy} H 0");
+				.arc(@cx,@cy,"M @{hcx} 0 V @{cy} M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy} H 0");
 			}
+		}
+		tr.nodes th {
+			padding: 0 0 unit(@cell-node-padding,px) 0;
+		}
+		tr.nodes:not(:last-child) th.node {
+			@cx: @cell-width;
+			@hcx: @cell-width/2;
+			@ax1: @hcx + @arc-arrow-width;
+			@ax2: @hcx - @arc-arrow-width;
+			@cy: @cell-node-padding;
+			.svg(@cx,@cy,"<path d='M @{ax1} @{cy} L @{hcx} 0 L @{ax2} @{cy} Z' fill='#FFF' stroke='#000' stroke-width='1' />");
+			background-repeat: no-repeat;
+			background-position: bottom;
 		}
 		tr.arcs {
 			th {

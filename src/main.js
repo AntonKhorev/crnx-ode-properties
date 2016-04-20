@@ -14,8 +14,8 @@ $(function(){
 			selectedNodes[id]=true
 		}
 		const theadLayout=new TheadLayout(dag,selectedNodes)
-		const setArcs=($cell,cell)=>{
-			;['bt','rl','rt','bl'].forEach(dir=>{
+		const setCellClasses=($cell,cell)=>{
+			;['node','bt','rl','rt','bl'].forEach(dir=>{
 				if (cell[dir]) {
 					$cell.addClass(dir)
 				}
@@ -31,7 +31,7 @@ $(function(){
 							if (cell.node!==undefined) {
 								$cell.append(data[cell.node].name)
 							}
-							setArcs($cell,cell)
+							setCellClasses($cell,cell)
 							return $cell
 						})
 					)
@@ -41,7 +41,7 @@ $(function(){
 						theadLayout.arcLayers[i].map(row=>$("<tr class='arcs'>").append(
 							row.map(cell=>{
 								const $cell=$("<th>")
-								setArcs($cell,cell)
+								setCellClasses($cell,cell)
 								return $cell
 							})
 						))
