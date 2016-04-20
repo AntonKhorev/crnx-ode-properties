@@ -23,6 +23,7 @@ module.exports=(nodeLabelLayers,arcLocationLayers)=>{
 				arcLayoutLayers[i][j][k].bt=true
 			}
 			if (nodeLayoutLayers[i][k].node!==undefined) {
+				nodeLayoutLayers[i][k].arrow=true
 				return
 			}
 			nodeLayoutLayers[i][k].bt=true
