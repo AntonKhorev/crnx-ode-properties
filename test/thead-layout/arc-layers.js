@@ -177,4 +177,18 @@ describe("makeArcLayers",()=>{
 			]
 		])
 	})
+	it("merges 3 children",()=>{
+		const result=makeArcLayers([
+			['separable'],
+			['autonomous','linearHomogeneous','separableInT']
+		],{
+			'autonomous':{'separable':true},
+			'linearHomogeneous':{'separable':true},
+			'separable':{},
+			'separableInT':{'separable':true},
+		})
+		assertArcRowsStructure(result,[
+			[1,[[0,1],[0,2],[0,3]]]
+		])
+	})
 })

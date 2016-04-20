@@ -38,8 +38,7 @@ module.exports=(depthList,parents)=>{ // TODO would prefer ordered parents list
 				if (String(arcs[j-1][0])===String(arcs[j][0])) { // sloppy but should be ok for numbers
 					arcs[j-1][1]=merge(arcs[j-1][1],arcs[j][1]) // merge children - parents already merged
 					arcs.splice(j,1)
-					if (j>1) j-=2
-					continue
+					j-=1
 				}
 			}
 			arcRows.push(arcs)
