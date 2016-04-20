@@ -1,7 +1,7 @@
 'use strict'
 
 const assert=require('assert')
-const arcRows=require('../../src/thead-layout/arc-rows')
+const makeArcLayers=require('../../src/thead-layout/arc-layers')
 
 const assertArcsExpandTo=(arcs,expectedExpandedArcs)=>{
 	const expandedArcs=[]
@@ -69,9 +69,9 @@ describe("assertArcRowsStructure",()=>{
 	})
 })
 
-describe("arcRows",()=>{
+describe("makeArcLayers",()=>{
 	it("makes no arcs for node",()=>{
-		const result=arcRows([
+		const result=makeArcLayers([
 			['A'],
 		],{
 			'A':{},
@@ -80,7 +80,7 @@ describe("arcRows",()=>{
 		])
 	})
 	it("makes combined arc for fork",()=>{
-		const result=arcRows([
+		const result=makeArcLayers([
 			['A'],
 			['B','C'],
 		],{
@@ -93,7 +93,7 @@ describe("arcRows",()=>{
 		])
 	})
 	it("makes combined arc for V-shape",()=>{
-		const result=arcRows([
+		const result=makeArcLayers([
 			['A','B'],
 			['C'],
 		],{
@@ -106,7 +106,7 @@ describe("arcRows",()=>{
 		])
 	})
 	it("makes 2 arcs for 2 chains",()=>{
-		const result=arcRows([
+		const result=makeArcLayers([
 			['A','B'],
 			['C','D'],
 		],{
@@ -120,7 +120,7 @@ describe("arcRows",()=>{
 		])
 	})
 	it("makes arcs for 3-chains",()=>{
-		const result=arcRows([
+		const result=makeArcLayers([
 			['A'],
 			['B'],
 			['C'],
@@ -135,7 +135,7 @@ describe("arcRows",()=>{
 		])
 	})
 	it("makes 2 arcs for N-shape",()=>{
-		const result=arcRows([
+		const result=makeArcLayers([
 			['A','B'],
 			['C','D'],
 		],{
@@ -149,7 +149,7 @@ describe("arcRows",()=>{
 		])
 	})
 	it("makes combined arc for fully connected parents and children",()=>{
-		const result=arcRows([
+		const result=makeArcLayers([
 			['A','B'],
 			['C','D'],
 		],{
@@ -163,7 +163,7 @@ describe("arcRows",()=>{
 		])
 	})
 	it("supports unsorted parents",()=>{
-		const result=arcRows([
+		const result=makeArcLayers([
 			['B','A'],
 			['C'],
 		],{

@@ -1,8 +1,8 @@
 'use strict'
 
-const makeNodeLabelLayersWithParents=require('./thead-layout/depth-list')
-const makeArcLocationLayers=require('./thead-layout/arc-rows')
-const makeLayoutLayers=require('./thead-layout/cell-layout')
+const makeNodeLabelLayersWithParents=require('./thead-layout/node-layers')
+const makeArcLocationLayers=require('./thead-layout/arc-layers')
+const makeLayoutLayers=require('./thead-layout/cell-layers')
 
 class TheadLayout {
 	constructor(dag,selectedNodes) {

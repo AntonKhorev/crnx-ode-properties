@@ -1,11 +1,11 @@
 'use strict'
 
 const assert=require('assert')
-const depthList=require('../../src/thead-layout/depth-list')
+const makeNodeLayers=require('../../src/thead-layout/node-layers')
 
-describe("depthList",()=>{
+describe("makeNodeLayers",()=>{
 	it("selects node from node",()=>{
-		const result=depthList({
+		const result=makeNodeLayers({
 			'A':{},
 		},{
 			'A':true,
@@ -17,7 +17,7 @@ describe("depthList",()=>{
 		}])
 	})
 	it("selects 2 nodes from 2 nodes",()=>{
-		const result=depthList({
+		const result=makeNodeLayers({
 			'A':{},
 			'B':{},
 		},{
@@ -32,7 +32,7 @@ describe("depthList",()=>{
 		}])
 	})
 	it("selects 2 nodes (reversed) from 2 nodes",()=>{
-		const result=depthList({
+		const result=makeNodeLayers({
 			'B':{},
 			'A':{},
 		},{
@@ -47,7 +47,7 @@ describe("depthList",()=>{
 		}])
 	})
 	it("selects chain from chain",()=>{
-		const result=depthList({
+		const result=makeNodeLayers({
 			'A':{},
 			'B':{'A':true},
 		},{
@@ -63,7 +63,7 @@ describe("depthList",()=>{
 		}])
 	})
 	it("selects node from chain",()=>{
-		const result=depthList({
+		const result=makeNodeLayers({
 			'A':{},
 			'B':{'A':true},
 		},{
@@ -76,7 +76,7 @@ describe("depthList",()=>{
 		}])
 	})
 	it("selects 2 chains from 2 chains",()=>{
-		const result=depthList({
+		const result=makeNodeLayers({
 			'A':{},
 			'B':{},
 			'C':{'A':true},
@@ -98,7 +98,7 @@ describe("depthList",()=>{
 		}])
 	})
 	it("selects 2 chains (reversed) from 2 chains",()=>{
-		const result=depthList({
+		const result=makeNodeLayers({
 			'A':{},
 			'B':{},
 			'C':{'B':true},
@@ -120,7 +120,7 @@ describe("depthList",()=>{
 		}])
 	})
 	it("selects fork from fork",()=>{
-		const result=depthList({
+		const result=makeNodeLayers({
 			'A':{},
 			'B':{'A':true},
 			'C':{'A':true},
@@ -139,7 +139,7 @@ describe("depthList",()=>{
 		}])
 	})
 	it("selects chain from fork",()=>{
-		const result=depthList({
+		const result=makeNodeLayers({
 			'A':{},
 			'B':{'A':true},
 			'C':{'A':true},
@@ -156,7 +156,7 @@ describe("depthList",()=>{
 		}])
 	})
 	it("selects 2 nodes from fork",()=>{
-		const result=depthList({
+		const result=makeNodeLayers({
 			'A':{},
 			'B':{'A':true},
 			'C':{'A':true},
@@ -172,7 +172,7 @@ describe("depthList",()=>{
 		}])
 	})
 	it("selects diamond from diamond",()=>{
-		const result=depthList({
+		const result=makeNodeLayers({
 			'A':{},
 			'B':{'A':true},
 			'C':{'A':true},
@@ -195,7 +195,7 @@ describe("depthList",()=>{
 		}])
 	})
 	it("selects 3-chain from diamond",()=>{
-		const result=depthList({
+		const result=makeNodeLayers({
 			'A':{},
 			'B':{'A':true},
 			'C':{'A':true},
@@ -216,7 +216,7 @@ describe("depthList",()=>{
 		}])
 	})
 	it("selects И-shape from И-shape",()=>{
-		const result=depthList({
+		const result=makeNodeLayers({
 			'A':{},
 			'B':{},
 			'C':{'A':true,'B':true},
@@ -238,7 +238,7 @@ describe("depthList",()=>{
 		}])
 	})
 	it("selects N-shape from alpha-shape",()=>{
-		const result=depthList({
+		const result=makeNodeLayers({
 			'A':{},
 			'B':{},
 			'C':{'A':true,'B':true},
@@ -260,7 +260,7 @@ describe("depthList",()=>{
 		}])
 	})
 	it("sorts more than 10 nodes",()=>{
-		const result=depthList({
+		const result=makeNodeLayers({
 			'A0':{},
 			'A1':{},
 			'A2':{},

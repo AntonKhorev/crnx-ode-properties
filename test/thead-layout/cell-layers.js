@@ -1,11 +1,11 @@
 'use strict'
 
 const assert=require('assert')
-const cellLayout=require('../../src/thead-layout/cell-layout')
+const makeCellLayers=require('../../src/thead-layout/cell-layers')
 
-describe("cellLayout",()=>{
+describe("makeCellLayers",()=>{
 	it("makes layout for node",()=>{
-		const result=cellLayout([ // node layers/rows
+		const result=makeCellLayers([ // node layers/rows
 			['A'],
 		],[ // arc layers
 		])
@@ -15,7 +15,7 @@ describe("cellLayout",()=>{
 		]])
 	})
 	it("makes layout for diamond",()=>{
-		const result=cellLayout([ // node layers/rows
+		const result=makeCellLayers([ // node layers/rows
 			['A'],
 			['B','C'],
 			['D'],
@@ -39,7 +39,7 @@ describe("cellLayout",()=>{
 		]])
 	})
 	it("makes layout for N-shape",()=>{
-		const result=cellLayout([ // node layers/rows
+		const result=makeCellLayers([ // node layers/rows
 			['A','B'],
 			['C','D'],
 		],[ // arc layers
@@ -59,7 +59,7 @@ describe("cellLayout",()=>{
 		]])
 	})
 	it("makes layout with vertical arcs going through node layers",()=>{
-		const result=cellLayout([ // node layers/rows
+		const result=makeCellLayers([ // node layers/rows
 			['A'],
 			['B','C'],
 			['D'],
