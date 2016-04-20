@@ -1,23 +1,28 @@
 .crnx-ode-properties {
 	font-size: 14px;
 	table {
+		@cell-width: 200;
+		@cell-height: 20;
+		@halfcell-width: @cell-width/2;
+		@halfcell-height: @cell-height/2;
 		table-layout: fixed;
 		border-collapse: collapse;
 		td, th {
-			width: 200px;
+			min-width: unit(@cell-width,px);
+			width: unit(@cell-width,px);
 			padding: 0;
 		}
 		tr.arcs {
 			th {
 				.arc(@d) {
 					@path: "<path d='@{d}' fill='none' stroke='#000' stroke-width='2' />";
-					@svg: "<svg xmlns='http://www.w3.org/2000/svg' width='200' height='20'>@{path}</svg>";
+					@svg: "<svg xmlns='http://www.w3.org/2000/svg' width='@{cell-width}' height='@{cell-height}'>@{path}</svg>";
 					@data: escape(@svg);
 					background-image: url("data:image/svg+xml;charset=utf-8,@{data}");
 				}
-				height: 20px;
+				height: unit(@cell-height,px);
 				&.bl {
-					.arc("M 100 20 a 10 10 0 0 0 -10 -10 H 0");
+					.arc("M @{halfcell-width} @{cell-height} a @{halfcell-height} @{halfcell-height} 0 0 0 -@{halfcell-height} -@{halfcell-height} H 0");
 				}
 			}
 		}
