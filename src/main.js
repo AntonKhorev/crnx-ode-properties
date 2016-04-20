@@ -15,24 +15,11 @@ $(function(){
 		}
 		const theadLayout=new TheadLayout(dag,selectedNodes)
 		const setArcs=($cell,cell)=>{
-			/*
 			;['bt','rl','rt','bl'].forEach(dir=>{
 				if (cell[dir]) {
-					$cell.append('+'+dir)
+					$cell.addClass(dir)
 				}
 			})
-			*/
-			// bl
-			if (cell.bl) {
-				/*
-				$cell.append(
-					"<svg width='200' height='20' viewbox='-10 -1 20 2'>"+
-					"<path d='M 0 1 A 1 1 0 0 0 -1 0 H -10' fill='none' stroke='#000' stroke-width='0.1' />"+
-					"</svg>"
-				)
-				*/
-				$cell.addClass('bl')
-			}
 		}
 		const writeThead=()=>{
 			const $thead=$("<thead>")
