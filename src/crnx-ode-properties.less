@@ -1,9 +1,19 @@
 .crnx-ode-properties {
 	font-size: 14px;
-	td, th {
-		width: 200px;
-	}
-	tr.arcs th {
-		height: 20px;
+	table {
+		table-layout: fixed;
+		border-collapse: collapse;
+		td, th {
+			width: 200px;
+			padding: 0;
+		}
+		tr.arcs {
+			th {
+				height: 20px;
+				&.bl {
+					background-image: data-uri('arc-bl.svg');
+				}
+			}
+		}
 	}
 }
