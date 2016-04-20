@@ -3,26 +3,38 @@
 	table {
 		@cell-width: 200;
 		@cell-height: 20;
-		@halfcell-width: @cell-width/2;
-		@halfcell-height: @cell-height/2;
 		table-layout: fixed;
 		border-collapse: collapse;
 		td, th {
 			min-width: unit(@cell-width,px);
+
 			width: unit(@cell-width,px);
 			padding: 0;
 		}
 		tr.arcs {
 			th {
+				@cx: @cell-width;
+				@cy: @cell-height;
+				@hcx: @cell-width/2;
+				@hcy: @cell-height/2;
 				.arc(@d) {
 					@path: "<path d='@{d}' fill='none' stroke='#000' stroke-width='2' />";
-					@svg: "<svg xmlns='http://www.w3.org/2000/svg' width='@{cell-width}' height='@{cell-height}'>@{path}</svg>";
+					@svg: "<svg xmlns='http://www.w3.org/2000/svg' width='@{cx}' height='@{cy}'>@{path}</svg>";
 					@data: escape(@svg);
 					background-image: url("data:image/svg+xml;charset=utf-8,@{data}");
 				}
 				height: unit(@cell-height,px);
+				&.bt {
+					.arc("M @{hcx} 0 V @{cy}");
+				}
+				&.rl {
+					.arc("M 0 @{hcy} H @{cx}");
+				}
+				&.rt {
+					.arc("M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy} H @{cx}");
+				}
 				&.bl {
-					.arc("M @{halfcell-width} @{cell-height} a @{halfcell-height} @{halfcell-height} 0 0 0 -@{halfcell-height} -@{halfcell-height} H 0");
+					.arc("M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy} H 0");
 				}
 			}
 		}
