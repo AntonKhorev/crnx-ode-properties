@@ -98,6 +98,27 @@
 				&:hover button {
 					opacity: 1;
 				}
+				ul {
+					@w: @cx - 2;
+					position: absolute; // to be vertically positioned with js
+					z-index: 1;
+					width: unit(@w,px);
+					margin: 0;
+					padding: 0;
+					border: 1px solid @active-stroke-color;
+					background: @passive-fill-color;
+					color: @passive-stroke-color;
+					text-align: left;
+					font-weight: normal;
+					li {
+						list-style: none;
+						padding: 5px;
+						&:hover {
+							background: @active-fill-color;
+							color: @active-stroke-color;
+						}
+					}
+				}
 			}
 		}
 		tr.arcs {

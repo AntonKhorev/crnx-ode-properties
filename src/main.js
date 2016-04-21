@@ -51,23 +51,39 @@ $(function(){
 					}
 				})
 			}
+			const writeTheadButton=($cell,text,tip,dir,nodes)=>{
+				let $nodes
+				const $button=writeButton(text,tip).addClass(dir).click(function(){
+					if (!$nodes) {
+						$nodes=$("<ul>").append(nodes.map(
+							id=>"<li>"+data[id].name+"</li>"
+						))
+						$cell.append($nodes)
+					} else {
+						$nodes.remove()
+						$nodes=undefined
+					}
+				})
+				return $button
+			}
 			const writeTheadCell=cell=>{
 				const $cell=$("<th>")
 				setCellClasses($cell,cell)
 				if (cell.node!==undefined) {
 					$cell.append(data[cell.node].name)
-					const parents=breadthWalk(dag,cell.node)
+					const parents=breadthWalk(dag,cell.node).reverse()
+					let $parents
 					if (parents.length>0) {
 						$cell.append(
 							" ",
-							writeButton("Add parent","Add one of parents of this node").addClass('t')
+							writeTheadButton($cell,"Add parent","Add one of parents of this node",'t',parents)
 						)
 					}
 					const children=breadthWalk(idag,cell.node)
 					if (children.length>0) {
 						$cell.append(
 							" ",
-							writeButton("Add child","Add one of children of this node").addClass('b')
+							writeTheadButton($cell,"Add child","Add one of children of this node",'b',children)
 						)
 					}
 				}
