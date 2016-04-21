@@ -44,6 +44,16 @@ $(function(){
 			return $button
 		}
 		const writeTable=()=>{
+			const deleteNode=id=>{
+				delete selectedNodes[id]
+				theadLayout=new TheadLayout(dag,selectedNodes)
+				writeTable()
+			}
+			const addNode=id=>{
+				selectedNodes[id]=true
+				theadLayout=new TheadLayout(dag,selectedNodes)
+				writeTable()
+			}
 			const setCellClasses=($cell,cell)=>{
 				;['b','t','bt','rl','rt','bl'].forEach(dir=>{
 					if (cell[dir]) {
@@ -52,6 +62,8 @@ $(function(){
 				})
 			}
 			const writeTheadButton=($cell,text,tip,dir,nodes)=>{
+				const keyCodeEnter=13
+				const keyCodeSpace=32
 				const keyCodeUp=38
 				const keyCodeDown=40
 				let $nodes
@@ -59,7 +71,9 @@ $(function(){
 				const $button=writeButton(text,tip).addClass(dir).click(function(){
 					if (!$nodes) {
 						$nodes=$("<ul>").append(nodes.map(
-							id=>$("<li tabindex='0'>"+data[id].name+"</li>").keydown(function(ev){
+							id=>$("<li tabindex='0'>"+data[id].name+"</li>").click(function(){
+								addNode(id)
+							}).keydown(function(ev){
 								if (!attached) return
 								if (ev.keyCode==keyCodeUp) {
 									const $toFocus=$(this).prev()
@@ -75,6 +89,8 @@ $(function(){
 									} else if (attached=='t') {
 										$button.focus()
 									}
+								} else if (ev.keyCode==keyCodeEnter || ev.keyCode==keyCodeSpace) {
+									addNode(id)
 								}
 							})
 						))
@@ -168,9 +184,7 @@ $(function(){
 					$("<tr>").append(
 						theadLayout.columns.map(id=>$("<td>").append(
 							writeButton("Delete","Delete this node").click(function(){
-								delete selectedNodes[id]
-								theadLayout=new TheadLayout(dag,selectedNodes)
-								writeTable()
+								deleteNode(id)
 							})
 						))
 					)
