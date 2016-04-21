@@ -2,9 +2,10 @@
 	font-size: 14px;
 	table {
 		@cell-width: 200;
-		@cell-height: 30;
-		@cell-node-padding: 20;
-		@arc-arrow-width: 3;
+		@arc-cell-height: 30;
+		@arc-arrow-width: 8;
+		@arc-arrow-length: 12;
+		@node-cell-padding: 20;
 		@button-width: 20;
 		@button-height: 20;
 		.svg(@width,@height,@contents) {
@@ -22,59 +23,31 @@
 			width: unit(@cell-width,px);
 			padding: 0;
 		}
-		th {
-			@cx: @cell-width;
-			@cy: @cell-height;
-			@hcx: @cell-width/2;
-			@hcy: @cell-height/2;
-			&.rt {
-				.arc(@cx,@cy,"M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy} H @{cx}");
-			}
-			&.bl {
-				.arc(@cx,@cy,"M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy} H 0");
-			}
-			&.rl {
-				.arc(@cx,@cy,"M 0 @{hcy} H @{cx}");
-			}
-			&.rl.rt {
-				.arc(@cx,@cy,"M 0 @{hcy} H @{cx} M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy}");
-			}
-			&.rl.bl {
-				.arc(@cx,@cy,"M 0 @{hcy} H @{cx} M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy}");
-			}
-			&.bt {
-				.arc(@cx,@cy,"M @{hcx} 0 V @{cy}");
-			}
-			&.bt.rt {
-				.arc(@cx,@cy,"M @{hcx} 0 V @{cy} M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy} H @{cx}");
-			}
-			&.bt.bl {
-				.arc(@cx,@cy,"M @{hcx} 0 V @{cy} M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy} H 0");
-			}
-		}
 		tr.nodes {
 			@cx: @cell-width;
 			@hcx: @cell-width/2;
-			@ax1: @hcx + @arc-arrow-width;
-			@ax2: @hcx - @arc-arrow-width;
-			@cy: @cell-node-padding;
+			@ax1: @hcx + @arc-arrow-width/2;
+			@ax2: @hcx - @arc-arrow-width/2;
+			@cy: @node-cell-padding;
+			@ay: @arc-arrow-length + 0.5;
 			th {
-				padding: unit(@cell-node-padding,px) 0;
+				padding: unit(@cy,px) 0;
 				background-repeat: no-repeat;
-				@arrow-path: "<path d='M @{ax1} @{cy} L @{hcx} 0 L @{ax2} @{cy} Z' fill='#FFF' stroke='#000' stroke-width='1' />";
 				@start-path-data: "M @{hcx} 0 V @{cy}";
+				@end-path: "<path d='M @{hcx} @{cy} V @{ay}' fill='none' stroke='#000' stroke-width='2' />";
+				@arrow-path: "<path d='M @{ax1} @{ay} L @{hcx} 0.5 L @{ax2} @{ay} Z' fill='#FFF' stroke='#000' stroke-width='1' />";
 				&.b {
-					.svg(@cx,@cy,@arrow-path);
+					.svg(@cx, @cy, @end-path @arrow-path);
 					background-position+: bottom;
 				}
 				&.t {
-					.arc(@cx,@cy,@start-path-data);
+					.arc(@cx, @cy ,@start-path-data);
 					background-position+: top;
 				}
 				&.b.t {
-					.svg(@cx,@cy,@arrow-path);
+					.svg(@cx ,@cy, @end-path @arrow-path);
 					background-position+: bottom;
-					.arc(@cx,@cy,@start-path-data);
+					.arc(@cx, @cy, @start-path-data);
 					background-position+: top;
 				}
 				position: relative;
@@ -110,8 +83,36 @@
 			}
 		}
 		tr.arcs {
+			@cx: @cell-width;
+			@cy: @arc-cell-height;
+			@hcx: @cx/2;
+			@hcy: @cy/2;
 			th {
-				height: unit(@cell-height,px);
+				height: unit(@arc-cell-height,px);
+				&.rt {
+					.arc(@cx,@cy,"M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy} H @{cx}");
+				}
+				&.bl {
+					.arc(@cx,@cy,"M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy} H 0");
+				}
+				&.rl {
+					.arc(@cx,@cy,"M 0 @{hcy} H @{cx}");
+				}
+				&.rl.rt {
+					.arc(@cx,@cy,"M 0 @{hcy} H @{cx} M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy}");
+				}
+				&.rl.bl {
+					.arc(@cx,@cy,"M 0 @{hcy} H @{cx} M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy}");
+				}
+				&.bt {
+					.arc(@cx,@cy,"M @{hcx} 0 V @{cy}");
+				}
+				&.bt.rt {
+					.arc(@cx,@cy,"M @{hcx} 0 V @{cy} M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy} H @{cx}");
+				}
+				&.bt.bl {
+					.arc(@cx,@cy,"M @{hcx} 0 V @{cy} M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy} H 0");
+				}
 			}
 		}
 		tfoot td {
