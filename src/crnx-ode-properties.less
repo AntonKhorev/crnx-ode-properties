@@ -8,13 +8,15 @@
 		@node-cell-padding: 20;
 		@button-width: 20;
 		@button-height: 20;
+		@ui-stroke-color: #444;
+		@ui-fill-color: #EEE;
 		.svg(@width,@height,@contents) {
 			@svg: "<svg xmlns='http://www.w3.org/2000/svg' width='@{width}' height='@{height}'>@{contents}</svg>";
 			@data: escape(@svg);
 			background-image+: url("data:image/svg+xml;charset=utf-8,@{data}");
 		}
 		.arc(@width,@height,@d) {
-			.svg(@width,@height,"<path d='@{d}' fill='none' stroke='#000' stroke-width='2' />");
+			.svg(@width,@height,"<path d='@{d}' fill='none' stroke='@{ui-stroke-color}' stroke-width='2' />");
 		}
 		table-layout: fixed;
 		border-collapse: collapse;
@@ -35,8 +37,8 @@
 				padding: unit(@cy,px) 0;
 				background-repeat: no-repeat;
 				@start-path-data: "M @{hcx} 0 V @{cy}";
-				@end-path: "<path d='M @{hcx} @{cy} V @{ay}' fill='none' stroke='#000' stroke-width='2' />";
-				@arrow-path: "<path d='M @{ax1} @{ay} L @{hcx} 0.5 L @{ax2} @{ay} Z' fill='#FFF' stroke='#000' stroke-width='1' />";
+				@end-path: "<path d='M @{hcx} @{cy} V @{ay}' fill='none' stroke='@{ui-stroke-color}' stroke-width='2' />";
+				@arrow-path: "<path d='M @{ax1} @{ay} L @{hcx} 0.5 L @{ax2} @{ay} Z' fill='@{ui-fill-color}' stroke='@{ui-stroke-color}' stroke-width='1' />";
 				&.b {
 					.svg(@cx, @cy, @end-path @arrow-path);
 					background-position+: bottom;
@@ -66,13 +68,13 @@
 					height: unit(@oby,px);
 					left: unit(@hcx - @hobx, px);
 					padding: 1px;
-					border: solid 1px #000;
+					border: solid 1px @ui-stroke-color;
 					.svg(@bx,@by,
-						"<path d='M @{hbx} 0 V @{by} M 0 @{hby} H @{bx}' fill='none' stroke='#000' stroke-width='2' />"
+						"<path d='M @{hbx} 0 V @{by} M 0 @{hby} H @{bx}' fill='none' stroke='@{ui-stroke-color}' stroke-width='2' />"
 					);
 					background-position: 1px 1px;
 					background-repeat: no-repeat;
-					background-color: #FFF;
+					background-color: @ui-fill-color;
 					&.t {
 						top: unit(@cy - @oby, px);
 					}
