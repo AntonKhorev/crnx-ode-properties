@@ -22,6 +22,7 @@
 			min-width: unit(@cell-width,px);
 			width: unit(@cell-width,px);
 			padding: 0;
+			position: relative;
 		}
 		tr.nodes {
 			@cx: @cell-width;
@@ -50,25 +51,30 @@
 					.arc(@cx, @cy, @start-path-data);
 					background-position+: top;
 				}
-				position: relative;
 				button {
-					@bx: @button-width;
-					@by: @button-height;
+					@obx: @button-width;
+					@oby: @button-height;
+					@bx: @obx - 4;
+					@by: @oby - 4;
+					@hobx: @obx/2;
+					@hoby: @oby/2;
 					@hbx: @bx/2;
 					@hby: @by/2;
 					display: block;
 					position: absolute;
-					width: unit(@bx,px);
-					height: unit(@by,px);
-					left: unit(@hcx - @hbx, px);
-					padding: 0;
-					border: 0;
+					width: unit(@obx,px);
+					height: unit(@oby,px);
+					left: unit(@hcx - @hobx, px);
+					padding: 1px;
+					border: solid 1px #000;
 					.svg(@bx,@by,
-						"<rect x='0' y='0' width='@{bx}' height='@{by}' fill='#FFF' stroke='#000' />"
 						"<path d='M @{hbx} 0 V @{by} M 0 @{hby} H @{bx}' fill='none' stroke='#000' stroke-width='2' />"
 					);
+					background-position: 1px 1px;
+					background-repeat: no-repeat;
+					background-color: #FFF;
 					&.t {
-						top: unit(@cy - @by,px);
+						top: unit(@cy - @oby, px);
 					}
 					span {
 						position: absolute;
