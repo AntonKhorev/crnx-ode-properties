@@ -11,14 +11,31 @@ $(function(){
 		for (let id in data) {
 			selectedNodes[id]=true
 			dag[id]=data[id].parents
+			idag[id]={}
+		}
+		for (let id in data) {
 			for (let pid in dag[id]) {
-				if (idag[pid]===undefined) {
-					idag[pid]={}
-				}
 				idag[pid][id]=true
 			}
 		}
 		let theadLayout=new TheadLayout(dag,selectedNodes)
+		const breadthWalk=(graph,id)=>{
+			const result=[]
+			const visited={}
+			const queue=[id]
+			while (queue.length>0) {
+				id=queue.shift()
+				if (visited[id]) {
+					continue
+				}
+				visited[id]=true
+				if (!selectedNodes[id]) {
+					result.push(id)
+				}
+				queue.push(...Object.keys(graph[id]).sort())
+			}
+			return result
+		}
 		const writeButton=(text,tip)=>{
 			const $button=$(`<button type='button'><span>${text}</span></button>`)
 			if (tip!==undefined) {
@@ -34,31 +51,34 @@ $(function(){
 					}
 				})
 			}
+			const writeTheadCell=cell=>{
+				const $cell=$("<th>")
+				setCellClasses($cell,cell)
+				if (cell.node!==undefined) {
+					$cell.append(data[cell.node].name)
+					const parents=breadthWalk(dag,cell.node)
+					if (parents.length>0) {
+						$cell.append(
+							" ",
+							writeButton("Add parent","Add one of parents of this node").addClass('t')
+						)
+					}
+					const children=breadthWalk(idag,cell.node)
+					if (children.length>0) {
+						$cell.append(
+							" ",
+							writeButton("Add child","Add one of children of this node").addClass('b')
+						)
+					}
+				}
+				return $cell
+			}
 			const writeThead=()=>{
 				const $thead=$("<thead>")
 				for (let i=0;i<theadLayout.nodeLayers.length;i++) {
 					$thead.append(
 						$("<tr class='nodes'>").append(
-							theadLayout.nodeLayers[i].map(cell=>{
-								const $cell=$("<th>")
-								if (cell.node!==undefined) {
-									$cell.append(data[cell.node].name)
-								}
-								setCellClasses($cell,cell)
-								if (cell.t) {
-									$cell.append(
-										" ",
-										writeButton("Add parent","Add one of parents of this node").addClass('t')
-									)
-								}
-								if (cell.b) {
-									$cell.append(
-										" ",
-										writeButton("Add child","Add one of children of this node").addClass('b')
-									)
-								}
-								return $cell
-							})
+							theadLayout.nodeLayers[i].map(writeTheadCell)
 						)
 					)
 					if (i<theadLayout.arcLayers.length) {
