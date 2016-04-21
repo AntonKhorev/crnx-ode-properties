@@ -66,6 +66,7 @@
 					@hby: @by/2;
 					display: block;
 					position: absolute;
+					z-index: 2;
 					width: unit(@obx,px);
 					height: unit(@oby,px);
 					left: unit(@hcx - @hobx, px);
@@ -87,6 +88,7 @@
 					opacity: 0;
 					transition: 300ms;
 					&:focus, &:hover {
+						transition: none;
 						opacity: 1;
 						border: solid 1px @active-stroke-color;
 						.svg(@bx,@by,
@@ -94,12 +96,19 @@
 						);
 						background-color: @active-fill-color;
 					}
-					&.hide {
+					&.attached-b, &.attached-t {
 						transition: none;
 						opacity: 1;
 						.svg(@bx,@by,
 							"<path d='M 0 @{hby} H @{bx}' fill='none' stroke='@{passive-stroke-color}' stroke-width='2' />"
 						);
+					}
+					&.attached-b {
+						border-bottom: none;
+					}
+					&.attached-t {
+						border-top: none;
+						background-position: 1px 2px;
 					}
 				}
 				&:hover button {

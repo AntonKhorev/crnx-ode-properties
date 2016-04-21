@@ -95,7 +95,6 @@ $(function(){
 							})
 						))
 						$cell.append($nodes)
-						$button.addClass('hide')
 						setTimeout(()=>{ // can calculate height only after it's displayed
 							const nh=$nodes.outerHeight()
 							const no=$nodes.offset()
@@ -114,9 +113,10 @@ $(function(){
 								left: no.left,
 							})
 							$nodes.addClass('attached')
+							$button.addClass('attached-'+attached)
 						},0)
 					} else {
-						$button.removeClass('hide')
+						$button.removeClass('attached-'+attached)
 						$nodes.remove()
 						$nodes=undefined
 						attached=undefined
