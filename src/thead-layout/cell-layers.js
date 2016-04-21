@@ -23,7 +23,7 @@ module.exports=(nodeLabelLayers,arcLocationLayers)=>{
 				arcLayoutLayers[i][j][k].bt=true
 			}
 			if (nodeLayoutLayers[i][k].node!==undefined) {
-				nodeLayoutLayers[i][k].arrow=true
+				nodeLayoutLayers[i][k].b=true
 				return
 			}
 			nodeLayoutLayers[i][k].bt=true
@@ -37,18 +37,21 @@ module.exports=(nodeLabelLayers,arcLocationLayers)=>{
 		for (j+=1;j<arcLayoutLayers[i].length;j++) {
 			arcLayoutLayers[i][j][k].bt=true
 		}
+		nodeLayoutLayers[i+1][k].t=true
 	}
-	let x=0
+	// create empty cells
 	for (let i=0;i<nodeLabelLayers.length;i++) {
 		nodeLayoutLayers.push(makeBlankRow())
+		if (i>=arcLocationLayers.length) continue
+		arcLayoutLayers.push(arcLocationLayers[i].map(makeBlankRow))
+	}
+	// fill cells
+	let x=0
+	for (let i=0;i<nodeLabelLayers.length;i++) {
 		nodeLabelLayers[i].forEach(node=>{
 			nodeLayoutLayers[i][x++].node=node
 		})
 		if (i>=arcLocationLayers.length) continue
-		arcLayoutLayers.push([])
-		for (let j=0;j<arcLocationLayers[i].length;j++) {
-			arcLayoutLayers[i].push(makeBlankRow())
-		}
 		for (let j=0;j<arcLocationLayers[i].length;j++) {
 			const parentLocations=arcLocationLayers[i][j][0]
 			const childLocations=arcLocationLayers[i][j][1]

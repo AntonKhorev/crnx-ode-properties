@@ -15,7 +15,7 @@ $(function(){
 		let theadLayout=new TheadLayout(dag,selectedNodes)
 		const writeTable=()=>{
 			const setCellClasses=($cell,cell)=>{
-				;['arrow','bt','rl','rt','bl'].forEach(dir=>{
+				;['b','t','bt','rl','rt','bl'].forEach(dir=>{
 					if (cell[dir]) {
 						$cell.addClass(dir)
 					}

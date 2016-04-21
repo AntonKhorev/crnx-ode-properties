@@ -27,9 +27,9 @@ describe("makeCellLayers",()=>{
 			]
 		])
 		assert.deepEqual(result,[[ // node layers/rows
-			[{node:'A',arrow:true},{},{},{}],
-			[{},{node:'B',arrow:true},{node:'C',arrow:true},{}],
-			[{},{},{},{node:'D'}],
+			[{node:'A',b:true},{},{},{}],
+			[{},{node:'B',b:true,t:true},{node:'C',b:true,t:true},{}],
+			[{},{},{},{node:'D',t:true}],
 		],[ // arc layers
 			[ // arc rows
 				[{rt:true},{rl:true,bl:true},{bl:true},{}],
@@ -49,8 +49,8 @@ describe("makeCellLayers",()=>{
 			]
 		])
 		assert.deepEqual(result,[[ // node layers/rows
-			[{node:'A',arrow:true},{node:'B',arrow:true},{},{}],
-			[{},{},{node:'C'},{node:'D'}],
+			[{node:'A',b:true},{node:'B',b:true},{},{}],
+			[{},{},{node:'C',t:true},{node:'D',t:true}],
 		],[ // arc layers
 			[ // arc rows
 				[{bt:true,rt:true},{rl:true,rt:true},{rl:true},{bl:true}],
@@ -74,10 +74,10 @@ describe("makeCellLayers",()=>{
 			]
 		])
 		assert.deepEqual(result,[[ // node layers/rows
-			[{node:'A',arrow:true},{},{},{},{}],
-			[{bt:true},{node:'B'},{node:'C',arrow:true},{},{}],
-			[{bt:true},{},{},{node:'D',arrow:true},{}],
-			[{},{},{},{},{node:'E'}],
+			[{node:'A',b:true},{},{},{},{}],
+			[{bt:true},{node:'B',t:true},{node:'C',b:true,t:true},{},{}],
+			[{bt:true},{},{},{node:'D',b:true,t:true},{}],
+			[{},{},{},{},{node:'E',t:true}],
 		],[ // arc layers
 			[ // arc rows
 				[{bt:true,rt:true},{rl:true,bl:true},{bl:true},{},{}],

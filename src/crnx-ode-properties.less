@@ -8,7 +8,7 @@
 		.svg(@width,@height,@contents) {
 			@svg: "<svg xmlns='http://www.w3.org/2000/svg' width='@{width}' height='@{height}'>@{contents}</svg>";
 			@data: escape(@svg);
-			background-image: url("data:image/svg+xml;charset=utf-8,@{data}");
+			background-image+: url("data:image/svg+xml;charset=utf-8,@{data}");
 		}
 		.arc(@width,@height,@d) {
 			.svg(@width,@height,"<path d='@{d}' fill='none' stroke='#000' stroke-width='2' />");
@@ -50,18 +50,30 @@
 				.arc(@cx,@cy,"M @{hcx} 0 V @{cy} M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy} H 0");
 			}
 		}
-		tr.nodes th {
-			padding: 0 0 unit(@cell-node-padding,px) 0;
-		}
-		tr.nodes th.arrow {
+		tr.nodes {
 			@cx: @cell-width;
 			@hcx: @cell-width/2;
 			@ax1: @hcx + @arc-arrow-width;
 			@ax2: @hcx - @arc-arrow-width;
 			@cy: @cell-node-padding;
-			.svg(@cx,@cy,"<path d='M @{ax1} @{cy} L @{hcx} 0 L @{ax2} @{cy} Z' fill='#FFF' stroke='#000' stroke-width='1' />");
-			background-repeat: no-repeat;
-			background-position: bottom;
+			th {
+				padding: unit(@cell-node-padding,px) 0;
+				background-repeat: no-repeat;
+				&.b {
+					.svg(@cx,@cy,"<path d='M @{ax1} @{cy} L @{hcx} 0 L @{ax2} @{cy} Z' fill='#FFF' stroke='#000' stroke-width='1' />");
+					background-position+: bottom;
+				}
+				&.t {
+					.arc(@cx,@cy,"M @{hcx} 0 V @{cy}");
+					background-position+: top;
+				}
+				&.b.t {
+					.svg(@cx,@cy,"<path d='M @{ax1} @{cy} L @{hcx} 0 L @{ax2} @{cy} Z' fill='#FFF' stroke='#000' stroke-width='1' />");
+					background-position+: bottom;
+					.arc(@cx,@cy,"M @{hcx} 0 V @{cy}");
+					background-position+: top;
+				}
+			}
 		}
 		tr.arcs {
 			th {
