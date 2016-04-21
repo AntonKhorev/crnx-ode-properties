@@ -42,7 +42,7 @@ module.exports={
 			separable: true,
 			linear: true,
 		},
-		name: "first-order separable in \\(t\\)",
+		name: "first-order separable in independent variable",
 		equation: `${dydt} = f(t)`,
 	},
 }

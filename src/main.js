@@ -6,13 +6,20 @@ const data=require('./data')
 $(function(){
 	$('.crnx-ode-properties').each(function(){
 		const $container=$(this)
-		const dag={}
+		const dag={}, idag={}
 		const selectedNodes={}
 		for (let id in data) {
-			dag[id]=data[id].parents
 			selectedNodes[id]=true
+			dag[id]=data[id].parents
+			for (let pid in dag[id]) {
+				if (idag[pid]===undefined) {
+					idag[pid]={}
+				}
+				idag[pid][id]=true
+			}
 		}
 		let theadLayout=new TheadLayout(dag,selectedNodes)
+		const writeButton=(text)=>$(`<button type='button'><span>${text}</span></button>`)
 		const writeTable=()=>{
 			const setCellClasses=($cell,cell)=>{
 				;['b','t','bt','rl','rt','bl'].forEach(dir=>{
@@ -32,6 +39,12 @@ $(function(){
 									$cell.append(data[cell.node].name)
 								}
 								setCellClasses($cell,cell)
+								if (cell.t) {
+									$cell.append(writeButton("Add parents").addClass('t'))
+								}
+								if (cell.b) {
+									$cell.append(writeButton("Add children").addClass('b'))
+								}
 								return $cell
 							})
 						)
@@ -56,7 +69,7 @@ $(function(){
 					$("<tfoot>").append(
 						$("<tr>").append(
 							theadLayout.columns.map(id=>$("<td>").append(
-								$("<button type='button'>Delete</button>").click(function(){
+								writeButton("Delete").click(function(){
 									delete selectedNodes[id]
 									theadLayout=new TheadLayout(dag,selectedNodes)
 									writeTable()

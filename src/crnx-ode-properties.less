@@ -2,9 +2,11 @@
 	font-size: 14px;
 	table {
 		@cell-width: 200;
-		@cell-height: 20;
-		@cell-node-padding: 10;
+		@cell-height: 30;
+		@cell-node-padding: 20;
 		@arc-arrow-width: 3;
+		@button-width: 20;
+		@button-height: 20;
 		.svg(@width,@height,@contents) {
 			@svg: "<svg xmlns='http://www.w3.org/2000/svg' width='@{width}' height='@{height}'>@{contents}</svg>";
 			@data: escape(@svg);
@@ -74,6 +76,36 @@
 					background-position+: bottom;
 					.arc(@cx,@cy,@start-path-data);
 					background-position+: top;
+				}
+				position: relative;
+				button {
+					@bx: @button-width;
+					@by: @button-height;
+					@hbx: @bx/2;
+					@hby: @by/2;
+					display: block;
+					position: absolute;
+					width: unit(@bx,px);
+					height: unit(@by,px);
+					left: unit(@hcx - @hbx, px);
+					padding: 0;
+					border: 0;
+					.svg(@bx,@by,
+						"<rect x='0' y='0' width='@{bx}' height='@{by}' fill='#FFF' stroke='#000' />"
+						"<path d='M @{hbx} 0 V @{by} M 0 @{hby} H @{bx}' fill='none' stroke='#000' stroke-width='2' />"
+					);
+					&.t {
+						top: unit(@cy - @by,px);
+					}
+					span {
+						position: absolute;
+						left: -10000px;
+					}
+					opacity: 0;
+					transition: 300ms;
+				}
+				button:focus, &:hover button {
+					opacity: 1;
 				}
 			}
 		}
