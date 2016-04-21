@@ -19,7 +19,13 @@ $(function(){
 			}
 		}
 		let theadLayout=new TheadLayout(dag,selectedNodes)
-		const writeButton=(text)=>$(`<button type='button'><span>${text}</span></button>`)
+		const writeButton=(text,tip)=>{
+			const $button=$(`<button type='button'><span>${text}</span></button>`)
+			if (tip!==undefined) {
+				$button.attr('title',tip)
+			}
+			return $button
+		}
 		const writeTable=()=>{
 			const setCellClasses=($cell,cell)=>{
 				;['b','t','bt','rl','rt','bl'].forEach(dir=>{
@@ -40,10 +46,16 @@ $(function(){
 								}
 								setCellClasses($cell,cell)
 								if (cell.t) {
-									$cell.append(writeButton("Add parents").addClass('t'))
+									$cell.append(
+										" ",
+										writeButton("Add parent","Add one of parents of this node").addClass('t')
+									)
 								}
 								if (cell.b) {
-									$cell.append(writeButton("Add children").addClass('b'))
+									$cell.append(
+										" ",
+										writeButton("Add child","Add one of children of this node").addClass('b')
+									)
 								}
 								return $cell
 							})
@@ -69,7 +81,7 @@ $(function(){
 					$("<tfoot>").append(
 						$("<tr>").append(
 							theadLayout.columns.map(id=>$("<td>").append(
-								writeButton("Delete").click(function(){
+								writeButton("Delete","Delete this node").click(function(){
 									delete selectedNodes[id]
 									theadLayout=new TheadLayout(dag,selectedNodes)
 									writeTable()
