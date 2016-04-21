@@ -59,18 +59,20 @@
 			th {
 				padding: unit(@cell-node-padding,px) 0;
 				background-repeat: no-repeat;
+				@arrow-path: "<path d='M @{ax1} @{cy} L @{hcx} 0 L @{ax2} @{cy} Z' fill='#FFF' stroke='#000' stroke-width='1' />";
+				@start-path-data: "M @{hcx} 0 V @{cy}";
 				&.b {
-					.svg(@cx,@cy,"<path d='M @{ax1} @{cy} L @{hcx} 0 L @{ax2} @{cy} Z' fill='#FFF' stroke='#000' stroke-width='1' />");
+					.svg(@cx,@cy,@arrow-path);
 					background-position+: bottom;
 				}
 				&.t {
-					.arc(@cx,@cy,"M @{hcx} 0 V @{cy}");
+					.arc(@cx,@cy,@start-path-data);
 					background-position+: top;
 				}
 				&.b.t {
-					.svg(@cx,@cy,"<path d='M @{ax1} @{cy} L @{hcx} 0 L @{ax2} @{cy} Z' fill='#FFF' stroke='#000' stroke-width='1' />");
+					.svg(@cx,@cy,@arrow-path);
 					background-position+: bottom;
-					.arc(@cx,@cy,"M @{hcx} 0 V @{cy}");
+					.arc(@cx,@cy,@start-path-data);
 					background-position+: top;
 				}
 			}
