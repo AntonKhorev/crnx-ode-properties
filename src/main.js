@@ -52,11 +52,31 @@ $(function(){
 				})
 			}
 			const writeTheadButton=($cell,text,tip,dir,nodes)=>{
+				const keyCodeUp=38
+				const keyCodeDown=40
 				let $nodes
+				let attached
 				const $button=writeButton(text,tip).addClass(dir).click(function(){
 					if (!$nodes) {
 						$nodes=$("<ul>").append(nodes.map(
-							id=>"<li tabindex='0'>"+data[id].name+"</li>"
+							id=>$("<li tabindex='0'>"+data[id].name+"</li>").keydown(function(ev){
+								if (!attached) return
+								if (ev.keyCode==keyCodeUp) {
+									const $toFocus=$(this).prev()
+									if ($toFocus.length) {
+										$toFocus.focus()
+									} else if (attached=='b') {
+										$button.focus()
+									}
+								} else if (ev.keyCode==keyCodeDown) {
+									const $toFocus=$(this).next()
+									if ($toFocus.length) {
+										$toFocus.focus()
+									} else if (attached=='t') {
+										$button.focus()
+									}
+								}
+							})
 						))
 						$cell.append($nodes)
 						$button.addClass('hide')
@@ -68,8 +88,10 @@ $(function(){
 							let t=bo.top-nh+1
 							if (dir!='t' || t<0) { // want below or doesn't fit to screen above the button
 								t=bo.top+bh-1
+								attached='b'
 							} else {
 								$nodes.insertBefore($button)
+								attached='t'
 							}
 							$nodes.offset({
 								top: t,
@@ -81,6 +103,14 @@ $(function(){
 						$button.removeClass('hide')
 						$nodes.remove()
 						$nodes=undefined
+						attached=undefined
+					}
+				}).keydown(function(ev){
+					if (!attached) return
+					if (ev.keyCode==keyCodeUp && attached=='t') {
+						$nodes.children().last().focus()
+					} else if (ev.keyCode==keyCodeDown && attached=='b') {
+						$nodes.children().first().focus()
 					}
 				})
 				return $button
