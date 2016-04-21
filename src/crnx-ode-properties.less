@@ -94,6 +94,13 @@
 						);
 						background-color: @active-fill-color;
 					}
+					&.hide {
+						transition: none;
+						opacity: 1;
+						.svg(@bx,@by,
+							"<path d='M 0 @{hby} H @{bx}' fill='none' stroke='@{passive-stroke-color}' stroke-width='2' />"
+						);
+					}
 				}
 				&:hover button {
 					opacity: 1;
@@ -113,7 +120,7 @@
 					li {
 						list-style: none;
 						padding: 5px;
-						&:hover {
+						&:focus, &:hover {
 							background: @active-fill-color;
 							color: @active-stroke-color;
 						}

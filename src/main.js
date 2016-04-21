@@ -56,10 +56,27 @@ $(function(){
 				const $button=writeButton(text,tip).addClass(dir).click(function(){
 					if (!$nodes) {
 						$nodes=$("<ul>").append(nodes.map(
-							id=>"<li>"+data[id].name+"</li>"
+							id=>"<li tabindex='0'>"+data[id].name+"</li>"
 						))
 						$cell.append($nodes)
+						$button.addClass('hide')
+						setTimeout(()=>{ // can calculate height only after it's displayed
+							// TODO temp set opacity to 0 to avoid flash
+							const nh=$nodes.height()
+							const no=$nodes.offset()
+							const bh=$button.height()
+							const bo=$button.offset()
+							let t=bo.top-nh-1
+							if (t<0) { // doesn't fit to screen on top of the button
+								t=bo.top+bh+3
+							}
+							$nodes.offset({
+								top: t,
+								left: no.left,
+							})
+						},0)
 					} else {
+						$button.removeClass('hide')
 						$nodes.remove()
 						$nodes=undefined
 					}
