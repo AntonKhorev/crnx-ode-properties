@@ -61,19 +61,21 @@ $(function(){
 						$cell.append($nodes)
 						$button.addClass('hide')
 						setTimeout(()=>{ // can calculate height only after it's displayed
-							// TODO temp set opacity to 0 to avoid flash
 							const nh=$nodes.height()
 							const no=$nodes.offset()
 							const bh=$button.height()
 							const bo=$button.offset()
 							let t=bo.top-nh-1
-							if (t<0) { // doesn't fit to screen on top of the button
+							if (dir!='t' || t<0) { // want below or doesn't fit to screen above the button
 								t=bo.top+bh+3
+							} else {
+								$nodes.insertBefore($button)
 							}
 							$nodes.offset({
 								top: t,
 								left: no.left,
 							})
+							$nodes.addClass('attached')
 						},0)
 					} else {
 						$button.removeClass('hide')
