@@ -75,20 +75,26 @@ $(function(){
 				}
 				return $thead
 			}
+			const writeTfoot=()=>{
+				if (theadLayout.columns.length<=1) {
+					return $()
+				}
+				return $("<tfoot>").append(
+					$("<tr>").append(
+						theadLayout.columns.map(id=>$("<td>").append(
+							writeButton("Delete","Delete this node").click(function(){
+								delete selectedNodes[id]
+								theadLayout=new TheadLayout(dag,selectedNodes)
+								writeTable()
+							})
+						))
+					)
+				)
+			}
 			$container.empty().append(
 				$("<table>").append(
 					writeThead(),
-					$("<tfoot>").append(
-						$("<tr>").append(
-							theadLayout.columns.map(id=>$("<td>").append(
-								writeButton("Delete","Delete this node").click(function(){
-									delete selectedNodes[id]
-									theadLayout=new TheadLayout(dag,selectedNodes)
-									writeTable()
-								})
-							))
-						)
-					),
+					writeTfoot(),
 					$("<tbody>").append(
 						$("<tr>").append(
 							theadLayout.columns.map(id=>"<td>$$"+data[id].equation+"$$</td>")
