@@ -44,6 +44,7 @@ $(function(){
 			return $button
 		}
 		const writeTable=()=>{
+			let $attachedMenu, $attachedToButton, attachedDirection, attachTimeoutId
 			const deleteNode=id=>{
 				delete selectedNodes[id]
 				theadLayout=new TheadLayout(dag,selectedNodes)
@@ -66,27 +67,35 @@ $(function(){
 				const keyCodeSpace=32
 				const keyCodeUp=38
 				const keyCodeDown=40
-				let $nodes
-				let attached
 				const $button=writeButton(text,tip).addClass(dir).click(function(){
-					if (!$nodes) {
-						$nodes=$("<ul>").append(nodes.map(
+					const removeAttachedMenu=()=>{
+						$attachedToButton.removeClass('attached-t attached-b')
+						$attachedMenu.remove()
+						clearTimeout(attachTimeoutId)
+						$attachedToButton=undefined
+						$attachedMenu=undefined
+						attachedDirection=undefined
+						attachTimeoutId=undefined
+					}
+					const startAttachingMenu=()=>{
+						$attachedToButton=$button
+						$attachedMenu=$("<ul>").append(nodes.map(
 							id=>$("<li tabindex='0'>"+data[id].name+"</li>").click(function(){
 								addNode(id)
 							}).keydown(function(ev){
-								if (!attached) return
+								if (!attachedDirection) return // not yet decided on attach direction (this can't happen)
 								if (ev.keyCode==keyCodeUp) {
 									const $toFocus=$(this).prev()
 									if ($toFocus.length) {
 										$toFocus.focus()
-									} else if (attached=='b') {
+									} else if (attachedDirection=='b') {
 										$button.focus()
 									}
 								} else if (ev.keyCode==keyCodeDown) {
 									const $toFocus=$(this).next()
 									if ($toFocus.length) {
 										$toFocus.focus()
-									} else if (attached=='t') {
+									} else if (attachedDirection=='t') {
 										$button.focus()
 									}
 								} else if (ev.keyCode==keyCodeEnter || ev.keyCode==keyCodeSpace) {
@@ -94,39 +103,43 @@ $(function(){
 								}
 							})
 						))
-						$cell.append($nodes)
-						setTimeout(()=>{ // can calculate height only after it's displayed
-							const nh=$nodes.outerHeight()
-							const no=$nodes.offset()
+						$cell.append($attachedMenu)
+						attachTimeoutId=setTimeout(()=>{ // can calculate height only after it's displayed
+							const mh=$attachedMenu.outerHeight()
+							const mo=$attachedMenu.offset()
 							const bh=$button.outerHeight()
 							const bo=$button.offset()
-							let t=bo.top-nh+1
+							let t=bo.top-mh+1
 							if (dir!='t' || t<0) { // want below or doesn't fit to screen above the button
 								t=bo.top+bh-1
-								attached='b'
+								attachedDirection='b'
 							} else {
-								$nodes.insertBefore($button)
-								attached='t'
+								$attachedMenu.insertBefore($button)
+								attachedDirection='t'
 							}
-							$nodes.offset({
+							$attachedMenu.offset({
 								top: t,
-								left: no.left,
+								left: mo.left,
 							})
-							$nodes.addClass('attached')
-							$button.addClass('attached-'+attached)
+							$attachedMenu.addClass('attached')
+							$button.addClass('attached-'+attachedDirection)
 						},0)
+					}
+					if (!$button.is($attachedToButton)) {
+						if ($attachedToButton) {
+							removeAttachedMenu() // close menu opened elsewhere
+						}
+						startAttachingMenu()
 					} else {
-						$button.removeClass('attached-'+attached)
-						$nodes.remove()
-						$nodes=undefined
-						attached=undefined
+						removeAttachedMenu() // close menu here
 					}
 				}).keydown(function(ev){
-					if (!attached) return
-					if (ev.keyCode==keyCodeUp && attached=='t') {
-						$nodes.children().last().focus()
-					} else if (ev.keyCode==keyCodeDown && attached=='b') {
-						$nodes.children().first().focus()
+					if ($button.is($attachedToButton)) {
+						if (ev.keyCode==keyCodeUp && attachedDirection=='t') {
+							$attachedMenu.children().last().focus()
+						} else if (ev.keyCode==keyCodeDown && attachedDirection=='b') {
+							$attachedMenu.children().first().focus()
+						}
 					}
 				})
 				return $button
