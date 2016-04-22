@@ -106,4 +106,16 @@ module.exports={
 				`\\[ y = ${int('f(t)','t')} \\]`,
 		],
 	},
+	expGrowth: {
+		parents: {
+			autonomous: true,
+			linearHomogeneous: true,
+		},
+		name: "exponential growth",
+		equation: `${dydt} = k \\cdot y`,
+		solutions: [
+			`<em>Solution</em>:`+
+				`\\[ y(t) = y(0) e^{kt} \\]`,
+		],
+	},
 }
