@@ -124,4 +124,12 @@ module.exports={
 				`\\[ y(t) = y(0) e^{kt} \\]`,
 		],
 	},
+	logisticGrowth: {
+		parents: {
+			autonomous: true,
+		},
+		name: "logistic growth",
+		htmlName: "<a href='https://en.wikipedia.org/wiki/Logistic_function#In_ecology:_modeling_population_growth'>logistic growth</a>",
+		equation: `${dydt} = k \\cdot y \\cdot \\left(1 - \\frac{y}{N}\\right)`,
+	},
 }
