@@ -59,9 +59,18 @@ module.exports={
 				`domain is \\( -\\infty &lt; t &lt; +\\infty \\)`
 		],
 	},
-	linear: {
+	bernoulli: {
 		parents: {
 			root: true,
+		},
+		name: "Bernoulli",
+		htmlName: "<a href='https://en.wikipedia.org/wiki/Bernoulli_differential_equation'>Bernoulli</a>",
+		importance: 2,
+		equation: `${dydt} + p(t) \\cdot y = q(t) \\cdot y^n`, // TODO we include n=0 and 1 here, others may exclude
+	},
+	linear: {
+		parents: {
+			bernoulli: true,
 		},
 		name: "first-order linear",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a>",

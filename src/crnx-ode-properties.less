@@ -182,6 +182,9 @@
 				&.bt.bl {
 					.arc(@cx,@cy,"M @{hcx} 0 V @{cy} M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy} H 0");
 				}
+				&.rl.bt {
+					.arc(@cx,@cy,"M 0 @{hcy} H @{cx} M @{hcx} 0 V @{cy}"); // TODO draw jumper
+				}
 			}
 		}
 		tfoot td {
