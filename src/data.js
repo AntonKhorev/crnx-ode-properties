@@ -31,8 +31,8 @@ module.exports={
 				`\\[ ${int(`\\frac{1}{f_2(y)}`,'y')} = ${int('f_1(t)','t')} \\]`+
 				`this may or may not include ${eqsol("equilibrium solutions")}`,
 			"<em>"+eqsol("Equilibrium solutions")+":</em><br>"+
-				`Solve \\( f_2(y) = 0 \\) for constant \\( y \\);`+"<br>"+
-				`domain is not necessary \\( -\\infty &lt; t &lt; +\\infty \\)`
+				`Solve \\( f_2(y) = 0 \\) for constant \\( y \\).` //+"<br>"+
+				//`domain is not necessary \\( -\\infty &lt; t &lt; +\\infty \\)`
 		],
 	},
 	autonomous: {
@@ -55,8 +55,8 @@ module.exports={
 				`\\[ ${int(`\\frac{1}{f(y)}`,'y')} = t \\]`+
 				`this may or may not include ${eqsol("equilibrium solutions")}`,
 			"<em>"+eqsol("Equilibrium solutions")+":</em><br>"+
-				`Solve \\( f(y) = 0 \\) for constant \\( y \\);`+"<br>"+
-				`domain is \\( -\\infty &lt; t &lt; +\\infty \\)`
+				`Solve \\( f(y) = 0 \\) for constant \\( y \\)` //+"<br>"+
+				//`domain is \\( -\\infty &lt; t &lt; +\\infty \\)`
 		],
 	},
 	bernoulli: {
