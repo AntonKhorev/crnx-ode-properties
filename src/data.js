@@ -19,6 +19,7 @@ module.exports={
 			root: true,
 		},
 		name: "first-order separable",
+		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Separation_of_variables#Ordinary_differential_equations_.28ODE.29'>separable</a>",
 		equation: `${dydt} = f_1(t) \\cdot f_2(y)`,
 		solutions: [
 			`<em>Solutions</em>:`+
@@ -37,6 +38,7 @@ module.exports={
 			separable: true,
 		},
 		name: "first-order autonomous",
+		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Autonomous_system_%28mathematics%29'>autonomous</a>",
 		equation: `${dydt} = f(y)`,
 		properties: [
 			"horizontal <a href='https://en.wikipedia.org/wiki/Isocline'>isoclines</a>",
@@ -59,6 +61,7 @@ module.exports={
 			root: true,
 		},
 		name: "first-order linear",
+		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a>",
 		equation: `${dydt} = a(t) \\cdot y + b(t)`,
 		properties: [
 			`<em>Extended linearity</em>:<br>`+
@@ -76,6 +79,7 @@ module.exports={
 			linear: true,
 		},
 		name: "first-order linear homogeneous",
+		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a> <a href='https://en.wikipedia.org/wiki/Homogeneous_differential_equation#Homogeneous_linear_differential_equations'>homogeneous</a>",
 		equation: `${dydt} = a(t) \\cdot y`,
 		properties: [
 			`<em>Linearity</em>:<br>`+
@@ -94,6 +98,7 @@ module.exports={
 			linear: true,
 		},
 		name: "first-order separable in independent variable",
+		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Separation_of_variables#Ordinary_differential_equations_.28ODE.29'>separable</a> in \\(t\\)",
 		equation: `${dydt} = f(t)`,
 		properties: [
 			"vertical <a href='https://en.wikipedia.org/wiki/Isocline'>isoclines</a>",
@@ -112,6 +117,7 @@ module.exports={
 			linearHomogeneous: true,
 		},
 		name: "exponential growth",
+		htmlName: "<a href='https://en.wikipedia.org/wiki/Exponential_growth#Differential_equation'>exponential growth</a>",
 		equation: `${dydt} = k \\cdot y`,
 		solutions: [
 			`<em>Solution</em>:`+

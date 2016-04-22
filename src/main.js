@@ -166,7 +166,10 @@ $(function(){
 				const $cell=$("<th>")
 				setCellClasses($cell,cell)
 				if (cell.node!==undefined) {
-					$cell.append(data[cell.node].name)
+					$cell.append(data[cell.node].htmlName!==undefined
+						? data[cell.node].htmlName
+						: data[cell.node].name
+					)
 					const parents=breadthWalk(dag,cell.node).reverse()
 					let $parents
 					if (parents.length>0) {
