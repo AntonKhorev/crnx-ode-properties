@@ -43,22 +43,22 @@ $(function(){
 			}
 			return $button
 		}
-		const writeProperties=(id)=>{
-			const properties=[]
+		const writeData=(name,id)=>{
+			const output=[]
 			const rec=(id)=>{
 				Object.keys(data[id].parents).sort().forEach(pid=>{
 					if (!selectedNodes[pid]) {
 						rec(pid)
 					}
 				})
-				if (data[id].properties) {
-					properties.push(...data[id].properties)
+				if (data[id][name]) {
+					output.push(...data[id][name])
 				}
 			}
 			rec(id)
-			if (properties.length==0) return $()
-			return $("<ul>").append(properties.map(
-				property=>`<li>${property}</li>`
+			if (output.length==0) return $()
+			return $("<ul>").append(output.map(
+				t=>`<li>${t}</li>`
 			))
 		}
 		const writeTable=()=>{
@@ -233,7 +233,13 @@ $(function(){
 						// properties
 						$("<tr>").append(
 							theadLayout.columns.map(id=>$("<td>").append(
-								writeProperties(id)
+								writeData('properties',id)
+							))
+						),
+						// solutions
+						$("<tr>").append(
+							theadLayout.columns.map(id=>$("<td>").append(
+								writeData('solutions',id)
 							))
 						)
 					)

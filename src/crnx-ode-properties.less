@@ -179,17 +179,22 @@
 			text-align: center;
 		}
 		tbody {
+			td {
+				vertical-align: top;
+			}
 			ul {
-				padding: 0 10px;
-				li {
-					list-style: none;
-					padding: 0;
-					&::before {
-						position: absolute;
-						margin-left: -7px;
-						margin-top: 1px;
-						content: '•';
-					}
+				padding: 0 7px;
+				margin: 0;
+			}
+			li {
+				list-style: none;
+				padding: 0;
+				margin: 1em 0;
+				&::before {
+					position: absolute;
+					margin-left: -7px;
+					margin-top: 1px;
+					content: '•';
 				}
 			}
 		}
