@@ -9,7 +9,9 @@ $(function(){
 		const dag={}, idag={}
 		const selectedNodes={}
 		for (let id in data) {
-			selectedNodes[id]=true
+			if (data[id].importance<=1) {
+				selectedNodes[id]=true
+			}
 			dag[id]=data[id].parents
 			idag[id]={}
 		}

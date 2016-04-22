@@ -9,6 +9,7 @@ module.exports={
 	root: {
 		parents: {},
 		name: "first-order",
+		importance: 0,
 		equation: `${dydt} = f(t,y)`,
 		properties: [
 			"can test if \\(y_p(t)\\) is a solution by substituting \\(y = y_p\\) into the equation",
@@ -20,6 +21,7 @@ module.exports={
 		},
 		name: "first-order separable",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Separation_of_variables#Ordinary_differential_equations_.28ODE.29'>separable</a>",
+		importance: 1,
 		equation: `${dydt} = f_1(t) \\cdot f_2(y)`,
 		solutions: [
 			`<em>Solutions</em>:`+
@@ -39,6 +41,7 @@ module.exports={
 		},
 		name: "first-order autonomous",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Autonomous_system_%28mathematics%29'>autonomous</a>",
+		importance: 1,
 		equation: `${dydt} = f(y)`,
 		properties: [
 			"horizontal <a href='https://en.wikipedia.org/wiki/Isocline'>isoclines</a>",
@@ -62,6 +65,7 @@ module.exports={
 		},
 		name: "first-order linear",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a>",
+		importance: 1,
 		equation: `${dydt} = a(t) \\cdot y + b(t)`,
 		properties: [
 			`<em>Extended linearity</em>:<br>`+
@@ -80,6 +84,7 @@ module.exports={
 		},
 		name: "first-order linear homogeneous",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a> <a href='https://en.wikipedia.org/wiki/Homogeneous_differential_equation#Homogeneous_linear_differential_equations'>homogeneous</a>",
+		importance: 1,
 		equation: `${dydt} = a(t) \\cdot y`,
 		properties: [
 			`<em>Linearity</em>:<br>`+
@@ -99,6 +104,7 @@ module.exports={
 		},
 		name: "first-order separable in independent variable",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Separation_of_variables#Ordinary_differential_equations_.28ODE.29'>separable</a> in \\(t\\)",
+		importance: 2,
 		equation: `${dydt} = f(t)`,
 		properties: [
 			"vertical <a href='https://en.wikipedia.org/wiki/Isocline'>isoclines</a>",
@@ -118,6 +124,7 @@ module.exports={
 		},
 		name: "exponential growth",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Exponential_growth#Differential_equation'>exponential growth</a>",
+		importance: 2,
 		equation: `${dydt} = k \\cdot y`,
 		solutions: [
 			`<em>Solution</em>:`+
@@ -130,6 +137,7 @@ module.exports={
 		},
 		name: "logistic growth",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Logistic_function#In_ecology:_modeling_population_growth'>logistic growth</a>",
+		importance: 2,
 		equation: `${dydt} = k \\cdot y \\cdot \\left(1 - \\frac{y}{N}\\right)`,
 	},
 }
