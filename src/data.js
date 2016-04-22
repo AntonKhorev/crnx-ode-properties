@@ -7,6 +7,9 @@ module.exports={
 		parents: {},
 		name: "first-order",
 		equation: `${dydt} = f(t,y)`,
+		properties: [
+			"can test if \\(y_1(t)\\) is a solution by substituting \\(y = y_1\\) into the equation",
+		]
 	},
 	separable: {
 		parents: {
@@ -21,6 +24,10 @@ module.exports={
 		},
 		name: "first-order autonomous",
 		equation: `${dydt} = f(y)`,
+		properties: [
+			"horizontal <a href='https://en.wikipedia.org/wiki/Isocline'>isoclines</a>",
+			"\\(y_1(t)\\) is a solution \\(\\Rightarrow\\) \\(y_1(t+C)\\) is a solution",
+		],
 	},
 	linear: {
 		parents: {
@@ -36,6 +43,9 @@ module.exports={
 		},
 		name: "first-order linear homogeneous",
 		equation: `${dydt} = a(t) y`,
+		properties: [
+			"\\(y_h(t) = 0\\) is an <a href='https://en.wikipedia.org/wiki/Equilibrium_point'>equilibrium solution</a>",
+		],
 	},
 	separableInT: {
 		parents: {
@@ -44,5 +54,9 @@ module.exports={
 		},
 		name: "first-order separable in independent variable",
 		equation: `${dydt} = f(t)`,
+		properties: [
+			"vertical <a href='https://en.wikipedia.org/wiki/Isocline'>isoclines</a>",
+			"\\(y_1(t)\\) is a solution \\(\\Rightarrow\\) \\(y_1(t) + C\\) is a solution",
+		],
 	},
 }

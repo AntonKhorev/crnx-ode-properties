@@ -43,6 +43,24 @@ $(function(){
 			}
 			return $button
 		}
+		const writeProperties=(id)=>{
+			const properties=[]
+			const rec=(id)=>{
+				Object.keys(data[id].parents).sort().forEach(pid=>{
+					if (!selectedNodes[pid]) {
+						rec(pid)
+					}
+				})
+				if (data[id].properties) {
+					properties.push(...data[id].properties)
+				}
+			}
+			rec(id)
+			if (properties.length==0) return $()
+			return $("<ul>").append(properties.map(
+				property=>`<li>${property}</li>`
+			))
+		}
 		const writeTable=()=>{
 			let $attachedMenu, $attachedToButton, attachedDirection, attachTimeoutId
 			const deleteNode=id=>{
@@ -208,8 +226,15 @@ $(function(){
 					writeThead(),
 					writeTfoot(),
 					$("<tbody>").append(
+						// equations
 						$("<tr>").append(
 							theadLayout.columns.map(id=>"<td>$$"+data[id].equation+"$$</td>")
+						),
+						// properties
+						$("<tr>").append(
+							theadLayout.columns.map(id=>$("<td>").append(
+								writeProperties(id)
+							))
 						)
 					)
 				)
