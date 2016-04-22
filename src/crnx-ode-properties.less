@@ -44,16 +44,24 @@
 				&.b {
 					.svg(@cx, @cy, @end-path @arrow-path);
 					background-position+: bottom;
+					background-repeat+: no-repeat;
 				}
 				&.t {
 					.arc(@cx, @cy ,@start-path-data);
 					background-position+: top;
+					background-repeat+: no-repeat;
 				}
 				&.b.t {
 					.svg(@cx ,@cy, @end-path @arrow-path);
 					background-position+: bottom;
+					background-repeat+: no-repeat;
 					.arc(@cx, @cy, @start-path-data);
 					background-position+: top;
+					background-repeat+: no-repeat;
+				}
+				&.bt {
+					.arc(@cx,@cy,"M @{hcx} 0 V @{cy}");
+					background-repeat+: repeat-y;
 				}
 				button {
 					@obx: @button-width;
@@ -149,6 +157,7 @@
 			@hcy: @cy/2;
 			th {
 				height: unit(@arc-cell-height,px);
+				background-repeat: no-repeat;
 				&.rt {
 					.arc(@cx,@cy,"M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy} H @{cx}");
 				}
