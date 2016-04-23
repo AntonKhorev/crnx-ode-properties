@@ -1,7 +1,9 @@
 .crnx-ode-properties {
-	font-size: 14px;
+	@font-size: 14;
+	font-size: unit(@font-size,px);
+	font-family: sans-serif;
 	table {
-		@cell-width: 200;
+		@cell-width: 250;
 		@arc-cell-height: 30;
 		@arc-arrow-width: 8;
 		@arc-arrow-length: 12;
@@ -75,6 +77,7 @@
 					display: block;
 					position: absolute;
 					z-index: 2;
+					box-sizing: border-box;
 					width: unit(@obx,px);
 					height: unit(@oby,px);
 					left: unit(@hcx - @hobx, px);
@@ -211,7 +214,7 @@
 				@hsy: @sy/2;
 				@separator-path: "<path d='M 0 @{hsy} H @{sx}' fill='none' stroke='#AAA' />";
 				list-style: none;
-				padding: 0px 2px unit(@sy,px) 2px;
+				padding: 0px 5px unit(@sy,px) 5px;
 				margin: 0;
 				.svg(@sx,@sy,@separator-path);
 				background-position: bottom;
@@ -222,6 +225,64 @@
 					background-position+: bottom;
 					.svg(@sx,@sy,@separator-path);
 					background-position+: top;
+				}
+				div.detail {
+					@td: "M 4.5 0.5 l 3 3 h -6 z";
+					@bd: "M 4.5 9.5 l 3 -3 h -6 z";
+					button {
+						display: block;
+						box-sizing: border-box;
+						width: 100%;
+						height: unit(@font-size,px);
+						padding: 0;
+						transition: 300ms;
+						transition-property: border, background;
+						border: solid 1px transparent;
+						background-color: transparent;
+						.svg(9,10,"<path d='@{td} @{bd}' fill='@{passive-fill-color}' stroke='@{passive-stroke-color}' />");
+						background-repeat: no-repeat;
+						background-position: center;
+						span {
+							position: absolute;
+							left: -10000px;
+						}
+						&:last-child {
+							display: none;
+						}
+						&:focus, &:hover {
+							border: solid 1px @active-stroke-color;
+							background-color: @active-fill-color;
+							.svg(9,10,"<path d='@{td} @{bd}' fill='@{active-fill-color}' stroke='@{active-stroke-color}' />");
+						}
+					}
+					div {
+						display: none;
+					}
+					&.open {
+						button {
+							&:first-child {
+								margin-bottom: unit(-@font-size,px);
+								.svg(9,10,"<path d='@{bd}' fill='@{passive-fill-color}' stroke='@{passive-stroke-color}' />");
+								&:focus, &:hover {
+									.svg(9,10,"<path d='@{bd}' fill='@{active-fill-color}' stroke='@{active-stroke-color}' />");
+								}
+							}
+							&:last-child {
+								display: block;
+								margin-top: unit(-@font-size,px);
+								.svg(9,10,"<path d='@{td}' fill='@{passive-fill-color}' stroke='@{passive-stroke-color}' />");
+								&:focus, &:hover {
+									.svg(9,10,"<path d='@{td}' fill='@{active-fill-color}' stroke='@{active-stroke-color}' />");
+								}
+							}
+						}
+						div {
+							display: block;
+						}
+					}
+				}
+				div.note {
+					font-size: 90%;
 				}
 			}
 		}

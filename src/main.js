@@ -59,9 +59,35 @@ $(function(){
 			}
 			rec(id)
 			if (output.length==0) return $()
-			return $("<ul>").append(output.map(
-				t=>`<li>${t}</li>`
-			))
+			return $("<ul>").append(output.map(item=>{
+				return $("<li>").append(item.map(section=>{
+					const type=section[0]
+					const contents=section[1]
+					const $section=$(`<div class='${type}'>`).append(contents.map(line=>{
+						if (type=='title') {
+							return $(`<div><em>${line}</em>:</div>`)
+						} else {
+							return $(`<div>${line}</div>`)
+						}
+					}))
+					if (type=='detail') {
+						const $b1=writeButton("Open","Expand details")
+						const $b2=writeButton("Open","Expand details")
+						$section.prepend($b1).append($b2)
+						const $bs=$b1.add($b2)
+						$bs.click(function(){
+							if (!$section.hasClass('open')) {
+								$section.addClass('open')
+								$bs.html("<span>Close</span>").attr('title',"Collapse details")
+							} else {
+								$section.removeClass('open')
+								$bs.html("<span>Open</span>").attr('title',"Expand details")
+							}
+						})
+					}
+					return $section
+				}))
+			}))
 		}
 		const writeTable=()=>{
 			let $attachedMenu, $attachedToButton, attachedDirection, attachTimeoutId
