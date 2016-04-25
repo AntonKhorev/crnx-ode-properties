@@ -47,7 +47,28 @@ $(function(){
 		}
 		const writeData=(name,id)=>{
 			const output=[]
+
+			// mark ancestors of visible ancestors as visited
 			const visited={}
+			const markAncestors=id=>{
+				if (visited[id]) return
+				visited[id]=true
+				Object.keys(data[id].parents).forEach(pid=>{
+					markAncestors(pid)
+				})
+			}
+			const reachAncestors=id=>{
+				if (visited[id]) return
+				Object.keys(data[id].parents).forEach(pid=>{
+					if (selectedNodes[pid]) {
+						markAncestors(pid)
+					} else {
+						reachAncestors(pid)
+					}
+				})
+			}
+			reachAncestors(id)
+
 			const overrides={}
 			const raiseOverride=iid=>{
 				if (overrides[iid]===undefined) {
@@ -78,7 +99,7 @@ $(function(){
 				forOverrides(raiseOverride)
 				// recursion on nodes that are not selected for display
 				Object.keys(data[id].parents).sort().forEach(pid=>{
-					if (!selectedNodes[pid] && !visited[pid]) {
+					if (!visited[pid]) {
 						rec(pid)
 					}
 				})
