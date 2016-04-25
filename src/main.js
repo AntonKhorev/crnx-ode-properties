@@ -96,13 +96,14 @@ $(function(){
 						})
 					}
 				}
-				forOverrides(raiseOverride)
 				// recursion on nodes that are not selected for display
+				forOverrides(raiseOverride)
 				Object.keys(data[id].parents).sort().forEach(pid=>{
 					if (!visited[pid]) {
 						rec(pid)
 					}
 				})
+				forOverrides(lowerOverride)
 				// output of things that are not overridden by children
 				if (data[id][name]) {
 					data[id][name].forEach(item=>{
@@ -121,7 +122,6 @@ $(function(){
 						}
 					})
 				}
-				forOverrides(lowerOverride)
 			}
 			rec(id)
 			if (output.length==0) return $()

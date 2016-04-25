@@ -82,6 +82,7 @@ module.exports={
 		],
 		solutions: [
 			[
+				['id','general'],
 				['override',[
 					'general',
 				]],
@@ -101,6 +102,7 @@ module.exports={
 				]],
 			],
 			[
+				['id','equilibrium'],
 				['override',[
 					'equilibrium',
 				]],
@@ -189,6 +191,7 @@ module.exports={
 		equation: `${dydt} = a(t) \\cdot y`,
 		properties: [
 			[
+				['id','linearity'],
 				['override',[
 					'linearity',
 					'homodiff',
@@ -204,6 +207,7 @@ module.exports={
 		],
 		solutions: [
 			[
+				['id','general'],
 				['override',[
 					'general',
 				]],
@@ -225,6 +229,7 @@ module.exports={
 				]],
 			],
 			[
+				['id','equilibrium'],
 				['override',[
 					'equilibrium',
 				]],
@@ -253,6 +258,7 @@ module.exports={
 				]],
 			],
 			[
+				['id','linearity'],
 				['override',[
 					'linearity',
 					'homodiff',
@@ -264,9 +270,10 @@ module.exports={
 		],
 		solutions: [
 			[
+				['id','general'],
 				['override',[
 					'general',
-					'equilibrium',
+					'equilibrium', // TODO override by empty item
 				]],
 				['title',[
 					"Solutions",
@@ -292,11 +299,40 @@ module.exports={
 		equation: `${dydt} = k \\cdot y`,
 		solutions: [
 			[
+				['id','general'],
+				['override',[
+					'general',
+				]],
 				['title',[
-					"Solution",
+					"Solutions",
+				]],
+				['detail',[
+					`\\[ ${dydt} = k \\cdot y \\]`,
+					`\\[ \\frac{1}{y} \\cdot ${dydt} = k \\]`,
+					`\\[ ${int(`\\frac{1}{y} ${dydt}`,'t')} = ${int('k','t')} + C \\]`,
+					`\\[ ${int(`\\frac{1}{y}`,'y')} = ${int('k','t')} + C \\]`,
+					`\\[ \\ln|y| = kt + C \\]`,
+					`\\[ y(t) = c e^{kt} \\]`,
+					`\\[ y(0) = c e^0 \\]`,
+					`\\[ c = y(0) \\]`,
 				]],
 				['main',[
 					`\\[ y(t) = y(0) e^{kt} \\]`,
+				]],
+				['note',[
+					`includes ${eqsol("equilibrium solution")} when \\( y(0) = 0 \\)`,
+				]],
+			],
+			[ // TODO could have inherited from linear homogeneous, but have to override autonomous
+				['id','equilibrium'],
+				['override',[
+					'equilibrium',
+				]],
+				['title',[
+					eqsol("Equilibrium solution"),
+				]],
+				['main',[
+					`\\[ y(t) = 0 \\]`
 				]],
 			],
 		],
