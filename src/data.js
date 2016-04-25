@@ -36,6 +36,7 @@ module.exports={
 				['title',[
 					"Solutions",
 				]],
+				['form'],
 				['detail',[
 					`\\[ ${dydt} = f_1(t) \\cdot f_2(y) \\]`,
 					`\\[ \\frac{1}{f_2(y)} \\cdot ${dydt} = f_1(t) \\]`,
@@ -53,6 +54,7 @@ module.exports={
 				['title',[
 					eqsol("Equilibrium solutions"),
 				]],
+				['form'],
 				['main',[
 					`Solve \\( f_2(y) = 0 \\) for constant \\( y \\).`,
 				]],
@@ -76,7 +78,7 @@ module.exports={
 			],
 			[
 				['main',[
-					"\\( y_p(t )\\) is a solution \\( \\Rightarrow \\) \\( y_p(t+C) \\) is a solution",
+					"\\( y_p(t) \\) is a solution \\( \\Rightarrow \\) \\( y_p(t+C) \\) is a solution",
 				]],
 			],
 		],
@@ -89,6 +91,7 @@ module.exports={
 				['title',[
 					"Solutions",
 				]],
+				['form'],
 				['detail',[
 					`\\[ ${dydt} = f(y) \\]`,
 					`\\[ \\frac{1}{f(y)} \\cdot ${dydt} = 1 \\]`,
@@ -109,6 +112,7 @@ module.exports={
 				['title',[
 					eqsol("Equilibrium solutions"),
 				]],
+				['form'],
 				['main',[
 					`Solve \\( f(y) = 0 \\) for constant \\( y \\).`,
 				]],
@@ -139,6 +143,7 @@ module.exports={
 				['title',[
 					"Extended linearity",
 				]],
+				['form'],
 				['main',[
 					`If \\( y_p(t) \\) is a solution of the original equation \\( ${dydt} = a(t) \\cdot y + b(t) \\)`,
 					`and \\( y_h(t) \\) is a solution of its associated homogeneous equation \\( ${dydt} = a(t) \\cdot y \\),`,
@@ -148,6 +153,7 @@ module.exports={
 			],
 			[
 				['id','homodiff'],
+				['form'],
 				['main',[
 					`If \\( y_p(t) \\) and \\( y_q(t) \\) are solutions,`,
 					`then \\( y_p(t) - y_q(t) \\) is a solution of the associated homogeneous equation \\( ${dydt} = a(t) \\cdot y \\).`,
@@ -160,6 +166,7 @@ module.exports={
 				['title',[
 					"Solutions found with method of <a href='https://en.wikipedia.org/wiki/Integrating_factor'>integrating factors</a>",
 				]],
+				['form'],
 				['main',[
 					`Rewrite the equation as \\[ ${dydt} + g(t) \\cdot y = b(t) \\]`,
 					`Introduce the integrating factor`,
@@ -214,6 +221,7 @@ module.exports={
 				['title',[
 					"Solutions",
 				]],
+				['form'],
 				['detail',[
 					`\\[ ${dydt} = a(t) \\cdot y \\]`,
 					`\\[ \\frac{1}{y} \\cdot ${dydt} = a(t) \\]`,
@@ -278,6 +286,7 @@ module.exports={
 				['title',[
 					"Solutions",
 				]],
+				['form'],
 				['detail',[
 					`\\[ ${dydt} = f(t) \\]`,
 					`\\[ ${int(`${dydt}`,'t')} = ${int('f(t)','t')} + C \\]`,
@@ -306,6 +315,7 @@ module.exports={
 				['title',[
 					"Solutions",
 				]],
+				['form'],
 				['detail',[
 					`\\[ ${dydt} = k \\cdot y \\]`,
 					`\\[ \\frac{1}{y} \\cdot ${dydt} = k \\]`,
@@ -345,5 +355,21 @@ module.exports={
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Logistic_function#In_ecology:_modeling_population_growth'>logistic growth</a>",
 		importance: 2,
 		equation: `${dydt} = k \\cdot y \\cdot \\left(1 - \\frac{y}{N}\\right)`,
+		solutions: [
+			[
+				['id','equilibrium'],
+				['override',[
+					'equilibrium',
+				]],
+				['title',[
+					eqsol("Equilibrium solutions"),
+				]],
+				['form'],
+				['main',[
+					`\\[ y(t) = 0 \\]`,
+					`\\[ y(t) = N \\]`,
+				]],
+			],
+		],
 	},
 }

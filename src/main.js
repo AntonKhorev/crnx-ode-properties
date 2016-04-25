@@ -79,11 +79,11 @@ $(function(){
 			const lowerOverride=iid=>{
 				overrides[iid]--
 			}
-			const rec=id=>{
-				visited[id]=true
+			const rec=cid=>{
+				visited[cid]=true
 				const forOverrides=fn=>{
-					if (data[id][name]) {
-						data[id][name].forEach(item=>{
+					if (data[cid][name]) {
+						data[cid][name].forEach(item=>{
 							item.forEach(section=>{
 								const type=section[0]
 								if (section[0]=='override') {
@@ -98,15 +98,15 @@ $(function(){
 				}
 				// recursion on nodes that are not selected for display
 				forOverrides(raiseOverride)
-				Object.keys(data[id].parents).sort().forEach(pid=>{
+				Object.keys(data[cid].parents).sort().forEach(pid=>{
 					if (!visited[pid]) {
 						rec(pid)
 					}
 				})
 				forOverrides(lowerOverride)
 				// output of things that are not overridden by children
-				if (data[id][name]) {
-					data[id][name].forEach(item=>{
+				if (data[cid][name]) {
+					data[cid][name].forEach(item=>{
 						let skip=false
 						item.forEach(section=>{
 							const type=section[0]
@@ -117,9 +117,23 @@ $(function(){
 								}
 							}
 						})
-						if (!skip) {
-							output.push(item)
-						}
+						if (skip) return
+						const outItem=[]
+						item.forEach(section=>{
+							const type=section[0]
+							if (type=='id' || type=='override') return
+							if (type=='form') {
+								if (cid!=id) {
+									outItem.push(['note',[
+										"when equation is written as <em>"+data[cid].htmlName+"</em>:",
+										"\\["+data[cid].equation+"\\]",
+									]])
+								}
+							} else {
+								outItem.push(section)
+							}
+						})
+						output.push(outItem)
 					})
 				}
 			}
@@ -127,11 +141,7 @@ $(function(){
 			if (output.length==0) return $()
 			return $("<ul>").append(output.map(item=>{
 				return $("<li>").append(item.map(section=>{
-					const type=section[0]
-					if (type=='id' || type=='override') {
-						return
-					}
-					const contents=section[1]
+					const type=section[0], contents=section[1]
 					const $section=$(`<div class='${type}'>`).append(contents.map(line=>{
 						if (type=='title') {
 							return $(`<div><em>${line}</em>:</div>`)
