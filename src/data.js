@@ -137,6 +137,7 @@ module.exports={
 				]],
 			],
 			[
+				['id','homodiff'],
 				['main',[
 					`If \\( y_p(t) \\) and \\( y_q(t) \\) are solutions,`,
 					`then \\( y_p(t) - y_q(t) \\) is a solution of the associated homogeneous equation \\( ${dydt} = a(t) \\cdot y \\).`,
@@ -179,7 +180,10 @@ module.exports={
 		equation: `${dydt} = a(t) \\cdot y`,
 		properties: [
 			[
-				['override','linearity'],
+				['override',[
+					'linearity',
+					'homodiff',
+				]],
 				['title',[
 					"Linearity",
 				]],
