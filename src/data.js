@@ -145,7 +145,7 @@ module.exports={
 		solutions: [
 			[
 				['title',[
-					"Method of <a href='https://en.wikipedia.org/wiki/Integrating_factor'>integrating factors</a>",
+					"Solutions found with method of <a href='https://en.wikipedia.org/wiki/Integrating_factor'>integrating factors</a>",
 				]],
 				['main',[
 					`Rewrite the equation as \\[ ${dydt} + g(t) \\cdot y = b(t) \\]`,
