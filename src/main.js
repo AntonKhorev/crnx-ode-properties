@@ -274,6 +274,12 @@ $(function(){
 							))
 						)
 					)
+				),
+				"<p>General notes:</p>",
+				$("<ul>").append(
+					`<li>all functions have to be continuous on the interval of interest</li>`,
+					`<li>\\( \\int\\!f(t)\\,\\mathrm{d}t + C \\) is a family of antiderivatives of \\( f(t) \\) with parameter \\( C \\)</li>`,
+					`<li>\\( \\int\\!f(t)\\,\\mathrm{d}t \\) is any single antiderivative of \\( f(t) \\)`
 				)
 			)
 			MathJax.Hub.Queue(["Typeset",MathJax.Hub]);

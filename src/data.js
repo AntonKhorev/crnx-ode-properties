@@ -38,10 +38,10 @@ module.exports={
 				['detail',[
 					`\\[ ${dydt} = f_1(t) \\cdot f_2(y) \\]`,
 					`\\[ \\frac{1}{f_2(y)} \\cdot ${dydt} = f_1(t) \\]`,
-					`\\[ ${int(`\\frac{1}{f_2(y)} \\cdot ${dydt}`,'t')} = ${int('f_1(t)','t')} \\]`,
+					`\\[ ${int(`\\frac{1}{f_2(y)} ${dydt}`,'t')} = ${int('f_1(t)','t')} + C \\]`,
 				]],
 				['main',[
-					`\\[ ${int(`\\frac{1}{f_2(y)}`,'y')} = ${int('f_1(t)','t')} \\]`,
+					`\\[ ${int(`\\frac{1}{f_2(y)}`,'y')} = ${int('f_1(t)','t')} + C \\]`,
 				]],
 				['note',[
 					`this may or may not include ${eqsol("equilibrium solutions")}`,
@@ -86,10 +86,10 @@ module.exports={
 				['detail',[
 					`\\[ ${dydt} = f(y) \\]`,
 					`\\[ \\frac{1}{f(y)} \\cdot ${dydt} = 1 \\]`,
-					`\\[ ${int(`\\frac{1}{f(y)} \\cdot ${dydt}`,'t')} = ${int('1','t')} \\]`,
+					`\\[ ${int(`\\frac{1}{f(y)} ${dydt}`,'t')} = ${int('1','t')} + C \\]`,
 				]],
 				['main',[
-					`\\[ ${int(`\\frac{1}{f(y)}`,'y')} = t \\]`,
+					`\\[ ${int(`\\frac{1}{f(y)}`,'y')} = t + C \\]`,
 				]],
 				['note',[
 					`this may or may not include ${eqsol("equilibrium solutions")}`,
@@ -226,10 +226,10 @@ module.exports={
 				]],
 				['detail',[
 					`\\[ ${dydt} = f(t) \\]`,
-					`\\[ ${int(`${dydt}`,'t')} = ${int('f(t)','t')} \\]`,
+					`\\[ ${int(`${dydt}`,'t')} = ${int('f(t)','t')} + C \\]`,
 				]],
 				['main',[
-					`\\[ y = ${int('f(t)','t')} \\]`,
+					`\\[ y = ${int('f(t)','t')} + C \\]`,
 				]],
 			],
 		],
