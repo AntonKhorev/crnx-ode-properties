@@ -140,6 +140,18 @@ module.exports={
 				]],
 			],
 		],
+		solutions: [
+			[
+				['title',[
+					"Method of <a href='https://en.wikipedia.org/wiki/Integrating_factor'>integrating factors</a>",
+				]],
+				['main',[
+					`Rewrite the equation as \\[ ${dydt} + g(t) \\cdot y = b(t) \\]`,
+					`Introduce the integrating factor: \\[ \\mu(t) = e^{${int('g(t)','t')}} \\]`,
+					`Integrate the equation multiplied by \\( \\mu(t) \\): \\[ \\mu(t) y = ${int('\\mu(t) b(t)','t')} + C \\]`,
+				]],
+			],
+		],
 	},
 	linearHomogeneous: {
 		parents: {
