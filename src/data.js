@@ -253,6 +253,10 @@ module.exports={
 				]],
 			],
 			[
+				['override',[
+					'linearity',
+					'homodiff',
+				]],
 				['main',[
 					"\\( y_p(t) \\) is a solution \\( \\Rightarrow \\) \\( y_p(t) + C \\) is a solution",
 				]],
@@ -260,6 +264,10 @@ module.exports={
 		],
 		solutions: [
 			[
+				['override',[
+					'general',
+					'equilibrium',
+				]],
 				['title',[
 					"Solutions",
 				]],
