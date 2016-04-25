@@ -32,6 +32,7 @@ module.exports={
 		equation: `${dydt} = f_1(t) \\cdot f_2(y)`,
 		solutions: [
 			[
+				['id','general'],
 				['title',[
 					"Solutions",
 				]],
@@ -48,6 +49,7 @@ module.exports={
 				]],
 			],
 			[
+				['id','equilibrium'],
 				['title',[
 					eqsol("Equilibrium solutions"),
 				]],
@@ -80,6 +82,9 @@ module.exports={
 		],
 		solutions: [
 			[
+				['override',[
+					'general',
+				]],
 				['title',[
 					"Solutions",
 				]],
@@ -96,11 +101,14 @@ module.exports={
 				]],
 			],
 			[
+				['override',[
+					'equilibrium',
+				]],
 				['title',[
 					eqsol("Equilibrium solutions"),
 				]],
 				['main',[
-					`Solve \\( f(y) = 0 \\) for constant \\( y \\)`,
+					`Solve \\( f(y) = 0 \\) for constant \\( y \\).`,
 				]],
 				//`domain is \\( -\\infty &lt; t &lt; +\\infty \\)` // only if f(y) is continuous
 			],
@@ -146,6 +154,7 @@ module.exports={
 		],
 		solutions: [
 			[
+				['id','general'],
 				['title',[
 					"Solutions found with method of <a href='https://en.wikipedia.org/wiki/Integrating_factor'>integrating factors</a>",
 				]],
@@ -195,6 +204,9 @@ module.exports={
 		],
 		solutions: [
 			[
+				['override',[
+					'general',
+				]],
 				['title',[
 					"Solutions",
 				]],
@@ -213,6 +225,9 @@ module.exports={
 				]],
 			],
 			[
+				['override',[
+					'equilibrium',
+				]],
 				['title',[
 					eqsol("Equilibrium solution"),
 				]],
