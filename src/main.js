@@ -47,14 +47,64 @@ $(function(){
 		}
 		const writeData=(name,id)=>{
 			const output=[]
-			const rec=(id)=>{
+			const overrides={}
+			const raiseOverride=iid=>{
+				if (overrides[iid]===undefined) {
+					overrides[iid]=0
+				}
+				overrides[iid]++
+			}
+			const lowerOverride=iid=>{
+				overrides[iid]--
+			}
+			const rec=id=>{
+				// raise overrides
+				if (data[id][name]) {
+					data[id][name].forEach(item=>{
+						item.forEach(section=>{
+							const type=section[0]
+							if (section[0]=='override') {
+								const iid=section[1]
+								raiseOverride(iid)
+							}
+						})
+					})
+				}
+				// recursion on nodes that are not selected for display
 				Object.keys(data[id].parents).sort().forEach(pid=>{
 					if (!selectedNodes[pid]) {
 						rec(pid)
 					}
 				})
+				// output of things that are not overridden by children
 				if (data[id][name]) {
-					output.push(...data[id][name])
+					data[id][name].forEach(item=>{
+						let skip=false
+						item.forEach(section=>{
+							const type=section[0]
+							if (type=='id') {
+								const iid=section[1]
+								if (overrides[iid]) {
+									skip=true
+								}
+							}
+						})
+						if (!skip) {
+							output.push(item)
+						}
+					})
+				}
+				// lower overrides
+				if (data[id][name]) {
+					data[id][name].forEach(item=>{
+						item.forEach(section=>{
+							const type=section[0]
+							if (section[0]=='override') {
+								const iid=section[1]
+								lowerOverride(iid)
+							}
+						})
+					})
 				}
 			}
 			rec(id)
@@ -62,6 +112,9 @@ $(function(){
 			return $("<ul>").append(output.map(item=>{
 				return $("<li>").append(item.map(section=>{
 					const type=section[0]
+					if (type=='id' || type=='override') {
+						return
+					}
 					const contents=section[1]
 					const $section=$(`<div class='${type}'>`).append(contents.map(line=>{
 						if (type=='title') {

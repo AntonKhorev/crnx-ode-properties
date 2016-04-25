@@ -125,6 +125,7 @@ module.exports={
 		equation: `${dydt} = a(t) \\cdot y + b(t)`,
 		properties: [
 			[
+				['id','linearity'],
 				['title',[
 					"Extended linearity",
 				]],
@@ -178,6 +179,7 @@ module.exports={
 		equation: `${dydt} = a(t) \\cdot y`,
 		properties: [
 			[
+				['override','linearity'],
 				['title',[
 					"Linearity",
 				]],
