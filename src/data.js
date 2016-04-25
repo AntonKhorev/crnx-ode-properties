@@ -190,6 +190,24 @@ module.exports={
 		solutions: [
 			[
 				['title',[
+					"Solutions",
+				]],
+				['detail',[
+					`\\[ ${dydt} = a(t) \\cdot y \\]`,
+					`\\[ \\frac{1}{y} \\cdot ${dydt} = a(t) \\]`,
+					`\\[ ${int(`\\frac{1}{y} ${dydt}`,'t')} = ${int('a(t)','t')} + C \\]`,
+					`\\[ ${int(`\\frac{1}{y}`,'y')} = ${int('a(t)','t')} + C \\]`,
+					`\\[ \\ln|y| = ${int('a(t)','t')} + C \\]`,
+				]],
+				['main',[
+					`\\[ y = k \\cdot e^{${sint('a(t)','t')}} \\]`,
+				]],
+				['note',[
+					`includes ${eqsol("equilibrium solution")} when \\( k = 0 \\)`,
+				]],
+			],
+			[
+				['title',[
 					eqsol("Equilibrium solution"),
 				]],
 				['main',[
