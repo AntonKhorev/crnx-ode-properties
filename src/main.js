@@ -47,6 +47,7 @@ $(function(){
 		}
 		const writeData=(name,id)=>{
 			const output=[]
+			const visited={}
 			const overrides={}
 			const raiseOverride=iid=>{
 				if (overrides[iid]===undefined) {
@@ -58,6 +59,7 @@ $(function(){
 				overrides[iid]--
 			}
 			const rec=id=>{
+				visited[id]=true
 				const forOverrides=fn=>{
 					if (data[id][name]) {
 						data[id][name].forEach(item=>{
@@ -73,11 +75,10 @@ $(function(){
 						})
 					}
 				}
-				// raise overrides
 				forOverrides(raiseOverride)
 				// recursion on nodes that are not selected for display
 				Object.keys(data[id].parents).sort().forEach(pid=>{
-					if (!selectedNodes[pid]) {
+					if (!selectedNodes[pid] && !visited[pid]) {
 						rec(pid)
 					}
 				})
@@ -99,7 +100,6 @@ $(function(){
 						}
 					})
 				}
-				// lower overrides
 				forOverrides(lowerOverride)
 			}
 			rec(id)
