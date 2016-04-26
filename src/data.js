@@ -383,6 +383,7 @@ module.exports={
 	logisticGrowth: {
 		parents: {
 			autonomous: true,
+			bernoulli: true,
 		},
 		name: "logistic growth",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Logistic_function#In_ecology:_modeling_population_growth'>logistic growth</a>",
