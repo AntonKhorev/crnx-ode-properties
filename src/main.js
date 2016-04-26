@@ -213,18 +213,23 @@ $(function(){
 									const $toFocus=$(this).prev()
 									if ($toFocus.length) {
 										$toFocus.focus()
+										return false
 									} else if (attachedDirection=='b') {
 										$button.focus()
+										return false
 									}
 								} else if (ev.keyCode==keyCodeDown) {
 									const $toFocus=$(this).next()
 									if ($toFocus.length) {
 										$toFocus.focus()
+										return false
 									} else if (attachedDirection=='t') {
 										$button.focus()
+										return false
 									}
 								} else if (ev.keyCode==keyCodeEnter || ev.keyCode==keyCodeSpace) {
 									addNode(id)
+									return false
 								}
 							})
 						))
@@ -262,8 +267,10 @@ $(function(){
 					if ($button.is($attachedToButton)) {
 						if (ev.keyCode==keyCodeUp && attachedDirection=='t') {
 							$attachedMenu.children().last().focus()
+							return false
 						} else if (ev.keyCode==keyCodeDown && attachedDirection=='b') {
 							$attachedMenu.children().first().focus()
+							return false
 						}
 					}
 				})
