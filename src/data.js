@@ -177,8 +177,8 @@ module.exports={
 				['main',[
 					`If \\( y_p(t) \\) is a solution of the original equation \\( ${dydt} = a(t) \\cdot y + b(t) \\)`,
 					`and \\( y_h(t) \\) is a solution of its associated homogeneous equation \\( ${dydt} = a(t) \\cdot y \\),`,
-					`then \\( k \\cdot y_h(t) + y_p(t) \\) is a solution of the original equation.`,
-					`If additionally \\( y_h(t) \\neq 0 \\), then \\( k \\cdot y_h(t) + y_p(t) \\) is a general solution.`,
+					`then \\( K y_h(t) + y_p(t) \\) is a solution of the original equation.`,
+					`If additionally \\( y_h(t) \\neq 0 \\), then \\( K y_h(t) + y_p(t) \\) is a general solution.`,
 				]],
 			],
 			[
@@ -240,8 +240,8 @@ module.exports={
 					"Linearity",
 				]],
 				['main',[
-					`If \\( y_h(t) \\) is a solution, then \\( k \\cdot y_h(t) \\) is a solution.`,
-					`If additionally \\( y_h(t) \\neq 0 \\), then \\( k \\cdot y_h(t) \\) is a general solution.`,
+					`If \\( y_h(t) \\) is a solution, then \\( K y_h(t) \\) is a solution.`,
+					`If additionally \\( y_h(t) \\neq 0 \\), then \\( K y_h(t) \\) is a general solution.`,
 				]],
 			],
 		],
@@ -263,10 +263,10 @@ module.exports={
 					`\\[ \\ln|y| = ${int('a(t)','t')} + C \\]`,
 				]],
 				['main',[
-					`\\[ y = k \\cdot e^{${sint('a(t)','t')}} \\]`,
+					`\\[ y = K \\cdot e^{${sint('a(t)','t')}} \\]`,
 				]],
 				['note',[
-					`includes ${eqsol("equilibrium solution")} when \\( k = 0 \\)`,
+					`includes ${eqsol("equilibrium solution")} when \\( K = 0 \\)`,
 				]],
 			],
 			[
@@ -355,9 +355,9 @@ module.exports={
 					`\\[ ${int(`\\frac{1}{y} ${dydt}`,'t')} = ${int('k','t')} + C \\]`,
 					`\\[ ${int(`\\frac{1}{y}`,'y')} = ${int('k','t')} + C \\]`,
 					`\\[ \\ln|y| = kt + C \\]`,
-					`\\[ y(t) = c e^{kt} \\]`,
-					`\\[ y(0) = c e^0 \\]`,
-					`\\[ c = y(0) \\]`,
+					`\\[ y(t) = C_1 e^{kt} \\]`,
+					`\\[ y(0) = C_1 e^0 \\]`,
+					`\\[ C_1 = y(0) \\]`,
 				]],
 				['main',[
 					`\\[ y(t) = y(0) e^{kt} \\]`,
@@ -388,7 +388,8 @@ module.exports={
 		name: "logistic growth",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Logistic_function#In_ecology:_modeling_population_growth'>logistic growth</a>",
 		importance: 2,
-		equation: `${dydt} = k \\cdot y \\cdot \\left(1 - \\frac{y}{N}\\right)`,
+		equation: `${dydt} = r \\cdot y \\cdot \\left(1 - \\frac{y}{k}\\right)`,
+		equationNote: `\\( k \\) is the <a href='https://en.wikipedia.org/wiki/Carrying_capacity'>carrying capacity</a>`,
 		solutions: [
 			[
 				['id','equilibrium'],
@@ -401,7 +402,7 @@ module.exports={
 				['form'],
 				['main',[
 					`\\[ y(t) = 0 \\]`,
-					`\\[ y(t) = N \\]`,
+					`\\[ y(t) = k \\]`,
 				]],
 			],
 		],
