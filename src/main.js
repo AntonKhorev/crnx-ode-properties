@@ -282,14 +282,14 @@ $(function(){
 					if (parents.length>0) {
 						$cell.append(
 							" ",
-							writeTheadButton($cell,"Add parent","Add one of parents of this node",'t',parents)
+							writeTheadButton($cell,"Add parent","Add one of supertypes of this equation type",'t',parents)
 						)
 					}
 					const children=breadthWalk(idag,cell.node)
 					if (children.length>0) {
 						$cell.append(
 							" ",
-							writeTheadButton($cell,"Add child","Add one of children of this node",'b',children)
+							writeTheadButton($cell,"Add child","Add one of subtypes of this equation type",'b',children)
 						)
 					}
 				}
@@ -324,7 +324,7 @@ $(function(){
 				return $("<tfoot>").append(
 					$("<tr>").append(
 						theadLayout.columns.map(id=>$("<td>").append(
-							writeButton("Delete","Delete this node").click(function(){
+							writeButton("Delete","Delete this equation type").click(function(){
 								deleteNode(id)
 							})
 						))
@@ -356,7 +356,11 @@ $(function(){
 				),
 				"<p>General notes:</p>",
 				$("<ul>").append(
-					`<li>how to read the diagram: every property of equation type on the tip of the arrow <span class='arrow'></span> is also true for the equation type on the other end of the arrow (like <a href='https://en.wikipedia.org/wiki/Class_diagram'>class diagram</a>)</li>`,
+					`<li>how to read the diagram: <ul>`+
+						`<li>equation type names are written among arrows that show the relationship between types</li>`+
+						`<li>properties of an equation type are listed in the table column below its name</li>`+
+						`<li>every property of the equation type on the tip of the arrow <span class='arrow'></span> is also true for the equation type on the other end of the arrow (like <a href='https://en.wikipedia.org/wiki/Class_diagram'>class diagram</a>)</li>`+
+					`</ul></li>`,
 					`<li>all functions have to be continuous on the interval of interest</li>`,
 					`<li>\\( \\int\\!f(t)\\,\\mathrm{d}t + C \\) is a family of antiderivatives of \\( f(t) \\) with parameter \\( C \\)</li>`,
 					`<li>\\( \\int\\!f(t)\\,\\mathrm{d}t \\) is any single antiderivative of \\( f(t) \\)`
