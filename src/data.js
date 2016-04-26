@@ -126,9 +126,38 @@ module.exports={
 		name: "Bernoulli",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Bernoulli_differential_equation'>Bernoulli</a>",
 		importance: 2,
-		equation: `${dydt} + p(t) \\cdot y = q(t) \\cdot y^n`, // TODO we include n=0 and 1 here, others may exclude
-		equationNote: `Usually it's considered to be a Bernoulli equation when \\( n ≠ 1 \\) and \\( n ≠ 0 \\), `+
-			`but in this diagram we include these cases in the definition.`,
+		equation: `${dydt} = a(t) \\cdot y + b(t) \\cdot y^n`,
+		equationNote: `\\( n ≠ 1 \\); usually it's also defined that additionally \\( n ≠ 0 \\), `+
+			`but we ignore this requirement here`,
+		solutions: [
+			[
+				['id','general'],
+				['title',[
+					"Solutions",
+				]],
+				['form'],
+				['detail',[
+					`\\[ ${dydt} = a(t) \\cdot y + b(t) \\cdot y^n \\]`,
+					`multiply the equation by \\( \\frac{1-n}{y^n} \\)`,
+					`\\[ \\frac{1-n}{y^n} ${dydt} = \\cdots \\]`,
+					`\\[ \\cdots = \\frac{(1-n) a(t)}{y^{n-1}} + (1-n) b(t) \\]`,
+					`introduce a new variable`,
+					`\\[ z = \\frac{1}{y^{n-1}} \\]`,
+					`\\[ ${dd('z','t')} = ${dd('z','y')} ${dydt} = \\frac{1-n}{y^n} ${dydt} \\]`,
+					`substitute \\( z \\) and \\( ${dd('z','t')} \\) into the equation`,
+					`\\[ ${dd('z','t')} = (1-n) a(t) z + (1-n) b(t) \\]`,
+					`solve this equation as a linear equation in \\( z \\), then return to the original variable \\( y \\)`,
+					`\\[ \\mu(t) z = (1-n) ${int('\\mu(t) b(t)','t')} + C \\]`,
+				]],
+				['main',[
+					`\\[ \\mu(t) = e^{(n-1)${sint('a(t)','t')}} \\]`,
+					`\\[ \\frac{\\mu(t)}{y^{n-1}} = (1-n) ${int('\\mu(t) b(t)','t')} + C \\]`,
+				]],
+				['note',[
+					`this may or may not include ${eqsol("equilibrium solutions")}`,
+				]],
+			],
+		],
 	},
 	linear: {
 		parents: {
@@ -164,6 +193,9 @@ module.exports={
 		solutions: [
 			[
 				['id','general'],
+				['override',[
+					'general',
+				]],
 				['title',[
 					"Solutions found with method of <a href='https://en.wikipedia.org/wiki/Integrating_factor'>integrating factors</a>",
 				]],
