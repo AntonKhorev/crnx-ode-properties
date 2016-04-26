@@ -8,7 +8,6 @@ const sint=(fx,x)=>`\\int\\!${fx}\\mathrm{d}${x}`
 const eqsol=(name)=>`<a href='https://en.wikipedia.org/wiki/Equilibrium_point'>${name}</a>`
 
 module.exports={
-	// TODO require all functions to be continuous on the domain?
 	root: {
 		parents: {},
 		name: "first-order",

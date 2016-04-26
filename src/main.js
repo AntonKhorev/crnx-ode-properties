@@ -356,6 +356,7 @@ $(function(){
 				),
 				"<p>General notes:</p>",
 				$("<ul>").append(
+					`<li>how to read the diagram: every property of equation type on the tip of the arrow <span class='arrow'></span> is also true for the equation type on the other end of the arrow (like <a href='https://en.wikipedia.org/wiki/Class_diagram'>class diagram</a>)</li>`,
 					`<li>all functions have to be continuous on the interval of interest</li>`,
 					`<li>\\( \\int\\!f(t)\\,\\mathrm{d}t + C \\) is a family of antiderivatives of \\( f(t) \\) with parameter \\( C \\)</li>`,
 					`<li>\\( \\int\\!f(t)\\,\\mathrm{d}t \\) is any single antiderivative of \\( f(t) \\)`

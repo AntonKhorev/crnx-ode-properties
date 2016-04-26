@@ -1,27 +1,29 @@
 .crnx-ode-properties {
+	// settings
 	@font-size: 14;
+	@cell-width: 250;
+	@arc-cell-height: 30;
+	@arc-arrow-width: 8;
+	@arc-arrow-length: 12;
+	@node-cell-padding: 20;
+	@button-width: 20;
+	@button-height: 20;
+	@passive-stroke-color: #444;
+	@passive-fill-color: #EEE;
+	@active-stroke-color: #000;
+	@active-fill-color: #FFF;
+
+	.svg(@width,@height,@contents) {
+		@svg: "<svg xmlns='http://www.w3.org/2000/svg' width='@{width}' height='@{height}'>@{contents}</svg>";
+		@data: escape(@svg);
+		background-image+: url("data:image/svg+xml;charset=utf-8,@{data}");
+	}
+	.arc(@width,@height,@d) {
+		.svg(@width,@height,"<path d='@{d}' fill='none' stroke='@{passive-stroke-color}' stroke-width='2' />");
+	}
 	font-size: unit(@font-size,px);
 	font-family: sans-serif;
 	table {
-		@cell-width: 250;
-		@arc-cell-height: 30;
-		@arc-arrow-width: 8;
-		@arc-arrow-length: 12;
-		@node-cell-padding: 20;
-		@button-width: 20;
-		@button-height: 20;
-		@passive-stroke-color: #444;
-		@passive-fill-color: #EEE;
-		@active-stroke-color: #000;
-		@active-fill-color: #FFF;
-		.svg(@width,@height,@contents) {
-			@svg: "<svg xmlns='http://www.w3.org/2000/svg' width='@{width}' height='@{height}'>@{contents}</svg>";
-			@data: escape(@svg);
-			background-image+: url("data:image/svg+xml;charset=utf-8,@{data}");
-		}
-		.arc(@width,@height,@d) {
-			.svg(@width,@height,"<path d='@{d}' fill='none' stroke='@{passive-stroke-color}' stroke-width='2' />");
-		}
 		table-layout: fixed;
 		border-collapse: collapse;
 		td, th {
@@ -286,5 +288,20 @@
 				}
 			}
 		}
+	}
+	span.arrow {
+		@cx: 50;
+		@cy: @font-size;
+		@hcy: @cy/2;
+		@ax: @arc-arrow-length + 0.5;
+		@ay1: @hcy + @arc-arrow-width/2;
+		@ay2: @hcy - @arc-arrow-width/2;
+		display: inline-block;
+		width: unit(@cx,px);
+		height: unit(@cy,px);
+		.svg(@cx,@cy,
+			"<path d='M @{ax} @{hcy} H @{cx}' fill='none' stroke='@{passive-stroke-color}' stroke-width='2' />"
+			"<path d='M @{ax} @{ay1} L 0.5 @{hcy} L @{ax} @{ay2} Z' fill='@{passive-fill-color}' stroke='@{passive-stroke-color}' stroke-width='1' />"
+		);
 	}
 }
