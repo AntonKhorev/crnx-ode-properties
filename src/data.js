@@ -157,6 +157,20 @@ module.exports={
 					`this may or may not include ${eqsol("equilibrium solutions")}`,
 				]],
 			],
+			[
+				['id','equilibrium'],
+				['override',[
+					'equilibrium',
+				]],
+				['title',[
+					eqsol("Equilibrium solution"),
+				]],
+				['form'],
+				['main',[
+					`if \\( n>0 \\), there's an equilibrium solution`,
+					`\\[ y(t) = 0 \\]`,
+				]],
+			],
 		],
 	},
 	linear: {
@@ -216,6 +230,11 @@ module.exports={
 				['main',[
 					`Integrate the equation multiplied by \\( \\mu(t) \\)`,
 					`\\[ \\mu(t) y = ${int('\\mu(t) b(t)','t')} + C \\]`,
+				]],
+			],
+			[
+				['override',[
+					'equilibrium',
 				]],
 			],
 		],
@@ -314,7 +333,6 @@ module.exports={
 				['id','general'],
 				['override',[
 					'general',
-					'equilibrium', // TODO override by empty item
 				]],
 				['title',[
 					"Solutions",
@@ -326,6 +344,11 @@ module.exports={
 				]],
 				['main',[
 					`\\[ y = ${int('f(t)','t')} + C \\]`,
+				]],
+			],
+			[
+				['override',[
+					'equilibrium',
 				]],
 			],
 		],

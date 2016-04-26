@@ -133,7 +133,9 @@ $(function(){
 								outItem.push(section)
 							}
 						})
-						output.push(outItem)
+						if (outItem.length>0) {
+							output.push(outItem)
+						}
 					})
 				}
 			}
