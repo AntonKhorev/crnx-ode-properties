@@ -345,7 +345,15 @@ $(function(){
 					$("<tbody>").append(
 						// equations
 						$("<tr>").append(
-							theadLayout.columns.map(id=>"<td>$$"+data[id].equation+"$$</td>")
+							//theadLayout.columns.map(id=>"<td>$$"+data[id].equation+"$$</td>")
+							theadLayout.columns.map(id=>{
+								const $td=$("<td>")
+								$td.append("<div class='equation'>\\["+data[id].equation+"\\]</div>")
+								if (data[id].equationNote!==undefined) {
+									$td.append("<div class='note'>"+data[id].equationNote+"</div>")
+								}
+								return $td
+							})
 						),
 						// properties
 						$("<tr>").append(

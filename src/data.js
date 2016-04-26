@@ -127,6 +127,8 @@ module.exports={
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Bernoulli_differential_equation'>Bernoulli</a>",
 		importance: 2,
 		equation: `${dydt} + p(t) \\cdot y = q(t) \\cdot y^n`, // TODO we include n=0 and 1 here, others may exclude
+		equationNote: `Usually it's considered to be a Bernoulli equation when \\( n ≠ 1 \\) and \\( n ≠ 0 \\), `+
+			`but in this diagram we include these cases in the definition.`,
 	},
 	linear: {
 		parents: {
