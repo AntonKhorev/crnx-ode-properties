@@ -127,8 +127,10 @@ module.exports={
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Bernoulli_differential_equation'>Bernoulli</a>",
 		importance: 2,
 		equation: `${dydt} = a(t) \\cdot y + b(t) \\cdot y^n`,
-		equationNote: `\\( n ≠ 1 \\); usually it's also defined that additionally \\( n ≠ 0 \\), `+
-			`but we ignore this requirement here`,
+		equationNotes: [
+			`\\( n ≠ 1 \\)`,
+			`usually it's also defined that additionally \\( n ≠ 0 \\), but we ignore this requirement here`,
+		],
 		solutions: [
 			[
 				['id','general'],
@@ -415,7 +417,9 @@ module.exports={
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Logistic_function#In_ecology:_modeling_population_growth'>logistic growth</a>",
 		importance: 2,
 		equation: `${dydt} = r \\cdot y \\cdot \\left(1 - \\frac{y}{k}\\right)`,
-		equationNote: `\\( k \\) is the <a href='https://en.wikipedia.org/wiki/Carrying_capacity'>carrying capacity</a>`,
+		equationNotes: [
+			`\\( k \\) is the <a href='https://en.wikipedia.org/wiki/Carrying_capacity'>carrying capacity</a>`,
+		],
 		solutions: [
 			[
 				['id','equilibrium'],

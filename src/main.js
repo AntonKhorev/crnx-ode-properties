@@ -20,6 +20,10 @@ $(function(){
 				idag[pid][id]=true
 			}
 		}
+		const getHtmlName=id=>(data[id].htmlName!==undefined
+			? data[id].htmlName
+			: data[id].name
+		)
 
 		let theadLayout=new TheadLayout(dag,selectedNodes)
 		const breadthWalk=(graph,id)=>{
@@ -126,7 +130,7 @@ $(function(){
 							if (type=='form') {
 								if (cid!=id) {
 									outItem.push(['note',[
-										"when equation is written as <em>"+data[cid].htmlName+"</em>:",
+										"when equation is written as <em>"+getHtmlName(cid)+"</em>:",
 										"\\["+data[cid].equation+"\\]",
 									]])
 								}
@@ -142,7 +146,7 @@ $(function(){
 			}
 			rec(id)
 			if (output.length==0) return $()
-			return $("<ul>").append(output.map(item=>{
+			return $("<ul class='major'>").append(output.map(item=>{
 				return $("<li>").append(item.map(section=>{
 					const type=section[0], contents=section[1]
 					const $section=$(`<div class='${type}'>`).append(contents.map(line=>{
@@ -299,10 +303,7 @@ $(function(){
 				const $cell=$("<th>")
 				setCellClasses($cell,cell)
 				if (cell.node!==undefined) {
-					$cell.append(data[cell.node].htmlName!==undefined
-						? data[cell.node].htmlName
-						: data[cell.node].name
-					)
+					$cell.append(getHtmlName(cell.node))
 					const parents=breadthWalk(dag,cell.node).reverse()
 					let $parents
 					if (parents.length>0) {
@@ -377,8 +378,19 @@ $(function(){
 										}
 									})
 								)
-								if (data[id].equationNote!==undefined) {
-									$td.append("<div class='note'>"+data[id].equationNote+"</div>")
+								const notes=[]
+								if (data[id].equationNotes!==undefined) {
+									notes.push(...data[id].equationNotes)
+								}
+								Object.keys(theadLayout.parents[id]).sort().forEach(pid=>{
+									if (selectedNodes[pid]) {
+										notes.push("can also be written as and has all properties of <em>"+getHtmlName(pid)+"</em>")
+									}
+								})
+								if (notes.length>0) {
+									$td.append($("<ul>").append(notes.map(note=>{
+										return $("<li><div class='note'>"+note+"</div></li>")
+									})))
 								}
 								return $td
 							})

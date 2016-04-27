@@ -14,6 +14,7 @@ class TheadLayout {
 		this.columns=[].concat(...nodeLabelLayers)
 		this.nodeLayers=t[0]
 		this.arcLayers=t[1]
+		this.parents=parents // TODO return as array in order of appearance, test
 	}
 }
 

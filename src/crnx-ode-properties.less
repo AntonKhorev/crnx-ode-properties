@@ -217,26 +217,30 @@
 			ul {
 				padding: 0;
 				margin: 0;
-			}
-			li {
-				@separator-width: 100;
-				@separator-padding: 9;
-				@sx: @separator-width;
-				@sy: @separator-padding*2 + 1;
-				@hsy: @sy/2;
-				@separator-path: "<path d='M 0 @{hsy} H @{sx}' fill='none' stroke='@{separator-color}' />";
-				list-style: none;
-				padding: 0px 5px unit(@sy,px) 5px;
-				margin: 0;
-				.svg(@sx,@sy,@separator-path);
-				background-position: bottom;
-				background-repeat: no-repeat;
-				&:first-child {
-					padding-top: unit(@sy,px);
+				li {
+					list-style: none;
+					margin: 5px;
+					padding: 0;
+				}
+				&.major li {
+					@separator-width: 100;
+					@separator-padding: 9;
+					@sx: @separator-width;
+					@sy: @separator-padding*2 + 1;
+					@hsy: @sy/2;
+					@separator-path: "<path d='M 0 @{hsy} H @{sx}' fill='none' stroke='@{separator-color}' />";
+					margin: 0;
+					padding: 0px 5px unit(@sy,px) 5px;
 					.svg(@sx,@sy,@separator-path);
-					background-position+: bottom;
-					.svg(@sx,@sy,@separator-path);
-					background-position+: top;
+					background-position: bottom;
+					background-repeat: no-repeat;
+					&:first-child {
+						padding-top: unit(@sy,px);
+						.svg(@sx,@sy,@separator-path);
+						background-position+: bottom;
+						.svg(@sx,@sy,@separator-path);
+						background-position+: top;
+					}
 				}
 			}
 			div.equation {
@@ -247,9 +251,6 @@
 					background: #FEA;
 					border: solid 1px @active-stroke-color;
 				}
-			}
-			div.equation + div.note {
-				margin: 5px 5px 0 5px;
 			}
 			div.detail {
 				@td: "M 4.5 0.5 l 3 3 h -6 z";
