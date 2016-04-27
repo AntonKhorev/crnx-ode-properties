@@ -382,11 +382,16 @@ $(function(){
 								if (data[id].equationNotes!==undefined) {
 									notes.push(...data[id].equationNotes)
 								}
-								Object.keys(theadLayout.parents[id]).sort().forEach(pid=>{
-									if (selectedNodes[pid]) {
-										notes.push("can also be written as and has all properties of <em>"+getHtmlName(pid)+"</em>")
-									}
-								})
+								const parents=Object.keys(theadLayout.parents[id])
+								if (parents.length>0) {
+									notes.push(
+										"can also be written as and has all properties of: <ul>"+
+										parents.sort().map(
+											pid=>"<li><em>"+getHtmlName(pid)+"</em></li>"
+										).join('')+
+										"</ul>"
+									)
+								}
 								if (notes.length>0) {
 									$td.append($("<ul>").append(notes.map(note=>{
 										return $("<li><div class='note'>"+note+"</div></li>")
