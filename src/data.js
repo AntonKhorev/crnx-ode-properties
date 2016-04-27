@@ -55,7 +55,7 @@ module.exports={
 				]],
 				['form'],
 				['main',[
-					`Solve \\( f_2(y) = 0 \\) for constant \\( y \\).`,
+					`solve \\( f_2(y) = 0 \\) for constant \\( y \\)`,
 				]],
 				//`domain is not necessary \\( -\\infty &lt; t &lt; +\\infty \\)`
 			],
@@ -113,7 +113,7 @@ module.exports={
 				]],
 				['form'],
 				['main',[
-					`Solve \\( f(y) = 0 \\) for constant \\( y \\).`,
+					`solve \\( f(y) = 0 \\) for constant \\( y \\)`,
 				]],
 				//`domain is \\( -\\infty &lt; t &lt; +\\infty \\)` // only if f(y) is continuous
 			],
@@ -167,8 +167,7 @@ module.exports={
 				]],
 				['form'],
 				['main',[
-					`if \\( n>0 \\), there's an equilibrium solution`,
-					`\\[ y(t) = 0 \\]`,
+					`if \\( n>0 \\), there's an equilibrium solution \\( y(t) = 0 \\)`,
 				]],
 			],
 		],
