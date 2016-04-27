@@ -380,22 +380,31 @@ $(function(){
 								)
 								const notes=[]
 								if (data[id].equationNotes!==undefined) {
-									notes.push(...data[id].equationNotes)
+									notes.push(...data[id].equationNotes.map(
+										noteText=>$("<div class='note'>").append(noteText)
+									))
 								}
 								const parents=Object.keys(theadLayout.parents[id])
 								if (parents.length>0) {
 									notes.push(
-										"can also be written as and has all properties of: <ul>"+
-										parents.sort().map(
-											pid=>"<li><em>"+getHtmlName(pid)+"</em></li>"
-										).join('')+
-										"</ul>"
+										$("<div class='note'>").append(
+											"can also be written as and has all properties of:",
+											$("<ul>").append(parents.sort().map(
+												pid=>$("<li>").append(
+													$("<em>"+getHtmlName(pid)+"</em>").hover(function(){
+														$equations[pid].addClass('highlight')
+													},function(){
+														$equations[pid].removeClass('highlight')
+													})
+												)
+											))
+										)
 									)
 								}
 								if (notes.length>0) {
-									$td.append($("<ul>").append(notes.map(note=>{
-										return $("<li><div class='note'>"+note+"</div></li>")
-									})))
+									$td.append($("<ul>").append(notes.map(
+										note=>$("<li>").append(note)
+									)))
 								}
 								return $td
 							})
