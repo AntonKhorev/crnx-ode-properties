@@ -20,19 +20,6 @@ $(function(){
 				idag[pid][id]=true
 			}
 		}
-		const visibleAncestors={} // including self
-		const computeVisibleAncestors=(id,aid)=>{
-			if (selectedNodes[aid]) {
-				visibleAncestors[id][aid]=true
-			}
-			for (let naid in dag[aid]) {
-				computeVisibleAncestors(id,naid)
-			}
-		}
-		for (let id in selectedNodes) {
-			visibleAncestors[id]={}
-			computeVisibleAncestors(id,id)
-		}
 
 		let theadLayout=new TheadLayout(dag,selectedNodes)
 		const breadthWalk=(graph,id)=>{
@@ -185,8 +172,23 @@ $(function(){
 			}))
 		}
 		const writeTable=()=>{
+			const visibleAncestors={} // including self
+			const computeVisibleAncestors=(id,aid)=>{
+				if (selectedNodes[aid]) {
+					visibleAncestors[id][aid]=true
+				}
+				for (let naid in dag[aid]) {
+					computeVisibleAncestors(id,naid)
+				}
+			}
+			for (let id in selectedNodes) {
+				visibleAncestors[id]={}
+				computeVisibleAncestors(id,id)
+			}
+
 			const $equations={}
 			let $attachedMenu, $attachedToButton, attachedDirection, attachTimeoutId
+
 			const deleteNode=id=>{
 				delete selectedNodes[id]
 				theadLayout=new TheadLayout(dag,selectedNodes)
