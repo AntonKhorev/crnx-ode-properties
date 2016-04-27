@@ -242,6 +242,11 @@
 			div.equation {
 				border: solid 1px @separator-color;
 				margin: 0 5px;
+				transition: 300ms;
+				&.highlight {
+					background: #FEA;
+					border: solid 1px @active-stroke-color;
+				}
 			}
 			div.equation + div.note {
 				margin: 5px 5px 0 5px;

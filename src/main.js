@@ -7,7 +7,7 @@ $(function(){
 	$('.crnx-ode-properties').each(function(){
 		const $container=$(this)
 		const dag={}, idag={}
-		const selectedNodes={}
+		const selectedNodes={} // visible nodes
 		for (let id in data) {
 			if (data[id].importance<=1) {
 				selectedNodes[id]=true
@@ -20,6 +20,20 @@ $(function(){
 				idag[pid][id]=true
 			}
 		}
+		const visibleAncestors={} // including self
+		const computeVisibleAncestors=(id,aid)=>{
+			if (selectedNodes[aid]) {
+				visibleAncestors[id][aid]=true
+			}
+			for (let naid in dag[aid]) {
+				computeVisibleAncestors(id,naid)
+			}
+		}
+		for (let id in selectedNodes) {
+			visibleAncestors[id]={}
+			computeVisibleAncestors(id,id)
+		}
+
 		let theadLayout=new TheadLayout(dag,selectedNodes)
 		const breadthWalk=(graph,id)=>{
 			const result=[]
@@ -171,6 +185,7 @@ $(function(){
 			}))
 		}
 		const writeTable=()=>{
+			const $equations={}
 			let $attachedMenu, $attachedToButton, attachedDirection, attachTimeoutId
 			const deleteNode=id=>{
 				delete selectedNodes[id]
@@ -347,10 +362,19 @@ $(function(){
 					$("<tbody>").append(
 						// equations
 						$("<tr>").append(
-							//theadLayout.columns.map(id=>"<td>$$"+data[id].equation+"$$</td>")
 							theadLayout.columns.map(id=>{
 								const $td=$("<td>")
-								$td.append("<div class='equation'>\\["+data[id].equation+"\\]</div>")
+								$td.append(
+									$equations[id]=$("<div class='equation'>\\["+data[id].equation+"\\]</div>").hover(function(){
+										for (let aid in visibleAncestors[id]) {
+											$equations[aid].addClass('highlight')
+										}
+									},function(){
+										for (let aid in visibleAncestors[id]) {
+											$equations[aid].removeClass('highlight')
+										}
+									})
+								)
 								if (data[id].equationNote!==undefined) {
 									$td.append("<div class='note'>"+data[id].equationNote+"</div>")
 								}
