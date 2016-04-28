@@ -164,42 +164,48 @@
 			@hcxj: @hcx - 4;
 			@hcyj: @hcy - 6;
 			th {
-				@rt-full-arc: "M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy} H @{cx}";
-				@bl-full-arc: "M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy} H 0";
+				@rt-arc-curve: "M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy}";
+				@rt-arc: "@{rt-arc-curve} H @{cx}";
+				@bl-arc-curve: "M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy}";
+				@bl-arc: "@{bl-arc-curve} H 0";
 				@bt-arc: "M @{hcx} 0 V @{cy}";
+				@rl-arc: "M 0 @{hcy} H @{cx}";
 				height: unit(@arc-cell-height,px);
 				background-repeat: no-repeat;
 				&.rt {
-					.arc(@cx, @cy, @rt-full-arc);
+					.arc(@cx, @cy, @rt-arc);
 				}
 				&.bl {
-					.arc(@cx, @cy, @bl-full-arc);
+					.arc(@cx, @cy, @bl-arc);
 				}
 				&.rt.bl {
-					.arc(@cx, @cy, @rt-full-arc @bl-full-arc);
+					.arc(@cx, @cy, @rt-arc @bl-arc);
 				}
 				&.bt {
 					.arc(@cx, @cy, @bt-arc);
 				}
 				&.bt.bl {
-					.arc(@cx, @cy, @bt-arc @bl-full-arc);
+					.arc(@cx, @cy, @bt-arc @bl-arc);
 				}
 				&.bt.rt {
-					.arc(@cx, @cy, @bt-arc @rt-full-arc);
+					.arc(@cx, @cy, @bt-arc @rt-arc);
 				}
 				&.bt.rt.bl {
-					.arc(@cx, @cy, @bt-arc @rt-full-arc @bl-full-arc);
+					.arc(@cx, @cy, @bt-arc @rt-arc @bl-arc);
 				}
-
 				&.rl {
-					.arc(@cx,@cy,"M 0 @{hcy} H @{cx}");
-				}
-				&.rl.rt {
-					.arc(@cx,@cy,"M 0 @{hcy} H @{cx} M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy}");
+					.arc(@cx, @cy, @rl-arc);
 				}
 				&.rl.bl {
-					.arc(@cx,@cy,"M 0 @{hcy} H @{cx} M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy}");
+					.arc(@cx, @cy, @rl-arc @bl-arc-curve);
 				}
+				&.rl.rt {
+					.arc(@cx ,@cy, @rl-arc @rt-arc-curve);
+				}
+				&.rl.rt.bl {
+					.arc(@cx ,@cy, @rl-arc @rt-arc-curve @bl-arc-curve);
+				}
+
 				&.rl.bt {
 					.arc(@cx,@cy,
 						"M 0 @{hcy} H @{hcxj} v -1 a 3 3 0 0 1 3 -3 h 2 a 3 3 0 0 1 3 3 v 1 H @{cx} "
