@@ -166,6 +166,7 @@
 			th {
 				@rt-full-arc: "M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy} H @{cx}";
 				@bl-full-arc: "M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy} H 0";
+				@bt-arc: "M @{hcx} 0 V @{cy}";
 				height: unit(@arc-cell-height,px);
 				background-repeat: no-repeat;
 				&.rt {
@@ -177,6 +178,19 @@
 				&.rt.bl {
 					.arc(@cx, @cy, @rt-full-arc @bl-full-arc);
 				}
+				&.bt {
+					.arc(@cx, @cy, @bt-arc);
+				}
+				&.bt.bl {
+					.arc(@cx, @cy, @bt-arc @bl-full-arc);
+				}
+				&.bt.rt {
+					.arc(@cx, @cy, @bt-arc @rt-full-arc);
+				}
+				&.bt.rt.bl {
+					.arc(@cx, @cy, @bt-arc @rt-full-arc @bl-full-arc);
+				}
+
 				&.rl {
 					.arc(@cx,@cy,"M 0 @{hcy} H @{cx}");
 				}
@@ -185,15 +199,6 @@
 				}
 				&.rl.bl {
 					.arc(@cx,@cy,"M 0 @{hcy} H @{cx} M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy}");
-				}
-				&.bt {
-					.arc(@cx,@cy,"M @{hcx} 0 V @{cy}");
-				}
-				&.bt.rt {
-					.arc(@cx,@cy,"M @{hcx} 0 V @{cy} M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy} H @{cx}");
-				}
-				&.bt.bl {
-					.arc(@cx,@cy,"M @{hcx} 0 V @{cy} M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy} H 0");
 				}
 				&.rl.bt {
 					.arc(@cx,@cy,
