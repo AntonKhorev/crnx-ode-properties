@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+<meta charset=utf-8>
+<title>Visual test of arcs/joints</title>
+<link rel=stylesheet href=../public_html/lib/crnx-ode-properties.css>
+<script src=https://code.jquery.com/jquery-2.2.3.min.js></script>
+<style>
+#arcs-test {
+	border-collapse: separate;
+}
+#arcs-test th {
+	border: solid 1px #888;
+}
+</style>
+</head>
+<body>
+<div class=crnx-ode-properties>
+<table id=arcs-test>
+<thead>
+<tr class=nodes></tr>
+<tr class=arcs></tr>
+</thead>
+</table>
+</div>
+<script>
+var availableClasses=['rl','bt','rt','bl']
+var $nodes=$('.nodes')
+var $arcs=$('.arcs')
+var activeClasses=[]
+function rec(i) {
+	if (i==availableClasses.length) {
+		var s=activeClasses.join(' ')
+		$nodes.append($("<th>"+s+"</th>"))
+		$arcs.append($("<th class='"+s+"'></th>"))
+	} else {
+		rec(i+1)
+		activeClasses.push(availableClasses[i])
+		rec(i+1)
+		activeClasses.pop()
+	}
+}
+rec(0)
+</script>
+</body>
+</html>
