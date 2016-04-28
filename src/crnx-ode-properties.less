@@ -163,13 +163,18 @@
 			@hcy: @cy/2;
 			@hcxj: @hcx - 4;
 			@hcyj: @hcy - 6;
+			@cubic-ctl-offset: 5;
+			@cubic-ctl-x: @hcy - @cubic-ctl-offset;
 			th {
 				@rt-arc-curve: "M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy}";
+				@rt-arc-cubic-curve: "M @{hcx} 0 c 0 @{cubic-ctl-offset} @{cubic-ctl-x} @{hcy} @{hcy} @{hcy}";
 				@rt-arc: "@{rt-arc-curve} H @{cx}";
 				@bl-arc-curve: "M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy}";
+				@bl-arc-cubic-curve: "M @{hcx} @{cy} c 0 -@{cubic-ctl-offset} -@{cubic-ctl-x} -@{hcy} -@{hcy} -@{hcy}";
 				@bl-arc: "@{bl-arc-curve} H 0";
 				@bt-arc: "M @{hcx} 0 V @{cy}";
 				@rl-arc: "M 0 @{hcy} H @{cx}";
+				@rl-bt-arc-jumper: "M 0 @{hcy} H @{hcxj} v -1 a 3 3 0 0 1 3 -3 h 2 a 3 3 0 0 1 3 3 v 1 H @{cx} M @{hcx} 0 V @{hcyj} m 0 4 V @{cy}";
 				height: unit(@arc-cell-height,px);
 				background-repeat: no-repeat;
 				&.rt {
@@ -205,21 +210,17 @@
 				&.rl.rt.bl {
 					.arc(@cx ,@cy, @rl-arc @rt-arc-curve @bl-arc-curve);
 				}
-
 				&.rl.bt {
-					.arc(@cx,@cy,
-						"M 0 @{hcy} H @{hcxj} v -1 a 3 3 0 0 1 3 -3 h 2 a 3 3 0 0 1 3 3 v 1 H @{cx} "
-						"M @{hcx} 0 V @{hcyj} m 0 4 V @{cy}"
-					);
+					.arc(@cx, @cy, @rl-bt-arc-jumper);
+				}
+				&.rl.bt.bl {
+					.arc(@cx, @cy, @rl-bt-arc-jumper @bl-arc-cubic-curve);
 				}
 				&.rl.bt.rt {
-					@ctl-y: 5;
-					@ctl-x: @hcy - @ctl-y;
-					.arc(@cx,@cy,
-						"M 0 @{hcy} H @{hcxj} v -1 a 3 3 0 0 1 3 -3 h 2 a 3 3 0 0 1 3 3 v 1 H @{cx} "
-						"M @{hcx} 0 V @{hcyj} m 0 4 V @{cy} "
-						"M @{hcx} 0 c 0 @{ctl-y} @{ctl-x} @{hcy} @{hcy} @{hcy}"
-					);
+					.arc(@cx, @cy, @rl-bt-arc-jumper @rt-arc-cubic-curve);
+				}
+				&.rl.bt.rt.bl {
+					.arc(@cx, @cy, @rl-bt-arc-jumper @rt-arc-cubic-curve @bl-arc-cubic-curve);
 				}
 			}
 		}
