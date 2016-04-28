@@ -164,13 +164,18 @@
 			@hcxj: @hcx - 4;
 			@hcyj: @hcy - 6;
 			th {
+				@rt-full-arc: "M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy} H @{cx}";
+				@bl-full-arc: "M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy} H 0";
 				height: unit(@arc-cell-height,px);
 				background-repeat: no-repeat;
 				&.rt {
-					.arc(@cx,@cy,"M @{hcx} 0 a @{hcy} @{hcy} 0 0 0 @{hcy} @{hcy} H @{cx}");
+					.arc(@cx, @cy, @rt-full-arc);
 				}
 				&.bl {
-					.arc(@cx,@cy,"M @{hcx} @{cy} a @{hcy} @{hcy} 0 0 0 -@{hcy} -@{hcy} H 0");
+					.arc(@cx, @cy, @bl-full-arc);
+				}
+				&.rt.bl {
+					.arc(@cx, @cy, @rt-full-arc @bl-full-arc);
 				}
 				&.rl {
 					.arc(@cx,@cy,"M 0 @{hcy} H @{cx}");
