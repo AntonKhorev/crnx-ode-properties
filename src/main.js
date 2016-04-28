@@ -389,15 +389,18 @@ $(function(){
 									notes.push(
 										$("<div class='note'>").append(
 											"can also be written as and has all properties of:",
-											$("<ul>").append(parents.sort().map(
-												pid=>$("<li>").append(
+											$("<ul>").append(parents.sort().map(pid=>{
+												const $li=$("<li>").append(
 													$("<em>"+getHtmlName(pid)+"</em>").hover(function(){
 														$equations[pid].addClass('highlight')
+														$li.addClass('highlight')
 													},function(){
+														$li.removeClass('highlight')
 														$equations[pid].removeClass('highlight')
 													})
 												)
-											))
+												return $li
+											}))
 										)
 									)
 								}
