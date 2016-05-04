@@ -1,6 +1,13 @@
 'use strict'
 
-const dd=(a,b)=>`\\frac{\\mathrm{d}${a}}{\\mathrm{d}${b}}`
+const dd=(a,b,n)=>{
+	if (n===undefined) n=1
+	if (n==1) {
+		return `\\frac{\\mathrm{d}${a}}{\\mathrm{d}${b}}`
+	} else {
+		return `\\frac{\\mathrm{d}^{${n}}${a}}{\\mathrm{d}${b}^{${n}}}`
+	}
+}
 const dydt=dd('y','t')
 const ddt=dd('','t')
 const int=(fx,x)=>`\\int\\!${fx}\\,\\mathrm{d}${x}`
@@ -8,11 +15,12 @@ const sint=(fx,x)=>`\\int\\!${fx}\\mathrm{d}${x}`
 const eqsol=(name)=>`<a href='https://en.wikipedia.org/wiki/Equilibrium_point'>${name}</a>`
 
 module.exports={
-	root: {
+	on: {
 		parents: {},
-		name: "first-order",
-		importance: 0,
-		equation: `${dydt} = f(t,y)`,
+		name: "nth-order",
+		htmlName: "<em>n</em>th-order",
+		importance: 2,
+		equation: `${dd('y','t','n')} = F(t,y,${dydt},...,${dd('y','t','n-1')})`,
 		properties: [
 			[
 				['main',[
@@ -21,9 +29,17 @@ module.exports={
 			],
 		]
 	},
-	separable: {
+	o1: {
 		parents: {
-			root: true,
+			on: true,
+		},
+		name: "first-order",
+		importance: 0,
+		equation: `${dydt} = f(t,y)`,
+	},
+	o1_separable: {
+		parents: {
+			o1: true,
 		},
 		name: "first-order separable",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Separation_of_variables#Ordinary_differential_equations_.28ODE.29'>separable</a>",
@@ -61,9 +77,9 @@ module.exports={
 			],
 		],
 	},
-	autonomous: {
+	o1_autonomous: {
 		parents: {
-			separable: true,
+			o1_separable: true,
 		},
 		name: "first-order autonomous",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Autonomous_system_%28mathematics%29'>autonomous</a>",
@@ -119,9 +135,9 @@ module.exports={
 			],
 		],
 	},
-	bernoulli: {
+	o1_bernoulli: {
 		parents: {
-			root: true,
+			o1: true,
 		},
 		name: "Bernoulli",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Bernoulli_differential_equation'>Bernoulli</a>",
@@ -174,9 +190,9 @@ module.exports={
 			],
 		],
 	},
-	linear: {
+	o1_linear: {
 		parents: {
-			bernoulli: true,
+			o1_bernoulli: true,
 		},
 		name: "first-order linear",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a>",
@@ -244,10 +260,10 @@ module.exports={
 			],
 		],
 	},
-	linearHomogeneous: {
+	o1_linearHomogeneous: {
 		parents: {
-			separable: true,
-			linear: true,
+			o1_separable: true,
+			o1_linear: true,
 		},
 		name: "first-order linear homogeneous",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a> <a href='https://en.wikipedia.org/wiki/Homogeneous_differential_equation#Homogeneous_linear_differential_equations'>homogeneous</a>",
@@ -307,10 +323,10 @@ module.exports={
 			],
 		],
 	},
-	separableInT: {
+	o1_separableInT: {
 		parents: {
-			separable: true,
-			linear: true,
+			o1_separable: true,
+			o1_linear: true,
 		},
 		name: "first-order separable in independent variable",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Separation_of_variables#Ordinary_differential_equations_.28ODE.29'>separable</a> in \\(t\\)",
@@ -358,10 +374,10 @@ module.exports={
 			],
 		],
 	},
-	expGrowth: {
+	o1_expGrowth: {
 		parents: {
-			autonomous: true,
-			linearHomogeneous: true,
+			o1_autonomous: true,
+			o1_linearHomogeneous: true,
 		},
 		name: "exponential growth",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Exponential_growth#Differential_equation'>exponential growth</a>",
@@ -408,10 +424,10 @@ module.exports={
 			],
 		],
 	},
-	logisticGrowth: {
+	o1_logisticGrowth: {
 		parents: {
-			autonomous: true,
-			bernoulli: true,
+			o1_autonomous: true,
+			o1_bernoulli: true,
 		},
 		name: "logistic growth",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Logistic_function#In_ecology:_modeling_population_growth'>logistic growth</a>",
@@ -435,6 +451,67 @@ module.exports={
 					`\\[ y(t) = k \\]`,
 				]],
 			],
+		],
+	},
+	o2: {
+		parents: {
+			on: true,
+		},
+		name: "second-order",
+		importance: 2,
+		equation: `${dd('y','t','2')} = F(t,y,${dydt})`,
+	},
+	o2_autonomous: {
+		parents: {
+			o2: true,
+		},
+		name: "second-order autonomous",
+		importance: 2,
+		equation: `${dd('y','t','2')} = F(y,${dydt})`,
+	},
+	o2_vanDerPol: {
+		parents: {
+			o2_autonomous: true,
+		},
+		name: "Van der Pol",
+		htmlName: "<a href='https://en.wikipedia.org/wiki/Van_der_Pol_oscillator'>Van der Pol</a>",
+		importance: 3,
+		equation: `${dd('y','t','2')} = \\mu(1-y^2)${dydt} - y`,
+	},
+	o2_unforcedDuffing: {
+		parents: {
+			o2_autonomous: true,
+		},
+		name: "unforced Duffing",
+		htmlName: "unforced <a href='https://en.wikipedia.org/wiki/Duffing_equation'>Duffing</a>",
+		importance: 3,
+		equation: `${dd('y','t','2')} = - \\delta ${dydt} - \\alpha y - \\beta y^3`,
+	},
+	o2_harmonicOscillator: {
+		parents: {
+			o2_autonomous: true,
+		},
+		name: "harmonic oscillator",
+		htmlName: "<a href='https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator'>harmonic oscillator</a>",
+		importance: 3,
+		equation: `${dd('y','t','2')} = - \\frac{b}{m} ${dydt} - \\frac{k}{m} y`,
+		equationNotes: [
+			`\\(m\\) is the mass`,
+			`\\(b\\) is the viscous damping coefficient`,
+			`\\(k\\) is the spring constant`,
+		],
+	},
+	o2_simpleHarmonicOscillator: {
+		parents: {
+			o2_harmonicOscillator: true,
+		},
+		name: "simple harmonic oscillator",
+		htmlName: "<a href='https://en.wikipedia.org/wiki/Harmonic_oscillator#Simple_harmonic_oscillator'>simple harmonic oscillator</a>",
+		importance: 3,
+		equation: `${dd('y','t','2')} = - \\frac{k}{m} y`,
+		equationNotes: [
+			`\\(m\\) is the mass`,
+			`\\(k\\) is the spring constant`,
 		],
 	},
 }
