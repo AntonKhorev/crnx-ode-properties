@@ -14,20 +14,63 @@ const int=(fx,x)=>`\\int\\!${fx}\\,\\mathrm{d}${x}`
 const sint=(fx,x)=>`\\int\\!${fx}\\mathrm{d}${x}`
 const eqsol=(name)=>`<a href='https://en.wikipedia.org/wiki/Equilibrium_point'>${name}</a>`
 
-module.exports={
+// TODO:
+// tableRow fn
+//	accepts: trait data substructure, class data, list of visible classes, their computed inheritances
+//	return: list of cells: list of (class id, trait id)
+//		class id = which class to take property from
+const traits=[
+	['entity',[
+		['associatedHomogeneousEquation'],
+	]],
+	['property',[
+		['isoclineProperty'],
+		['solutionRelation',[
+			['shiftSolutionRelation'],
+			['linearitySolutionRelation',[ // linear and affine properties of solutions
+				['solutionSpaceBasis'],
+				['homogeneitySolutionRelation'],
+				['additivitySolutionRelation'],
+				['twoLinearCombinationSolutionRelation'],
+				['nLinearCombinationSolutionRelation'],
+				['twoAffineCombinationSolutionRelation'],
+				['nAffineCombinationSolutionRelation'],
+				['associatedSolutionRelation'],
+			]]
+		]],
+	]],
+	['solutionMethod',[
+		['generalSolutionMethod'],
+		['equilibriumSolutionMethod'],
+		['testSolutionMethod'],
+	]],
+]
+
+// trait entries:
+//	title = redefine title; has to be first
+//	main
+//	detail
+//	note
+//	form = have to present the equation in which this trait was defined; put after title
+//	close = children don't need to inherit this trait; display it only if parents have it displayed; put at end
+//	compare = show only if other classes have this property without compare entry; put at end
+// TODO remove:
+//	id
+//	override
+const classes={
 	on: {
 		parents: {},
 		name: "nth-order",
 		htmlName: "<em>n</em>th-order",
 		importance: 2,
 		equation: `${dd('y','t','n')} = F(t,y,${dydt},...,${dd('y','t','n-1')})`,
-		properties: [
-			[
+		traits: {
+			testSolutionMethod: [
 				['main',[
 					"Can test if \\(y_p(t)\\) is a solution by substituting \\(y = y_p\\) into the equation.",
 				]],
 			],
-		]
+		}
 	},
 	o1: {
 		parents: {
@@ -45,12 +88,8 @@ module.exports={
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Separation_of_variables#Ordinary_differential_equations_.28ODE.29'>separable</a>",
 		importance: 1,
 		equation: `${dydt} = f_1(t) \\cdot f_2(y)`,
-		solutions: [
-			[
-				['id','general'],
-				['title',[
-					"Solutions",
-				]],
+		traits: {
+			generalSolutionMethod: [
 				['form'],
 				['detail',[
 					`\\[ ${dydt} = f_1(t) \\cdot f_2(y) \\]`,
@@ -64,18 +103,14 @@ module.exports={
 					`this may or may not include ${eqsol("equilibrium solutions")}`,
 				]],
 			],
-			[
-				['id','equilibrium'],
-				['title',[
-					eqsol("Equilibrium solutions"),
-				]],
+			equilibriumSolutionMethod: [
 				['form'],
 				['main',[
 					`solve \\( f_2(y) = 0 \\) for constant \\( y \\)`,
 				]],
 				//`domain is not necessary \\( -\\infty &lt; t &lt; +\\infty \\)`
 			],
-		],
+		},
 	},
 	o1_autonomous: {
 		parents: {
@@ -85,27 +120,18 @@ module.exports={
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Autonomous_system_%28mathematics%29'>autonomous</a>",
 		importance: 1,
 		equation: `${dydt} = f(y)`,
-		properties: [
-			[
+		traits: {
+			isoclineProperty: [
 				['main',[
-					"horizontal <a href='https://en.wikipedia.org/wiki/Isocline'>isoclines</a>",
+					"isoclines are horizontal",
 				]],
 			],
-			[
+			shiftSolutionRelation: [
 				['main',[
 					"\\( y_p(t) \\) is a solution \\( \\Rightarrow \\) \\( y_p(t+C) \\) is a solution",
 				]],
 			],
-		],
-		solutions: [
-			[
-				['id','general'],
-				['override',[
-					'general',
-				]],
-				['title',[
-					"Solutions",
-				]],
+			generalSolutionMethod: [
 				['form'],
 				['detail',[
 					`\\[ ${dydt} = f(y) \\]`,
@@ -119,21 +145,14 @@ module.exports={
 					`this may or may not include ${eqsol("equilibrium solutions")}`,
 				]],
 			],
-			[
-				['id','equilibrium'],
-				['override',[
-					'equilibrium',
-				]],
-				['title',[
-					eqsol("Equilibrium solutions"),
-				]],
+			equilibriumSolutionMethod: [
 				['form'],
 				['main',[
 					`solve \\( f(y) = 0 \\) for constant \\( y \\)`,
 				]],
 				//`domain is \\( -\\infty &lt; t &lt; +\\infty \\)` // only if f(y) is continuous
 			],
-		],
+		},
 	},
 	o1_bernoulli: {
 		parents: {
@@ -147,12 +166,8 @@ module.exports={
 			`\\( n ≠ 1 \\)`,
 			`usually it's also defined that additionally \\( n ≠ 0 \\), but we ignore this requirement here`,
 		],
-		solutions: [
-			[
-				['id','general'],
-				['title',[
-					"Solutions",
-				]],
+		traits: {
+			generalSolutionMethod: [
 				['form'],
 				['detail',[
 					`\\[ ${dydt} = a(t) \\cdot y + b(t) \\cdot y^n \\]`,
@@ -175,20 +190,13 @@ module.exports={
 					`this may or may not include ${eqsol("equilibrium solutions")}`,
 				]],
 			],
-			[
-				['id','equilibrium'],
-				['override',[
-					'equilibrium',
-				]],
-				['title',[
-					eqsol("Equilibrium solution"),
-				]],
+			equilibriumSolutionMethod: [
 				['form'],
 				['main',[
 					`if \\( n>0 \\), there's an equilibrium solution \\( y(t) = 0 \\)`,
 				]],
 			],
-		],
+		},
 	},
 	o1_linear: {
 		parents: {
@@ -198,35 +206,69 @@ module.exports={
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a>",
 		importance: 1,
 		equation: `${dydt} = a(t) \\cdot y + b(t)`,
-		properties: [
-			[
-				['id','linearity'],
-				['title',[
-					"Extended linearity",
-				]],
+		traits: {
+			associatedHomogeneousEquation: [
 				['form'],
 				['main',[
-					`If \\( y_p(t) \\) is a solution of the original equation \\( ${dydt} = a(t) \\cdot y + b(t) \\)`,
-					`and \\( y_h(t) \\) is a solution of its associated homogeneous equation \\( ${dydt} = a(t) \\cdot y \\),`,
-					`then \\( K y_h(t) + y_p(t) \\) is a solution of the original equation.`,
-					`If additionally \\( y_h(t) \\neq 0 \\), then \\( K y_h(t) + y_p(t) \\) is a general solution.`,
+					`\\( ${dydt} = a(t) \\cdot y \\)`,
 				]],
 			],
-			[
-				['id','homodiff'],
-				['form'],
+			solutionSpaceBasis: [
 				['main',[
-					`If \\( y_p(t) \\) and \\( y_q(t) \\) are solutions,`,
-					`then \\( y_p(t) - y_q(t) \\) is a solution of the associated homogeneous equation \\( ${dydt} = a(t) \\cdot y \\).`,
+					`If \\( y_p(t) \\) is a solution`,
+					`and \\( y_h(t) \\) is a nonzero solution of the associated homogeneous equation`,
+					`then \\( K y_h(t) + y_p(t) \\) is a general solution.`,
 				]],
 			],
-		],
-		solutions: [
-			[
-				['id','general'],
-				['override',[
-					'general',
+			homogeneitySolutionRelation: [
+				['main',[
+					`If \\( y_0(t) \\) and \\( y_1(t) \\) are solutions,`,
+					`then \\( K_1 y_1(t) + (1 - K_1) y_0(t) \\) is a solution.`,
 				]],
+				['compare'],
+			],
+			additivitySolutionRelation: [
+				['main',[
+					`If \\( y_0(t) \\), \\( y_1(t) \\) and \\( y_2(t) \\) are solutions,`,
+					`then \\( y_1(t) + y_2(t) - y_0(t) \\) is a solution.`,
+				]],
+				['compare'],
+			],
+			twoLinearCombinationSolutionRelation: [
+				['main',[
+					`If \\( y_0(t) \\), \\( y_1(t) \\) and \\( y_2(t) \\) are solutions,`,
+					`then \\( K_1 y_1(t) + K_2 y_2(t) + (1 - K_1 - K_2) y_0(t) \\) is a solution.`,
+				]],
+				['compare'],
+			],
+			nLinearCombinationSolutionRelation: [
+				['main',[
+					`If \\( y_0(t) \\), \\( y_1(t) \\), \\( y_2(t) \\), ..., \\( y_m(t) \\) are solutions,`,
+					`then \\( K_1 y_1(t) + K_2 y_2(t) + \\cdots + K_m y_m(t) + (1 - K_1 - K_2 - \\cdots - K_m) y_0(t) \\) is a solution.`,
+				]],
+				['compare'],
+			],
+			twoAffineCombinationSolutionRelation: [
+				['main',[
+					`If \\( y_1(t) \\), \\( y_2(t) \\) are solutions`,
+					`and \\( K_1 + K_2 = 1 \\)`,
+					`then \\( K_1 y_1(t) + K_2 y_2(t) \\) is a solution.`,
+				]],
+			],
+			nAffineCombinationSolutionRelation: [
+				['main',[
+					`If \\( y_1(t) \\), \\( y_2(t) \\), ..., \\( y_m(t) \\) are solutions`,
+					`and \\( K_1 + K_2 + \\cdots + K_m = 1 \\)`,
+					`then \\( K_1 y_1(t) + K_2 y_2(t) + \\cdots + K_m y_m(t) \\) is a solution.`,
+				]],
+			],
+			associatedSolutionRelation: [
+				['main',[
+					`If \\( y_1(t) \\) and \\( y_2(t) \\) are solutions,`,
+					`then \\( y_1(t) - y_2(t) \\) is a solution of the associated homogeneous equation.`,
+				]],
+			],
+			generalSolutionMethod: [
 				['title',[
 					"Solutions found with method of <a href='https://en.wikipedia.org/wiki/Integrating_factor'>integrating factors</a>",
 				]],
@@ -253,12 +295,13 @@ module.exports={
 					`\\[ \\mu(t) y = ${int('\\mu(t) b(t)','t')} + C \\]`,
 				]],
 			],
-			[
-				['override',[
-					'equilibrium',
+			equilibriumSolutionMethod: [
+				['note',[
+					`Can't find equilibrium solution like in Bernoulli equation because \\( n = 0 \\).`,
 				]],
+				['close'],
 			],
-		],
+		},
 	},
 	o1_linearHomogeneous: {
 		parents: {
@@ -269,31 +312,59 @@ module.exports={
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a> <a href='https://en.wikipedia.org/wiki/Homogeneous_differential_equation#Homogeneous_linear_differential_equations'>homogeneous</a>",
 		importance: 1,
 		equation: `${dydt} = a(t) \\cdot y`,
-		properties: [
-			[
-				['id','linearity'],
-				['override',[
-					'linearity',
-					'homodiff',
+		traits: {
+			associatedHomogeneousEquation: [
+				['note',[
+					`The equation is associated with itself.`
 				]],
-				['title',[
-					"Linearity",
-				]],
+				['close'],
+			],
+			solutionSpaceBasis: [
 				['main',[
-					`If \\( y_h(t) \\) is a solution, then \\( K y_h(t) \\) is a solution.`,
-					`If additionally \\( y_h(t) \\neq 0 \\), then \\( K y_h(t) \\) is a general solution.`,
+					`If \\( y_h(t) \\) is a nonzero solution,`,
+					`then \\( K y_h(t) \\) is a general solution.`,
 				]],
 			],
-		],
-		solutions: [
-			[
-				['id','general'],
-				['override',[
-					'general',
+			homogeneitySolutionRelation: [
+				['main',[
+					`If \\( y_1(t) \\) is a solution,`,
+					`then \\( K_1 y_1(t) \\) is a solution.`,
 				]],
-				['title',[
-					"Solutions",
+			],
+			additivitySolutionRelation: [
+				['main',[
+					`If \\( y_1(t) \\) and \\( y_2(t) \\) are solutions,`,
+					`then \\( y_1(t) + y_2(t) \\) is a solution.`,
 				]],
+			],
+			twoLinearCombinationSolutionRelation: [
+				['main',[
+					`If \\( y_1(t) \\) and \\( y_2(t) \\) are solutions,`,
+					`then \\( K_1 y_1(t) + K_2 y_2(t) \\) is a solution.`,
+				]],
+			],
+			nLinearCombinationSolutionRelation: [
+				['main',[
+					`If \\( y_1(t) \\), \\( y_2(t) \\), ..., \\( y_m(t) \\) are solutions,`,
+					`then \\( K_1 y_1(t) + K_2 y_2(t) + \\cdots + K_m y_m(t) \\) is a solution.`,
+				]],
+			],
+			twoAffineCombinationSolutionRelation: [
+				['note',[
+					`This is a special case of a linear combination.`,
+				]],
+				['close'],
+			],
+			nAffineCombinationSolutionRelation: [
+				['note',[
+					`This is a special case of a linear combination.`,
+				]],
+				['close'],
+			],
+			associatedSolutionRelation: [
+				['close'],
+			],
+			generalSolutionMethod: [
 				['form'],
 				['detail',[
 					`\\[ ${dydt} = a(t) \\cdot y \\]`,
@@ -309,19 +380,12 @@ module.exports={
 					`includes ${eqsol("equilibrium solution")} when \\( K = 0 \\)`,
 				]],
 			],
-			[
-				['id','equilibrium'],
-				['override',[
-					'equilibrium',
-				]],
-				['title',[
-					eqsol("Equilibrium solution"),
-				]],
+			equilibriumSolutionMethod: [
 				['main',[
 					`\\[ y(t) = 0 \\]`
 				]],
 			],
-		],
+		},
 	},
 	o1_separableInT: {
 		parents: {
@@ -332,32 +396,34 @@ module.exports={
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Separation_of_variables#Ordinary_differential_equations_.28ODE.29'>separable</a> in \\(t\\)",
 		importance: 2,
 		equation: `${dydt} = f(t)`,
-		properties: [
-			[
+		traits: {
+			associatedHomogeneousEquation: [
 				['main',[
-					"vertical <a href='https://en.wikipedia.org/wiki/Isocline'>isoclines</a>",
+					`\\( ${dydt} = 0 \\)`,
 				]],
 			],
-			[
-				['id','linearity'],
-				['override',[
-					'linearity',
-					'homodiff',
-				]],
+			isoclineProperty: [
 				['main',[
-					"\\( y_p(t) \\) is a solution \\( \\Rightarrow \\) \\( y_p(t) + C \\) is a solution",
+					"isoclines are vertical",
 				]],
 			],
-		],
-		solutions: [
-			[
-				['id','general'],
-				['override',[
-					'general',
+			//shiftSolutionRelation: [
+			//	['main',[
+			//		"\\( y_p(t) \\) is a solution \\( \\Rightarrow \\) \\( y_p(t) + C \\) is a solution",
+			//	]],
+			//],
+			solutionSpaceBasis: [
+				['main',[
+					`If \\( y_p(t) \\) is a solution`,
+					`then \\( y_p(t) + C \\) is a general solution.`,
 				]],
-				['title',[
-					"Solutions",
+			],
+			associatedSolutionRelation: [
+				['main',[
+					`\\( y(t) = C \\) is a solution of the associated homogeneous equation.`,
 				]],
+			],
+			generalSolutionMethod: [
 				['form'],
 				['detail',[
 					`\\[ ${dydt} = f(t) \\]`,
@@ -367,12 +433,13 @@ module.exports={
 					`\\[ y = ${int('f(t)','t')} + C \\]`,
 				]],
 			],
-			[
-				['override',[
-					'equilibrium',
+			equilibriumSolutionMethod: [
+				['note',[
+					`Can't find equilibrium solution like in separable equation because \\( f_2(y) = 1 \\).`,
 				]],
+				['close'],
 			],
-		],
+		},
 	},
 	o1_expGrowth: {
 		parents: {
@@ -383,15 +450,8 @@ module.exports={
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Exponential_growth#Differential_equation'>exponential growth</a>",
 		importance: 2,
 		equation: `${dydt} = k \\cdot y`,
-		solutions: [
-			[
-				['id','general'],
-				['override',[
-					'general',
-				]],
-				['title',[
-					"Solutions",
-				]],
+		traits: {
+			generalSolutionMethod: [
 				['form'],
 				['detail',[
 					`\\[ ${dydt} = k \\cdot y \\]`,
@@ -410,19 +470,12 @@ module.exports={
 					`includes ${eqsol("equilibrium solution")} when \\( y(0) = 0 \\)`,
 				]],
 			],
-			[ // TODO could have inherited from linear homogeneous, but have to override autonomous
-				['id','equilibrium'],
-				['override',[
-					'equilibrium',
-				]],
-				['title',[
-					eqsol("Equilibrium solution"),
-				]],
+			equilibriumSolutionMethod: [ // TODO could have inherited from linear homogeneous, but have to override autonomous
 				['main',[
 					`\\[ y(t) = 0 \\]`
 				]],
 			],
-		],
+		},
 	},
 	o1_logisticGrowth: {
 		parents: {
@@ -436,22 +489,15 @@ module.exports={
 		equationNotes: [
 			`\\( k \\) is the <a href='https://en.wikipedia.org/wiki/Carrying_capacity'>carrying capacity</a>`,
 		],
-		solutions: [
-			[
-				['id','equilibrium'],
-				['override',[
-					'equilibrium',
-				]],
-				['title',[
-					eqsol("Equilibrium solutions"),
-				]],
+		traits: {
+			equilibriumSolutionMethod: [
 				['form'],
 				['main',[
 					`\\[ y(t) = 0 \\]`,
 					`\\[ y(t) = k \\]`,
 				]],
 			],
-		],
+		},
 	},
 	o2: {
 		parents: {
@@ -515,3 +561,5 @@ module.exports={
 		],
 	},
 }
+
+module.exports={traits,classes}

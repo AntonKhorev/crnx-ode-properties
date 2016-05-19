@@ -3,11 +3,38 @@
 const TheadLayout=require('./thead-layout')
 const data=require('./data')
 
+const i18n=(id)=>{
+	const strings={
+		'trait.entity': "Associated entities",
+		'trait.associatedHomogeneousEquation': "Associated homogeneous equation",
+
+		'trait.property': "Properties",
+		'trait.isoclineProperty': "Property of <a href='https://en.wikipedia.org/wiki/Isocline'>isoclines</a>",
+		'trait.solutionRelation': "Solution relation properties",
+		'trait.shiftSolutionRelation': "Time/value shifts of solutions",
+		'trait.linearitySolutionRelation': "Linear/affine properties of solutions",
+		'trait.solutionSpaceBasis': "Basis of the solution space",
+		'trait.homogeneitySolutionRelation': "Homogeneity of solutions",
+		'trait.additivitySolutionRelation': "Additivity of solutions",
+		'trait.twoLinearCombinationSolutionRelation': "<a href='https://en.wikipedia.org/wiki/Linear_combination'>Linear combination</a> property of solutions",
+		'trait.nLinearCombinationSolutionRelation': "<a href='https://en.wikipedia.org/wiki/Linear_combination'>Linear combination</a> property of solutions",
+		'trait.twoAffineCombinationSolutionRelation': "<a href='https://en.wikipedia.org/wiki/Affine_combination'>Affine combination</a> property of solutions",
+		'trait.nAffineCombinationSolutionRelation': "<a href='https://en.wikipedia.org/wiki/Affine_combination'>Affine combination</a> property of solutions",
+		'trait.associatedSolutionRelation': "Associated homogeneous equation solution",
+
+		'trait.solutionMethod': "Solutions",
+		'trait.generalSolutionMethod': "General solution",
+		'trait.equilibriumSolutionMethod': "<a href='https://en.wikipedia.org/wiki/Equilibrium_point'>Equilibrium solutions</a>",
+		'trait.testSolutionMethod': "Solution testing",
+	}
+	return strings[id]
+}
+
 $(function(){
 	$('.crnx-ode-properties').each(function(){
 		const $container=$(this)
-		const dag={}, idag={}
-		const selectedNodes={} // visible nodes
+		const dag={}, idag={} // TODO naming of completeDag, visibleDag; completeIDag, visibleIDag
+		const selectedNodes={} // visible nodes // TODO rename to visibleNodes
 		for (let id in data) {
 			if (data[id].importance<=1) {
 				selectedNodes[id]=true
