@@ -10,8 +10,7 @@ describe("makeTrLayout",()=>{
 			['A','B','C'],
 			{
 				A: {
-					parents: {
-					},
+					parents: {},
 					traits: {
 						prop: [['main',['stuff a']]],
 					},
@@ -55,8 +54,7 @@ describe("makeTrLayout",()=>{
 			['A','B','C'],
 			{
 				A: {
-					parents: {
-					},
+					parents: {},
 					traits: {
 						subprop1: [['main',['stuff a1']]],
 						subprop2: [['main',['stuff a2']]],
@@ -97,14 +95,50 @@ describe("makeTrLayout",()=>{
 			],
 		])
 	})
-	it("supports partly skipped trait",()=>{
+	it("supports skipped trait",()=>{
 		const trLayout=makeTrLayout(
 			['prop'],
 			['A','B','C'],
 			{
 				A: {
-					parents: {
+					parents: {},
+					traits: {
+						prop: [['main',['stuff a']]],
 					},
+				},
+				B: {
+					parents: {
+						A: true,
+					},
+					traits: {},
+				},
+				C: {
+					parents: {
+						B: true,
+					},
+					traits: {
+						prop: [['main',['stuff c']]],
+					},
+				},
+			}
+		)
+		assert.deepEqual(trLayout,[
+			[
+				['A','prop'],
+			],
+			[],
+			[
+				['C','prop'],
+			],
+		])
+	})
+	it("supports inherited trait",()=>{
+		const trLayout=makeTrLayout(
+			['prop'],
+			['B','C'],
+			{
+				A: {
+					parents: {},
 					traits: {
 						prop: [['main',['stuff a']]],
 					},
@@ -131,6 +165,198 @@ describe("makeTrLayout",()=>{
 				['A','prop'],
 			],
 			[
+				['C','prop'],
+			],
+		])
+	})
+	it("supports fork-inherited trait",()=>{
+		const trLayout=makeTrLayout(
+			['prop'],
+			['C'],
+			{
+				A: {
+					parents: {},
+					traits: {
+						prop: [['main',['stuff a']]],
+					},
+				},
+				B: {
+					parents: {},
+					traits: {
+						prop: [['main',['stuff b']]],
+					},
+				},
+				C: {
+					parents: {
+						A: true,
+						B: true,
+					},
+					traits: {},
+				},
+			}
+		)
+		assert.deepEqual(trLayout,[
+			[
+				['A','prop'],
+				['B','prop'],
+			],
+		])
+	})
+	it("supports diamond-inherited trait",()=>{
+		const trLayout=makeTrLayout(
+			['prop'],
+			['D'],
+			{
+				A: {
+					parents: {},
+					traits: {
+						prop: [['main',['stuff a']]],
+					},
+				},
+				B: {
+					parents: {
+						A: true,
+					},
+					traits: {},
+				},
+				C: {
+					parents: {
+						A: true,
+					},
+					traits: {},
+				},
+				D: {
+					parents: {
+						B: true,
+						C: true,
+					},
+					traits: {},
+				},
+			}
+		)
+		assert.deepEqual(trLayout,[
+			[
+				['A','prop'],
+			],
+		])
+	})
+	it("supports diamond-inherited trait with one parent visible",()=>{
+		const trLayout=makeTrLayout(
+			['prop'],
+			['C','D'],
+			{
+				A: {
+					parents: {},
+					traits: {
+						prop: [['main',['stuff a']]],
+					},
+				},
+				B: {
+					parents: {
+						A: true,
+					},
+					traits: {},
+				},
+				C: {
+					parents: {
+						A: true,
+					},
+					traits: {},
+				},
+				D: {
+					parents: {
+						B: true,
+						C: true,
+					},
+					traits: {},
+				},
+			}
+		)
+		assert.deepEqual(trLayout,[
+			[
+				['A','prop'],
+			],
+			[],
+		])
+	})
+	it("skips diamond-inherited trait when parent with trait is visible",()=>{
+		const trLayout=makeTrLayout(
+			['prop'],
+			['C','D'],
+			{
+				A: {
+					parents: {},
+					traits: {
+						prop: [['main',['stuff a']]],
+					},
+				},
+				B: {
+					parents: {
+						A: true,
+					},
+					traits: {},
+				},
+				C: {
+					parents: {
+						A: true,
+					},
+					traits: {
+						prop: [['main',['stuff c']]],
+					},
+				},
+				D: {
+					parents: {
+						B: true,
+						C: true,
+					},
+					traits: {},
+				},
+			}
+		)
+		assert.deepEqual(trLayout,[
+			[
+				['C','prop'],
+			],
+			[],
+		])
+	})
+	it("displays diamond-inherited trait for parent when different parent with trait is invisible",()=>{
+		const trLayout=makeTrLayout(
+			['prop'],
+			['B','D'],
+			{
+				A: {
+					parents: {},
+					traits: {
+						prop: [['main',['stuff a']]],
+					},
+				},
+				B: {
+					parents: {
+						A: true,
+					},
+					traits: {},
+				},
+				C: {
+					parents: {
+						A: true,
+					},
+					traits: {
+						prop: [['main',['stuff c']]],
+					},
+				},
+				D: {
+					parents: {
+						B: true,
+						C: true,
+					},
+					traits: {},
+				},
+			}
+		)
+		assert.deepEqual(trLayout,[
+			[
+				['A','prop'],
 			],
 			[
 				['C','prop'],
