@@ -97,4 +97,44 @@ describe("makeTrLayout",()=>{
 			],
 		])
 	})
+	it("supports partly skipped trait",()=>{
+		const trLayout=makeTrLayout(
+			['prop'],
+			['A','B','C'],
+			{
+				A: {
+					parents: {
+					},
+					traits: {
+						prop: [['main',['stuff a']]],
+					},
+				},
+				B: {
+					parents: {
+						A: true,
+					},
+					traits: {
+					},
+				},
+				C: {
+					parents: {
+						B: true,
+					},
+					traits: {
+						prop: [['main',['stuff c']]],
+					},
+				},
+			}
+		)
+		assert.deepEqual(trLayout,[
+			[
+				['A','prop'],
+			],
+			[
+			],
+			[
+				['C','prop'],
+			],
+		])
+	})
 })

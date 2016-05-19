@@ -74,6 +74,7 @@ const classes={
 		name: "first-order",
 		importance: 0,
 		equation: `${dydt} = f(t,y)`,
+		traits: {},
 	},
 	o1_separable: {
 		parents: {
@@ -501,6 +502,7 @@ const classes={
 		name: "second-order",
 		importance: 2,
 		equation: `${dd('y','t','2')} = F(t,y,${dydt})`,
+		traits: {},
 	},
 	o2_autonomous: {
 		parents: {
@@ -509,6 +511,7 @@ const classes={
 		name: "second-order autonomous",
 		importance: 2,
 		equation: `${dd('y','t','2')} = F(y,${dydt})`,
+		traits: {},
 	},
 	o2_vanDerPol: {
 		parents: {
@@ -518,6 +521,7 @@ const classes={
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Van_der_Pol_oscillator'>Van der Pol</a>",
 		importance: 3,
 		equation: `${dd('y','t','2')} = \\mu(1-y^2)${dydt} - y`,
+		traits: {},
 	},
 	o2_unforcedDuffing: {
 		parents: {
@@ -527,6 +531,7 @@ const classes={
 		htmlName: "unforced <a href='https://en.wikipedia.org/wiki/Duffing_equation'>Duffing</a>",
 		importance: 3,
 		equation: `${dd('y','t','2')} = - \\delta ${dydt} - \\alpha y - \\beta y^3`,
+		traits: {},
 	},
 	o2_harmonicOscillator: {
 		parents: {
@@ -541,6 +546,7 @@ const classes={
 			`\\(b\\) is the viscous damping coefficient`,
 			`\\(k\\) is the spring constant`,
 		],
+		traits: {},
 	},
 	o2_simpleHarmonicOscillator: {
 		parents: {
@@ -554,6 +560,7 @@ const classes={
 			`\\(m\\) is the mass`,
 			`\\(k\\) is the spring constant`,
 		],
+		traits: {},
 	},
 }
 

@@ -11,7 +11,9 @@ module.exports=(traitSubtree,classIds,classData)=>{
 			if (traitChildren) {
 				traitChildren.forEach(rec)
 			} else {
-				cell.push([classId,traitId])
+				if (classData[classId].traits[traitId]) {
+					cell.push([classId,traitId])
+				}
 			}
 		}
 		rec(traitSubtree)
