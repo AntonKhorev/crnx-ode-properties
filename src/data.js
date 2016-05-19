@@ -14,11 +14,6 @@ const int=(fx,x)=>`\\int\\!${fx}\\,\\mathrm{d}${x}`
 const sint=(fx,x)=>`\\int\\!${fx}\\mathrm{d}${x}`
 const eqsol=(name)=>`<a href='https://en.wikipedia.org/wiki/Equilibrium_point'>${name}</a>`
 
-// TODO:
-// tableRow fn
-//	accepts: trait data substructure, class data, list of visible classes, their computed inheritances
-//	return: list of cells: list of (class id, trait id)
-//		class id = which class to take property from
 const traits=[
 	['entity',[
 		['associatedHomogeneousEquation'],
