@@ -6,9 +6,9 @@ const TheadLayout=require('../src/thead-layout')
 describe("TheadLayout",()=>{
 	context("with 1 node",()=>{
 		const layout=new TheadLayout({
-			'A':{},
+			A: {},
 		},{
-			'A':true,
+			A: true,
 		})
 		it("has columns",()=>{
 			assert.deepEqual(layout.columns,
@@ -23,6 +23,32 @@ describe("TheadLayout",()=>{
 		it("has arc layers",()=>{
 			assert.deepEqual(layout.arcLayers,[
 			])
+		})
+		it("has parents array",()=>{
+			assert.deepEqual(layout.columnParents,{
+				A: [],
+			})
+		})
+	})
+	context("with fork",()=>{
+		const layout=new TheadLayout({
+			B: {},
+			A: {},
+			C: {
+				B: true,
+				A: true,
+			},
+		},{
+			B: true,
+			A: true,
+			C: true,
+		})
+		it("has parents array",()=>{
+			assert.deepEqual(layout.columnParents,{
+				A: [],
+				B: [],
+				C: ['A','B'],
+			})
 		})
 	})
 })

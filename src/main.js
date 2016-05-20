@@ -411,12 +411,12 @@ $(function(){
 										noteText=>$("<div class='note'>").append(noteText)
 									))
 								}
-								const parents=Object.keys(theadLayout.parents[id])
-								if (parents.length>0) {
+								const columnParents=theadLayout.columnParents[id]
+								if (columnParents.length>0) {
 									notes.push(
 										$("<div class='note'>").append(
 											"can also be written as and has all properties of:",
-											$("<ul>").append(parents.sort().map(pid=>{
+											$("<ul>").append(columnParents.map(pid=>{
 												const $li=$("<li>").append(
 													$("<em>"+getHtmlName(pid)+"</em>").hover(function(){
 														$equations[pid].addClass('highlight')

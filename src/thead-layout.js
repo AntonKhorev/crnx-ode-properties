@@ -14,7 +14,15 @@ class TheadLayout {
 		this.columns=[].concat(...nodeLabelLayers)
 		this.nodeLayers=t[0]
 		this.arcLayers=t[1]
-		this.parents=parents // TODO return as array in order of appearance, test
+
+		const ranks={}
+		this.columns.forEach((id,i)=>{
+			ranks[id]=i
+		})
+		this.columnParents={}
+		for (let id in parents) {
+			this.columnParents[id]=Object.keys(parents[id]).sort((id1,id2)=>ranks[id1]-ranks[id2])
+		}
 	}
 }
 
