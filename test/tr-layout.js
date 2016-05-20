@@ -394,4 +394,175 @@ describe("makeTrLayout",()=>{
 			],
 		])
 	})
+	/*
+	context("on chain with closed trait",()=>{
+		const classData={
+			A: {
+				parents: {},
+				traits: {
+					prop: [['main',['stuff a']]],
+				},
+			},
+			B: {
+				parents: {
+					A: true,
+				},
+				traits: {},
+			},
+			C: {
+				parents: {
+					B: true,
+				},
+				traits: {
+					prop: [
+						['note',['need no stuff a']],
+						['close'],
+					],
+				},
+			},
+			D: {
+				parents: {
+					C: true,
+				},
+				traits: {},
+			},
+		}
+		it("displays closed trait when defining ancestor is visible",()=>{
+			const trLayout=makeTrLayout(
+				['prop'],
+				['A','B','C','D'],
+				classData
+			)
+			assert.deepEqual(trLayout,[
+				[
+					['A','prop'],
+				],
+				[],
+				[
+					['C','prop'],
+				],
+				[],
+			])
+		})
+		it("displays closed trait when inheriting ancestor is visible",()=>{
+			const trLayout=makeTrLayout(
+				['prop'],
+				['B','C','D'],
+				classData
+			)
+			assert.deepEqual(trLayout,[
+				[
+					['A','prop'],
+				],
+				[
+					['C','prop'],
+				],
+				[],
+			])
+		})
+		it("displays closed trait on child when inheriting ancestor is visible",()=>{
+			const trLayout=makeTrLayout(
+				['prop'],
+				['B','D'],
+				classData
+			)
+			assert.deepEqual(trLayout,[
+				[
+					['A','prop'],
+				],
+				[
+					['C','prop'],
+				],
+			])
+		})
+		it("skips closed trait when defining/inheriting ancestors are hidden",()=>{
+			const trLayout=makeTrLayout(
+				['prop'],
+				['C','D'],
+				classData
+			)
+			assert.deepEqual(trLayout,[
+				[],
+				[],
+			])
+		})
+	})
+	context("on diamond with closed trait",()=>{
+		const classData={
+			A: {
+				parents: {},
+				traits: {
+					prop: [['main',['stuff a']]],
+				},
+			},
+			B: {
+				parents: {
+					A: true,
+				},
+				traits: {},
+			},
+			C: {
+				parents: {
+					A: true,
+				},
+				traits: {
+					prop: [
+						['note',['need no stuff a']],
+						['close'],
+					],
+				},
+			},
+			D: {
+				parents: {
+					B: true,
+					C: true,
+				},
+				traits: {},
+			},
+		}
+		it("displays closed trait when defining ancestor is visible",()=>{
+			const trLayout=makeTrLayout(
+				['prop'],
+				['A','B','C','D'],
+				classData
+			)
+			assert.deepEqual(trLayout,[
+				[
+					['A','prop'],
+				],
+				[],
+				[
+					['C','prop'],
+				],
+				[],
+			])
+		})
+		it("displays closed trait on child when inheriting non-closing-side ancestor is visible",()=>{
+			const trLayout=makeTrLayout(
+				['prop'],
+				['B','D'],
+				classData
+			)
+			assert.deepEqual(trLayout,[
+				[
+					['A','prop'],
+				],
+				[
+					['C','prop'],
+				],
+			])
+		})
+		it("skips closed trait when defining/inheriting ancestors are hidden",()=>{
+			const trLayout=makeTrLayout(
+				['prop'],
+				['C','D'],
+				classData
+			)
+			assert.deepEqual(trLayout,[
+				[],
+				[],
+			])
+		})
+	})
+	*/
 })

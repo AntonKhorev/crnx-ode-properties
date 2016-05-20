@@ -35,21 +35,21 @@ $(function(){
 		const $container=$(this)
 		const dag={}, idag={} // TODO naming of completeDag, visibleDag; completeIDag, visibleIDag
 		const selectedNodes={} // visible nodes // TODO rename to visibleNodes
-		for (let id in data) {
-			if (data[id].importance<=1) {
+		for (let id in data.classes) {
+			if (data.classes[id].importance<=1) {
 				selectedNodes[id]=true
 			}
-			dag[id]=data[id].parents
+			dag[id]=data.classes[id].parents
 			idag[id]={}
 		}
-		for (let id in data) {
+		for (let id in data.classes) {
 			for (let pid in dag[id]) {
 				idag[pid][id]=true
 			}
 		}
-		const getHtmlName=id=>(data[id].htmlName!==undefined
-			? data[id].htmlName
-			: data[id].name
+		const getHtmlName=id=>(data.classes[id].htmlName!==undefined
+			? data.classes[id].htmlName
+			: data.classes[id].name
 		)
 
 		let theadLayout=new TheadLayout(dag,selectedNodes)
@@ -85,13 +85,13 @@ $(function(){
 			const markAncestors=id=>{
 				if (visited[id]) return
 				visited[id]=true
-				Object.keys(data[id].parents).forEach(pid=>{
+				Object.keys(data.classes[id].parents).forEach(pid=>{
 					markAncestors(pid)
 				})
 			}
 			const reachAncestors=id=>{
 				if (visited[id]) return
-				Object.keys(data[id].parents).forEach(pid=>{
+				Object.keys(data.classes[id].parents).forEach(pid=>{
 					if (selectedNodes[pid]) {
 						markAncestors(pid)
 					} else {
@@ -114,8 +114,8 @@ $(function(){
 			const rec=cid=>{
 				visited[cid]=true
 				const forOverrides=fn=>{
-					if (data[cid][name]) {
-						data[cid][name].forEach(item=>{
+					if (data.classes[cid][name]) {
+						data.classes[cid][name].forEach(item=>{
 							item.forEach(section=>{
 								const type=section[0]
 								if (section[0]=='override') {
@@ -130,15 +130,15 @@ $(function(){
 				}
 				// recursion on nodes that are not selected for display
 				forOverrides(raiseOverride)
-				Object.keys(data[cid].parents).sort().forEach(pid=>{
+				Object.keys(data.classes[cid].parents).sort().forEach(pid=>{
 					if (!visited[pid]) {
 						rec(pid)
 					}
 				})
 				forOverrides(lowerOverride)
 				// output of things that are not overridden by children
-				if (data[cid][name]) {
-					data[cid][name].forEach(item=>{
+				if (data.classes[cid][name]) {
+					data.classes[cid][name].forEach(item=>{
 						let skip=false
 						item.forEach(section=>{
 							const type=section[0]
@@ -158,7 +158,7 @@ $(function(){
 								if (cid!=id) {
 									outItem.push(['note',[
 										"when equation is written as <em>"+getHtmlName(cid)+"</em>:",
-										"\\["+data[cid].equation+"\\]",
+										"\\["+data.classes[cid].equation+"\\]",
 									]])
 								}
 							} else {
@@ -255,7 +255,7 @@ $(function(){
 					const startAttachingMenu=()=>{
 						$attachedToButton=$button
 						$attachedMenu=$("<ul>").append(nodes.map(
-							id=>$("<li tabindex='0'>"+data[id].name+"</li>").click(function(){
+							id=>$("<li tabindex='0'>"+data.classes[id].name+"</li>").click(function(){
 								addNode(id)
 							}).keydown(function(ev){
 								if (!attachedDirection) return // not yet decided on attach direction (this can't happen)
@@ -395,7 +395,7 @@ $(function(){
 							theadLayout.columns.map(id=>{
 								const $td=$("<td>")
 								$td.append(
-									$equations[id]=$("<div class='equation'>\\["+data[id].equation+"\\]</div>").hover(function(){
+									$equations[id]=$("<div class='equation'>\\["+data.classes[id].equation+"\\]</div>").hover(function(){
 										for (let aid in visibleAncestors[id]) {
 											$equations[aid].addClass('highlight')
 										}
@@ -406,8 +406,8 @@ $(function(){
 									})
 								)
 								const notes=[]
-								if (data[id].equationNotes!==undefined) {
-									notes.push(...data[id].equationNotes.map(
+								if (data.classes[id].equationNotes!==undefined) {
+									notes.push(...data.classes[id].equationNotes.map(
 										noteText=>$("<div class='note'>").append(noteText)
 									))
 								}
@@ -438,7 +438,7 @@ $(function(){
 								}
 								return $td
 							})
-						),
+						)/*,
 						// properties
 						$("<tr>").append(
 							theadLayout.columns.map(id=>$("<td>").append(
@@ -450,7 +450,7 @@ $(function(){
 							theadLayout.columns.map(id=>$("<td>").append(
 								writeData('solutions',id)
 							))
-						)
+						)*/
 					)
 				),
 				"<p>General notes:</p>",
