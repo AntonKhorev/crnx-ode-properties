@@ -1,9 +1,10 @@
 'use strict'
 
 // returns list of cells: list of (class id, trait id)
-// class id = which class to take property from
+// 	class id = which class to take property from
+// returns null if row is to be skipped
 module.exports=(traitSubtree,classIds,classData)=>{
-	return classIds.map(classId=>{
+	const cells=classIds.map(classId=>{
 		const cell=[]
 		const walkTraits=(traitSubtree)=>{
 			const traitId=traitSubtree[0]
@@ -17,7 +18,7 @@ module.exports=(traitSubtree,classIds,classData)=>{
 					markAncestors(pid)
 				})
 			}
-			const reachAncestors=id=>{
+			const reachAncestors=id=>{ // TODO if prop is closed, mark as visited even the first visible ancestor
 				if (visited[id]) return
 				Object.keys(classData[id].parents).forEach(pid=>{
 					if (classIds.indexOf(pid)>=0) {
@@ -46,7 +47,11 @@ module.exports=(traitSubtree,classIds,classData)=>{
 			}
 		}
 		walkTraits(traitSubtree)
-
 		return cell
 	})
+	if (cells.some(cell=>cell.length>0)) {
+		return cells
+	} else {
+		return null
+	}
 }

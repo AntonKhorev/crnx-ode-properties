@@ -4,6 +4,37 @@ const assert=require('assert')
 const makeTrLayout=require('../src/tr-layout')
 
 describe("makeTrLayout",()=>{
+	it("skips row if trait is not present",()=>{
+		const trLayout=makeTrLayout(
+			['no-such-prop'],
+			['A','B','C'],
+			{
+				A: {
+					parents: {},
+					traits: {
+						prop: [['main',['stuff a']]],
+					},
+				},
+				B: {
+					parents: {
+						A: true,
+					},
+					traits: {
+						prop: [['main',['stuff b']]],
+					},
+				},
+				C: {
+					parents: {
+						B: true,
+					},
+					traits: {
+						prop: [['main',['stuff c']]],
+					},
+				},
+			}
+		)
+		assert.equal(trLayout,null)
+	})
 	it("supports redefined trait",()=>{
 		const trLayout=makeTrLayout(
 			['prop'],
