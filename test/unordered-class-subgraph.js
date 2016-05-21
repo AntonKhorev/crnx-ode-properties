@@ -49,6 +49,9 @@ describe("UnorderedClassSubgraph",()=>{
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 		})
+		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+			A:{},
+		})
 		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
 			A:{
 				A:{},
@@ -70,6 +73,10 @@ describe("UnorderedClassSubgraph",()=>{
 			B:{},
 		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
+			A:{},
+			B:{},
+		})
+		assert.deepEqual(unorderedClassGraph.visibleChildren,{
 			A:{},
 			B:{},
 		})
@@ -100,6 +107,10 @@ describe("UnorderedClassSubgraph",()=>{
 			A:{},
 			B:{A:true},
 		})
+		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+			A:{B:true},
+			B:{},
+		})
 		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
 			A:{
 				A:{},
@@ -125,51 +136,13 @@ describe("UnorderedClassSubgraph",()=>{
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			B:{},
 		})
+		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+			B:{},
+		})
 		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
 			B:{
 				A:{},
 				B:{A:true},
-			},
-		})
-	})
-	it("selects 2 chains from 2 chains",()=>{
-		const dag={
-			A:{},
-			B:{},
-			C:{A:true},
-			D:{B:true},
-		}
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
-			A:true,
-			B:true,
-			C:true,
-			D:true,
-		})
-		assert.deepEqual(unorderedClassGraph.allParents,dag)
-		assert.deepEqual(unorderedClassGraph.allChildren,{
-			A:{C:true},
-			B:{D:true},
-			C:{},
-			D:{},
-		})
-		assert.deepEqual(unorderedClassGraph.visibleParents,{
-			A:{},
-			B:{},
-			C:{A:true},
-			D:{B:true},
-		})
-		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
-			A:{
-				A:{},
-			},
-			B:{
-				B:{},
-			},
-			C:{
-				C:{},
-			},
-			D:{
-				D:{},
 			},
 		})
 	})
@@ -194,6 +167,11 @@ describe("UnorderedClassSubgraph",()=>{
 			A:{},
 			B:{A:true},
 			C:{A:true},
+		})
+		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+			A:{B:true,C:true},
+			B:{},
+			C:{},
 		})
 		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
 			A:{
@@ -227,6 +205,10 @@ describe("UnorderedClassSubgraph",()=>{
 			A:{},
 			C:{A:true},
 		})
+		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+			A:{C:true},
+			C:{},
+		})
 		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
 			A:{
 				A:{},
@@ -253,6 +235,10 @@ describe("UnorderedClassSubgraph",()=>{
 			C:{},
 		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
+			B:{},
+			C:{},
+		})
+		assert.deepEqual(unorderedClassGraph.visibleChildren,{
 			B:{},
 			C:{},
 		})
@@ -293,6 +279,12 @@ describe("UnorderedClassSubgraph",()=>{
 			C:{A:true},
 			D:{B:true,C:true},
 		})
+		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+			A:{B:true,C:true},
+			B:{D:true},
+			C:{D:true},
+			D:{},
+		})
 		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
 			A:{
 				A:{},
@@ -332,6 +324,11 @@ describe("UnorderedClassSubgraph",()=>{
 			B:{A:true},
 			D:{B:true},
 		})
+		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+			A:{B:true},
+			B:{D:true},
+			D:{},
+		})
 		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
 			A:{
 				A:{},
@@ -342,47 +339,6 @@ describe("UnorderedClassSubgraph",()=>{
 			D:{
 				C:{},
 				D:{C:true},
-			},
-		})
-	})
-	it("selects И-shape from И-shape",()=>{
-		const dag={
-			A:{},
-			B:{},
-			C:{A:true,B:true},
-			D:{B:true},
-		}
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
-			A:true,
-			B:true,
-			C:true,
-			D:true,
-		})
-		assert.deepEqual(unorderedClassGraph.allParents,dag)
-		assert.deepEqual(unorderedClassGraph.allChildren,{
-			A:{C:true},
-			B:{C:true,D:true},
-			C:{},
-			D:{},
-		})
-		assert.deepEqual(unorderedClassGraph.visibleParents,{
-			A:{},
-			B:{},
-			C:{A:true,B:true},
-			D:{B:true},
-		})
-		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
-			A:{
-				A:{},
-			},
-			B:{
-				B:{},
-			},
-			C:{
-				C:{},
-			},
-			D:{
-				D:{},
 			},
 		})
 	})
@@ -410,6 +366,11 @@ describe("UnorderedClassSubgraph",()=>{
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			B:{},
 			D:{B:true},
+			E:{},
+		})
+		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+			B:{D:true},
+			D:{},
 			E:{},
 		})
 		assert.deepEqual(unorderedClassGraph.integratedAncestors,{

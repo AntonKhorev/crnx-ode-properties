@@ -2,20 +2,27 @@
 
 class UnorderedClassGraph {
 	constructor(classData,visibleClasses) {
-		// this.allParents and this.allChildren
-		this.allParents={}
-		this.allChildren={}
-		for (let id in classData) {
-			this.allParents[id]=classData[id].parents
-			this.allChildren[id]={}
-		}
-		for (let id in classData) {
-			for (let pid in this.allParents[id]) {
-				this.allChildren[pid][id]=true
+		const invertGraph=(graph)=>{
+			const igraph={}
+			for (let id in graph) {
+				igraph[id]={}
 			}
+			for (let id in graph) {
+				for (let pid in graph[id]) {
+					igraph[pid][id]=true
+				}
+			}
+			return igraph
 		}
 
-		// this.visibleParents
+		// this.allParents and this.allChildren
+		this.allParents={}
+		for (let id in classData) {
+			this.allParents[id]=classData[id].parents
+		}
+		this.allChildren=invertGraph(this.allParents)
+
+		// this.visibleParents and this.visibleChildren
 		const ancestorDistances={} // {node:{ancestorNode:distance,...},...}; node is any node, ancestorNode is one of selectedNodes
 		const addAncestorDistance=(fromNode,toNode,distance)=>{
 			const oldDistance=ancestorDistances[fromNode][toNode]
@@ -52,6 +59,7 @@ class UnorderedClassGraph {
 				}
 			}
 		}
+		this.visibleChildren=invertGraph(this.visibleParents)
 
 		// this.integratedAncestors = ancestors that are not (visible parents and/or ancestors of visible parents)
 		this.integratedAncestors={}
