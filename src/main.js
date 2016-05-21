@@ -204,10 +204,8 @@ $(function(){
 		const writeTable=()=>{
 			const visibleAncestors={} // including self
 			const computeVisibleAncestors=(id,aid)=>{
-				if (selectedNodes[aid]) {
-					visibleAncestors[id][aid]=true
-				}
-				for (let naid in unorderedClassGraph.allParents[aid]) {
+				visibleAncestors[id][aid]=true
+				for (let naid in unorderedClassGraph.visibleParents[aid]) {
 					computeVisibleAncestors(id,naid)
 				}
 			}
