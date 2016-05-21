@@ -53,7 +53,7 @@ class UnorderedClassGraph {
 			}
 		}
 
-		// this.integratedAncestors
+		// this.integratedAncestors = ancestors that are not (visible parents and/or ancestors of visible parents)
 		this.integratedAncestors={}
 		for (let cid in visibleClasses) {
 			const masked={}

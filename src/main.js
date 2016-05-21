@@ -1,5 +1,6 @@
 'use strict'
 
+const UnorderedClassGraph=require('./unordered-class-subgraph')
 const TheadLayout=require('./thead-layout')
 const data=require('./data')
 
@@ -33,18 +34,10 @@ const i18n=(id)=>{
 $(function(){
 	$('.crnx-ode-properties').each(function(){
 		const $container=$(this)
-		const dag={}, idag={} // TODO naming of completeDag, visibleDag; completeIDag, visibleIDag
 		const selectedNodes={} // visible nodes // TODO rename to visibleNodes
 		for (let id in data.classes) {
 			if (data.classes[id].importance<=1) {
 				selectedNodes[id]=true
-			}
-			dag[id]=data.classes[id].parents
-			idag[id]={}
-		}
-		for (let id in data.classes) {
-			for (let pid in dag[id]) {
-				idag[pid][id]=true
 			}
 		}
 		const getHtmlName=id=>(data.classes[id].htmlName!==undefined
@@ -52,7 +45,13 @@ $(function(){
 			: data.classes[id].name
 		)
 
-		let theadLayout=new TheadLayout(dag,selectedNodes)
+		let unorderedClassGraph,theadLayout
+		const recomputeLayouts=()=>{
+			unorderedClassGraph=new UnorderedClassGraph(data.classes,selectedNodes)
+			theadLayout=new TheadLayout(unorderedClassGraph.allParents,selectedNodes)
+		}
+		recomputeLayouts()
+
 		const breadthWalk=(graph,id)=>{
 			const result=[]
 			const visited={}
@@ -208,7 +207,7 @@ $(function(){
 				if (selectedNodes[aid]) {
 					visibleAncestors[id][aid]=true
 				}
-				for (let naid in dag[aid]) {
+				for (let naid in unorderedClassGraph.allParents[aid]) {
 					computeVisibleAncestors(id,naid)
 				}
 			}
@@ -222,12 +221,12 @@ $(function(){
 
 			const deleteNode=id=>{
 				delete selectedNodes[id]
-				theadLayout=new TheadLayout(dag,selectedNodes)
+				recomputeLayouts()
 				writeTable()
 			}
 			const addNode=id=>{
 				selectedNodes[id]=true
-				theadLayout=new TheadLayout(dag,selectedNodes)
+				recomputeLayouts()
 				writeTable()
 			}
 			const setCellClasses=($cell,cell)=>{
@@ -332,7 +331,7 @@ $(function(){
 				if (cell.node!==undefined) {
 					$cell.append(getHtmlName(cell.node))
 					// TODO rename parents, children to ancestors, descendants
-					const parents=breadthWalk(dag,cell.node).reverse()
+					const parents=breadthWalk(unorderedClassGraph.allParents,cell.node).reverse()
 					let $parents
 					if (parents.length>0) {
 						$cell.append(
@@ -340,7 +339,7 @@ $(function(){
 							writeTheadButton($cell,"Add parent","Add one of supertypes of this equation type",'t',parents)
 						)
 					}
-					const children=breadthWalk(idag,cell.node)
+					const children=breadthWalk(unorderedClassGraph.allChildren,cell.node)
 					if (children.length>0) {
 						$cell.append(
 							" ",
