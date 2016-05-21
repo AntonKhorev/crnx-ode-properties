@@ -36,11 +36,13 @@ describe("convertParentsToData",()=>{
 
 describe("UnorderedClassSubgraph",()=>{
 	it("selects node from node",()=>{
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
+		const dag={
 			A:{},
-		}),{
+		}
+		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
 			A:true,
 		})
+		assert.deepEqual(unorderedClassGraph.allParents,dag)
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 		})
@@ -51,13 +53,15 @@ describe("UnorderedClassSubgraph",()=>{
 		})
 	})
 	it("selects 2 nodes from 2 nodes",()=>{
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
+		const dag={
 			A:{},
 			B:{},
-		}),{
+		}
+		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 		})
+		assert.deepEqual(unorderedClassGraph.allParents,dag)
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 			B:{},
@@ -72,13 +76,15 @@ describe("UnorderedClassSubgraph",()=>{
 		})
 	})
 	it("selects chain from chain",()=>{
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
+		const dag={
 			A:{},
 			B:{A:true},
-		}),{
+		}
+		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 		})
+		assert.deepEqual(unorderedClassGraph.allParents,dag)
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 			B:{A:true},
@@ -93,12 +99,14 @@ describe("UnorderedClassSubgraph",()=>{
 		})
 	})
 	it("selects node from chain",()=>{
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
+		const dag={
 			A:{},
 			B:{A:true},
-		}),{
+		}
+		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
 			B:true,
 		})
+		assert.deepEqual(unorderedClassGraph.allParents,dag)
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			B:{},
 		})
@@ -110,17 +118,19 @@ describe("UnorderedClassSubgraph",()=>{
 		})
 	})
 	it("selects 2 chains from 2 chains",()=>{
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
+		const dag={
 			A:{},
 			B:{},
 			C:{A:true},
 			D:{B:true},
-		}),{
+		}
+		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 			C:true,
 			D:true,
 		})
+		assert.deepEqual(unorderedClassGraph.allParents,dag)
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 			B:{},
@@ -143,15 +153,17 @@ describe("UnorderedClassSubgraph",()=>{
 		})
 	})
 	it("selects fork from fork",()=>{
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
+		const dag={
 			A:{},
 			B:{A:true},
 			C:{A:true},
-		}),{
+		}
+		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 			C:true,
 		})
+		assert.deepEqual(unorderedClassGraph.allParents,dag)
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 			B:{A:true},
@@ -170,14 +182,16 @@ describe("UnorderedClassSubgraph",()=>{
 		})
 	})
 	it("selects chain from fork",()=>{
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
+		const dag={
 			A:{},
 			B:{A:true},
 			C:{A:true},
-		}),{
+		}
+		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
 			A:true,
 			C:true,
 		})
+		assert.deepEqual(unorderedClassGraph.allParents,dag)
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 			C:{A:true},
@@ -192,14 +206,16 @@ describe("UnorderedClassSubgraph",()=>{
 		})
 	})
 	it("selects 2 nodes from fork",()=>{
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
+		const dag={
 			A:{},
 			B:{A:true},
 			C:{A:true},
-		}),{
+		}
+		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
 			B:true,
 			C:true,
 		})
+		assert.deepEqual(unorderedClassGraph.allParents,dag)
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			B:{},
 			C:{},
@@ -216,17 +232,19 @@ describe("UnorderedClassSubgraph",()=>{
 		})
 	})
 	it("selects diamond from diamond",()=>{
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
+		const dag={
 			A:{},
 			B:{A:true},
 			C:{A:true},
 			D:{B:true,C:true},
-		}),{
+		}
+		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 			C:true,
 			D:true,
 		})
+		assert.deepEqual(unorderedClassGraph.allParents,dag)
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 			B:{A:true},
@@ -249,16 +267,18 @@ describe("UnorderedClassSubgraph",()=>{
 		})
 	})
 	it("selects 3-chain from diamond",()=>{
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
+		const dag={
 			A:{},
 			B:{A:true},
 			C:{A:true},
 			D:{B:true,C:true},
-		}),{
+		}
+		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 			D:true,
 		})
+		assert.deepEqual(unorderedClassGraph.allParents,dag)
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 			B:{A:true},
@@ -278,17 +298,19 @@ describe("UnorderedClassSubgraph",()=>{
 		})
 	})
 	it("selects И-shape from И-shape",()=>{
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
+		const dag={
 			A:{},
 			B:{},
 			C:{A:true,B:true},
 			D:{B:true},
-		}),{
+		}
+		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 			C:true,
 			D:true,
 		})
+		assert.deepEqual(unorderedClassGraph.allParents,dag)
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 			B:{},
@@ -311,17 +333,19 @@ describe("UnorderedClassSubgraph",()=>{
 		})
 	})
 	it("selects chain and node from a-shape",()=>{
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
+		const dag={
 			A:{},
 			B:{A:true},
 			C:{A:true},
 			D:{B:true,C:true},
 			E:{C:true},
-		}),{
+		}
+		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
 			B:true,
 			D:true,
 			E:true,
 		})
+		assert.deepEqual(unorderedClassGraph.allParents,dag)
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			B:{},
 			D:{B:true},

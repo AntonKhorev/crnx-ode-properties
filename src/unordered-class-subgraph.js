@@ -2,6 +2,12 @@
 
 class UnorderedClassGraph {
 	constructor(classData,visibleClasses) {
+		// this.allParents
+		this.allParents={}
+		for (let id in classData) {
+			this.allParents[id]=classData[id].parents
+		}
+
 		// this.visibleParents
 		const ancestorDistances={} // {node:{ancestorNode:distance,...},...}; node is any node, ancestorNode is one of selectedNodes
 		const addAncestorDistance=(fromNode,toNode,distance)=>{
@@ -17,7 +23,7 @@ class UnorderedClassGraph {
 				return // already visited
 			}
 			ancestorDistances[node]={}
-			for (let parentNode in classData[node].parents) {
+			for (let parentNode in this.allParents[node]) {
 				traverseNode(parentNode)
 				if (visibleClasses[parentNode]) {
 					addAncestorDistance(node,parentNode,1)
@@ -47,7 +53,7 @@ class UnorderedClassGraph {
 			const maskAncestors=id=>{
 				if (masked[id]) return
 				masked[id]=true
-				for (let pid in classData[id].parents) {
+				for (let pid in this.allParents[id]) {
 					maskAncestors(pid)
 				}
 			}
@@ -58,7 +64,7 @@ class UnorderedClassGraph {
 			const integrateAncestors=id=>{
 				if (this.integratedAncestors[cid][id]) return
 				this.integratedAncestors[cid][id]={}
-				for (let pid in classData[id].parents) {
+				for (let pid in this.allParents[id]) {
 					if (!masked[pid]) {
 						this.integratedAncestors[cid][id][pid]=true
 						integrateAncestors(pid)
