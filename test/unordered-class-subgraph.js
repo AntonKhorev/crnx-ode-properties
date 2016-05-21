@@ -43,6 +43,9 @@ describe("UnorderedClassSubgraph",()=>{
 			A:true,
 		})
 		assert.deepEqual(unorderedClassGraph.allParents,dag)
+		assert.deepEqual(unorderedClassGraph.allChildren,{
+			A:{},
+		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 		})
@@ -62,6 +65,10 @@ describe("UnorderedClassSubgraph",()=>{
 			B:true,
 		})
 		assert.deepEqual(unorderedClassGraph.allParents,dag)
+		assert.deepEqual(unorderedClassGraph.allChildren,{
+			A:{},
+			B:{},
+		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 			B:{},
@@ -85,6 +92,10 @@ describe("UnorderedClassSubgraph",()=>{
 			B:true,
 		})
 		assert.deepEqual(unorderedClassGraph.allParents,dag)
+		assert.deepEqual(unorderedClassGraph.allChildren,{
+			A:{B:true},
+			B:{},
+		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 			B:{A:true},
@@ -107,6 +118,10 @@ describe("UnorderedClassSubgraph",()=>{
 			B:true,
 		})
 		assert.deepEqual(unorderedClassGraph.allParents,dag)
+		assert.deepEqual(unorderedClassGraph.allChildren,{
+			A:{B:true},
+			B:{},
+		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			B:{},
 		})
@@ -131,6 +146,12 @@ describe("UnorderedClassSubgraph",()=>{
 			D:true,
 		})
 		assert.deepEqual(unorderedClassGraph.allParents,dag)
+		assert.deepEqual(unorderedClassGraph.allChildren,{
+			A:{C:true},
+			B:{D:true},
+			C:{},
+			D:{},
+		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 			B:{},
@@ -164,6 +185,11 @@ describe("UnorderedClassSubgraph",()=>{
 			C:true,
 		})
 		assert.deepEqual(unorderedClassGraph.allParents,dag)
+		assert.deepEqual(unorderedClassGraph.allChildren,{
+			A:{B:true,C:true},
+			B:{},
+			C:{},
+		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 			B:{A:true},
@@ -192,6 +218,11 @@ describe("UnorderedClassSubgraph",()=>{
 			C:true,
 		})
 		assert.deepEqual(unorderedClassGraph.allParents,dag)
+		assert.deepEqual(unorderedClassGraph.allChildren,{
+			A:{B:true,C:true},
+			B:{},
+			C:{},
+		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 			C:{A:true},
@@ -216,6 +247,11 @@ describe("UnorderedClassSubgraph",()=>{
 			C:true,
 		})
 		assert.deepEqual(unorderedClassGraph.allParents,dag)
+		assert.deepEqual(unorderedClassGraph.allChildren,{
+			A:{B:true,C:true},
+			B:{},
+			C:{},
+		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			B:{},
 			C:{},
@@ -245,6 +281,12 @@ describe("UnorderedClassSubgraph",()=>{
 			D:true,
 		})
 		assert.deepEqual(unorderedClassGraph.allParents,dag)
+		assert.deepEqual(unorderedClassGraph.allChildren,{
+			A:{B:true,C:true},
+			B:{D:true},
+			C:{D:true},
+			D:{},
+		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 			B:{A:true},
@@ -279,6 +321,12 @@ describe("UnorderedClassSubgraph",()=>{
 			D:true,
 		})
 		assert.deepEqual(unorderedClassGraph.allParents,dag)
+		assert.deepEqual(unorderedClassGraph.allChildren,{
+			A:{B:true,C:true},
+			B:{D:true},
+			C:{D:true},
+			D:{},
+		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 			B:{A:true},
@@ -311,6 +359,12 @@ describe("UnorderedClassSubgraph",()=>{
 			D:true,
 		})
 		assert.deepEqual(unorderedClassGraph.allParents,dag)
+		assert.deepEqual(unorderedClassGraph.allChildren,{
+			A:{C:true},
+			B:{C:true,D:true},
+			C:{},
+			D:{},
+		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			A:{},
 			B:{},
@@ -346,6 +400,13 @@ describe("UnorderedClassSubgraph",()=>{
 			E:true,
 		})
 		assert.deepEqual(unorderedClassGraph.allParents,dag)
+		assert.deepEqual(unorderedClassGraph.allChildren,{
+			A:{B:true,C:true},
+			B:{D:true},
+			C:{D:true,E:true},
+			D:{},
+			E:{},
+		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
 			B:{},
 			D:{B:true},

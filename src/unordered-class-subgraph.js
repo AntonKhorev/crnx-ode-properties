@@ -2,10 +2,17 @@
 
 class UnorderedClassGraph {
 	constructor(classData,visibleClasses) {
-		// this.allParents
+		// this.allParents and this.allChildren
 		this.allParents={}
+		this.allChildren={}
 		for (let id in classData) {
 			this.allParents[id]=classData[id].parents
+			this.allChildren[id]={}
+		}
+		for (let id in classData) {
+			for (let pid in this.allParents[id]) {
+				this.allChildren[pid][id]=true
+			}
 		}
 
 		// this.visibleParents
