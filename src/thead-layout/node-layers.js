@@ -53,6 +53,8 @@ module.exports=(dag,selectedNodes)=>{
 	// sort nodes at each depth by
 	//	lexicographic parent order
 	//	label
+	// TODO rewrite:
+	// 	use children: breadth search with queue (node,depth)
 	let nextParentOrder=0
 	const parentOrder={}
 	for (let depth in depthList) {
