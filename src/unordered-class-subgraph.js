@@ -2,6 +2,7 @@
 
 class UnorderedClassGraph {
 	constructor(classData,visibleClasses) {
+		// this.visibleParents
 		const ancestorDistances={} // {node:{ancestorNode:distance,...},...}; node is any node, ancestorNode is one of selectedNodes
 		const addAncestorDistance=(fromNode,toNode,distance)=>{
 			const oldDistance=ancestorDistances[fromNode][toNode]
@@ -37,6 +38,34 @@ class UnorderedClassGraph {
 					this.visibleParents[node][ancestorNode]=true
 				}
 			}
+		}
+
+		// this.integratedAncestors
+		this.integratedAncestors={}
+		for (let cid in visibleClasses) {
+			const masked={}
+			const maskAncestors=id=>{
+				if (masked[id]) return
+				masked[id]=true
+				for (let pid in classData[id].parents) {
+					maskAncestors(pid)
+				}
+			}
+			for (let pid in this.visibleParents[cid]) {
+				maskAncestors(pid)
+			}
+			this.integratedAncestors[cid]={}
+			const integrateAncestors=id=>{
+				if (this.integratedAncestors[cid][id]) return
+				this.integratedAncestors[cid][id]={}
+				for (let pid in classData[id].parents) {
+					if (!masked[pid]) {
+						this.integratedAncestors[cid][id][pid]=true
+						integrateAncestors(pid)
+					}
+				}
+			}
+			integrateAncestors(cid)
 		}
 	}
 }

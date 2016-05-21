@@ -16,19 +16,19 @@ const convertParentsToData=(parents)=>{
 describe("convertParentsToData",()=>{
 	it("validated parents to data conversion",()=>{
 		const data=convertParentsToData({
-			'A':{},
-			'B':{'A':true},
-			'C':{'A':true},
+			A:{},
+			B:{A:true},
+			C:{A:true},
 		})
 		assert.deepEqual(data,{
-			'A': {
+			A: {
 				parents: {},
 			},
-			'B': {
-				parents: {'A':true},
+			B: {
+				parents: {A:true},
 			},
-			'C': {
-				parents: {'A':true},
+			C: {
+				parents: {A:true},
 			},
 		})
 	})
@@ -37,199 +37,310 @@ describe("convertParentsToData",()=>{
 describe("UnorderedClassSubgraph",()=>{
 	it("selects node from node",()=>{
 		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
-			'A':{},
+			A:{},
 		}),{
-			'A':true,
+			A:true,
 		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
-			'A':{},
+			A:{},
+		})
+		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+			A:{
+				A:{},
+			},
 		})
 	})
 	it("selects 2 nodes from 2 nodes",()=>{
 		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
-			'A':{},
-			'B':{},
+			A:{},
+			B:{},
 		}),{
-			'A':true,
-			'B':true,
+			A:true,
+			B:true,
 		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
-			'A':{},
-			'B':{},
+			A:{},
+			B:{},
 		})
-	})
-	it("selects 2 nodes (reversed) from 2 nodes",()=>{
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
-			'B':{},
-			'A':{},
-		}),{
-			'B':true,
-			'A':true,
-		})
-		assert.deepEqual(unorderedClassGraph.visibleParents,{
-			'A':{},
-			'B':{},
+		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+			A:{
+				A:{},
+			},
+			B:{
+				B:{},
+			},
 		})
 	})
 	it("selects chain from chain",()=>{
 		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
-			'A':{},
-			'B':{'A':true},
+			A:{},
+			B:{A:true},
 		}),{
-			'A':true,
-			'B':true,
+			A:true,
+			B:true,
 		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
-			'A':{},
-			'B':{'A':true},
+			A:{},
+			B:{A:true},
+		})
+		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+			A:{
+				A:{},
+			},
+			B:{
+				B:{},
+			},
 		})
 	})
 	it("selects node from chain",()=>{
 		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
-			'A':{},
-			'B':{'A':true},
+			A:{},
+			B:{A:true},
 		}),{
-			'B':true,
+			B:true,
 		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
-			'B':{},
+			B:{},
+		})
+		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+			B:{
+				A:{},
+				B:{A:true},
+			},
 		})
 	})
 	it("selects 2 chains from 2 chains",()=>{
 		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
-			'A':{},
-			'B':{},
-			'C':{'A':true},
-			'D':{'B':true},
+			A:{},
+			B:{},
+			C:{A:true},
+			D:{B:true},
 		}),{
-			'A':true,
-			'B':true,
-			'C':true,
-			'D':true,
+			A:true,
+			B:true,
+			C:true,
+			D:true,
 		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
-			'A':{},
-			'B':{},
-			'C':{'A':true},
-			'D':{'B':true},
+			A:{},
+			B:{},
+			C:{A:true},
+			D:{B:true},
 		})
-	})
-	it("selects 2 chains (reversed) from 2 chains",()=>{
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
-			'A':{},
-			'B':{},
-			'C':{'B':true},
-			'D':{'A':true},
-		}),{
-			'A':true,
-			'B':true,
-			'C':true,
-			'D':true,
-		})
-		assert.deepEqual(unorderedClassGraph.visibleParents,{
-			'A':{},
-			'B':{},
-			'C':{'B':true},
-			'D':{'A':true},
+		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+			A:{
+				A:{},
+			},
+			B:{
+				B:{},
+			},
+			C:{
+				C:{},
+			},
+			D:{
+				D:{},
+			},
 		})
 	})
 	it("selects fork from fork",()=>{
 		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
-			'A':{},
-			'B':{'A':true},
-			'C':{'A':true},
+			A:{},
+			B:{A:true},
+			C:{A:true},
 		}),{
-			'A':true,
-			'B':true,
-			'C':true,
+			A:true,
+			B:true,
+			C:true,
 		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
-			'A':{},
-			'B':{'A':true},
-			'C':{'A':true},
+			A:{},
+			B:{A:true},
+			C:{A:true},
+		})
+		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+			A:{
+				A:{},
+			},
+			B:{
+				B:{},
+			},
+			C:{
+				C:{},
+			},
 		})
 	})
 	it("selects chain from fork",()=>{
 		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
-			'A':{},
-			'B':{'A':true},
-			'C':{'A':true},
+			A:{},
+			B:{A:true},
+			C:{A:true},
 		}),{
-			'A':true,
-			'C':true,
+			A:true,
+			C:true,
 		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
-			'A':{},
-			'C':{'A':true},
+			A:{},
+			C:{A:true},
+		})
+		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+			A:{
+				A:{},
+			},
+			C:{
+				C:{},
+			},
 		})
 	})
 	it("selects 2 nodes from fork",()=>{
 		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
-			'A':{},
-			'B':{'A':true},
-			'C':{'A':true},
+			A:{},
+			B:{A:true},
+			C:{A:true},
 		}),{
-			'B':true,
-			'C':true,
+			B:true,
+			C:true,
 		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
-			'B':{},
-			'C':{},
+			B:{},
+			C:{},
+		})
+		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+			B:{
+				A:{},
+				B:{A:true},
+			},
+			C:{
+				A:{},
+				C:{A:true},
+			},
 		})
 	})
 	it("selects diamond from diamond",()=>{
 		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
-			'A':{},
-			'B':{'A':true},
-			'C':{'A':true},
-			'D':{'B':true,'C':true},
+			A:{},
+			B:{A:true},
+			C:{A:true},
+			D:{B:true,C:true},
 		}),{
-			'A':true,
-			'B':true,
-			'C':true,
-			'D':true,
+			A:true,
+			B:true,
+			C:true,
+			D:true,
 		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
-			'A':{},
-			'B':{'A':true},
-			'C':{'A':true},
-			'D':{'B':true,'C':true},
+			A:{},
+			B:{A:true},
+			C:{A:true},
+			D:{B:true,C:true},
+		})
+		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+			A:{
+				A:{},
+			},
+			B:{
+				B:{},
+			},
+			C:{
+				C:{},
+			},
+			D:{
+				D:{},
+			},
 		})
 	})
 	it("selects 3-chain from diamond",()=>{
 		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
-			'A':{},
-			'B':{'A':true},
-			'C':{'A':true},
-			'D':{'B':true,'C':true},
+			A:{},
+			B:{A:true},
+			C:{A:true},
+			D:{B:true,C:true},
 		}),{
-			'A':true,
-			'B':true,
-			'D':true,
+			A:true,
+			B:true,
+			D:true,
 		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
-			'A':{},
-			'B':{'A':true},
-			'D':{'B':true},
+			A:{},
+			B:{A:true},
+			D:{B:true},
+		})
+		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+			A:{
+				A:{},
+			},
+			B:{
+				B:{},
+			},
+			D:{
+				C:{},
+				D:{C:true},
+			},
 		})
 	})
 	it("selects И-shape from И-shape",()=>{
 		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
-			'A':{},
-			'B':{},
-			'C':{'A':true,'B':true},
-			'D':{'B':true},
+			A:{},
+			B:{},
+			C:{A:true,B:true},
+			D:{B:true},
 		}),{
-			'A':true,
-			'B':true,
-			'C':true,
-			'D':true,
+			A:true,
+			B:true,
+			C:true,
+			D:true,
 		})
 		assert.deepEqual(unorderedClassGraph.visibleParents,{
-			'A':{},
-			'B':{},
-			'C':{'A':true,'B':true},
-			'D':{'B':true},
+			A:{},
+			B:{},
+			C:{A:true,B:true},
+			D:{B:true},
+		})
+		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+			A:{
+				A:{},
+			},
+			B:{
+				B:{},
+			},
+			C:{
+				C:{},
+			},
+			D:{
+				D:{},
+			},
+		})
+	})
+	it("selects chain and node from a-shape",()=>{
+		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData({
+			A:{},
+			B:{A:true},
+			C:{A:true},
+			D:{B:true,C:true},
+			E:{C:true},
+		}),{
+			B:true,
+			D:true,
+			E:true,
+		})
+		assert.deepEqual(unorderedClassGraph.visibleParents,{
+			B:{},
+			D:{B:true},
+			E:{},
+		})
+		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+			B:{
+				A:{},
+				B:{A:true},
+			},
+			D:{
+				C:{},
+				D:{C:true},
+			},
+			E:{
+				A:{},
+				C:{A:true},
+				E:{C:true},
+			},
 		})
 	})
 })

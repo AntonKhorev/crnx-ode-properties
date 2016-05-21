@@ -331,6 +331,7 @@ $(function(){
 				setCellClasses($cell,cell)
 				if (cell.node!==undefined) {
 					$cell.append(getHtmlName(cell.node))
+					// TODO rename parents, children to ancestors, descendants
 					const parents=breadthWalk(dag,cell.node).reverse()
 					let $parents
 					if (parents.length>0) {
