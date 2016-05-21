@@ -1,12 +1,11 @@
 'use strict'
 
 const assert=require('assert')
-const makeTrLayout=require('../src/tr-layout')
+const TrLayout=require('../src/tr-layout')
 
-describe("makeTrLayout",()=>{
+describe("TrLayout",()=>{
 	it("skips row if trait is not present",()=>{
-		const trLayout=makeTrLayout(
-			['no-such-prop'],
+		const trLayout=new TrLayout(
 			['A','B','C'],
 			{
 				A: {
@@ -33,11 +32,12 @@ describe("makeTrLayout",()=>{
 				},
 			}
 		)
-		assert.equal(trLayout,null)
+		assert.equal(trLayout.getSubtreeLayout(
+			['no-such-prop']
+		),null)
 	})
 	it("supports redefined trait",()=>{
-		const trLayout=makeTrLayout(
-			['prop'],
+		const trLayout=new TrLayout(
 			['A','B','C'],
 			{
 				A: {
@@ -64,7 +64,9 @@ describe("makeTrLayout",()=>{
 				},
 			}
 		)
-		assert.deepEqual(trLayout,[
+		assert.deepEqual(trLayout.getSubtreeLayout(
+			['prop']
+		),[
 			[
 				['A','prop'],
 			],
@@ -77,11 +79,7 @@ describe("makeTrLayout",()=>{
 		])
 	})
 	it("supports redefined trait group",()=>{
-		const trLayout=makeTrLayout(
-			['prop',[
-				['subprop1'],
-				['subprop2'],
-			]],
+		const trLayout=new TrLayout(
 			['A','B','C'],
 			{
 				A: {
@@ -111,7 +109,12 @@ describe("makeTrLayout",()=>{
 				},
 			}
 		)
-		assert.deepEqual(trLayout,[
+		assert.deepEqual(trLayout.getSubtreeLayout(
+			['prop',[
+				['subprop1'],
+				['subprop2'],
+			]]
+		),[
 			[
 				['A','subprop1'],
 				['A','subprop2'],
@@ -127,8 +130,7 @@ describe("makeTrLayout",()=>{
 		])
 	})
 	it("supports skipped trait",()=>{
-		const trLayout=makeTrLayout(
-			['prop'],
+		const trLayout=new TrLayout(
 			['A','B','C'],
 			{
 				A: {
@@ -153,7 +155,9 @@ describe("makeTrLayout",()=>{
 				},
 			}
 		)
-		assert.deepEqual(trLayout,[
+		assert.deepEqual(trLayout.getSubtreeLayout(
+			['prop']
+		),[
 			[
 				['A','prop'],
 			],
@@ -164,8 +168,7 @@ describe("makeTrLayout",()=>{
 		])
 	})
 	it("supports inherited trait",()=>{
-		const trLayout=makeTrLayout(
-			['prop'],
+		const trLayout=new TrLayout(
 			['B','C'],
 			{
 				A: {
@@ -191,7 +194,9 @@ describe("makeTrLayout",()=>{
 				},
 			}
 		)
-		assert.deepEqual(trLayout,[
+		assert.deepEqual(trLayout.getSubtreeLayout(
+			['prop']
+		),[
 			[
 				['A','prop'],
 			],
@@ -201,8 +206,7 @@ describe("makeTrLayout",()=>{
 		])
 	})
 	it("supports fork-inherited trait",()=>{
-		const trLayout=makeTrLayout(
-			['prop'],
+		const trLayout=new TrLayout(
 			['C'],
 			{
 				A: {
@@ -226,7 +230,9 @@ describe("makeTrLayout",()=>{
 				},
 			}
 		)
-		assert.deepEqual(trLayout,[
+		assert.deepEqual(trLayout.getSubtreeLayout(
+			['prop']
+		),[
 			[
 				['A','prop'],
 				['B','prop'],
@@ -234,8 +240,7 @@ describe("makeTrLayout",()=>{
 		])
 	})
 	it("supports diamond-inherited trait",()=>{
-		const trLayout=makeTrLayout(
-			['prop'],
+		const trLayout=new TrLayout(
 			['D'],
 			{
 				A: {
@@ -265,15 +270,16 @@ describe("makeTrLayout",()=>{
 				},
 			}
 		)
-		assert.deepEqual(trLayout,[
+		assert.deepEqual(trLayout.getSubtreeLayout(
+			['prop']
+		),[
 			[
 				['A','prop'],
 			],
 		])
 	})
 	it("supports diamond-inherited trait with one parent visible",()=>{
-		const trLayout=makeTrLayout(
-			['prop'],
+		const trLayout=new TrLayout(
 			['C','D'],
 			{
 				A: {
@@ -303,7 +309,9 @@ describe("makeTrLayout",()=>{
 				},
 			}
 		)
-		assert.deepEqual(trLayout,[
+		assert.deepEqual(trLayout.getSubtreeLayout(
+			['prop']
+		),[
 			[
 				['A','prop'],
 			],
@@ -311,8 +319,7 @@ describe("makeTrLayout",()=>{
 		])
 	})
 	it("skips diamond-inherited trait when parent with trait is visible",()=>{
-		const trLayout=makeTrLayout(
-			['prop'],
+		const trLayout=new TrLayout(
 			['C','D'],
 			{
 				A: {
@@ -344,7 +351,9 @@ describe("makeTrLayout",()=>{
 				},
 			}
 		)
-		assert.deepEqual(trLayout,[
+		assert.deepEqual(trLayout.getSubtreeLayout(
+			['prop']
+		),[
 			[
 				['C','prop'],
 			],
@@ -352,8 +361,7 @@ describe("makeTrLayout",()=>{
 		])
 	})
 	it("displays diamond-inherited trait for parent when different parent with trait is invisible",()=>{
-		const trLayout=makeTrLayout(
-			['prop'],
+		const trLayout=new TrLayout(
 			['B','D'],
 			{
 				A: {
@@ -385,7 +393,9 @@ describe("makeTrLayout",()=>{
 				},
 			}
 		)
-		assert.deepEqual(trLayout,[
+		assert.deepEqual(trLayout.getSubtreeLayout(
+			['prop']
+		),[
 			[
 				['A','prop'],
 			],
@@ -428,12 +438,13 @@ describe("makeTrLayout",()=>{
 			},
 		}
 		it("displays closed trait when defining ancestor is visible",()=>{
-			const trLayout=makeTrLayout(
-				['prop'],
+			const trLayout=new TrLayout(
 				['A','B','C','D'],
 				classData
 			)
-			assert.deepEqual(trLayout,[
+			assert.deepEqual(trLayout.getSubtreeLayout(
+				['prop']
+			),[
 				[
 					['A','prop'],
 				],
@@ -445,12 +456,13 @@ describe("makeTrLayout",()=>{
 			])
 		})
 		it("displays closed trait when inheriting ancestor is visible",()=>{
-			const trLayout=makeTrLayout(
-				['prop'],
+			const trLayout=new TrLayout(
 				['B','C','D'],
 				classData
 			)
-			assert.deepEqual(trLayout,[
+			assert.deepEqual(trLayout.getSubtreeLayout(
+				['prop']
+			),[
 				[
 					['A','prop'],
 				],
@@ -461,12 +473,13 @@ describe("makeTrLayout",()=>{
 			])
 		})
 		it("displays closed trait on child when inheriting ancestor is visible",()=>{
-			const trLayout=makeTrLayout(
-				['prop'],
+			const trLayout=new TrLayout(
 				['B','D'],
 				classData
 			)
-			assert.deepEqual(trLayout,[
+			assert.deepEqual(trLayout.getSubtreeLayout(
+				['prop']
+			),[
 				[
 					['A','prop'],
 				],
@@ -476,12 +489,13 @@ describe("makeTrLayout",()=>{
 			])
 		})
 		it("skips closed trait when defining/inheriting ancestors are hidden",()=>{
-			const trLayout=makeTrLayout(
-				['prop'],
+			const trLayout=new TrLayout(
 				['C','D'],
 				classData
 			)
-			assert.deepEqual(trLayout,[
+			assert.deepEqual(trLayout.getSubtreeLayout(
+				['prop']
+			),[
 				[],
 				[],
 			])
@@ -521,12 +535,13 @@ describe("makeTrLayout",()=>{
 			},
 		}
 		it("displays closed trait when defining ancestor is visible",()=>{
-			const trLayout=makeTrLayout(
-				['prop'],
+			const trLayout=new TrLayout(
 				['A','B','C','D'],
 				classData
 			)
-			assert.deepEqual(trLayout,[
+			assert.deepEqual(trLayout.getSubtreeLayout(
+				['prop']
+			),[
 				[
 					['A','prop'],
 				],
@@ -538,12 +553,13 @@ describe("makeTrLayout",()=>{
 			])
 		})
 		it("displays closed trait on child when inheriting non-closing-side ancestor is visible",()=>{
-			const trLayout=makeTrLayout(
-				['prop'],
+			const trLayout=new TrLayout(
 				['B','D'],
 				classData
 			)
-			assert.deepEqual(trLayout,[
+			assert.deepEqual(trLayout.getSubtreeLayout(
+				['prop']
+			),[
 				[
 					['A','prop'],
 				],
@@ -553,12 +569,13 @@ describe("makeTrLayout",()=>{
 			])
 		})
 		it("skips closed trait when defining/inheriting ancestors are hidden",()=>{
-			const trLayout=makeTrLayout(
-				['prop'],
+			const trLayout=new TrLayout(
 				['C','D'],
 				classData
 			)
-			assert.deepEqual(trLayout,[
+			assert.deepEqual(trLayout.getSubtreeLayout(
+				['prop']
+			),[
 				[],
 				[],
 			])
