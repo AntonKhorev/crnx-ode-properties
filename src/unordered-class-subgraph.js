@@ -22,7 +22,7 @@ class UnorderedClassGraph {
 		}
 		this.allChildren=invertGraph(this.allParents)
 
-		// this.visibleParents and this.visibleChildren
+		// this.visibleParents, this.visibleChildren, this.visibleDepthNodes
 		const ancestorDistances={} // {node:{ancestorNode:distance,...},...}; node is any node, ancestorNode is one of selectedNodes
 		const addAncestorDistance=(fromNode,toNode,distance)=>{
 			const oldDistance=ancestorDistances[fromNode][toNode]
@@ -48,16 +48,25 @@ class UnorderedClassGraph {
 				}
 			}
 		}
+		this.visibleDepthNodes=[]
 		this.visibleParents={}
 		for (let node in visibleClasses) {
 			traverseNode(node)
+			let depth=0
 			this.visibleParents[node]={}
 			for (let ancestorNode in ancestorDistances[node]) {
 				const distance=ancestorDistances[node][ancestorNode]
+				if (distance>depth) {
+					depth=distance
+				}
 				if (distance==1) {
 					this.visibleParents[node][ancestorNode]=true
 				}
 			}
+			if (this.visibleDepthNodes[depth]===undefined) {
+				this.visibleDepthNodes[depth]={}
+			}
+			this.visibleDepthNodes[depth][node]=true
 		}
 		this.visibleChildren=invertGraph(this.visibleParents)
 

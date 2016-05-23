@@ -1,7 +1,7 @@
 'use strict'
 
 const assert=require('assert')
-const UnorderedClassGraph=require('../src/unordered-class-subgraph')
+const UnorderedClassSubgraph=require('../src/unordered-class-subgraph')
 
 const convertParentsToData=(parents)=>{
 	const data={}
@@ -39,7 +39,7 @@ describe("UnorderedClassSubgraph",()=>{
 		const dag={
 			A:{},
 		}
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
+		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			A:true,
 		})
 		assert.deepEqual(unorderedClassGraph.allParents,dag)
@@ -57,13 +57,16 @@ describe("UnorderedClassSubgraph",()=>{
 				A:{},
 			},
 		})
+		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+			{A:true},
+		])
 	})
 	it("selects 2 nodes from 2 nodes",()=>{
 		const dag={
 			A:{},
 			B:{},
 		}
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
+		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 		})
@@ -88,13 +91,16 @@ describe("UnorderedClassSubgraph",()=>{
 				B:{},
 			},
 		})
+		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+			{A:true,B:true},
+		])
 	})
 	it("selects chain from chain",()=>{
 		const dag={
 			A:{},
 			B:{A:true},
 		}
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
+		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 		})
@@ -119,13 +125,17 @@ describe("UnorderedClassSubgraph",()=>{
 				B:{},
 			},
 		})
+		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+			{A:true},
+			{B:true},
+		])
 	})
 	it("selects node from chain",()=>{
 		const dag={
 			A:{},
 			B:{A:true},
 		}
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
+		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			B:true,
 		})
 		assert.deepEqual(unorderedClassGraph.allParents,dag)
@@ -145,6 +155,9 @@ describe("UnorderedClassSubgraph",()=>{
 				B:{A:true},
 			},
 		})
+		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+			{B:true},
+		])
 	})
 	it("selects fork from fork",()=>{
 		const dag={
@@ -152,7 +165,7 @@ describe("UnorderedClassSubgraph",()=>{
 			B:{A:true},
 			C:{A:true},
 		}
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
+		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 			C:true,
@@ -184,6 +197,10 @@ describe("UnorderedClassSubgraph",()=>{
 				C:{},
 			},
 		})
+		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+			{A:true},
+			{B:true,C:true},
+		])
 	})
 	it("selects chain from fork",()=>{
 		const dag={
@@ -191,7 +208,7 @@ describe("UnorderedClassSubgraph",()=>{
 			B:{A:true},
 			C:{A:true},
 		}
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
+		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			A:true,
 			C:true,
 		})
@@ -217,6 +234,10 @@ describe("UnorderedClassSubgraph",()=>{
 				C:{},
 			},
 		})
+		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+			{A:true},
+			{C:true},
+		])
 	})
 	it("selects 2 nodes from fork",()=>{
 		const dag={
@@ -224,7 +245,7 @@ describe("UnorderedClassSubgraph",()=>{
 			B:{A:true},
 			C:{A:true},
 		}
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
+		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			B:true,
 			C:true,
 		})
@@ -252,6 +273,9 @@ describe("UnorderedClassSubgraph",()=>{
 				C:{A:true},
 			},
 		})
+		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+			{B:true,C:true},
+		])
 	})
 	it("selects diamond from diamond",()=>{
 		const dag={
@@ -260,7 +284,7 @@ describe("UnorderedClassSubgraph",()=>{
 			C:{A:true},
 			D:{B:true,C:true},
 		}
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
+		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 			C:true,
@@ -299,6 +323,11 @@ describe("UnorderedClassSubgraph",()=>{
 				D:{},
 			},
 		})
+		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+			{A:true},
+			{B:true,C:true},
+			{D:true},
+		])
 	})
 	it("selects 3-chain from diamond",()=>{
 		const dag={
@@ -307,7 +336,7 @@ describe("UnorderedClassSubgraph",()=>{
 			C:{A:true},
 			D:{B:true,C:true},
 		}
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
+		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 			D:true,
@@ -341,6 +370,11 @@ describe("UnorderedClassSubgraph",()=>{
 				D:{C:true},
 			},
 		})
+		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+			{A:true},
+			{B:true},
+			{D:true},
+		])
 	})
 	it("selects chain and node from a-shape",()=>{
 		const dag={
@@ -350,7 +384,7 @@ describe("UnorderedClassSubgraph",()=>{
 			D:{B:true,C:true},
 			E:{C:true},
 		}
-		const unorderedClassGraph=new UnorderedClassGraph(convertParentsToData(dag),{
+		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			B:true,
 			D:true,
 			E:true,
@@ -388,5 +422,9 @@ describe("UnorderedClassSubgraph",()=>{
 				E:{C:true},
 			},
 		})
+		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+			{B:true,E:true},
+			{D:true},
+		])
 	})
 })

@@ -1,15 +1,19 @@
 'use strict'
 
 const assert=require('assert')
+const UnorderedClassSubgraph=require('../src/unordered-class-subgraph')
 const TheadLayout=require('../src/thead-layout')
 
 describe("TheadLayout",()=>{
 	context("with 1 node",()=>{
-		const layout=new TheadLayout({
-			A: {},
+		const subgraph=new UnorderedClassSubgraph({
+			A: {
+				parents: {},
+			},
 		},{
 			A: true,
 		})
+		const layout=new TheadLayout(subgraph)
 		it("has columns",()=>{
 			assert.deepEqual(layout.columns,
 				['A']
@@ -31,18 +35,25 @@ describe("TheadLayout",()=>{
 		})
 	})
 	context("with fork",()=>{
-		const layout=new TheadLayout({
-			B: {},
-			A: {},
+		const subgraph=new UnorderedClassSubgraph({
+			B: {
+				parents: {},
+			},
+			A: {
+				parents: {},
+			},
 			C: {
-				B: true,
-				A: true,
+				parents: {
+					B: true,
+					A: true,
+				},
 			},
 		},{
 			B: true,
 			A: true,
 			C: true,
 		})
+		const layout=new TheadLayout(subgraph)
 		it("has parents array",()=>{
 			assert.deepEqual(layout.columnParents,{
 				A: [],

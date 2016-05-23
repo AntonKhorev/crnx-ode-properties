@@ -1,6 +1,6 @@
 'use strict'
 
-const UnorderedClassGraph=require('./unordered-class-subgraph')
+const UnorderedClassSubgraph=require('./unordered-class-subgraph')
 const TheadLayout=require('./thead-layout')
 const data=require('./data')
 
@@ -45,10 +45,10 @@ $(function(){
 			: data.classes[id].name
 		)
 
-		let unorderedClassGraph,theadLayout
+		let unorderedClassSubgraph,theadLayout
 		const recomputeLayouts=()=>{
-			unorderedClassGraph=new UnorderedClassGraph(data.classes,selectedNodes)
-			theadLayout=new TheadLayout(unorderedClassGraph.allParents,selectedNodes)
+			unorderedClassSubgraph=new UnorderedClassSubgraph(data.classes,selectedNodes)
+			theadLayout=new TheadLayout(unorderedClassSubgraph)
 		}
 		recomputeLayouts()
 
@@ -205,7 +205,7 @@ $(function(){
 			const visibleAncestors={} // including self
 			const computeVisibleAncestors=(id,aid)=>{
 				visibleAncestors[id][aid]=true
-				for (let naid in unorderedClassGraph.visibleParents[aid]) {
+				for (let naid in unorderedClassSubgraph.visibleParents[aid]) {
 					computeVisibleAncestors(id,naid)
 				}
 			}
@@ -329,7 +329,7 @@ $(function(){
 				if (cell.node!==undefined) {
 					$cell.append(getHtmlName(cell.node))
 					// TODO rename parents, children to ancestors, descendants
-					const parents=breadthWalk(unorderedClassGraph.allParents,cell.node).reverse()
+					const parents=breadthWalk(unorderedClassSubgraph.allParents,cell.node).reverse()
 					let $parents
 					if (parents.length>0) {
 						$cell.append(
@@ -337,7 +337,7 @@ $(function(){
 							writeTheadButton($cell,"Add parent","Add one of supertypes of this equation type",'t',parents)
 						)
 					}
-					const children=breadthWalk(unorderedClassGraph.allChildren,cell.node)
+					const children=breadthWalk(unorderedClassSubgraph.allChildren,cell.node)
 					if (children.length>0) {
 						$cell.append(
 							" ",
