@@ -410,7 +410,6 @@ describe("TrLayout",()=>{
 			],
 		])
 	})
-	/*
 	context("on chain with closed trait",()=>{
 		const classData={
 			A: {
@@ -497,10 +496,7 @@ describe("TrLayout",()=>{
 			const trLayout=new TrLayout(classSubgraph,classData,classColumns)
 			assert.deepEqual(trLayout.getSubtreeLayout(
 				['prop']
-			),[
-				[],
-				[],
-			])
+			),null)
 		})
 	})
 	context("on diamond with closed trait",()=>{
@@ -574,11 +570,7 @@ describe("TrLayout",()=>{
 			const trLayout=new TrLayout(classSubgraph,classData,classColumns)
 			assert.deepEqual(trLayout.getSubtreeLayout(
 				['prop']
-			),[
-				[],
-				[],
-			])
+			),null)
 		})
 	})
-	*/
 })

@@ -11,48 +11,61 @@ class TrLayout {
 	// 	class id = which class to take property from
 	// returns null if row is to be skipped
 	getSubtreeLayout(traitSubtree) {
-		const hasClose=(classId,traitId)=>{
-			const trait=this.classData[classId].traits[traitId]
-			if (!trait) return false
+		const hasCloseSection=trait=>{
 			return trait.some(section=>section[0]=='close')
+		}
+		const ancestorsHaveIntegratedTrait=(classId,traitId)=>{
+			const visited={}
+			const walk=classId=>{
+				if (visited[classId]) return false
+				visited[classId]=true
+				if (getIntegratedClassesForTrait(classId,traitId).length>0) {
+					return true
+				}
+				for (let vpid in this.classSubgraph.visibleParents[classId]) {
+					if (walk(vpid)) {
+						return true
+					}
+				}
+				return false
+			}
+			for (let vpid in this.classSubgraph.visibleParents[classId]) {
+				if (walk(vpid)) {
+					return true
+				}
+			}
+			return false
+		}
+		const getIntegratedClassesForTrait=(classId,traitId)=>{ // TODO memoize?
+			const integratedClassIds=[]
+			const visited={}
+			const walk=id=>{
+				if (visited[id]) return
+				visited[id]=true
+				const trait=this.classData[id].traits[traitId]
+				if (trait) {
+					if (!hasCloseSection(trait) || ancestorsHaveIntegratedTrait(classId,traitId)) {
+						integratedClassIds.push(id)
+					}
+				} else {
+					Object.keys(this.classSubgraph.integratedAncestors[classId][id]).sort().forEach(walk)
+				}
+			}
+			walk(classId)
+			return integratedClassIds
 		}
 
 		const cells=this.classColumns.map(classId=>{
-			/*
-			const hasVisibleParentsWithVisibleOpenTrait=(traitId)=>{
-				const reach=(id)=>{
-					for (let parent in this.classData[id].parents) {
-						if (
-					}
-				}
-				return reach(classId)
-			}
-			*/
-
 			const cell=[]
 			const walkTraits=(traitSubtree)=>{
 				const traitId=traitSubtree[0]
 				const traitChildren=traitSubtree[1]
-				const visited={}
-				const walkAncestors=id=>{
-					if (visited[id]) return
-					visited[id]=true
-					if (this.classData[id].traits[traitId]) {
-						if (hasClose(id,traitId)) {
-							//if (hasVisibleParentsWithTrait(traitId)) {
-								cell.push([id,traitId])
-							//}
-						} else {
-							cell.push([id,traitId])
-						}
-					} else {
-						Object.keys(this.classSubgraph.integratedAncestors[classId][id]).sort().forEach(walkAncestors)
-					}
-				}
 				if (traitChildren) {
 					traitChildren.forEach(walkTraits)
 				} else {
-					walkAncestors(classId)
+					getIntegratedClassesForTrait(classId,traitId).forEach(id=>{
+						cell.push([id,traitId])
+					})
 				}
 			}
 			walkTraits(traitSubtree)
