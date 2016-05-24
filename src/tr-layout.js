@@ -1,9 +1,10 @@
 'use strict'
 
 class TrLayout {
-	constructor(classIds,classData) {
-		this.classIds=classIds
+	constructor(classSubgraph,classData,classColumns) {
+		this.classSubgraph=classSubgraph
 		this.classData=classData
+		this.classColumns=classColumns
 	}
 
 	// returns list of cells: list of (class id, trait id)
@@ -16,27 +17,7 @@ class TrLayout {
 			return trait.some(section=>section[0]=='close')
 		}
 
-		const cells=this.classIds.map(classId=>{
-			const masked={}
-			const maskAncestors=id=>{
-				if (masked[id]) return
-				masked[id]=true
-				Object.keys(this.classData[id].parents).forEach(pid=>{
-					maskAncestors(pid)
-				})
-			}
-			const reachToMaskAncestors=id=>{
-				if (masked[id]) return
-				Object.keys(this.classData[id].parents).forEach(pid=>{
-					if (this.classIds.indexOf(pid)>=0) { // parent is visible
-						maskAncestors(pid)
-					} else {
-						reachToMaskAncestors(pid)
-					}
-				})
-			}
-			reachToMaskAncestors(classId) // mask visible ancestors and their ancestors - b/c they already have traits shown
-
+		const cells=this.classColumns.map(classId=>{
 			/*
 			const hasVisibleParentsWithVisibleOpenTrait=(traitId)=>{
 				const reach=(id)=>{
@@ -54,7 +35,7 @@ class TrLayout {
 				const traitChildren=traitSubtree[1]
 				const visited={}
 				const walkAncestors=id=>{
-					if (masked[id] || visited[id]) return
+					if (visited[id]) return
 					visited[id]=true
 					if (this.classData[id].traits[traitId]) {
 						if (hasClose(id,traitId)) {
@@ -65,7 +46,7 @@ class TrLayout {
 							cell.push([id,traitId])
 						}
 					} else {
-						Object.keys(this.classData[id].parents).sort().forEach(walkAncestors)
+						Object.keys(this.classSubgraph.integratedAncestors[classId][id]).sort().forEach(walkAncestors)
 					}
 				}
 				if (traitChildren) {

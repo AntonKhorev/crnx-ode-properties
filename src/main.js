@@ -54,6 +54,7 @@ $(function(){
 		}
 		recomputeLayouts()
 
+		// TODO put into classSubgraph
 		const breadthWalk=(graph,id)=>{
 			const result=[]
 			const visited={}
