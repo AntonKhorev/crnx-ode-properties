@@ -28,38 +28,5 @@ describe("TheadLayout",()=>{
 			assert.deepEqual(layout.arcLayers,[
 			])
 		})
-		it("has parents array",()=>{
-			assert.deepEqual(layout.columnParents,{
-				A: [],
-			})
-		})
-	})
-	context("with fork",()=>{
-		const subgraph=new UnorderedClassSubgraph({
-			B: {
-				parents: {},
-			},
-			A: {
-				parents: {},
-			},
-			C: {
-				parents: {
-					B: true,
-					A: true,
-				},
-			},
-		},{
-			B: true,
-			A: true,
-			C: true,
-		})
-		const layout=new TheadLayout(subgraph)
-		it("has parents array",()=>{
-			assert.deepEqual(layout.columnParents,{
-				A: [],
-				B: [],
-				C: ['A','B'],
-			})
-		})
 	})
 })

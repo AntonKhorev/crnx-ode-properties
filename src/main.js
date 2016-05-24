@@ -1,6 +1,7 @@
 'use strict'
 
 const UnorderedClassSubgraph=require('./unordered-class-subgraph')
+const OrderedClassSubgraph=require('./ordered-class-subgraph')
 const TheadLayout=require('./thead-layout')
 const data=require('./data')
 
@@ -45,10 +46,11 @@ $(function(){
 			: data.classes[id].name
 		)
 
-		let unorderedClassSubgraph,theadLayout
+		let unorderedClassSubgraph,theadLayout,orderedClassSubgraph
 		const recomputeLayouts=()=>{
 			unorderedClassSubgraph=new UnorderedClassSubgraph(data.classes,selectedNodes)
 			theadLayout=new TheadLayout(unorderedClassSubgraph)
+			orderedClassSubgraph=new OrderedClassSubgraph(unorderedClassSubgraph,theadLayout.columns)
 		}
 		recomputeLayouts()
 
@@ -409,7 +411,7 @@ $(function(){
 										noteText=>$("<div class='note'>").append(noteText)
 									))
 								}
-								const columnParents=theadLayout.columnParents[id]
+								const columnParents=orderedClassSubgraph.visibleParents[id]
 								if (columnParents.length>0) {
 									notes.push(
 										$("<div class='note'>").append(

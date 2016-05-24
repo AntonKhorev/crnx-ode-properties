@@ -39,25 +39,25 @@ describe("UnorderedClassSubgraph",()=>{
 		const dag={
 			A:{},
 		}
-		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
+		const unorderedClassSubraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			A:true,
 		})
-		assert.deepEqual(unorderedClassGraph.allParents,dag)
-		assert.deepEqual(unorderedClassGraph.allChildren,{
+		assert.deepEqual(unorderedClassSubraph.allParents,dag)
+		assert.deepEqual(unorderedClassSubraph.allChildren,{
 			A:{},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleParents,{
+		assert.deepEqual(unorderedClassSubraph.visibleParents,{
 			A:{},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+		assert.deepEqual(unorderedClassSubraph.visibleChildren,{
 			A:{},
 		})
-		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+		assert.deepEqual(unorderedClassSubraph.integratedAncestors,{
 			A:{
 				A:{},
 			},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+		assert.deepEqual(unorderedClassSubraph.visibleDepthNodes,[
 			{A:true},
 		])
 	})
@@ -66,24 +66,24 @@ describe("UnorderedClassSubgraph",()=>{
 			A:{},
 			B:{},
 		}
-		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
+		const unorderedClassSubraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 		})
-		assert.deepEqual(unorderedClassGraph.allParents,dag)
-		assert.deepEqual(unorderedClassGraph.allChildren,{
+		assert.deepEqual(unorderedClassSubraph.allParents,dag)
+		assert.deepEqual(unorderedClassSubraph.allChildren,{
 			A:{},
 			B:{},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleParents,{
+		assert.deepEqual(unorderedClassSubraph.visibleParents,{
 			A:{},
 			B:{},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+		assert.deepEqual(unorderedClassSubraph.visibleChildren,{
 			A:{},
 			B:{},
 		})
-		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+		assert.deepEqual(unorderedClassSubraph.integratedAncestors,{
 			A:{
 				A:{},
 			},
@@ -91,7 +91,7 @@ describe("UnorderedClassSubgraph",()=>{
 				B:{},
 			},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+		assert.deepEqual(unorderedClassSubraph.visibleDepthNodes,[
 			{A:true,B:true},
 		])
 	})
@@ -100,24 +100,24 @@ describe("UnorderedClassSubgraph",()=>{
 			A:{},
 			B:{A:true},
 		}
-		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
+		const unorderedClassSubraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 		})
-		assert.deepEqual(unorderedClassGraph.allParents,dag)
-		assert.deepEqual(unorderedClassGraph.allChildren,{
+		assert.deepEqual(unorderedClassSubraph.allParents,dag)
+		assert.deepEqual(unorderedClassSubraph.allChildren,{
 			A:{B:true},
 			B:{},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleParents,{
+		assert.deepEqual(unorderedClassSubraph.visibleParents,{
 			A:{},
 			B:{A:true},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+		assert.deepEqual(unorderedClassSubraph.visibleChildren,{
 			A:{B:true},
 			B:{},
 		})
-		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+		assert.deepEqual(unorderedClassSubraph.integratedAncestors,{
 			A:{
 				A:{},
 			},
@@ -125,7 +125,7 @@ describe("UnorderedClassSubgraph",()=>{
 				B:{},
 			},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+		assert.deepEqual(unorderedClassSubraph.visibleDepthNodes,[
 			{A:true},
 			{B:true},
 		])
@@ -135,27 +135,27 @@ describe("UnorderedClassSubgraph",()=>{
 			A:{},
 			B:{A:true},
 		}
-		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
+		const unorderedClassSubraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			B:true,
 		})
-		assert.deepEqual(unorderedClassGraph.allParents,dag)
-		assert.deepEqual(unorderedClassGraph.allChildren,{
+		assert.deepEqual(unorderedClassSubraph.allParents,dag)
+		assert.deepEqual(unorderedClassSubraph.allChildren,{
 			A:{B:true},
 			B:{},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleParents,{
+		assert.deepEqual(unorderedClassSubraph.visibleParents,{
 			B:{},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+		assert.deepEqual(unorderedClassSubraph.visibleChildren,{
 			B:{},
 		})
-		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+		assert.deepEqual(unorderedClassSubraph.integratedAncestors,{
 			B:{
 				A:{},
 				B:{A:true},
 			},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+		assert.deepEqual(unorderedClassSubraph.visibleDepthNodes,[
 			{B:true},
 		])
 	})
@@ -165,28 +165,28 @@ describe("UnorderedClassSubgraph",()=>{
 			B:{A:true},
 			C:{A:true},
 		}
-		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
+		const unorderedClassSubraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 			C:true,
 		})
-		assert.deepEqual(unorderedClassGraph.allParents,dag)
-		assert.deepEqual(unorderedClassGraph.allChildren,{
+		assert.deepEqual(unorderedClassSubraph.allParents,dag)
+		assert.deepEqual(unorderedClassSubraph.allChildren,{
 			A:{B:true,C:true},
 			B:{},
 			C:{},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleParents,{
+		assert.deepEqual(unorderedClassSubraph.visibleParents,{
 			A:{},
 			B:{A:true},
 			C:{A:true},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+		assert.deepEqual(unorderedClassSubraph.visibleChildren,{
 			A:{B:true,C:true},
 			B:{},
 			C:{},
 		})
-		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+		assert.deepEqual(unorderedClassSubraph.integratedAncestors,{
 			A:{
 				A:{},
 			},
@@ -197,7 +197,7 @@ describe("UnorderedClassSubgraph",()=>{
 				C:{},
 			},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+		assert.deepEqual(unorderedClassSubraph.visibleDepthNodes,[
 			{A:true},
 			{B:true,C:true},
 		])
@@ -208,25 +208,25 @@ describe("UnorderedClassSubgraph",()=>{
 			B:{A:true},
 			C:{A:true},
 		}
-		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
+		const unorderedClassSubraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			A:true,
 			C:true,
 		})
-		assert.deepEqual(unorderedClassGraph.allParents,dag)
-		assert.deepEqual(unorderedClassGraph.allChildren,{
+		assert.deepEqual(unorderedClassSubraph.allParents,dag)
+		assert.deepEqual(unorderedClassSubraph.allChildren,{
 			A:{B:true,C:true},
 			B:{},
 			C:{},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleParents,{
+		assert.deepEqual(unorderedClassSubraph.visibleParents,{
 			A:{},
 			C:{A:true},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+		assert.deepEqual(unorderedClassSubraph.visibleChildren,{
 			A:{C:true},
 			C:{},
 		})
-		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+		assert.deepEqual(unorderedClassSubraph.integratedAncestors,{
 			A:{
 				A:{},
 			},
@@ -234,7 +234,7 @@ describe("UnorderedClassSubgraph",()=>{
 				C:{},
 			},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+		assert.deepEqual(unorderedClassSubraph.visibleDepthNodes,[
 			{A:true},
 			{C:true},
 		])
@@ -245,25 +245,25 @@ describe("UnorderedClassSubgraph",()=>{
 			B:{A:true},
 			C:{A:true},
 		}
-		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
+		const unorderedClassSubraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			B:true,
 			C:true,
 		})
-		assert.deepEqual(unorderedClassGraph.allParents,dag)
-		assert.deepEqual(unorderedClassGraph.allChildren,{
+		assert.deepEqual(unorderedClassSubraph.allParents,dag)
+		assert.deepEqual(unorderedClassSubraph.allChildren,{
 			A:{B:true,C:true},
 			B:{},
 			C:{},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleParents,{
+		assert.deepEqual(unorderedClassSubraph.visibleParents,{
 			B:{},
 			C:{},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+		assert.deepEqual(unorderedClassSubraph.visibleChildren,{
 			B:{},
 			C:{},
 		})
-		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+		assert.deepEqual(unorderedClassSubraph.integratedAncestors,{
 			B:{
 				A:{},
 				B:{A:true},
@@ -273,7 +273,7 @@ describe("UnorderedClassSubgraph",()=>{
 				C:{A:true},
 			},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+		assert.deepEqual(unorderedClassSubraph.visibleDepthNodes,[
 			{B:true,C:true},
 		])
 	})
@@ -284,32 +284,32 @@ describe("UnorderedClassSubgraph",()=>{
 			C:{A:true},
 			D:{B:true,C:true},
 		}
-		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
+		const unorderedClassSubraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 			C:true,
 			D:true,
 		})
-		assert.deepEqual(unorderedClassGraph.allParents,dag)
-		assert.deepEqual(unorderedClassGraph.allChildren,{
+		assert.deepEqual(unorderedClassSubraph.allParents,dag)
+		assert.deepEqual(unorderedClassSubraph.allChildren,{
 			A:{B:true,C:true},
 			B:{D:true},
 			C:{D:true},
 			D:{},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleParents,{
+		assert.deepEqual(unorderedClassSubraph.visibleParents,{
 			A:{},
 			B:{A:true},
 			C:{A:true},
 			D:{B:true,C:true},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+		assert.deepEqual(unorderedClassSubraph.visibleChildren,{
 			A:{B:true,C:true},
 			B:{D:true},
 			C:{D:true},
 			D:{},
 		})
-		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+		assert.deepEqual(unorderedClassSubraph.integratedAncestors,{
 			A:{
 				A:{},
 			},
@@ -323,7 +323,7 @@ describe("UnorderedClassSubgraph",()=>{
 				D:{},
 			},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+		assert.deepEqual(unorderedClassSubraph.visibleDepthNodes,[
 			{A:true},
 			{B:true,C:true},
 			{D:true},
@@ -336,29 +336,29 @@ describe("UnorderedClassSubgraph",()=>{
 			C:{A:true},
 			D:{B:true,C:true},
 		}
-		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
+		const unorderedClassSubraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			A:true,
 			B:true,
 			D:true,
 		})
-		assert.deepEqual(unorderedClassGraph.allParents,dag)
-		assert.deepEqual(unorderedClassGraph.allChildren,{
+		assert.deepEqual(unorderedClassSubraph.allParents,dag)
+		assert.deepEqual(unorderedClassSubraph.allChildren,{
 			A:{B:true,C:true},
 			B:{D:true},
 			C:{D:true},
 			D:{},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleParents,{
+		assert.deepEqual(unorderedClassSubraph.visibleParents,{
 			A:{},
 			B:{A:true},
 			D:{B:true},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+		assert.deepEqual(unorderedClassSubraph.visibleChildren,{
 			A:{B:true},
 			B:{D:true},
 			D:{},
 		})
-		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+		assert.deepEqual(unorderedClassSubraph.integratedAncestors,{
 			A:{
 				A:{},
 			},
@@ -370,7 +370,7 @@ describe("UnorderedClassSubgraph",()=>{
 				D:{C:true},
 			},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+		assert.deepEqual(unorderedClassSubraph.visibleDepthNodes,[
 			{A:true},
 			{B:true},
 			{D:true},
@@ -384,30 +384,30 @@ describe("UnorderedClassSubgraph",()=>{
 			D:{B:true,C:true},
 			E:{C:true},
 		}
-		const unorderedClassGraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
+		const unorderedClassSubraph=new UnorderedClassSubgraph(convertParentsToData(dag),{
 			B:true,
 			D:true,
 			E:true,
 		})
-		assert.deepEqual(unorderedClassGraph.allParents,dag)
-		assert.deepEqual(unorderedClassGraph.allChildren,{
+		assert.deepEqual(unorderedClassSubraph.allParents,dag)
+		assert.deepEqual(unorderedClassSubraph.allChildren,{
 			A:{B:true,C:true},
 			B:{D:true},
 			C:{D:true,E:true},
 			D:{},
 			E:{},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleParents,{
+		assert.deepEqual(unorderedClassSubraph.visibleParents,{
 			B:{},
 			D:{B:true},
 			E:{},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleChildren,{
+		assert.deepEqual(unorderedClassSubraph.visibleChildren,{
 			B:{D:true},
 			D:{},
 			E:{},
 		})
-		assert.deepEqual(unorderedClassGraph.integratedAncestors,{
+		assert.deepEqual(unorderedClassSubraph.integratedAncestors,{
 			B:{
 				A:{},
 				B:{A:true},
@@ -422,7 +422,7 @@ describe("UnorderedClassSubgraph",()=>{
 				E:{C:true},
 			},
 		})
-		assert.deepEqual(unorderedClassGraph.visibleDepthNodes,[
+		assert.deepEqual(unorderedClassSubraph.visibleDepthNodes,[
 			{B:true,E:true},
 			{D:true},
 		])
