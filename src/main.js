@@ -3,6 +3,7 @@
 const UnorderedClassSubgraph=require('./unordered-class-subgraph')
 const OrderedClassSubgraph=require('./ordered-class-subgraph')
 const TheadLayout=require('./thead-layout')
+const TrLayout=require('./tr-layout')
 const data=require('./data')
 
 const i18n=(id)=>{
@@ -46,11 +47,12 @@ $(function(){
 			: data.classes[id].name
 		)
 
-		let unorderedClassSubgraph,theadLayout,orderedClassSubgraph
+		let unorderedClassSubgraph,theadLayout,orderedClassSubgraph,trLayout
 		const recomputeLayouts=()=>{
 			unorderedClassSubgraph=new UnorderedClassSubgraph(data.classes,selectedNodes)
 			theadLayout=new TheadLayout(unorderedClassSubgraph)
 			orderedClassSubgraph=new OrderedClassSubgraph(unorderedClassSubgraph,theadLayout.columns)
+			trLayout=new TrLayout(unorderedClassSubgraph,data.classes,theadLayout.columns)
 		}
 		recomputeLayouts()
 
@@ -79,130 +81,62 @@ $(function(){
 			}
 			return $button
 		}
-		const writeData=(name,id)=>{
-			const output=[]
-
-			// mark ancestors of visible ancestors as visited
-			const visited={}
-			const markAncestors=id=>{
-				if (visited[id]) return
-				visited[id]=true
-				Object.keys(data.classes[id].parents).forEach(pid=>{
-					markAncestors(pid)
-				})
-			}
-			const reachAncestors=id=>{
-				if (visited[id]) return
-				Object.keys(data.classes[id].parents).forEach(pid=>{
-					if (selectedNodes[pid]) {
-						markAncestors(pid)
+		const writeTraitItem=(forClassId,fromClassId,item)=>{
+			return $("<li>").append(item.map(section=>{
+				let type=section[0], contents=section[1]
+				if (type=='form') {
+					if (forClassId==fromClassId) return null
+					type='note'
+					contents=[
+						"when equation is written as <em>"+getHtmlName(fromClassId)+"</em>:",
+						"\\["+data.classes[fromClassId].equation+"\\]",
+					]
+				} else if (type=='close' || type=='compare') {
+					return null
+				}
+				const $section=$(`<div class='${type}'>`).append(contents.map(line=>{
+					if (type=='title') {
+						return $(`<div><em>${line}</em>:</div>`)
 					} else {
-						reachAncestors(pid)
+						return $(`<div>${line}</div>`)
 					}
-				})
-			}
-			reachAncestors(id)
-
-			const overrides={}
-			const raiseOverride=iid=>{
-				if (overrides[iid]===undefined) {
-					overrides[iid]=0
-				}
-				overrides[iid]++
-			}
-			const lowerOverride=iid=>{
-				overrides[iid]--
-			}
-			const rec=cid=>{
-				visited[cid]=true
-				const forOverrides=fn=>{
-					if (data.classes[cid][name]) {
-						data.classes[cid][name].forEach(item=>{
-							item.forEach(section=>{
-								const type=section[0]
-								if (section[0]=='override') {
-									const iids=section[1]
-									iids.forEach(iid=>{
-										fn(iid)
-									})
-								}
-							})
-						})
-					}
-				}
-				// recursion on nodes that are not selected for display
-				forOverrides(raiseOverride)
-				Object.keys(data.classes[cid].parents).sort().forEach(pid=>{
-					if (!visited[pid]) {
-						rec(pid)
-					}
-				})
-				forOverrides(lowerOverride)
-				// output of things that are not overridden by children
-				if (data.classes[cid][name]) {
-					data.classes[cid][name].forEach(item=>{
-						let skip=false
-						item.forEach(section=>{
-							const type=section[0]
-							if (type=='id') {
-								const iid=section[1]
-								if (overrides[iid]) {
-									skip=true
-								}
-							}
-						})
-						if (skip) return
-						const outItem=[]
-						item.forEach(section=>{
-							const type=section[0]
-							if (type=='id' || type=='override') return
-							if (type=='form') {
-								if (cid!=id) {
-									outItem.push(['note',[
-										"when equation is written as <em>"+getHtmlName(cid)+"</em>:",
-										"\\["+data.classes[cid].equation+"\\]",
-									]])
-								}
-							} else {
-								outItem.push(section)
-							}
-						})
-						if (outItem.length>0) {
-							output.push(outItem)
+				}))
+				if (type=='detail') {
+					const $b1=writeButton("Open","Expand details")
+					const $b2=writeButton("Open","Expand details")
+					$section.prepend($b1).append($b2)
+					const $bs=$b1.add($b2)
+					$bs.click(function(){
+						if (!$section.hasClass('open')) {
+							$section.addClass('open')
+							$bs.html("<span>Close</span>").attr('title',"Collapse details")
+						} else {
+							$section.removeClass('open')
+							$bs.html("<span>Open</span>").attr('title',"Expand details")
 						}
 					})
 				}
-			}
-			rec(id)
-			if (output.length==0) return $()
-			return $("<ul class='major'>").append(output.map(item=>{
-				return $("<li>").append(item.map(section=>{
-					const type=section[0], contents=section[1]
-					const $section=$(`<div class='${type}'>`).append(contents.map(line=>{
-						if (type=='title') {
-							return $(`<div><em>${line}</em>:</div>`)
-						} else {
-							return $(`<div>${line}</div>`)
-						}
-					}))
-					if (type=='detail') {
-						const $b1=writeButton("Open","Expand details")
-						const $b2=writeButton("Open","Expand details")
-						$section.prepend($b1).append($b2)
-						const $bs=$b1.add($b2)
-						$bs.click(function(){
-							if (!$section.hasClass('open')) {
-								$section.addClass('open')
-								$bs.html("<span>Close</span>").attr('title',"Collapse details")
-							} else {
-								$section.removeClass('open')
-								$bs.html("<span>Open</span>").attr('title',"Expand details")
-							}
-						})
-					}
-					return $section
-				}))
+				return $section
 			}))
+		}
+		const writeTraitCell=(forClassId,traitCell)=>{
+			const $cell=$("<td>")
+			if (traitCell.length>0) {
+				$cell.append($("<ul class='major'>").append(traitCell.map(classTraitId=>{
+					const classId=classTraitId[0]
+					const traitId=classTraitId[1]
+					const item=data.classes[classId].traits[traitId]
+					return writeTraitItem(forClassId,classId,item)
+				})))
+			}
+			return $cell
+		}
+		const writeTraitRow=(traitSubtree)=>{
+			const traitCells=trLayout.getSubtreeLayout(traitSubtree)
+			if (!traitCells) return null
+			return $("<tr>").append(traitCells.map(
+				(traitCell,i)=>writeTraitCell(theadLayout.columns[i],traitCell)
+			))
 		}
 		const writeTable=()=>{
 			const visibleAncestors={} // including self
@@ -439,19 +373,9 @@ $(function(){
 								}
 								return $td
 							})
-						)/*,
-						// properties
-						$("<tr>").append(
-							theadLayout.columns.map(id=>$("<td>").append(
-								writeData('properties',id)
-							))
 						),
-						// solutions
-						$("<tr>").append(
-							theadLayout.columns.map(id=>$("<td>").append(
-								writeData('solutions',id)
-							))
-						)*/
+						// traits
+						data.traits.map(writeTraitRow)
 					)
 				),
 				"<p>General notes:</p>",

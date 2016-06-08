@@ -49,9 +49,6 @@ const traits=[
 //	form = have to present the equation in which this trait was defined; put after title
 //	close = children don't need to inherit this trait; display it only if parents have it displayed; put at end
 //	compare = show only if other classes have this property without compare entry; put at end
-// TODO remove:
-//	id
-//	override
 const classes={
 	on: {
 		parents: {},
