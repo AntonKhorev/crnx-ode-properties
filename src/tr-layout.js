@@ -14,6 +14,9 @@ class TrLayout {
 		const hasCloseSection=trait=>{
 			return trait.some(section=>section[0]=='close')
 		}
+		const hasCompareSection=trait=>{
+			return trait.some(section=>section[0]=='compare')
+		}
 		const ancestorsHaveIntegratedTrait=(classId,traitId)=>{
 			const visited={}
 			const walk=classId=>{
@@ -72,6 +75,24 @@ class TrLayout {
 			return cell
 		})
 
+		// compared traits filtering
+		const keepTraits={}
+		cells.forEach(cell=>cell.forEach(classTraitId=>{
+			const classId=classTraitId[0]
+			const traitId=classTraitId[1]
+			const trait=this.classData[classId].traits[traitId]
+			if (!hasCompareSection(trait)) {
+				keepTraits[traitId]=true
+			}
+		}))
+		for (let i=0;i<cells.length;i++) {
+			cells[i]=cells[i].filter(classTraitId=>{
+				const traitId=classTraitId[1]
+				return keepTraits[traitId]
+			})
+		}
+
+		// empty row detection
 		if (cells.some(cell=>cell.length>0)) {
 			return cells
 		} else {

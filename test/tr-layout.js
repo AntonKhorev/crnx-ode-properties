@@ -573,4 +573,94 @@ describe("TrLayout",()=>{
 			),null)
 		})
 	})
+	context("on chain with compared trait",()=>{
+		const classData={
+			A: {
+				parents: {},
+				traits: {
+					prop: [
+						['main',['useless stuff a']],
+						['compare'],
+					],
+				},
+			},
+			B: {
+				parents: {
+					A: true,
+				},
+				traits: {},
+			},
+			C: {
+				parents: {
+					B: true,
+				},
+				traits: {
+					prop: [
+						['main',['useful stuff a']],
+					],
+				},
+			},
+			D: {
+				parents: {
+					C: true,
+				},
+				traits: {},
+			},
+		}
+		it("displays compared trait when defining descendant is visible",()=>{
+			const classColumns=['A','B','C','D']
+			const classSubgraph=makeClassSubgraph(classData,classColumns)
+			const trLayout=new TrLayout(classSubgraph,classData,classColumns)
+			assert.deepEqual(trLayout.getSubtreeLayout(
+				['prop']
+			),[
+				[
+					['A','prop'],
+				],
+				[],
+				[
+					['C','prop'],
+				],
+				[],
+			])
+		})
+		it("displays compared trait when inheriting descendant is visible",()=>{
+			const classColumns=['A','D']
+			const classSubgraph=makeClassSubgraph(classData,classColumns)
+			const trLayout=new TrLayout(classSubgraph,classData,classColumns)
+			assert.deepEqual(trLayout.getSubtreeLayout(
+				['prop']
+			),[
+				[
+					['A','prop'],
+				],
+				[
+					['C','prop'],
+				],
+			])
+		})
+		it("displays compared trait on child when inheriting descendant is visible",()=>{
+			const classColumns=['B','D']
+			const classSubgraph=makeClassSubgraph(classData,classColumns)
+			const trLayout=new TrLayout(classSubgraph,classData,classColumns)
+			assert.deepEqual(trLayout.getSubtreeLayout(
+				['prop']
+			),[
+				[
+					['A','prop'],
+				],
+				[
+					['C','prop'],
+				],
+			])
+		})
+		it("skips compared trait when defining/inheriting descendants are hidden",()=>{
+			const classColumns=['A','B']
+			const classSubgraph=makeClassSubgraph(classData,classColumns)
+			const trLayout=new TrLayout(classSubgraph,classData,classColumns)
+			assert.deepEqual(trLayout.getSubtreeLayout(
+				['prop']
+			),null)
+		})
+	})
 })
