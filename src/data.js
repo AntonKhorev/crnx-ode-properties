@@ -59,7 +59,7 @@ const classes={
 		traits: {
 			testSolutionMethod: [
 				['main',[
-					"Can test if \\( y_p(t) \\) is a solution by substituting \\(y = y_p\\) into the equation.",
+					"Can test if \\( y_p \\) is a solution by substituting \\( y = y_p \\) into the equation.",
 				]],
 			],
 		}
@@ -121,7 +121,7 @@ const classes={
 			],
 			shiftSolutionRelation: [
 				['main',[
-					"\\( y_p(t) \\) is a solution \\( \\Rightarrow \\) \\( y_p(t+C) \\) is a solution",
+					"If \\( y_p(t) \\) is a solution, then \\( y_p(t+C) \\) is a solution",
 				]],
 			],
 			generalSolutionMethod: [
@@ -208,57 +208,56 @@ const classes={
 			],
 			solutionSpaceBasis: [
 				['main',[
-					`If \\( y_p(t) \\) is a solution`,
-					`and \\( y_h(t) \\) is a nonzero solution of the associated homogeneous equation`,
+					`If \\( y_p \\) is a solution`,
+					`and \\( y_h \\) is a nonzero solution of the associated homogeneous equation`,
 					`then \\( K y_h + y_p \\) is a general solution.`,
 				]],
 			],
 			homogeneitySolutionRelation: [
 				['main',[
-					`If \\( y_0(t) \\) and \\( y_1(t) \\) are solutions,`,
+					`If \\( y_0 \\) and \\( y_1 \\) are solutions,`,
 					`then \\( K_1 y_1 + (1 - K_1) y_0 \\) is a solution.`,
 				]],
 				['compare'],
 			],
 			additivitySolutionRelation: [
 				['main',[
-					`If \\( y_0(t) \\), \\( y_1(t) \\) and \\( y_2(t) \\) are solutions,`,
+					`If \\( y_0 \\), \\( y_1 \\) and \\( y_2 \\) are solutions,`,
 					`then \\( y_1 + y_2 - y_0 \\) is a solution.`,
 				]],
 				['compare'],
 			],
 			twoLinearCombinationSolutionRelation: [
 				['main',[
-					`If \\( y_0(t) \\), \\( y_1(t) \\) and \\( y_2(t) \\) are solutions,`,
+					`If \\( y_0 \\), \\( y_1 \\) and \\( y_2 \\) are solutions,`,
 					`then \\( K_1 y_1 + K_2 y_2 + (1 - K_1 - K_2) y_0 \\) is a solution.`,
 				]],
 				['compare'],
 			],
 			nLinearCombinationSolutionRelation: [
 				['main',[
-					`If \\( y_0(t) \\), \\( y_1(t) \\), \\( y_2(t) \\), ..., \\( y_m(t) \\) are solutions,`,
-					//`then \\( K_1 y_1 + K_2 y_2 + \\cdots + K_m y_m + (1 - K_1 - K_2 - \\cdots - K_m) y_0 \\) is a solution.`,
+					`If \\( y_0 \\), \\( y_1 \\), \\( y_2 \\), ..., \\( y_m \\) are solutions,`,
 					`then \\( \\sum\\limits_{i=1}^m K_i y_i + (1 - \\sum\\limits_{i=1}^m K_i) y_0 \\) is a solution.`,
 				]],
 				['compare'],
 			],
 			twoAffineCombinationSolutionRelation: [
 				['main',[
-					`If \\( y_1(t) \\), \\( y_2(t) \\) are solutions`,
+					`If \\( y_1 \\), \\( y_2 \\) are solutions`,
 					`and \\( K_1 + K_2 = 1 \\)`,
 					`then \\( K_1 y_1 + K_2 y_2 \\) is a solution.`,
 				]],
 			],
 			nAffineCombinationSolutionRelation: [
 				['main',[
-					`If \\( y_1(t) \\), \\( y_2(t) \\), ..., \\( y_m(t) \\) are solutions`,
+					`If \\( y_1 \\), \\( y_2 \\), ..., \\( y_m \\) are solutions`,
 					`and \\( \\sum\\limits_{i=1}^m K_i = 1 \\)`,
 					`then \\( \\sum\\limits_{i=1}^m K_i y_i \\) is a solution.`,
 				]],
 			],
 			associatedSolutionRelation: [
 				['main',[
-					`If \\( y_1(t) \\) and \\( y_2(t) \\) are solutions,`,
+					`If \\( y_1 \\) and \\( y_2 \\) are solutions,`,
 					`then \\( y_1 - y_2 \\) is a solution of the associated homogeneous equation.`,
 				]],
 			],
@@ -315,32 +314,32 @@ const classes={
 			],
 			solutionSpaceBasis: [
 				['main',[
-					`If \\( y_h(t) \\) is a nonzero solution,`,
-					`then \\( K y_h(t) \\) is a general solution.`,
+					`If \\( y_h \\) is a nonzero solution,`,
+					`then \\( K y_h \\) is a general solution.`,
 				]],
 			],
 			homogeneitySolutionRelation: [
 				['main',[
-					`If \\( y_1(t) \\) is a solution,`,
-					`then \\( K_1 y_1(t) \\) is a solution.`,
+					`If \\( y_1 \\) is a solution,`,
+					`then \\( K_1 y_1 \\) is a solution.`,
 				]],
 			],
 			additivitySolutionRelation: [
 				['main',[
-					`If \\( y_1(t) \\) and \\( y_2(t) \\) are solutions,`,
-					`then \\( y_1(t) + y_2(t) \\) is a solution.`,
+					`If \\( y_1 \\) and \\( y_2 \\) are solutions,`,
+					`then \\( y_1 + y_2 \\) is a solution.`,
 				]],
 			],
 			twoLinearCombinationSolutionRelation: [
 				['main',[
-					`If \\( y_1(t) \\) and \\( y_2(t) \\) are solutions,`,
-					`then \\( K_1 y_1(t) + K_2 y_2(t) \\) is a solution.`,
+					`If \\( y_1 \\) and \\( y_2 \\) are solutions,`,
+					`then \\( K_1 y_1 + K_2 y_2 \\) is a solution.`,
 				]],
 			],
 			nLinearCombinationSolutionRelation: [
 				['main',[
-					`If \\( y_1(t) \\), \\( y_2(t) \\), ..., \\( y_m(t) \\) are solutions,`,
-					`then \\( K_1 y_1(t) + K_2 y_2(t) + \\cdots + K_m y_m(t) \\) is a solution.`,
+					`If \\( y_1 \\), \\( y_2 \\), ..., \\( y_m \\) are solutions,`,
+					`then \\( \\sum\\limits_{i=1}^m K_i y_i \\) is a solution.`,
 				]],
 			],
 			twoAffineCombinationSolutionRelation: [
@@ -376,7 +375,7 @@ const classes={
 			],
 			equilibriumSolutionMethod: [
 				['main',[
-					`\\[ y(t) = 0 \\]`
+					`\\[ y = 0 \\]`
 				]],
 			],
 		},
@@ -401,20 +400,15 @@ const classes={
 					"isoclines are vertical",
 				]],
 			],
-			//shiftSolutionRelation: [
-			//	['main',[
-			//		"\\( y_p(t) \\) is a solution \\( \\Rightarrow \\) \\( y_p(t) + C \\) is a solution",
-			//	]],
-			//],
-			solutionSpaceBasis: [
+			solutionSpaceBasis: [ // also shiftSolutionRelation
 				['main',[
-					`If \\( y_p(t) \\) is a solution`,
-					`then \\( y_p(t) + C \\) is a general solution.`,
+					`If \\( y_p \\) is a solution`,
+					`then \\( y_p + C \\) is a general solution.`,
 				]],
 			],
 			associatedSolutionRelation: [
 				['main',[
-					`\\( y(t) = C \\) is a solution of the associated homogeneous equation.`,
+					`\\( y = C \\) is a solution of the associated homogeneous equation.`,
 				]],
 			],
 			generalSolutionMethod: [
@@ -466,7 +460,7 @@ const classes={
 			],
 			equilibriumSolutionMethod: [ // TODO could have inherited from linear homogeneous, but have to override autonomous
 				['main',[
-					`\\[ y(t) = 0 \\]`
+					`\\[ y = 0 \\]`
 				]],
 			],
 		},
@@ -487,8 +481,8 @@ const classes={
 			equilibriumSolutionMethod: [
 				['form'],
 				['main',[
-					`\\[ y(t) = 0 \\]`,
-					`\\[ y(t) = k \\]`,
+					`\\[ y = 0 \\]`,
+					`\\[ y = k \\]`,
 				]],
 			],
 		},
