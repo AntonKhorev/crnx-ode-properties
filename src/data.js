@@ -59,7 +59,7 @@ const classes={
 		traits: {
 			testSolutionMethod: [
 				['main',[
-					"Can test if \\(y_p(t)\\) is a solution by substituting \\(y = y_p\\) into the equation.",
+					"Can test if \\( y_p(t) \\) is a solution by substituting \\(y = y_p\\) into the equation.",
 				]],
 			],
 		}
@@ -210,34 +210,35 @@ const classes={
 				['main',[
 					`If \\( y_p(t) \\) is a solution`,
 					`and \\( y_h(t) \\) is a nonzero solution of the associated homogeneous equation`,
-					`then \\( K y_h(t) + y_p(t) \\) is a general solution.`,
+					`then \\( K y_h + y_p \\) is a general solution.`,
 				]],
 			],
 			homogeneitySolutionRelation: [
 				['main',[
 					`If \\( y_0(t) \\) and \\( y_1(t) \\) are solutions,`,
-					`then \\( K_1 y_1(t) + (1 - K_1) y_0(t) \\) is a solution.`,
+					`then \\( K_1 y_1 + (1 - K_1) y_0 \\) is a solution.`,
 				]],
 				['compare'],
 			],
 			additivitySolutionRelation: [
 				['main',[
 					`If \\( y_0(t) \\), \\( y_1(t) \\) and \\( y_2(t) \\) are solutions,`,
-					`then \\( y_1(t) + y_2(t) - y_0(t) \\) is a solution.`,
+					`then \\( y_1 + y_2 - y_0 \\) is a solution.`,
 				]],
 				['compare'],
 			],
 			twoLinearCombinationSolutionRelation: [
 				['main',[
 					`If \\( y_0(t) \\), \\( y_1(t) \\) and \\( y_2(t) \\) are solutions,`,
-					`then \\( K_1 y_1(t) + K_2 y_2(t) + (1 - K_1 - K_2) y_0(t) \\) is a solution.`,
+					`then \\( K_1 y_1 + K_2 y_2 + (1 - K_1 - K_2) y_0 \\) is a solution.`,
 				]],
 				['compare'],
 			],
 			nLinearCombinationSolutionRelation: [
 				['main',[
 					`If \\( y_0(t) \\), \\( y_1(t) \\), \\( y_2(t) \\), ..., \\( y_m(t) \\) are solutions,`,
-					`then \\( K_1 y_1(t) + K_2 y_2(t) + \\cdots + K_m y_m(t) + (1 - K_1 - K_2 - \\cdots - K_m) y_0(t) \\) is a solution.`,
+					//`then \\( K_1 y_1 + K_2 y_2 + \\cdots + K_m y_m + (1 - K_1 - K_2 - \\cdots - K_m) y_0 \\) is a solution.`,
+					`then \\( \\sum\\limits_{i=1}^m K_i y_i + (1 - \\sum\\limits_{i=1}^m K_i) y_0 \\) is a solution.`,
 				]],
 				['compare'],
 			],
@@ -245,20 +246,20 @@ const classes={
 				['main',[
 					`If \\( y_1(t) \\), \\( y_2(t) \\) are solutions`,
 					`and \\( K_1 + K_2 = 1 \\)`,
-					`then \\( K_1 y_1(t) + K_2 y_2(t) \\) is a solution.`,
+					`then \\( K_1 y_1 + K_2 y_2 \\) is a solution.`,
 				]],
 			],
 			nAffineCombinationSolutionRelation: [
 				['main',[
 					`If \\( y_1(t) \\), \\( y_2(t) \\), ..., \\( y_m(t) \\) are solutions`,
-					`and \\( K_1 + K_2 + \\cdots + K_m = 1 \\)`,
-					`then \\( K_1 y_1(t) + K_2 y_2(t) + \\cdots + K_m y_m(t) \\) is a solution.`,
+					`and \\( \\sum\\limits_{i=1}^m K_i = 1 \\)`,
+					`then \\( \\sum\\limits_{i=1}^m K_i y_i \\) is a solution.`,
 				]],
 			],
 			associatedSolutionRelation: [
 				['main',[
 					`If \\( y_1(t) \\) and \\( y_2(t) \\) are solutions,`,
-					`then \\( y_1(t) - y_2(t) \\) is a solution of the associated homogeneous equation.`,
+					`then \\( y_1 - y_2 \\) is a solution of the associated homogeneous equation.`,
 				]],
 			],
 			generalSolutionMethod: [

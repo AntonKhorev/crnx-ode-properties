@@ -29,7 +29,8 @@
 		border-collapse: collapse;
 		td, th {
 			min-width: unit(@cell-width,px);
-			width: unit(@cell-width,px);
+			max-width: unit(@cell-width,px);
+			overflow: hidden;
 			padding: 0;
 			position: relative;
 		}
