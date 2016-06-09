@@ -108,32 +108,26 @@ $(function(){
 		}
 		const writeTraitItem=(forClassId,fromClassId,traitId)=>{
 			const item=data.classes[fromClassId].traits[traitId]
-			const $li=$("<li>")
-			if (item[0] && item[0][0]!='title') {
-				$li.append(
-					writeTraitItemSection('title',[
-						i18n('trait.'+traitId)
-					])
-				)
-			}
-			$li.append(item.map(section=>{
+			const sections=[]
+			item.forEach(section=>{
 				const type=section[0], contents=section[1]
-				if (type=='form') {
-					if (forClassId==fromClassId) {
-						return null
-					} else {
-						return writeTraitItemSection('note',[
-							"when equation is written as <em>"+getHtmlName(fromClassId)+"</em>:",
-							"\\["+data.classes[fromClassId].equation+"\\]",
-						])
-					}
-				} else if (type=='close' || type=='compare') {
-					return null
-				} else {
-					return writeTraitItemSection(type,contents)
+				if (type=='form' && forClassId!=fromClassId) {
+					sections.push(writeTraitItemSection('note',[
+						"when equation is written as <em>"+getHtmlName(fromClassId)+"</em>:",
+						"\\["+data.classes[fromClassId].equation+"\\]",
+					]))
+				} else if (contents) {
+					sections.push(writeTraitItemSection(type,contents))
 				}
-			}))
-			return $li
+			})
+			if (sections.length>0 &&item[0][0]!='title') {
+				sections.unshift(writeTraitItemSection('title',[
+					i18n('trait.'+traitId)
+				]))
+			}
+			if (sections.length>0) {
+				return $("<li>").append(sections)
+			}
 		}
 		const writeTraitCell=(forClassId,traitCell)=>{
 			const $cell=$("<td>")
