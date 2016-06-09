@@ -30,9 +30,11 @@
 		td, th {
 			min-width: unit(@cell-width,px);
 			max-width: unit(@cell-width,px);
-			overflow: hidden;
 			padding: 0;
 			position: relative;
+		}
+		td {
+			overflow: hidden;
 		}
 		tr.nodes {
 			@cx: @cell-width;

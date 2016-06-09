@@ -265,20 +265,18 @@ $(function(){
 				setCellClasses($cell,cell)
 				if (cell.node!==undefined) {
 					$cell.append(getHtmlName(cell.node))
-					// TODO rename parents, children to ancestors, descendants
-					const parents=breadthWalk(unorderedClassSubgraph.allParents,cell.node).reverse()
-					let $parents
-					if (parents.length>0) {
+					const ancestors=breadthWalk(unorderedClassSubgraph.allParents,cell.node).reverse()
+					if (ancestors.length>0) {
 						$cell.append(
 							" ",
-							writeTheadButton($cell,"Add parent","Add one of supertypes of this equation type",'t',parents)
+							writeTheadButton($cell,"Add ancestor","Add one of supertypes of this equation type",'t',ancestors)
 						)
 					}
-					const children=breadthWalk(unorderedClassSubgraph.allChildren,cell.node)
-					if (children.length>0) {
+					const descendants=breadthWalk(unorderedClassSubgraph.allChildren,cell.node)
+					if (descendants.length>0) {
 						$cell.append(
 							" ",
-							writeTheadButton($cell,"Add child","Add one of subtypes of this equation type",'b',children)
+							writeTheadButton($cell,"Add descendant","Add one of subtypes of this equation type",'b',descendants)
 						)
 					}
 				}
