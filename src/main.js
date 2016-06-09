@@ -81,43 +81,59 @@ $(function(){
 			}
 			return $button
 		}
-		const writeTraitItem=(forClassId,fromClassId,item)=>{
-			return $("<li>").append(item.map(section=>{
-				let type=section[0], contents=section[1]
+		const writeTraitItemSection=(type,contents)=>{
+			const $section=$(`<div class='${type}'>`).append(contents.map(line=>{
+				if (type=='title') {
+					return $(`<div><em>${line}</em>:</div>`)
+				} else {
+					return $(`<div>${line}</div>`)
+				}
+			}))
+			if (type=='detail') {
+				const $b1=writeButton("Open","Expand details")
+				const $b2=writeButton("Open","Expand details")
+				$section.prepend($b1).append($b2)
+				const $bs=$b1.add($b2)
+				$bs.click(function(){
+					if (!$section.hasClass('open')) {
+						$section.addClass('open')
+						$bs.html("<span>Close</span>").attr('title',"Collapse details")
+					} else {
+						$section.removeClass('open')
+						$bs.html("<span>Open</span>").attr('title',"Expand details")
+					}
+				})
+			}
+			return $section
+		}
+		const writeTraitItem=(forClassId,fromClassId,traitId)=>{
+			const item=data.classes[fromClassId].traits[traitId]
+			const $li=$("<li>")
+			if (item[0] && item[0][0]!='title') {
+				$li.append(
+					writeTraitItemSection('title',[
+						i18n('trait.'+traitId)
+					])
+				)
+			}
+			$li.append(item.map(section=>{
+				const type=section[0], contents=section[1]
 				if (type=='form') {
-					if (forClassId==fromClassId) return null
-					type='note'
-					contents=[
-						"when equation is written as <em>"+getHtmlName(fromClassId)+"</em>:",
-						"\\["+data.classes[fromClassId].equation+"\\]",
-					]
+					if (forClassId==fromClassId) {
+						return null
+					} else {
+						return writeTraitItemSection('note',[
+							"when equation is written as <em>"+getHtmlName(fromClassId)+"</em>:",
+							"\\["+data.classes[fromClassId].equation+"\\]",
+						])
+					}
 				} else if (type=='close' || type=='compare') {
 					return null
+				} else {
+					return writeTraitItemSection(type,contents)
 				}
-				const $section=$(`<div class='${type}'>`).append(contents.map(line=>{
-					if (type=='title') {
-						return $(`<div><em>${line}</em>:</div>`)
-					} else {
-						return $(`<div>${line}</div>`)
-					}
-				}))
-				if (type=='detail') {
-					const $b1=writeButton("Open","Expand details")
-					const $b2=writeButton("Open","Expand details")
-					$section.prepend($b1).append($b2)
-					const $bs=$b1.add($b2)
-					$bs.click(function(){
-						if (!$section.hasClass('open')) {
-							$section.addClass('open')
-							$bs.html("<span>Close</span>").attr('title',"Collapse details")
-						} else {
-							$section.removeClass('open')
-							$bs.html("<span>Open</span>").attr('title',"Expand details")
-						}
-					})
-				}
-				return $section
 			}))
+			return $li
 		}
 		const writeTraitCell=(forClassId,traitCell)=>{
 			const $cell=$("<td>")
@@ -125,8 +141,7 @@ $(function(){
 				$cell.append($("<ul class='major'>").append(traitCell.map(classTraitId=>{
 					const classId=classTraitId[0]
 					const traitId=classTraitId[1]
-					const item=data.classes[classId].traits[traitId]
-					return writeTraitItem(forClassId,classId,item)
+					return writeTraitItem(forClassId,classId,traitId)
 				})))
 			}
 			return $cell
