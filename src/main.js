@@ -122,9 +122,12 @@ $(function(){
 					sections.push(writeTraitItemSection(type,contents))
 				}
 			})
-			if (sections.length>0 &&item[0][0]!='title') {
+			if (sections.length>0 && item[0][0]!='title') {
 				sections.unshift(writeTraitItemSection('title',[
-					i18n('trait.'+traitId)
+					(item[item.length-1][0]=='compare'
+						? "Property comparable to <em>"+i18n('trait.'+traitId)+"</em>"
+						: i18n('trait.'+traitId)
+					)
 				]))
 			}
 			if (sections.length>0) {
