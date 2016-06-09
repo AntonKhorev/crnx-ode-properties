@@ -229,6 +229,7 @@
 		}
 		tfoot td {
 			text-align: center;
+			padding: 5px 0;
 		}
 		tbody {
 			td {
@@ -249,26 +250,19 @@
 						color: @active-stroke-color;
 					}
 				}
-				&.major li {
-					@separator-width: 100;
-					@separator-padding: 9;
-					@sx: @separator-width;
-					@sy: @separator-padding*2 + 1;
-					@hsy: @sy/2;
-					@separator-path: "<path d='M 0 @{hsy} H @{sx}' fill='none' stroke='@{separator-color}' />";
-					margin: 0;
-					padding: 0px 5px unit(@sy,px) 5px;
-					.svg(@sx,@sy,@separator-path);
-					background-position: bottom;
-					background-repeat: no-repeat;
-					&:first-child {
-						padding-top: unit(@sy,px);
-						.svg(@sx,@sy,@separator-path);
-						background-position+: bottom;
-						.svg(@sx,@sy,@separator-path);
-						background-position+: top;
-					}
-				}
+			}
+			div.trait {
+				@separator-width: 100;
+				@separator-padding: 9;
+				@sx: @separator-width;
+				@sy: @separator-padding*2 + 1;
+				@hsy: @sy/2;
+				@separator-path: "<path d='M 0 @{hsy} H @{sx}' fill='none' stroke='@{separator-color}' />";
+				margin: 0;
+				padding: unit(@sy,px) 5px 0px 5px;
+				.svg(@sx,@sy,@separator-path);
+				background-position: top;
+				background-repeat: no-repeat;
 			}
 			div.equation {
 				border: solid 1px @separator-color;

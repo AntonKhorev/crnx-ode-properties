@@ -128,17 +128,17 @@ $(function(){
 				]))
 			}
 			if (sections.length>0) {
-				return $("<li>").append(sections)
+				return $("<div class='trait'>").append(sections)
 			}
 		}
 		const writeTraitCell=(forClassId,traitCell)=>{
 			const $cell=$("<td>")
 			if (traitCell.length>0) {
-				$cell.append($("<ul class='major'>").append(traitCell.map(classTraitId=>{
+				$cell.append(traitCell.map(classTraitId=>{
 					const classId=classTraitId[0]
 					const traitId=classTraitId[1]
 					return writeTraitItem(forClassId,classId,traitId)
-				})))
+				}))
 			}
 			return $cell
 		}
