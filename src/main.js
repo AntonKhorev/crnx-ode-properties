@@ -37,6 +37,8 @@ $(function(){
 	$('.crnx-ode-properties').each(function(){
 		const $container=$(this)
 		const selectedNodes={} // visible nodes // TODO rename to visibleNodes
+		let traitAlignmentLevel=1
+		const maxTraitAlignmentLevel=4
 		for (let id in data.classes) {
 			if (data.classes[id].importance<=1) {
 				selectedNodes[id]=true
@@ -327,13 +329,42 @@ $(function(){
 					)
 				)
 			}
+			const writeTraitRows=()=>{
+				const output=[]
+				const rec=(traitSubtree,depth)=>{
+					const traitId=traitSubtree[0]
+					const traitChildren=traitSubtree[1]
+					if (depth>=traitAlignmentLevel || !traitChildren) {
+						output.push(writeTraitRow(traitSubtree))
+					} else {
+						traitChildren.forEach(traitChild=>rec(traitChild,depth+1))
+					}
+				}
+				rec(['root',data.traits],0)
+				return output
+			}
+			const writeTraitAlignmentControls=()=>{
+				const $container=$("<form>Trait alignment level:</form>")
+				for (let i=0;i<=maxTraitAlignmentLevel;i++) {
+					$container.append(
+						" ",
+						$("<label>").append(
+							$("<input type='radio' name='trait-alignment-level'>").prop('checked',i==traitAlignmentLevel).click(function(){
+								traitAlignmentLevel=i
+								writeTable()
+							}),
+							" "+i
+						)
+					)
+				}
+				return $container
+			}
 			$container.empty().append(
 				$("<table>").append(
 					writeThead(),
 					writeTfoot(),
 					$("<tbody>").append(
-						// equations
-						$("<tr>").append(
+						$("<tr>").append( // equations
 							theadLayout.columns.map(id=>{
 								const $td=$("<td>")
 								$td.append(
@@ -381,10 +412,10 @@ $(function(){
 								return $td
 							})
 						),
-						// traits
-						data.traits.map(writeTraitRow)
+						writeTraitRows()
 					)
 				),
+				writeTraitAlignmentControls(),
 				"<p>General notes:</p>",
 				$("<ul>").append(
 					`<li>how to read the diagram: <ul>`+
