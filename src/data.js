@@ -1,6 +1,7 @@
 'use strict'
 
 const dd=(a,b,n)=>{
+	if (b===undefined) b='t'
 	if (n===undefined) n=1
 	if (n==1) {
 		return `\\frac{\\mathrm{d}${a}}{\\mathrm{d}${b}}`
@@ -8,8 +9,8 @@ const dd=(a,b,n)=>{
 		return `\\frac{\\mathrm{d}^{${n}}${a}}{\\mathrm{d}${b}^{${n}}}`
 	}
 }
-const dydt=dd('y','t')
-const ddt=dd('','t')
+const dydt=dd('y')
+const ddt=dd('')
 const int=(fx,x)=>`\\int\\!${fx}\\,\\mathrm{d}${x}`
 const sint=(fx,x)=>`\\int\\!${fx}\\mathrm{d}${x}`
 const eqsol=(name)=>`<a href='https://en.wikipedia.org/wiki/Equilibrium_point'>${name}</a>`
@@ -50,6 +51,22 @@ const traits=[
 //	close = children don't need to inherit this trait; display it only if parents have it displayed; put at end
 //	compare = show only if other classes have this property without compare entry; put at end
 const classes={
+	sn: {
+		parents: {},
+		name: "system of n first-order",
+		htmlName: "system of <em>n</em> first-order",
+		importance: 3,
+		equation:
+			`\\left\\{`+
+			`\\begin{array}{c}`+
+			dd(`y_1`)+` = F(t,y_1,…,y_n) \\\\`+
+			`\\vdots \\\\`+
+			dd(`y_n`)+` = F(t,y_1,…,y_n)`+
+			`\\end{array}`+
+			`\\right.`,
+		vectorEquation: dd(`Y`)+` = F(t,Y)`,
+		traits: {},
+	},
 	on: {
 		parents: {},
 		name: "nth-order",
@@ -66,6 +83,7 @@ const classes={
 	},
 	o1: {
 		parents: {
+			sn: true,
 			on: true,
 		},
 		name: "first-order",
@@ -169,9 +187,9 @@ const classes={
 					`\\[ \\cdots = \\frac{(1-n) a(t)}{y^{n-1}} + (1-n) b(t) \\]`,
 					`introduce a new variable`,
 					`\\[ z = \\frac{1}{y^{n-1}} \\]`,
-					`\\[ ${dd('z','t')} = ${dd('z','y')} ${dydt} = \\frac{1-n}{y^n} ${dydt} \\]`,
-					`substitute \\( z \\) and \\( ${dd('z','t')} \\) into the equation`,
-					`\\[ ${dd('z','t')} = (1-n) a(t) z + (1-n) b(t) \\]`,
+					`\\[ ${dd('z')} = ${dd('z','y')} ${dydt} = \\frac{1-n}{y^n} ${dydt} \\]`,
+					`substitute \\( z \\) and \\( ${dd('z')} \\) into the equation`,
+					`\\[ ${dd('z')} = (1-n) a(t) z + (1-n) b(t) \\]`,
 					`solve this equation as a linear equation in \\( z \\), then return to the original variable \\( y \\)`,
 					`\\[ \\mu(t) z = (1-n) ${int('\\mu(t) b(t)','t')} + C \\]`,
 				]],

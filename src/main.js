@@ -362,6 +362,22 @@ $(function(){
 				}
 				return $container
 			}
+			const writeEquation=(id)=>{
+				$equations[id]=$("<div class='equation'>").append("\\["+data.classes[id].equation+"\\]")
+				if (data.classes[id].vectorEquation) {
+					$equations[id].append("<div class='alt-separator'>or in vector format</div>","\\["+data.classes[id].vectorEquation+"\\]")
+				}
+				$equations[id].hover(function(){
+					for (let aid in visibleAncestors[id]) {
+						$equations[aid].addClass('highlight')
+					}
+				},function(){
+					for (let aid in visibleAncestors[id]) {
+						$equations[aid].removeClass('highlight')
+					}
+				})
+				return $equations[id]
+			}
 			$container.empty().append(
 				$("<table>").append(
 					writeThead(),
@@ -369,18 +385,7 @@ $(function(){
 					$("<tbody>").append(
 						$("<tr>").append( // equations
 							theadLayout.columns.map(id=>{
-								const $td=$("<td>")
-								$td.append(
-									$equations[id]=$("<div class='equation'>\\["+data.classes[id].equation+"\\]</div>").hover(function(){
-										for (let aid in visibleAncestors[id]) {
-											$equations[aid].addClass('highlight')
-										}
-									},function(){
-										for (let aid in visibleAncestors[id]) {
-											$equations[aid].removeClass('highlight')
-										}
-									})
-								)
+								const $td=$("<td>").append(writeEquation(id))
 								const notes=[]
 								if (data.classes[id].equationNotes!==undefined) {
 									notes.push(...data.classes[id].equationNotes.map(
