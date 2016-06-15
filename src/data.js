@@ -58,13 +58,11 @@ const classes={
 		htmlName: "system of <em>n</em> first-order",
 		importance: 3,
 		equation:
-			`\\left\\{`+
-			`\\begin{array}{c}`+
-			dd(`y_1`)+` = F_1(t,y_1,…,y_n) \\\\`+
-			`\\vdots \\\\`+
-			dd(`y_n`)+` = F_n(t,y_1,…,y_n)`+
-			`\\end{array}`+
-			`\\right.`,
+			`\\left\\{ \\begin{array}{c}`+
+				dd(`y_1`)+` = F_1(t,y_1,…,y_n) \\\\`+
+				`\\vdots \\\\`+
+				dd(`y_n`)+` = F_n(t,y_1,…,y_n)`+
+			`\\end{array} \\right.`,
 		vectorEquation: dd(`Y`)+` = F(t,Y)`,
 		traits: {
 			testSolutionMethod: [
@@ -81,14 +79,32 @@ const classes={
 		name: "system of 2 first-order",
 		importance: 3,
 		equation:
-			`\\left\\{`+
-			`\\begin{array}{c}`+
-			dd(`y`)+` = F_y(t,y,v) \\\\`+
-			dd(`v`)+` = F_v(t,y,v)`+
-			`\\end{array}`+
-			`\\right.`,
+			`\\left\\{ \\begin{aligned}`+
+				dd(`y`)+` &= F_y(t,y,v) \\\\`+
+				dd(`v`)+` &= F_v(t,y,v)`+
+			`\\end{aligned} \\right.`,
 		vectorEquation: dd(`Y`)+` = F(t,Y)`,
 		traits: {},
+	},
+	s2_partlyDecoupled: {
+		parents: {
+			s2: true,
+		},
+		name: "partly decoupled system of 2 first-order",
+		importance: 3,
+		equation:
+			`\\left\\{ \\begin{aligned}`+
+				dd(`y`)+` &= F_y(t,y,v) \\\\`+
+				dd(`v`)+` &= F_v(t,v)`+
+			`\\end{aligned} \\right.`,
+		traits: {
+			generalSolutionMethod: [
+				['main',[
+					`Solve \\(${dd('v')} = F_v(t,v) \\).`,
+					`Substitute \\( v \\) into \\( ${dd('y')} = F_y(t,y,v) \\).`,
+				]],
+			],
+		},
 	},
 	sn_sir: {
 		parents: {
@@ -98,13 +114,11 @@ const classes={
 		htmlName: "<a href='https://en.wikipedia.org/w/index.php?title=SIR_model'>SIR</a> model",
 		importance: 3,
 		equation:
-			`\\left\\{`+
-			`\\begin{aligned}`+
-			dd('S')+` &= -\\alpha S I \\\\`+
-			dd('I')+` &= \\alpha S I - \\beta I \\\\ `+
-			dd('R')+` &= \\beta I`+
-			`\\end{aligned}`+
-			`\\right.`,
+			`\\left\\{ \\begin{aligned}`+
+				dd('S')+` &= -\\alpha S I \\\\`+
+				dd('I')+` &= \\alpha S I - \\beta I \\\\ `+
+				dd('R')+` &= \\beta I`+
+			`\\end{aligned} \\right.`,
 		equationNotes: [
 			`\\( S = \\) number susceptible`,
 			`\\( I = \\) number infectious`,
@@ -128,8 +142,8 @@ const classes={
 					`\\[ S + I + R = N \\]`,
 					`eliminate \\( R \\)`,
 					`\\[ \\left\\{ \\begin{aligned}`+
-					dd('S')+` &= -\\alpha S I \\\\`+
-					dd('I')+` &= \\alpha S I - \\beta I \\\\ `+
+						dd('S')+` &= -\\alpha S I \\\\`+
+						dd('I')+` &= \\alpha S I - \\beta I \\\\ `+
 					`\\end{aligned} \\right. \\]`,
 					`\\[ ${dd('I','S')} = \\frac{\\alpha S I - \\beta I}{-\\alpha S I} = -1 + \\frac{\\rho}{S} \\]`,
 					`integrate by \\( S \\)`,
