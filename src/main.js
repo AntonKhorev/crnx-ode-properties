@@ -27,6 +27,7 @@ const i18n=(id)=>{
 
 		'trait.solutionMethod': "Solutions",
 		'trait.generalSolutionMethod': "General solution",
+		'trait.phaseSolutionMethod': "<a href='https://en.wikipedia.org/wiki/Phase_space'>Phase space</a> trajectory",
 		'trait.equilibriumSolutionMethod': "<a href='https://en.wikipedia.org/wiki/Equilibrium_point'>Equilibrium solutions</a>",
 		'trait.testSolutionMethod': "Solution testing",
 	}

@@ -37,6 +37,7 @@ const traits=[
 	]],
 	['solutionMethod',[
 		['generalSolutionMethod'],
+		['phaseSolutionMethod'],
 		['equilibriumSolutionMethod'],
 		['testSolutionMethod'],
 	]],
@@ -59,13 +60,105 @@ const classes={
 		equation:
 			`\\left\\{`+
 			`\\begin{array}{c}`+
-			dd(`y_1`)+` = F(t,y_1,…,y_n) \\\\`+
+			dd(`y_1`)+` = F_1(t,y_1,…,y_n) \\\\`+
 			`\\vdots \\\\`+
-			dd(`y_n`)+` = F(t,y_1,…,y_n)`+
+			dd(`y_n`)+` = F_n(t,y_1,…,y_n)`+
+			`\\end{array}`+
+			`\\right.`,
+		vectorEquation: dd(`Y`)+` = F(t,Y)`,
+		traits: {
+			testSolutionMethod: [
+				['main',[
+					"Can test if \\( Y_p \\) is a solution by substituting \\( Y = Y_p \\) into the equation.",
+				]],
+			],
+		},
+	},
+	s2: {
+		parents: {
+			sn: true,
+		},
+		name: "system of 2 first-order",
+		importance: 3,
+		equation:
+			`\\left\\{`+
+			`\\begin{array}{c}`+
+			dd(`y`)+` = F_y(t,y,v) \\\\`+
+			dd(`v`)+` = F_v(t,y,v)`+
 			`\\end{array}`+
 			`\\right.`,
 		vectorEquation: dd(`Y`)+` = F(t,Y)`,
 		traits: {},
+	},
+	sn_sir: {
+		parents: {
+			sn: true,
+		},
+		name: "SIR model",
+		htmlName: "<a href='https://en.wikipedia.org/w/index.php?title=SIR_model'>SIR</a> model",
+		importance: 3,
+		equation:
+			`\\left\\{`+
+			`\\begin{aligned}`+
+			dd('S')+` &= -\\alpha S I \\\\`+
+			dd('I')+` &= \\alpha S I - \\beta I \\\\ `+
+			dd('R')+` &= \\beta I`+
+			`\\end{aligned}`+
+			`\\right.`,
+		equationNotes: [
+			`\\( S = \\) number susceptible`,
+			`\\( I = \\) number infectious`,
+			`\\( R = \\) number recovered (immune)`,
+			`\\( \\alpha = \\) contact rate`,
+			`\\( \\beta = \\) recovery rate`,
+			`all quantities are nonnegative`,
+		],
+		traits: {
+			phaseSolutionMethod: [
+				['form'],
+				['main',[
+					`threshold value \\( \\rho = \\frac\\beta\\alpha \\):`,
+					`\\( I \\) increases when \\( S &gt; \\rho \\)`,
+					`\\( S \\) decreases`,
+					`\\( I \\) attains its maximum when \\( S = \\rho \\)`,
+				]],
+				['detail',[
+					`\\[ ${dd('S')} + ${dd('I')} + ${dd('R')} = 0 \\]`,
+					`total population \\( N \\) is constant`,
+					`\\[ S + I + R = N \\]`,
+					`eliminate \\( R \\)`,
+					`\\[ \\left\\{ \\begin{aligned}`+
+					dd('S')+` &= -\\alpha S I \\\\`+
+					dd('I')+` &= \\alpha S I - \\beta I \\\\ `+
+					`\\end{aligned} \\right. \\]`,
+					`\\[ ${dd('I','S')} = \\frac{\\alpha S I - \\beta I}{-\\alpha S I} = -1 + \\frac{\\rho}{S} \\]`,
+					`integrate by \\( S \\)`,
+					`\\[ I = -S + \\rho \\ln S + C \\]`,
+				]],
+				['main',[
+					`conserved quantities:`,
+					`\\[ \\begin{multline}`+
+						`S(t) + I(t) + R(t) = \\\\`+
+						`= S(0) + I(0) + R(0)`+
+					`\\end{multline} \\]`,
+					`\\[ \\begin{multline}`+
+						`I(t) + S(t) - \\rho \\ln S(t) = \\\\`+
+						`= I(0) + S(0) - \\rho \\ln S(0)`+
+					`\\end{multline} \\]`,
+					`maximum of \\( I \\):`,
+					`\\[ \\begin{multline}`+
+						`I_{max} + \\rho - \\rho \\ln \\rho = \\\\`+
+						`= I(0) + S(0) - \\rho \\ln S(0)`+
+					`\\end{multline} \\]`,
+				]],
+			],
+			equilibriumSolutionMethod: [
+				['form'],
+				['main',[
+					`\\[ I = 0 \\]`,
+				]],
+			],
+		},
 	},
 	on: {
 		parents: {},
