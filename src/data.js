@@ -35,6 +35,9 @@ const traits=[
 			]]
 		]],
 	]],
+	['transform',[
+		['orderReduction'],
+	]],
 	['solutionMethod',[
 		['generalSolutionMethod'],
 		['phaseSolutionMethod'],
@@ -619,7 +622,18 @@ const classes={
 		name: "second-order",
 		importance: 2,
 		equation: `${dd('y','t','2')} = F(t,y,${dydt})`,
-		traits: {},
+		traits: {
+			orderReduction: [
+				['form'],
+				['main',[
+					"transform to a system of 2 first-order equations",
+					`\\[ \\left\\{ \\begin{aligned}`+
+						dd(`y`)+` &= v \\\\`+
+						dd(`v`)+` &= F(t,y,v)`+
+					`\\end{aligned} \\right. \\]`,
+				]],
+			],
+		},
 	},
 	o2_autonomous: {
 		parents: {

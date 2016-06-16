@@ -25,6 +25,9 @@ const i18n=(id)=>{
 		'trait.nAffineCombinationSolutionRelation': "<a href='https://en.wikipedia.org/wiki/Affine_combination'>Affine combination</a> property of solutions",
 		'trait.associatedSolutionRelation': "Associated homogeneous equation solution",
 
+		'trait.transform': "Transforms to different types",
+		'trait.orderReduction': "Order reduction",
+
 		'trait.solutionMethod': "Solutions",
 		'trait.generalSolutionMethod': "General solution",
 		'trait.phaseSolutionMethod': "<a href='https://en.wikipedia.org/wiki/Phase_space'>Phase space</a> trajectory",
