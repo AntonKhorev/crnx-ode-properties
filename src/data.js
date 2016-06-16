@@ -62,9 +62,9 @@ const classes={
 		importance: 3,
 		equation:
 			`\\left\\{ \\begin{array}{c}`+
-				dd(`y_1`)+` = F_1(t,y_1,…,y_n) \\\\`+
+				dd(`y_1`)+` = f_1(t,y_1,…,y_n) \\\\`+
 				`\\vdots \\\\`+
-				dd(`y_n`)+` = F_n(t,y_1,…,y_n)`+
+				dd(`y_n`)+` = f_n(t,y_1,…,y_n)`+
 			`\\end{array} \\right.`,
 		vectorEquation: dd(`Y`)+` = F(t,Y)`,
 		traits: {
@@ -83,8 +83,8 @@ const classes={
 		importance: 3,
 		equation:
 			`\\left\\{ \\begin{aligned}`+
-				dd(`y`)+` &= F_y(t,y,v) \\\\`+
-				dd(`v`)+` &= F_v(t,y,v)`+
+				dd(`y`)+` &= f(t,y,v) \\\\`+
+				dd(`v`)+` &= g(t,y,v)`+
 			`\\end{aligned} \\right.`,
 		vectorEquation: dd(`Y`)+` = F(t,Y)`,
 		traits: {},
@@ -97,14 +97,15 @@ const classes={
 		importance: 3,
 		equation:
 			`\\left\\{ \\begin{aligned}`+
-				dd(`y`)+` &= F_y(t,y,v) \\\\`+
-				dd(`v`)+` &= F_v(t,v)`+
+				dd(`y`)+` &= f(t,y,v) \\\\`+
+				dd(`v`)+` &= g(t,v)`+
 			`\\end{aligned} \\right.`,
 		traits: {
 			generalSolutionMethod: [
+				['form'],
 				['main',[
-					`Solve \\(${dd('v')} = F_v(t,v) \\).`,
-					`Substitute \\( v \\) into \\( ${dd('y')} = F_y(t,y,v) \\).`,
+					`Solve \\(${dd('v')} = g(t,v) \\).`,
+					`Substitute \\( v \\) into \\( ${dd('y')} = f(t,y,v) \\).`,
 				]],
 			],
 		},
@@ -182,7 +183,7 @@ const classes={
 		name: "nth-order",
 		htmlName: "<em>n</em>th-order",
 		importance: 2,
-		equation: `${dd('y','t','n')} = F(t,y,${dydt},...,${dd('y','t','n-1')})`,
+		equation: `${dd('y','t','n')} = f(t,y,${dydt},...,${dd('y','t','n-1')})`,
 		traits: {
 			testSolutionMethod: [
 				['main',[
@@ -621,7 +622,7 @@ const classes={
 		},
 		name: "second-order",
 		importance: 2,
-		equation: `${dd('y','t','2')} = F(t,y,${dydt})`,
+		equation: `${dd('y','t','2')} = f(t,y,${dydt})`,
 		traits: {
 			orderReduction: [
 				['form'],
@@ -629,7 +630,7 @@ const classes={
 					"transform to a system of 2 first-order equations",
 					`\\[ \\left\\{ \\begin{aligned}`+
 						dd(`y`)+` &= v \\\\`+
-						dd(`v`)+` &= F(t,y,v)`+
+						dd(`v`)+` &= f(t,y,v)`+
 					`\\end{aligned} \\right. \\]`,
 				]],
 			],
@@ -641,7 +642,7 @@ const classes={
 		},
 		name: "second-order autonomous",
 		importance: 2,
-		equation: `${dd('y','t','2')} = F(y,${dydt})`,
+		equation: `${dd('y','t','2')} = f(y,${dydt})`,
 		traits: {},
 	},
 	o2_vanDerPol: {
