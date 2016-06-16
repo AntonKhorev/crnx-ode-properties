@@ -200,7 +200,13 @@ const classes={
 		name: "first-order",
 		importance: 0,
 		equation: `${dydt} = f(t,y)`,
-		traits: {},
+		traits: {
+			testSolutionMethod: [ // same as in 'on', done to mask 'sn's trait
+				['main',[
+					"Can test if \\( y_p \\) is a solution by substituting \\( y = y_p \\) into the equation.",
+				]],
+			],
+		},
 	},
 	o1_separable: {
 		parents: {
