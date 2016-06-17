@@ -18,6 +18,7 @@ const eqsol=(name)=>`<a href='https://en.wikipedia.org/wiki/Equilibrium_point'>$
 const traits=[
 	['entity',[
 		['associatedHomogeneousEquation'],
+		['characteristicEquation'],
 	]],
 	['property',[
 		['isoclineProperty'],
@@ -110,6 +111,20 @@ const classes={
 			],
 		},
 	},
+	s2_autonomous: {
+		parents: {
+			s2: true,
+		},
+		name: "system of 2 first-order autonomous",
+		importance: 3,
+		equation:
+			`\\left\\{ \\begin{aligned}`+
+				dd(`y`)+` &= f(y,v) \\\\`+
+				dd(`v`)+` &= g(y,v)`+
+			`\\end{aligned} \\right.`,
+		vectorEquation: dd(`Y`)+` = F(Y)`,
+		traits: {},
+	},
 	sn_sir: {
 		parents: {
 			sn: true,
@@ -191,6 +206,34 @@ const classes={
 				]],
 			],
 		}
+	},
+	on_linearHomogeneousConstant: {
+		parents: {
+			on: true,
+		},
+		name: "nth-order linear homogeneous with constant coefficients",
+		htmlName: "<em>n</em>th-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Homogeneous_equations_with_constant_coefficients'>linear homogeneous with constant coefficients</a>",
+		importance: 2,
+		//equation: `y^{(n)} = - \\tfrac{a_{n-1}}{a_n} y^{(n-1)} - \\cdots - \\tfrac{a_1}{a_n} y' - \\tfrac{a_0}{a_n} y`,
+		equation: `${dd('y','t','n')} = - \\sum_{i=0}^{n-1} \\frac{a_i}{a_n} ${dd('y','t','i')}`,
+		equationNotes: [
+			`usually written as \\( \\sum_{i=0}^n a_i ${dd('y','t','i')} = 0 \\)`,
+		],
+		traits: {
+			characteristicEquation: [
+				['form'],
+				['detail',[
+					`\\[ \\sum_{i=0}^n a_i ${dd('y','t','i')} = 0 \\]`,
+					`substitute \\( y = e^{\\lambda t} \\)`,
+					`\\[ \\sum_{i=0}^n a_i ${dd('','t','i')} e^{\\lambda t} = 0 \\]`,
+					`\\[ \\sum_{i=0}^n a_i \\lambda^i e^{\\lambda t} = 0 \\]`,
+					`divide by \\( e^{\\lambda t} \\)`,
+				]],
+				['main',[
+					`\\[ \\sum_{i=0}^n a_i \\lambda^i = 0 \\]`,
+				]],
+			],
+		},
 	},
 	o1: {
 		parents: {
@@ -566,14 +609,28 @@ const classes={
 	},
 	o1_expGrowth: {
 		parents: {
+			on_linearHomogeneousConstant: true,
 			o1_autonomous: true,
 			o1_linearHomogeneous: true,
 		},
-		name: "exponential growth",
-		htmlName: "<a href='https://en.wikipedia.org/wiki/Exponential_growth#Differential_equation'>exponential growth</a>",
+		name: "first-order linear homogeneous with constant coefficients (exponential growth)",
+		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Homogeneous_equations_with_constant_coefficients'>linear homogeneous with constant coefficients</a> (<a href='https://en.wikipedia.org/wiki/Exponential_growth#Differential_equation'>exponential growth</a>)",
 		importance: 2,
 		equation: `${dydt} = k \\cdot y`,
 		traits: {
+			characteristicEquation: [
+				['form'],
+				['detail',[
+					`\\[ ${dydt} = k \\cdot y \\]`,
+					`substitute \\( y = e^{\\lambda t} \\)`,
+					`\\[ ${ddt} e^{\\lambda t} = k \\cdot e^{\\lambda t} \\]`,
+					`\\[ \\lambda \\cdot e^{\\lambda t} = k \\cdot e^{\\lambda t} \\]`,
+					`divide by \\( e^{\\lambda t} \\)`,
+				]],
+				['main',[
+					`\\[ \\lambda = k \\]`,
+				]],
+			],
 			generalSolutionMethod: [
 				['form'],
 				['detail',[
@@ -631,6 +688,9 @@ const classes={
 		equation: `${dd('y','t','2')} = f(t,y,${dydt})`,
 		traits: {
 			orderReduction: [
+				['title',[
+					"Order reduction to a system of 2 first-order equations",
+				]],
 				['form'],
 				['main',[
 					"transform to a system of 2 first-order equations",
@@ -647,9 +707,63 @@ const classes={
 			o2: true,
 		},
 		name: "second-order autonomous",
+		htmlName: "second-order <a href='https://en.wikipedia.org/wiki/Autonomous_system_%28mathematics%29'>autonomous</a>",
 		importance: 2,
 		equation: `${dd('y','t','2')} = f(y,${dydt})`,
-		traits: {},
+		traits: {
+			orderReduction: [
+				['title',[
+					"Order reduction to a system of 2 first-order autonomous equations",
+				]],
+				['form'],
+				['main',[
+					`\\[ \\left\\{ \\begin{aligned}`+
+						dd(`y`)+` &= v \\\\`+
+						dd(`v`)+` &= f(y,v)`+
+					`\\end{aligned} \\right. \\]`,
+				]],
+			],
+		},
+	},
+	o2_linearHomogeneousConstant: {
+		parents: {
+			on_linearHomogeneousConstant: true,
+			o2_autonomous: true,
+		},
+		name: "second-order linear homogeneous with constant coefficients",
+		htmlName: "second-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Homogeneous_equations_with_constant_coefficients'>linear homogeneous with constant coefficients</a>",
+		importance: 2,
+		equation: `${dd('y','t','2')} = - \\frac b a ${dydt} - \\frac c a y`,
+		equationNotes: [
+			`usually written as \\( a ${dd('y','t','2')} + b ${dydt} + c y = 0 \\)`,
+		],
+		traits: {
+			characteristicEquation: [
+				['form'],
+				['detail',[
+					`\\[ a ${dd('y','t','2')} + b ${dydt} + c y = 0 \\]`,
+					`substitute \\( y = e^{\\lambda t} \\)`,
+					`\\[ a ${dd('','t','2')} e^{\\lambda t} + b ${ddt} e^{\\lambda t} + c e^{\\lambda t} = 0 \\]`,
+					`\\[ a \\lambda^2 e^{\\lambda t} + b \\lambda e^{\\lambda t} + c e^{\\lambda t} = 0 \\]`,
+					`divide by \\( e^{\\lambda t} \\)`,
+				]],
+				['main',[
+					`\\[ a \\lambda^2 + b \\lambda + c = 0 \\]`,
+				]],
+			],
+			orderReduction: [
+				['title',[
+					"Order reduction to a system of 2 first-order linear homogeneous equations with constant coefficients",
+				]],
+				['form'],
+				['main',[
+					`\\[ \\left\\{ \\begin{aligned}`+
+						dd(`y`)+` &= v \\\\`+
+						dd(`v`)+` &= - \\frac c a y - \\frac b a v`+
+					`\\end{aligned} \\right. \\]`,
+				]],
+			],
+		},
 	},
 	o2_vanDerPol: {
 		parents: {
