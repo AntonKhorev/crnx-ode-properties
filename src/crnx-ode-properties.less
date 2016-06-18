@@ -251,7 +251,7 @@
 					}
 				}
 			}
-			div.trait {
+			details.trait {
 				@separator-width: 100;
 				@separator-padding: 9;
 				@sx: @separator-width;
@@ -276,61 +276,6 @@
 					text-align: center;
 					font-size: 90%;
 					color: @passive-stroke-color;
-				}
-			}
-			div.detail {
-				@td: "M 4.5 0.5 l 3 3 h -6 z";
-				@bd: "M 4.5 9.5 l 3 -3 h -6 z";
-				button {
-					display: block;
-					box-sizing: border-box;
-					width: 100%;
-					height: unit(@font-size,px);
-					padding: 0;
-					transition: 300ms;
-					transition-property: border, background;
-					border: solid 1px transparent;
-					background-color: transparent;
-					.svg(9,10,"<path d='@{td} @{bd}' fill='@{passive-fill-color}' stroke='@{passive-stroke-color}' />");
-					background-repeat: no-repeat;
-					background-position: center;
-					span {
-						position: absolute;
-						left: -10000px;
-					}
-					&:last-child {
-						display: none;
-					}
-					&:focus, &:hover {
-						border: solid 1px @active-stroke-color;
-						background-color: @active-fill-color;
-						.svg(9,10,"<path d='@{td} @{bd}' fill='@{active-fill-color}' stroke='@{active-stroke-color}' />");
-					}
-				}
-				div {
-					display: none;
-				}
-				&.open {
-					button {
-						&:first-child {
-							margin-bottom: unit(-@font-size,px);
-							.svg(9,10,"<path d='@{bd}' fill='@{passive-fill-color}' stroke='@{passive-stroke-color}' />");
-							&:focus, &:hover {
-								.svg(9,10,"<path d='@{bd}' fill='@{active-fill-color}' stroke='@{active-stroke-color}' />");
-							}
-						}
-						&:last-child {
-							display: block;
-							margin-top: unit(-@font-size,px);
-							.svg(9,10,"<path d='@{td}' fill='@{passive-fill-color}' stroke='@{passive-stroke-color}' />");
-							&:focus, &:hover {
-								.svg(9,10,"<path d='@{td}' fill='@{active-fill-color}' stroke='@{active-stroke-color}' />");
-							}
-						}
-					}
-					div {
-						display: block;
-					}
 				}
 			}
 			div.note {

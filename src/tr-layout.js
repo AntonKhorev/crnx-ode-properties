@@ -11,12 +11,6 @@ class TrLayout {
 	// 	class id = which class to take property from
 	// returns null if row is to be skipped
 	getSubtreeLayout(traitSubtree) {
-		const hasCloseSection=trait=>{
-			return trait.some(section=>section[0]=='close')
-		}
-		const hasCompareSection=trait=>{
-			return trait.some(section=>section[0]=='compare')
-		}
 		const ancestorsHaveIntegratedTrait=(classId,traitId)=>{
 			const visited={}
 			const walk=classId=>{
@@ -47,7 +41,7 @@ class TrLayout {
 				visited[id]=true
 				const trait=this.classData[id].traits[traitId]
 				if (trait) {
-					if (!hasCloseSection(trait) || ancestorsHaveIntegratedTrait(classId,traitId)) {
+					if (!trait.close || ancestorsHaveIntegratedTrait(classId,traitId)) {
 						integratedClassIds.push(id)
 					}
 				} else {
@@ -81,7 +75,7 @@ class TrLayout {
 			const classId=classTraitId[0]
 			const traitId=classTraitId[1]
 			const trait=this.classData[classId].traits[traitId]
-			if (!hasCompareSection(trait)) {
+			if (!trait.compare) {
 				keepTraits[traitId]=true
 			}
 		}))

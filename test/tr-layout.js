@@ -16,7 +16,7 @@ describe("TrLayout",()=>{
 			A: {
 				parents: {},
 				traits: {
-					prop: [['main',['stuff a']]],
+					prop: {},
 				},
 			},
 			B: {
@@ -24,7 +24,7 @@ describe("TrLayout",()=>{
 					A: true,
 				},
 				traits: {
-					prop: [['main',['stuff b']]],
+					prop: {},
 				},
 			},
 			C: {
@@ -32,7 +32,7 @@ describe("TrLayout",()=>{
 					B: true,
 				},
 				traits: {
-					prop: [['main',['stuff c']]],
+					prop: {},
 				},
 			},
 		}
@@ -48,7 +48,7 @@ describe("TrLayout",()=>{
 			A: {
 				parents: {},
 				traits: {
-					prop: [['main',['stuff a']]],
+					prop: {},
 				},
 			},
 			B: {
@@ -56,7 +56,7 @@ describe("TrLayout",()=>{
 					A: true,
 				},
 				traits: {
-					prop: [['main',['stuff b']]],
+					prop: {},
 				},
 			},
 			C: {
@@ -64,7 +64,7 @@ describe("TrLayout",()=>{
 					B: true,
 				},
 				traits: {
-					prop: [['main',['stuff c']]],
+					prop: {},
 				},
 			},
 		}
@@ -90,8 +90,8 @@ describe("TrLayout",()=>{
 			A: {
 				parents: {},
 				traits: {
-					subprop1: [['main',['stuff a1']]],
-					subprop2: [['main',['stuff a2']]],
+					subprop1: {},
+					subprop2: {},
 				},
 			},
 			B: {
@@ -99,8 +99,8 @@ describe("TrLayout",()=>{
 					A: true,
 				},
 				traits: {
-					subprop1: [['main',['stuff b1']]],
-					subprop2: [['main',['stuff b2']]],
+					subprop1: {},
+					subprop2: {},
 				},
 			},
 			C: {
@@ -108,8 +108,8 @@ describe("TrLayout",()=>{
 					B: true,
 				},
 				traits: {
-					subprop1: [['main',['stuff c1']]],
-					subprop2: [['main',['stuff c2']]],
+					subprop1: {},
+					subprop2: {},
 				},
 			},
 		}
@@ -141,7 +141,7 @@ describe("TrLayout",()=>{
 			A: {
 				parents: {},
 				traits: {
-					prop: [['main',['stuff a']]],
+					prop: {},
 				},
 			},
 			B: {
@@ -155,7 +155,7 @@ describe("TrLayout",()=>{
 					B: true,
 				},
 				traits: {
-					prop: [['main',['stuff c']]],
+					prop: {},
 				},
 			},
 		}
@@ -179,7 +179,7 @@ describe("TrLayout",()=>{
 			A: {
 				parents: {},
 				traits: {
-					prop: [['main',['stuff a']]],
+					prop: {},
 				},
 			},
 			B: {
@@ -193,7 +193,7 @@ describe("TrLayout",()=>{
 					B: true,
 				},
 				traits: {
-					prop: [['main',['stuff c']]],
+					prop: {},
 				},
 			},
 		}
@@ -216,13 +216,13 @@ describe("TrLayout",()=>{
 			A: {
 				parents: {},
 				traits: {
-					prop: [['main',['stuff a']]],
+					prop: {},
 				},
 			},
 			B: {
 				parents: {},
 				traits: {
-					prop: [['main',['stuff b']]],
+					prop: {},
 				},
 			},
 			C: {
@@ -250,7 +250,7 @@ describe("TrLayout",()=>{
 			A: {
 				parents: {},
 				traits: {
-					prop: [['main',['stuff a']]],
+					prop: {},
 				},
 			},
 			B: {
@@ -289,7 +289,7 @@ describe("TrLayout",()=>{
 			A: {
 				parents: {},
 				traits: {
-					prop: [['main',['stuff a']]],
+					prop: {},
 				},
 			},
 			B: {
@@ -329,7 +329,7 @@ describe("TrLayout",()=>{
 			A: {
 				parents: {},
 				traits: {
-					prop: [['main',['stuff a']]],
+					prop: {},
 				},
 			},
 			B: {
@@ -343,7 +343,7 @@ describe("TrLayout",()=>{
 					A: true,
 				},
 				traits: {
-					prop: [['main',['stuff c']]],
+					prop: {},
 				},
 			},
 			D: {
@@ -371,7 +371,7 @@ describe("TrLayout",()=>{
 			A: {
 				parents: {},
 				traits: {
-					prop: [['main',['stuff a']]],
+					prop: {},
 				},
 			},
 			B: {
@@ -385,7 +385,7 @@ describe("TrLayout",()=>{
 					A: true,
 				},
 				traits: {
-					prop: [['main',['stuff c']]],
+					prop: {},
 				},
 			},
 			D: {
@@ -415,7 +415,7 @@ describe("TrLayout",()=>{
 			A: {
 				parents: {},
 				traits: {
-					prop: [['main',['stuff a']]],
+					prop: {},
 				},
 			},
 			B: {
@@ -429,10 +429,7 @@ describe("TrLayout",()=>{
 					B: true,
 				},
 				traits: {
-					prop: [
-						['note',['need no stuff a']],
-						['close'],
-					],
+					prop: { close: true },
 				},
 			},
 			D: {
@@ -504,7 +501,7 @@ describe("TrLayout",()=>{
 			A: {
 				parents: {},
 				traits: {
-					prop: [['main',['stuff a']]],
+					prop: {},
 				},
 			},
 			B: {
@@ -518,10 +515,7 @@ describe("TrLayout",()=>{
 					A: true,
 				},
 				traits: {
-					prop: [
-						['note',['need no stuff a']],
-						['close'],
-					],
+					prop: { close: true },
 				},
 			},
 			D: {
@@ -578,10 +572,7 @@ describe("TrLayout",()=>{
 			A: {
 				parents: {},
 				traits: {
-					prop: [
-						['main',['useless stuff a']],
-						['compare'],
-					],
+					prop: { compare: true },
 				},
 			},
 			B: {
@@ -595,9 +586,7 @@ describe("TrLayout",()=>{
 					B: true,
 				},
 				traits: {
-					prop: [
-						['main',['useful stuff a']],
-					],
+					prop: {},
 				},
 			},
 			D: {

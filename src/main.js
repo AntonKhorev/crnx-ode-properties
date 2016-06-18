@@ -88,56 +88,45 @@ $(function(){
 			}
 			return $button
 		}
-		const writeTraitItemSection=(type,contents)=>{
-			const $section=$(`<div class='${type}'>`).append(contents.map(line=>{
-				if (type=='title') {
-					return $(`<div><em>${line}</em>:</div>`)
-				} else {
-					return $(`<div>${line}</div>`)
-				}
-			}))
-			if (type=='detail') {
-				const $b1=writeButton("Open","Expand details")
-				const $b2=writeButton("Open","Expand details")
-				$section.prepend($b1).append($b2)
-				const $bs=$b1.add($b2)
-				$bs.click(function(){
-					if (!$section.hasClass('open')) {
-						$section.addClass('open')
-						$bs.html("<span>Close</span>").attr('title',"Collapse details")
-					} else {
-						$section.removeClass('open')
-						$bs.html("<span>Open</span>").attr('title',"Expand details")
-					}
-				})
-			}
-			return $section
-		}
 		const writeTraitItem=(forClassId,fromClassId,traitId)=>{
 			const item=data.classes[fromClassId].traits[traitId]
-			const sections=[]
-			item.forEach(section=>{
-				const type=section[0], contents=section[1]
-				if (type=='form' && forClassId!=fromClassId) {
-					sections.push(writeTraitItemSection('note',[
+			if (!item.content) return
+			const getTitle=()=>{
+				if (item.title!==undefined) {
+					return item.title
+				} else if (item.compare) {
+					return "Property comparable to <em>"+i18n('trait.'+traitId)+"</em>"
+				} else {
+					return i18n('trait.'+traitId)
+				}
+			}
+			const $item=$("<details class='trait'>").append(
+				$("<summary>").append(getTitle(),':')
+			)
+			const rec=(line)=>{
+				if (typeof line == 'string') {
+					return $("<div>").append(line)
+				} else if (line.type=='derivation') {
+					return $("<details>").append(
+						$("<summary>").append(line.type,':'),
+						line.content.map(rec)
+					)
+				} else {
+					return $("<div class='"+line.type+"'>").append(
+						line.content.map(rec)
+					)
+				}
+			}
+			if (item.form && forClassId!=fromClassId) {
+				$item.append(
+					rec({type:'note',content:[
 						"when equation is written as <em>"+getHtmlName(fromClassId)+"</em>:",
 						"\\["+data.classes[fromClassId].equation+"\\]",
-					]))
-				} else if (contents) {
-					sections.push(writeTraitItemSection(type,contents))
-				}
-			})
-			if (sections.length>0 && item[0][0]!='title') {
-				sections.unshift(writeTraitItemSection('title',[
-					(item[item.length-1][0]=='compare'
-						? "Property comparable to <em>"+i18n('trait.'+traitId)+"</em>"
-						: i18n('trait.'+traitId)
-					)
-				]))
+					]})
+				)
 			}
-			if (sections.length>0) {
-				return $("<div class='trait'>").append(sections)
-			}
+			$item.append(item.content.map(rec))
+			return $item
 		}
 		const writeTraitCell=(forClassId,traitCell)=>{
 			const $cell=$("<td>")
