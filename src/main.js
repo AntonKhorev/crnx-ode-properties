@@ -1,5 +1,6 @@
 'use strict'
 
+const detailsPolyfill=require('crnx-base/details-polyfill')
 const UnorderedClassSubgraph=require('./unordered-class-subgraph')
 const OrderedClassSubgraph=require('./ordered-class-subgraph')
 const TheadLayout=require('./thead-layout')
@@ -102,7 +103,7 @@ $(function(){
 			}
 			const $item=$("<details class='trait'>").append(
 				$("<summary>").append(getTitle(),':')
-			)
+			).each(detailsPolyfill)
 			const rec=(line)=>{
 				if (typeof line == 'string') {
 					return $("<div>").append(line)
@@ -110,7 +111,7 @@ $(function(){
 					return $("<details>").append(
 						$("<summary>").append(line.type,':'),
 						line.content.map(rec)
-					)
+					).each(detailsPolyfill)
 				} else {
 					return $("<div class='"+line.type+"'>").append(
 						line.content.map(rec)

@@ -14,6 +14,8 @@
 	@active-fill-color: #FFF;
 	@separator-color: #AAA;
 
+	@import 'details-polyfill';
+
 	.svg(@width,@height,@contents) {
 		@svg: "<svg xmlns='http://www.w3.org/2000/svg' width='@{width}' height='@{height}'>@{contents}</svg>";
 		@data: escape(@svg);
