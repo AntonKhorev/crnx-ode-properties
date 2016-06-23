@@ -14,6 +14,8 @@ const ddt=dd('')
 const int=(fx,x)=>`\\int\\!${fx}\\,\\mathrm{d}${x}`
 const sint=(fx,x)=>`\\int\\!${fx}\\mathrm{d}${x}`
 const eqsol=(name)=>`<a href='https://en.wikipedia.org/wiki/Equilibrium_point'>${name}</a>`
+const vec2=(a,b)=>`\\begin{bmatrix} ${a} \\\\ ${b} \\end{bmatrix}`
+const mat2=(a,b,c,d)=>`\\begin{bmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{bmatrix}`
 
 const traits=[
 	['entity',[
@@ -61,11 +63,11 @@ const classes={
 		importance: 3,
 		equation:
 			`\\left\\{ \\begin{array}{c}`+
-				dd(`y_1`)+` = f_1(t,y_1,…,y_n) \\\\`+
+				dd('y_1')+` = f_1(t,y_1,…,y_n) \\\\`+
 				`\\vdots \\\\`+
-				dd(`y_n`)+` = f_n(t,y_1,…,y_n)`+
+				dd('y_n')+` = f_n(t,y_1,…,y_n)`+
 			`\\end{array} \\right.`,
-		vectorEquation: dd(`Y`)+` = F(t,Y)`,
+		vectorEquation: dd('Y')+` = F(t,Y)`,
 		traits: {
 			testSolutionMethod: {
 				content: [
@@ -82,10 +84,10 @@ const classes={
 		importance: 3,
 		equation:
 			`\\left\\{ \\begin{aligned}`+
-				dd(`y`)+` &= f(t,y,v) \\\\`+
-				dd(`v`)+` &= g(t,y,v)`+
+				dd('y')+` &= f(t,y,v) \\\\`+
+				dd('v')+` &= g(t,y,v)`+
 			`\\end{aligned} \\right.`,
-		vectorEquation: dd(`Y`)+` = F(t,Y)`,
+		vectorEquation: dd('Y')+` = F(t,Y)`,
 		traits: {},
 	},
 	s2_partlyDecoupled: {
@@ -96,8 +98,8 @@ const classes={
 		importance: 3,
 		equation:
 			`\\left\\{ \\begin{aligned}`+
-				dd(`y`)+` &= f(t,y,v) \\\\`+
-				dd(`v`)+` &= g(t,v)`+
+				dd('y')+` &= f(t,y,v) \\\\`+
+				dd('v')+` &= g(t,v)`+
 			`\\end{aligned} \\right.`,
 		traits: {
 			generalSolutionMethod: {
@@ -117,11 +119,60 @@ const classes={
 		importance: 3,
 		equation:
 			`\\left\\{ \\begin{aligned}`+
-				dd(`y`)+` &= f(y,v) \\\\`+
-				dd(`v`)+` &= g(y,v)`+
+				dd('y')+` &= f(y,v) \\\\`+
+				dd('v')+` &= g(y,v)`+
 			`\\end{aligned} \\right.`,
-		vectorEquation: dd(`Y`)+` = F(Y)`,
+		vectorEquation: dd('Y')+` = F(Y)`,
 		traits: {},
+	},
+	s2_linearHomogeneousConstant: {
+		parents: {
+			s2_autonomous: true,
+		},
+		name: "system of 2 first-order linear homogeneous equations with constant coefficients",
+		importance: 3,
+		equation:
+			`\\left\\{ \\begin{aligned}`+
+				dd('y')+` &= a_{yy} y + a_{yv} v \\\\`+
+				dd('v')+` &= a_{vy} y + a_{vv} v`+
+			`\\end{aligned} \\right.`,
+		vectorEquation: dd('Y')+` = A Y`,
+		traits: {
+			characteristicEquation: {
+				form: true,
+				content: [
+					`\\[ \\det(A - \\lambda I) = 0 \\]`,
+					{type:'note',content:[
+						`\\( \\lambda \\) is an eigenvalue of \\( A \\)`,
+					]},
+				],
+			},
+			generalSolutionMethod: {
+				form: true,
+				content: [
+					{type:'cases',content:[
+						{type:'case',title:`\\( a_{yv} = a_{vy} = 0 \\)`,content:[
+							`\\[ ${ddt} ${vec2('y','v')} = ${mat2('\\lambda_1',0,0,'\\lambda_2')} ${vec2('y','v')} \\]`+
+							`\\[ Y = y_0 e^{\\lambda_1 t} ${vec2(1,0)} + v_0 e^{\\lambda_2 t} ${vec2(0,1)} \\]`,
+						]},
+						{type:'case',title:`\\( a_{yv} \\neq 0 \\) or \\( a_{vy} \\neq 0 \\)`,content:[
+							`solve characteristic equation for \\( \\lambda \\)`,
+							{type:'cases',content:[
+								{type:'case',title:`repeated \\( \\lambda \\)`,content:[
+									`TODO`,
+								]},
+								{type:'case',title:`real distinct \\( \\lambda_1 \\), \\( \\lambda_2 \\)`,content:[
+									`TODO`,
+								]},
+								{type:'case',title:`complex conjugate pair \\( \\lambda = \\alpha \\pm \\beta i \\)`,content:[
+									`TODO`,
+								]},
+							]},
+						]},
+					]},
+				],
+			}
+		},
 	},
 	sn_sir: {
 		parents: {
@@ -330,8 +381,8 @@ const classes={
 		importance: 2,
 		equation: `${dydt} = a(t) \\cdot y + b(t) \\cdot y^n`,
 		equationNotes: [
-			`\\( n ≠ 1 \\)`,
-			`usually it's also defined that additionally \\( n ≠ 0 \\), but we ignore this requirement here`,
+			`\\( n \\neq 1 \\)`,
+			`usually it's also defined that additionally \\( n \\neq 0 \\), but we ignore this requirement here`,
 		],
 		traits: {
 			generalSolutionMethod: {
