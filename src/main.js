@@ -102,14 +102,14 @@ $(function(){
 				}
 			}
 			const $item=$("<details class='trait'>").append(
-				$("<summary>").append(getTitle(),':')
+				$("<summary>").append(getTitle())
 			).each(detailsPolyfill)
 			const rec=(line)=>{
 				if (typeof line == 'string') {
 					return $("<div>").append(line)
 				} else if (line.type=='derivation') {
 					return $("<details>").append(
-						$("<summary>").append(line.type,':'),
+						$("<summary>").append(line.type),
 						line.content.map(rec)
 					).each(detailsPolyfill)
 				} else {

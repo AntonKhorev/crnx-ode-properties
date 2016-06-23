@@ -253,6 +253,9 @@
 					}
 				}
 			}
+			details[open] > summary::after {
+				content: ":";
+			}
 			details.trait {
 				@separator-width: 100;
 				@separator-padding: 9;
@@ -265,6 +268,9 @@
 				.svg(@sx,@sy,@separator-path);
 				background-position: top;
 				background-repeat: no-repeat;
+				details {
+					outline: solid 1px @separator-color;
+				}
 			}
 			div.equation {
 				border: solid 1px @separator-color;
