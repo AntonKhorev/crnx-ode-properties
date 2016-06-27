@@ -5,7 +5,8 @@ const UnorderedClassSubgraph=require('./unordered-class-subgraph')
 const OrderedClassSubgraph=require('./ordered-class-subgraph')
 const TheadLayout=require('./thead-layout')
 const TrLayout=require('./tr-layout')
-const data=require('./data')
+const Notation=require('./notation')
+const dataGenerator=require('./data')
 
 const i18n=(id)=>{
 	const strings={
@@ -43,8 +44,24 @@ $(function(){
 	$('.crnx-ode-properties').each(function(){
 		const $container=$(this)
 		const selectedNodes={} // visible nodes // TODO rename to visibleNodes
+
+		// options
 		let traitAlignmentLevel=1
 		const maxTraitAlignmentLevel=4
+		let dependentVariables='yvz'
+		const availableDependentVariables=['xyw','yvz']
+		const viewDependentVariables={
+			xyw: `\\( x \\), \\( y \\), \\( w \\)`,
+			yvz: `\\( y \\), \\( v \\), \\( z \\)`,
+		}
+
+		let notation,data
+		const regenerateData=()=>{
+			notation=new Notation(dependentVariables)
+			data=dataGenerator(notation)
+		}
+		regenerateData()
+
 		for (let id in data.classes) {
 			if (data.classes[id].importance<=1) {
 				selectedNodes[id]=true
@@ -357,6 +374,26 @@ $(function(){
 				}
 				return $container
 			}
+			const writeDependentVariablesControls=()=>{
+				// TODO text inputs with
+				//	suggested names: u, v, w, x, y, z
+				//	examples: x,y,w; y,v,z
+				const $container=$("<form>Dependent variables notation (main variable, second variable in 2d system, substitution variable):</form>")
+				availableDependentVariables.forEach(dvs=>{
+					$container.append(
+						" ",
+						$("<label>").append(
+							$("<input type='radio' name='dependent-variables'>").prop('checked',dvs==dependentVariables).click(function(){
+								dependentVariables=dvs
+								regenerateData()
+								writeTable()
+							}),
+							" "+viewDependentVariables[dvs]
+						)
+					)
+				})
+				return $container
+			}
 			const writeEquation=(id)=>{
 				$equations[id]=$("<div class='equation'>").append("\\["+data.classes[id].equation+"\\]")
 				if (data.classes[id].vectorEquation) {
@@ -372,6 +409,21 @@ $(function(){
 					}
 				})
 				return $equations[id]
+			}
+			const writeGeneralNotes=()=>{
+				const nt=notation
+				return $("<ul>").append(
+					`<li>how to read the diagram: <ul>`+
+						`<li>equation type names are written among arrows that show the relationship between types</li>`+
+						`<li>properties of an equation type are listed in the table column below its name</li>`+
+						`<li>every property of the equation type on the tip of the arrow <span class='arrow'></span> is also true for the equation type on the other end of the arrow (like <a href='https://en.wikipedia.org/wiki/Class_diagram'>class diagram</a>)</li>`+
+					`</ul></li>`,
+					`<li>all functions have to be continuous on the interval of interest</li>`,
+					`<li>\\( ${nt.x} \\), \\( ${nt.y} \\) or \\( ${nt.w} \\) possibly with a subscript is a function of \\( t \\); other functions are written with an argument like this: \\( f(t) \\)</li>`,
+					`<li>\\( C \\), \\( K \\) and other uppercase letters are arbitrary constants</li>`,
+					`<li>\\( \\int\\!f(t)\\,\\mathrm{d}t + C \\) is a family of antiderivatives of \\( f(t) \\) with parameter \\( C \\)</li>`,
+					`<li>\\( \\int\\!f(t)\\,\\mathrm{d}t \\) is any single antiderivative of \\( f(t) \\)`
+				)
 			}
 			$container.empty().append(
 				$("<table>").append(
@@ -419,19 +471,9 @@ $(function(){
 					)
 				),
 				writeTraitAlignmentControls(),
+				writeDependentVariablesControls(),
 				"<p>General notes:</p>",
-				$("<ul>").append(
-					`<li>how to read the diagram: <ul>`+
-						`<li>equation type names are written among arrows that show the relationship between types</li>`+
-						`<li>properties of an equation type are listed in the table column below its name</li>`+
-						`<li>every property of the equation type on the tip of the arrow <span class='arrow'></span> is also true for the equation type on the other end of the arrow (like <a href='https://en.wikipedia.org/wiki/Class_diagram'>class diagram</a>)</li>`+
-					`</ul></li>`,
-					`<li>all functions have to be continuous on the interval of interest</li>`,
-					`<li>\\( y \\), \\( y_1 \\), \\( y_p \\) and \\( y \\) or \\( z \\) with any other subscript is a function of \\( t \\); other functions are written with an argument like this: \\( f(t) \\)</li>`,
-					`<li>\\( C \\), \\( K \\) and other uppercase letters are arbitrary constants</li>`,
-					`<li>\\( \\int\\!f(t)\\,\\mathrm{d}t + C \\) is a family of antiderivatives of \\( f(t) \\) with parameter \\( C \\)</li>`,
-					`<li>\\( \\int\\!f(t)\\,\\mathrm{d}t \\) is any single antiderivative of \\( f(t) \\)`
-				)
+				writeGeneralNotes()
 			)
 			MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 		}
