@@ -153,8 +153,8 @@ module.exports=(nt)=>({
 						`total population \\( N \\) is constant`,
 						`\\[ S + I + R = N \\]`,
 						`eliminate \\( R \\)`,
-						`\\[ \\left\\{ \\begin{aligned}`+
-							`${nt.dd('S')} &= -\\alpha S I \\\\`+
+						`\\[ \\left\\{ \\begin{aligned} `+
+							`${nt.dd('S')} &= -\\alpha S I \\\\ `+
 							`${nt.dd('I')} &= \\alpha S I - \\beta I \\\\ `+
 						`\\end{aligned} \\right. \\]`,
 						`\\[ ${nt.dd('I','S')} = \\frac{\\alpha S I - \\beta I}{-\\alpha S I} = -1 + \\frac{\\rho}{S} \\]`,

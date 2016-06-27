@@ -112,8 +112,10 @@ module.exports=(nt)=>({
 					{type:'derivation',content:[
 						`\\[ ${nt.dxdt} = a(t) \\cdot ${nt.x} + b(t) \\cdot ${nt.x}^n \\]`,
 						`multiply the equation by \\( \\frac{1-n}{${nt.x}^n} \\)`,
-						`\\[ \\frac{1-n}{${nt.x}^n} ${nt.dxdt} = \\cdots \\]`,
-						`\\[ \\cdots = \\frac{(1-n) a(t)}{${nt.x}^{n-1}} + (1-n) b(t) \\]`,
+						`\\[ \\begin{multline} `+
+							`\\frac{1-n}{${nt.x}^n} ${nt.dxdt} = \\\\ `+
+							`= \\frac{(1-n) a(t)}{${nt.x}^{n-1}} + (1-n) b(t) `+
+						`\\end{multline} \\]`,
 						`introduce a new variable`,
 						`\\[ ${nt.w} = \\frac{1}{${nt.x}^{n-1}} \\]`,
 						`\\[ ${nt.dd(nt.w)} = ${nt.dd(nt.w,nt.x)} ${nt.dxdt} = \\frac{1-n}{${nt.x}^n} ${nt.dxdt} \\]`,
