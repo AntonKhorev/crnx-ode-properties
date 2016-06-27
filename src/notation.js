@@ -9,8 +9,8 @@ class Notation {
 	get x() { // main dependent variable
 		return this.dependentVariables.charAt(0)
 	}
-	get X() { // TODO vector font
-		return this.dependentVariables.charAt(0).toUpperCase()
+	get X() { // vector of dependent variables
+		return '\\mathbf{'+this.dependentVariables.charAt(0).toUpperCase()+'}'
 	}
 	get y() { // second dependent variable for systems of 2 equations
 		return this.dependentVariables.charAt(1)

@@ -12,7 +12,7 @@ module.exports=(nt)=>({
 				`\\vdots \\\\`+
 				`${nt.dd(`${nt.x}_n`)} = f_n(t,${nt.x}_1,…,${nt.x}_n)`+
 			`\\end{array} \\right.`,
-		vectorEquation: `${nt.dd(nt.X)} = F(t,${nt.X})`,
+		vectorEquation: `${nt.dd(nt.X)} = \\mathbf{F}(t,${nt.X})`,
 		traits: {
 			testSolutionMethod: {
 				content: [
@@ -32,7 +32,7 @@ module.exports=(nt)=>({
 				`${nt.dd(nt.x)} &= f(t,${nt.x},${nt.y}) \\\\`+
 				`${nt.dd(nt.y)} &= g(t,${nt.x},${nt.y})`+
 			`\\end{aligned} \\right.`,
-		vectorEquation: `${nt.dd(nt.X)} = F(t,${nt.X})`,
+		vectorEquation: `${nt.dd(nt.X)} = \\mathbf{F}(t,${nt.X})`,
 		traits: {},
 	},
 	s2_partlyDecoupled: {
@@ -67,7 +67,7 @@ module.exports=(nt)=>({
 				`${nt.dd(nt.x)} &= f(${nt.x},${nt.y}) \\\\`+
 				`${nt.dd(nt.y)} &= g(${nt.x},${nt.y})`+
 			`\\end{aligned} \\right.`,
-		vectorEquation: `${nt.dd(nt.X)} = F(${nt.X})`,
+		vectorEquation: `${nt.dd(nt.X)} = \\mathbf{F}(${nt.X})`,
 		traits: {},
 	},
 	s2_linearHomogeneousConstant: {
@@ -81,14 +81,14 @@ module.exports=(nt)=>({
 				`${nt.dd(nt.x)} &= a_{${nt.x}${nt.x}} ${nt.x} + a_{${nt.x}${nt.y}} ${nt.y} \\\\`+
 				`${nt.dd(nt.y)} &= a_{${nt.y}${nt.x}} ${nt.x} + a_{${nt.y}${nt.y}} ${nt.y}`+
 			`\\end{aligned} \\right.`,
-		vectorEquation: `${nt.dd(nt.X)} = A ${nt.X}`,
+		vectorEquation: `${nt.dd(nt.X)} = \\mathbf{A} ${nt.X}`,
 		traits: {
 			characteristicEquation: {
 				form: true,
 				content: [
-					`\\[ \\det(A - \\lambda I) = 0 \\]`,
+					`\\[ \\det(\\mathbf{A} - \\lambda \\mathbf{I}) = 0 \\]`,
 					{type:'note',content:[
-						`\\( \\lambda \\) is an eigenvalue of \\( A \\)`,
+						`\\( \\lambda \\) is an eigenvalue of \\( \\mathbf{A} \\)`,
 					]},
 				],
 			},
@@ -163,17 +163,17 @@ module.exports=(nt)=>({
 					]},
 					`conserved quantities:`,
 					`\\[ \\begin{multline}`+
-						`S(t) + I(t) + R(t) = \\\\`+
-						`= S(0) + I(0) + R(0)`+
+						`S(t) + I(t) + R(t) = \\\\ `+
+						`= S(0) + I(0) + R(0) `+
 					`\\end{multline} \\]`,
 					`\\[ \\begin{multline}`+
-						`I(t) + S(t) - \\rho \\ln S(t) = \\\\`+
-						`= I(0) + S(0) - \\rho \\ln S(0)`+
+						`I(t) + S(t) - \\rho \\ln S(t) = \\\\ `+
+						`= I(0) + S(0) - \\rho \\ln S(0) `+
 					`\\end{multline} \\]`,
 					`maximum of \\( I \\):`,
 					`\\[ \\begin{multline}`+
-						`I_{max} + \\rho - \\rho \\ln \\rho = \\\\`+
-						`= I(0) + S(0) - \\rho \\ln S(0)`+
+						`I_{max} + \\rho - \\rho \\ln \\rho = \\\\ `+
+						`= I(0) + S(0) - \\rho \\ln S(0) `+
 					`\\end{multline} \\]`,
 				],
 			},
