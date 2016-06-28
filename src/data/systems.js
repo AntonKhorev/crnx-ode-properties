@@ -10,9 +10,9 @@ module.exports=(nt)=>({
 		importance: 3,
 		equation:
 			`\\left\\{ \\begin{array}{c}`+
-				`${nt.dd(`${nt.x}_1`)} = f_1(t,${nt.x}_1,…,${nt.x}_n) \\\\`+
+				`${nt.dd(`${nt.x}_1`)} = f_1(t,${nt.x}_1,\\dotsc,${nt.x}_n) \\\\`+
 				`\\vdots \\\\`+
-				`${nt.dd(`${nt.x}_n`)} = f_n(t,${nt.x}_1,…,${nt.x}_n)`+
+				`${nt.dd(`${nt.x}_n`)} = f_n(t,${nt.x}_1,\\dotsc,${nt.x}_n)`+
 			`\\end{array} \\right.`,
 		vectorEquation: `${nt.dd(nt.X)} = \\mathbf{F}(t,${nt.X})`,
 		traits: {

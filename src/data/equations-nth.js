@@ -6,7 +6,7 @@ module.exports=(nt)=>({
 		name: "nth-order",
 		htmlName: "<em>n</em>th-order",
 		importance: 2,
-		equation: `${nt.dd(nt.x,'t','n')} = f(t,${nt.x},${nt.dxdt},...,${nt.dd(nt.x,'t','n-1')})`,
+		equation: `${nt.dd(nt.x,'t','n')} = f(t,${nt.x},${nt.dxdt},\\dotsc,${nt.dd(nt.x,'t','n-1')})`,
 		traits: {
 			testSolutionMethod: {
 				content: [
