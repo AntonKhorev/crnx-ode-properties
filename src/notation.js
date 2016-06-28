@@ -46,6 +46,9 @@ class Notation {
 	vec2(a,b) {
 		return `\\begin{bmatrix} ${a} \\\\ ${b} \\end{bmatrix}`
 	}
+	svec2(a,b) {
+		return `\\left[ \\begin{smallmatrix} ${a} \\\\ ${b} \\end{smallmatrix} \\right]`
+	}
 	mat2(a,b,c,d) {
 		return `\\begin{bmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{bmatrix}`
 	}

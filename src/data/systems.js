@@ -1,5 +1,7 @@
 'use strict'
 
+const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
+
 module.exports=(nt)=>({
 	sn: {
 		parents: {},
@@ -95,22 +97,46 @@ module.exports=(nt)=>({
 			generalSolutionMethod: {
 				form: true,
 				content: [
+					`includes ${ivp} solution with initial conditions: \\( ${nt.x}_0 = ${nt.x}(0) \\), \\( ${nt.y}_0 = ${nt.y}(0) \\)`,
 					{type:'cases',content:[
 						{type:'case',title:`\\( a_{${nt.x}${nt.y}} = a_{${nt.y}${nt.x}} = 0 \\)`,content:[
-							`\\[ ${nt.ddt} ${nt.vec2(nt.x,nt.y)} = ${nt.mat2('\\lambda_1',0,0,'\\lambda_2')} ${nt.vec2(nt.x,nt.y)} \\]`+
+							`the equation has the form:`,
+							`\\[ ${nt.ddt} ${nt.vec2(nt.x,nt.y)} = ${nt.mat2('\\lambda_1',0,0,'\\lambda_2')} ${nt.vec2(nt.x,nt.y)} \\]`,
+							`general solution (with arbitrary constants \\( ${nt.x}_0 \\), \\( ${nt.y}_0 \\)) and ${ivp} solution:`,
 							`\\[ ${nt.X} = ${nt.x}_0 e^{\\lambda_1 t} ${nt.vec2(1,0)} + ${nt.y}_0 e^{\\lambda_2 t} ${nt.vec2(0,1)} \\]`,
 						]},
 						{type:'case',title:`\\( a_{${nt.x}${nt.y}} \\neq 0 \\) or \\( a_{${nt.y}${nt.x}} \\neq 0 \\)`,content:[
-							`solve characteristic equation for \\( \\lambda \\)`,
+							`get eigenvalues by solving the characteristic equation for \\( \\lambda \\):`,
+							`\\[ \\det(\\mathbf{A} - \\lambda \\mathbf{I}) = 0 \\]`,
 							{type:'cases',content:[
 								{type:'case',title:`repeated \\( \\lambda \\)`,content:[
-									`TODO`,
+									`general solution (with arbitrary constants \\( ${nt.x}_0 \\), \\( ${nt.y}_0 \\)) and ${ivp} solution:`,
+									`\\[ ${nt.X} = e^{\\lambda t} ${nt.vec2(nt.x+'_0',nt.y+'_0')} + t e^{\\lambda t} (\\mathbf{A} - \\lambda \\mathbf{I}) ${nt.vec2(nt.x+'_0',nt.y+'_0')} \\]`,
 								]},
 								{type:'case',title:`real distinct \\( \\lambda_1 \\), \\( \\lambda_2 \\)`,content:[
-									`TODO`,
+									`find eigenvector \\( ${nt.svec2(`${nt.x}_1`,`${nt.y}_1`)} \\) by solving:`,
+									`\\[ (\\mathbf{A} - \\lambda_1 \\mathbf{I}) ${nt.vec2(`${nt.x}_1`,`${nt.y}_1`)} = 0 \\]`,
+									`find eigenvector \\( ${nt.svec2(`${nt.x}_2`,`${nt.y}_2`)} \\) by solving:`,
+									`\\[ (\\mathbf{A} - \\lambda_2 \\mathbf{I}) ${nt.vec2(`${nt.x}_2`,`${nt.y}_2`)} = 0 \\]`,
+									`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
+									`\\[ ${nt.X} = k_1 e^{\\lambda_1 t} ${nt.vec2(`${nt.x}_1`,`${nt.y}_1`)} + k_2 e^{\\lambda_2 t} ${nt.vec2(`${nt.x}_2`,`${nt.y}_2`)} \\]`,
+									`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+									`\\[ ${nt.mat2(`${nt.x}_1`,`${nt.x}_2`,`${nt.y}_1`,`${nt.y}_2`)} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}_0`,`${nt.y}_0`)} \\]`,
 								]},
-								{type:'case',title:`complex conjugate pair \\( \\lambda = \\alpha \\pm \\beta i \\)`,content:[
-									`TODO`,
+								{type:'case',title:`complex conjugate pair \\( \\lambda = \\alpha \\pm i \\beta \\)`,content:[
+									`select either \\( \\alpha + i \\beta \\) or \\( \\alpha - i \\beta \\) as \\( \\lambda_1 \\)`,
+									`find complex-valued eigenvector \\( ${nt.svec2(`${nt.x}_1 + i ${nt.x}_2`,`${nt.y}_1 + i ${nt.y}_2`)} \\) by solving:`,
+									`\\[ (\\mathbf{A} - \\lambda_1 \\mathbf{I}) ${nt.vec2(`${nt.x}_1 + i ${nt.x}_2`,`${nt.y}_1 + i ${nt.y}_2`)} = 0 \\]`,
+									`one of complex-valued solutions:`,
+									`\\[ ${nt.X}_c = e^{\\alpha t} (\\cos \\beta t + i \\sin \\beta t) ${nt.svec2(`${nt.x}_1 + i ${nt.x}_2`,`${nt.y}_1 + i ${nt.y}_2`)} \\]`,
+									`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
+									`\\[ ${nt.X} = k_1 \\Re ${nt.X}_c + k_2 \\Im ${nt.X}_c \\]`,
+									`\\[ \\begin{aligned} `+
+										`${nt.X} = \\: & k_1 ${nt.vec2(`${nt.x}_1 \\cos \\beta t - ${nt.x}_2 \\sin \\beta t`,`${nt.y}_1 \\cos \\beta t - ${nt.y}_2 \\sin \\beta t`)} \\\\`+
+										        `+ \\: & k_2 ${nt.vec2(`${nt.x}_1 \\sin \\beta t + ${nt.x}_2 \\cos \\beta t`,`${nt.y}_1 \\sin \\beta t + ${nt.y}_2 \\cos \\beta t`)} `+
+									`\\end{aligned} \\]`,
+									`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+									`\\[ ${nt.mat2(`${nt.x}_1`,`${nt.x}_2`,`${nt.y}_1`,`${nt.y}_2`)} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}_0`,`${nt.y}_0`)} \\]`,
 								]},
 							]},
 						]},

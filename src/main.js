@@ -123,7 +123,7 @@ $(function(){
 			).each(detailsPolyfill)
 			const rec=(line)=>{
 				if (typeof line == 'string') {
-					return $("<div>").append(line)
+					return $("<div class='line'>").append(line)
 				} else if (line.type=='derivation' || line.type=='case') {
 					return $("<details>").append(
 						$("<summary>").append(line.title!==undefined ? line.title : line.type),
