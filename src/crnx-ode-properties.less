@@ -290,6 +290,16 @@
 					margin: 1em -4px;
 					padding: 3px;
 					border: solid 1px @separator-color;
+					summary {
+						margin: -3px;
+						padding: 3px;
+					}
+					&[open] > summary {
+						border-bottom: solid 1px @separator-color;
+					}
+					summary:hover {
+						background: #FFF;
+					}
 					details {
 						background: #FFD;
 						margin: 1em -2px;
@@ -297,6 +307,10 @@
 							margin-bottom: -2px;
 						}
 						padding: 1px;
+						summary {
+							margin: -1px;
+							padding: 1px;
+						}
 						details {
 							background: #EDF;
 						}
