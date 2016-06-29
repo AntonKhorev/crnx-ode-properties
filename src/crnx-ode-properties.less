@@ -293,12 +293,17 @@
 					summary {
 						margin: -3px;
 						padding: 3px;
+						transition: 300ms;
 					}
 					&[open] > summary {
-						border-bottom: solid 1px @separator-color;
+						border-bottom: solid 1px transparent;
+						&:hover {
+							border-bottom: solid 1px @separator-color;
+						}
 					}
 					summary:hover {
 						background: #FFF;
+						transition: none;
 					}
 					details {
 						background: #FFD;
@@ -335,6 +340,7 @@
 				&.highlight {
 					background: #FEA;
 					border: solid 1px @active-stroke-color;
+					transition: none;
 				}
 				& div.alt-separator {
 					text-align: center;
