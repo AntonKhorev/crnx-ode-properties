@@ -11,7 +11,9 @@
     "gulp": "^3.9.1",
     "mocha": "^2.4.5"
   },
-  "dependencies": {},
+  "dependencies": {
+    "crnx-base": "github:antonkhorev/crnx-base#v0.5.3"
+  },
   "repository": "AntonKhorev/crnx-ode-properties",
   "bugs": {
     "url": "https://github.com/AntonKhorev/crnx-ode-properties/issues"
