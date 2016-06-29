@@ -1,5 +1,7 @@
 'use strict'
 
+const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
+
 module.exports=(nt)=>({
 	o2: {
 		parents: {
@@ -86,13 +88,23 @@ module.exports=(nt)=>({
 					`\\[ a \\lambda^2 + b \\lambda + c = 0 \\]`,
 					{type:'switch',title:`roots \\( \\lambda \\) are`,content:[
 						{type:'case',title:`repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,content:[
+							`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
 							`\\[ ${nt.x} = k_1 e^{\\lambda t} + k_2 t e^{\\lambda t} \\]`,
+							`constants for ${ivp} solution:`,
+							`\\[ k_1 = ${nt.x}(0) \\]`,
+							`\\[ k_2 = ${nt.x}'(0) - \\lambda ${nt.x}(0) \\]`,
 						]},
 						{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[
+							`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
 							`\\[ ${nt.x} = k_1 e^{\\lambda_1 t} + k_2 e^{\\lambda_2 t} \\]`,
+							`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+							`\\[ ${nt.mat2(1,1,'\\lambda_1','\\lambda_2')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}(0)`,`${nt.x}'(0)`)} \\]`,
 						]},
 						{type:'case',title:`complex conjugate pair \\( ( \\lambda = \\alpha \\pm i \\beta; \\beta \\ne 0 ) \\)`,content:[
+							`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
 							`\\[ ${nt.x} = k_1 e^{\\alpha t} \\cos \\beta t + k_2 e^{\\alpha t} \\sin \\beta t \\]`,
+							`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+							`\\[ ${nt.mat2(1,0,'\\alpha','\\beta')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}(0)`,`${nt.x}'(0)`)} \\]`,
 						]},
 					]},
 				],
