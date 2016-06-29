@@ -59,7 +59,7 @@ module.exports=(nt)=>({
 			characteristicEquation: {
 				form: true,
 				content: [
-					{type:'derivetion',content:[
+					{type:'derivation',content:[
 						`\\[ a ${nt.dd(nt.x,'t',2)} + b ${nt.dxdt} + c ${nt.x} = 0 \\]`,
 						`substitute \\( ${nt.x} = e^{\\lambda t} \\)`,
 						`\\[ a ${nt.dd('','t',2)} e^{\\lambda t} + b ${nt.ddt} e^{\\lambda t} + c e^{\\lambda t} = 0 \\]`,
@@ -77,6 +77,24 @@ module.exports=(nt)=>({
 						`${nt.dd(nt.x)} &= ${nt.y} \\\\`+
 						`${nt.dd(nt.y)} &= - \\frac c a ${nt.x} - \\frac b a ${nt.y}`+
 					`\\end{aligned} \\right. \\]`,
+				],
+			},
+			generalSolutionMethod: {
+				form: true,
+				content: [
+					`solve characteristic equation for \\( \\lambda \\):`,
+					`\\[ a \\lambda^2 + b \\lambda + c = 0 \\]`,
+					{type:'switch',title:`roots \\( \\lambda \\) are`,content:[
+						{type:'case',title:`repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,content:[
+							`\\[ ${nt.x} = k_1 e^{\\lambda t} + k_2 t e^{\\lambda t} \\]`,
+						]},
+						{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[
+							`\\[ ${nt.x} = k_1 e^{\\lambda_1 t} + k_2 e^{\\lambda_2 t} \\]`,
+						]},
+						{type:'case',title:`complex conjugate pair \\( ( \\lambda = \\alpha \\pm i \\beta; \\beta \\ne 0 ) \\)`,content:[
+							`\\[ ${nt.x} = k_1 e^{\\alpha t} \\cos \\beta t + k_2 e^{\\alpha t} \\sin \\beta t \\]`,
+						]},
+					]},
 				],
 			},
 		},
