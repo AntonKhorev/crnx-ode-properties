@@ -272,9 +272,12 @@
 					margin: 1em 0;
 				}
 				div.condition {
+					background: linear-gradient(to top, #DEF, transparent);
 					border-bottom: solid 1px @separator-color;
 					margin-left: -4px;
 					padding-left: 3px;
+					margin-right: -4px;
+					padding-right: 3px;
 				}
 				div.cases {
 					border-left: solid 1px @separator-color;
@@ -283,17 +286,29 @@
 					padding-left: 3px;
 				}
 				details {
+					background: #DEF;
 					margin: 1em -4px;
 					padding: 3px;
 					border: solid 1px @separator-color;
 					details {
+						background: #FFD;
 						margin: 1em -2px;
 						&:last-child {
 							margin-bottom: -2px;
 						}
 						padding: 1px;
+						details {
+							background: #EDF;
+						}
 					}
-					div.condition, div.cases {
+					div.condition {
+						background: linear-gradient(to top, #FFD, transparent);
+						margin-left: -2px;
+						padding-left: 1px;
+						margin-right: -2px;
+						padding-right: 1px;
+					}
+					div.cases {
 						margin-left: -2px;
 						padding-left: 1px;
 					}
