@@ -98,7 +98,7 @@ module.exports=(nt)=>({
 				form: true,
 				content: [
 					`includes ${ivp} solution with initial conditions: \\( ${nt.x}_0 = ${nt.x}(0) \\), \\( ${nt.y}_0 = ${nt.y}(0) \\)`,
-					{type:'cases',content:[
+					{type:'switch',title:`coefficients satisfy conditions`,content:[
 						{type:'case',title:`\\( a_{${nt.x}${nt.y}} = a_{${nt.y}${nt.x}} = 0 \\)`,content:[
 							`the equation has the form:`,
 							`\\[ ${nt.ddt} ${nt.vec2(nt.x,nt.y)} = ${nt.mat2('\\lambda_1',0,0,'\\lambda_2')} ${nt.vec2(nt.x,nt.y)} \\]`,
@@ -106,14 +106,14 @@ module.exports=(nt)=>({
 							`\\[ ${nt.X} = ${nt.x}_0 e^{\\lambda_1 t} ${nt.vec2(1,0)} + ${nt.y}_0 e^{\\lambda_2 t} ${nt.vec2(0,1)} \\]`,
 						]},
 						{type:'case',title:`\\( a_{${nt.x}${nt.y}} \\neq 0 \\) or \\( a_{${nt.y}${nt.x}} \\neq 0 \\)`,content:[
-							`get eigenvalues by solving the characteristic equation for \\( \\lambda \\):`,
+							`get eigenvalues \\( \\lambda_1 \\), \\( \\lambda_2 \\) by solving the characteristic equation for \\( \\lambda \\):`,
 							`\\[ \\det(\\mathbf{A} - \\lambda \\mathbf{I}) = 0 \\]`,
-							{type:'cases',content:[
-								{type:'case',title:`repeated \\( \\lambda \\)`,content:[
+							{type:'switch',title:`eigenvalues \\( \\lambda_1 \\), \\( \\lambda_2 \\) are`,content:[
+								{type:'case',title:`repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,content:[
 									`general solution (with arbitrary constants \\( ${nt.x}_0 \\), \\( ${nt.y}_0 \\)) and ${ivp} solution:`,
 									`\\[ ${nt.X} = e^{\\lambda t} ${nt.vec2(nt.x+'_0',nt.y+'_0')} + t e^{\\lambda t} (\\mathbf{A} - \\lambda \\mathbf{I}) ${nt.vec2(nt.x+'_0',nt.y+'_0')} \\]`,
 								]},
-								{type:'case',title:`real distinct \\( \\lambda_1 \\), \\( \\lambda_2 \\)`,content:[
+								{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[
 									`find eigenvector \\( ${nt.svec2(`${nt.x}_1`,`${nt.y}_1`)} \\) by solving:`,
 									`\\[ (\\mathbf{A} - \\lambda_1 \\mathbf{I}) ${nt.vec2(`${nt.x}_1`,`${nt.y}_1`)} = 0 \\]`,
 									`find eigenvector \\( ${nt.svec2(`${nt.x}_2`,`${nt.y}_2`)} \\) by solving:`,
@@ -123,7 +123,7 @@ module.exports=(nt)=>({
 									`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
 									`\\[ ${nt.mat2(`${nt.x}_1`,`${nt.x}_2`,`${nt.y}_1`,`${nt.y}_2`)} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}_0`,`${nt.y}_0`)} \\]`,
 								]},
-								{type:'case',title:`complex conjugate pair \\( \\lambda = \\alpha \\pm i \\beta \\)`,content:[
+								{type:'case',title:`complex conjugate pair \\( ( \\lambda = \\alpha \\pm i \\beta; \\beta \\ne 0 ) \\)`,content:[
 									`select one of eigenvalues \\( \\lambda_1 = \\alpha + i \\beta \\)`,
 									`find complex-valued eigenvector \\( ${nt.svec2(`${nt.x}_1 + i ${nt.x}_2`,`${nt.y}_1 + i ${nt.y}_2`)} \\) by solving:`,
 									`\\[ (\\mathbf{A} - \\lambda_1 \\mathbf{I}) ${nt.vec2(`${nt.x}_1 + i ${nt.x}_2`,`${nt.y}_1 + i ${nt.y}_2`)} = 0 \\]`,

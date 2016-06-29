@@ -268,6 +268,20 @@
 				.svg(@sx,@sy,@separator-path);
 				background-position: top;
 				background-repeat: no-repeat;
+				div.line {
+					margin: 1em 0;
+				}
+				div.condition {
+					border-bottom: solid 1px @separator-color;
+					margin-left: -4px;
+					padding-left: 3px;
+				}
+				div.cases {
+					border-left: solid 1px @separator-color;
+					padding-top: 1px;
+					margin-left: -4px;
+					padding-left: 3px;
+				}
 				details {
 					margin: 1em -4px;
 					padding: 3px;
@@ -279,9 +293,10 @@
 						}
 						padding: 1px;
 					}
-				}
-				div.line {
-					margin: 1em 0;
+					div.condition, div.cases {
+						margin-left: -2px;
+						padding-left: 1px;
+					}
 				}
 			}
 			div.equation {

@@ -129,6 +129,13 @@ $(function(){
 						$("<summary>").append(line.title!==undefined ? line.title : line.type),
 						line.content.map(rec)
 					).each(detailsPolyfill)
+				} else if (line.type=='switch') {
+					return $("<div class='"+line.type+"'>").append(
+						$("<div class='condition'>").append(line.title!==undefined ? line.title : line.type,':'),
+						$("<div class='cases'>").append(
+							line.content.map(rec)
+						)
+					)
 				} else {
 					return $("<div class='"+line.type+"'>").append(
 						line.content.map(rec)
