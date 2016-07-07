@@ -432,7 +432,45 @@ $(function(){
 					`<li>\\( \\int\\!f(t)\\,\\mathrm{d}t \\) is any single antiderivative of \\( f(t) \\)`
 				)
 			}
+			const writeQuickAddControls=()=>{
+				let $select,$button
+				const updateButton=()=>{
+					const id=$select.val()
+					$button.text(selectedNodes[id]
+						? "Delete"
+						: "Add"
+					)
+				}
+				const $div=$("<div>").append(
+					$select=$("<select>").append(
+						Object.keys(data.classes).sort().map(id=>{
+							const $option=$("<option>").val(id)
+							let $text=$option
+							if (selectedNodes[id]) {
+								$option.append(
+									$text=$("<strong>")
+								)
+							}
+							$text.text(data.classes[id].name)
+							return $option
+						})
+					).change(function(){
+						updateButton()
+					}),
+					$button=$("<button>").click(function(){
+						const id=$select.val()
+						if (selectedNodes[id]) {
+							deleteNode(id)
+						} else {
+							addNode(id)
+						}
+					})
+				)
+				updateButton()
+				return $div
+			}
 			$container.empty().append(
+				writeQuickAddControls(),
 				$("<table>").append(
 					writeThead(),
 					writeTfoot(),
