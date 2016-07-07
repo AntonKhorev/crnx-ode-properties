@@ -42,7 +42,7 @@ const i18n=(id)=>{
 
 $(function(){
 	$('.crnx-ode-properties').each(function(){
-		const $container=$(this)
+		const $container=$(this).empty()
 		const selectedNodes={} // visible nodes // TODO rename to visibleNodes
 
 		// options
@@ -171,7 +171,55 @@ $(function(){
 				(traitCell,i)=>writeTraitCell(theadLayout.columns[i],traitCell)
 			))
 		}
-		const writeTable=()=>{
+
+		let $tableContainer,$quickSelect,$quickSelectButton
+		const updateQuickSelectButton=()=>{
+			const id=$quickSelect.val()
+			$quickSelectButton.text(selectedNodes[id]
+				? "Delete"
+				: "Add"
+			)
+		}
+		const deleteNode=id=>{
+			delete selectedNodes[id]
+			$quickSelect.children(`[value="${id}"]`).removeClass('added')
+			updateQuickSelectButton()
+			recomputeLayouts()
+			writeTable()
+		}
+		const addNode=id=>{
+			selectedNodes[id]=true
+			$quickSelect.children(`[value="${id}"]`).addClass('added')
+			updateQuickSelectButton()
+			recomputeLayouts()
+			writeTable()
+		}
+		const writeQuickSelectControls=()=>{
+			const $div=$("<div>").append(
+				$quickSelect=$("<select>").append(
+					Object.keys(data.classes).sort().map(id=>{
+						const $option=$("<option>").val(id).text(data.classes[id].name)
+						if (selectedNodes[id]) {
+							$option.addClass('added')
+						}
+						return $option
+					})
+				).change(function(){
+					updateQuickSelectButton()
+				}),
+				$quickSelectButton=$("<button>").click(function(){
+					const id=$quickSelect.val()
+					if (selectedNodes[id]) {
+						deleteNode(id)
+					} else {
+						addNode(id)
+					}
+				})
+			)
+			updateQuickSelectButton()
+			return $div
+		}
+		const writeTable=()=>{ // TODO rename (doesn't return object)
 			const visibleAncestors={} // including self
 			const computeVisibleAncestors=(id,aid)=>{
 				visibleAncestors[id][aid]=true
@@ -183,20 +231,8 @@ $(function(){
 				visibleAncestors[id]={}
 				computeVisibleAncestors(id,id)
 			}
-
 			const $equations={}
 			let $attachedMenu, $attachedToButton, attachedDirection, attachTimeoutId
-
-			const deleteNode=id=>{
-				delete selectedNodes[id]
-				recomputeLayouts()
-				writeTable()
-			}
-			const addNode=id=>{
-				selectedNodes[id]=true
-				recomputeLayouts()
-				writeTable()
-			}
 			const setCellClasses=($cell,cell)=>{
 				;['b','t','bt','rl','rt','bl'].forEach(dir=>{
 					if (cell[dir]) {
@@ -432,45 +468,7 @@ $(function(){
 					`<li>\\( \\int\\!f(t)\\,\\mathrm{d}t \\) is any single antiderivative of \\( f(t) \\)`
 				)
 			}
-			const writeQuickAddControls=()=>{
-				let $select,$button
-				const updateButton=()=>{
-					const id=$select.val()
-					$button.text(selectedNodes[id]
-						? "Delete"
-						: "Add"
-					)
-				}
-				const $div=$("<div>").append(
-					$select=$("<select>").append(
-						Object.keys(data.classes).sort().map(id=>{
-							const $option=$("<option>").val(id)
-							let $text=$option
-							if (selectedNodes[id]) {
-								$option.append(
-									$text=$("<strong>")
-								)
-							}
-							$text.text(data.classes[id].name)
-							return $option
-						})
-					).change(function(){
-						updateButton()
-					}),
-					$button=$("<button>").click(function(){
-						const id=$select.val()
-						if (selectedNodes[id]) {
-							deleteNode(id)
-						} else {
-							addNode(id)
-						}
-					})
-				)
-				updateButton()
-				return $div
-			}
-			$container.empty().append(
-				writeQuickAddControls(),
+			$tableContainer.empty().append(
 				$("<table>").append(
 					writeThead(),
 					writeTfoot(),
@@ -522,6 +520,10 @@ $(function(){
 			)
 			MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 		}
+		$container.append(
+			writeQuickSelectControls(),
+			$tableContainer=$("<div>")
+		)
 		writeTable()
 	})
 })
