@@ -59,7 +59,7 @@ module.exports=(nt)=>({
 				content: [
 					{type:'switch',title:`\\( b(t) \\) is`,content:[
 						{type:'case',title:`\\( b(t) = 0 \\)`,content:[
-							`\\[ ${nt.x} = C \\]`,
+							`\\[ ${nt.x} = K \\]`,
 						]},
 						{type:'case',title:`\\( b(t) \\ne 0 \\)`,content:[
 							`\\[ ${nt.x} = 0 \\]`,
@@ -130,6 +130,19 @@ module.exports=(nt)=>({
 							`\\[ ${nt.x} = k_1 e^{\\alpha t} \\cos \\beta t + k_2 e^{\\alpha t} \\sin \\beta t \\]`,
 							`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
 							`\\[ ${nt.mat2(1,0,'\\alpha','\\beta')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}(0)`,`${nt.x}'(0)`)} \\]`,
+						]},
+					]},
+				],
+			},
+			equilibriumSolutionMethod: {
+				form: true,
+				content: [
+					{type:'switch',title:`\\( c \\) is`,content:[
+						{type:'case',title:`\\( c = 0 \\)`,content:[
+							`\\[ ${nt.x} = K \\]`,
+						]},
+						{type:'case',title:`\\( c \\ne 0 \\)`,content:[
+							`\\[ ${nt.x} = 0 \\]`,
 						]},
 					]},
 				],

@@ -207,6 +207,7 @@ $(function(){
 				).change(function(){
 					updateQuickSelectButton()
 				}),
+				" ",
 				$quickSelectButton=$("<button>").click(function(){
 					const id=$quickSelect.val()
 					if (selectedNodes[id]) {
@@ -214,6 +215,16 @@ $(function(){
 					} else {
 						addNode(id)
 					}
+				}),
+				" ",
+				$("<button>Clear all</button>").click(function(){
+					for (let id in selectedNodes) {
+						delete selectedNodes[id]
+					}
+					$quickSelect.children().removeClass('added')
+					updateQuickSelectButton()
+					recomputeLayouts()
+					writeTable()
 				})
 			)
 			updateQuickSelectButton()
@@ -374,9 +385,6 @@ $(function(){
 				return $thead
 			}
 			const writeTfoot=()=>{
-				if (theadLayout.columns.length<=1) {
-					return $()
-				}
 				return $("<tfoot>").append(
 					$("<tr>").append(
 						theadLayout.columns.map(id=>$("<td>").append(
@@ -468,7 +476,8 @@ $(function(){
 					`<li>\\( \\int\\!f(t)\\,\\mathrm{d}t \\) is any single antiderivative of \\( f(t) \\)`
 				)
 			}
-			$tableContainer.empty().append(
+			$tableContainer.empty()
+			if (Object.keys(selectedNodes).length>0) $tableContainer.append(
 				$("<table>").append(
 					writeThead(),
 					writeTfoot(),
@@ -512,7 +521,9 @@ $(function(){
 						),
 						writeTraitRows()
 					)
-				),
+				)
+			)
+			$tableContainer.append(
 				writeTraitAlignmentControls(),
 				writeDependentVariablesControls(),
 				"<p>General notes:</p>",

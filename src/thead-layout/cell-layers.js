@@ -1,7 +1,7 @@
 'use strict'
 
 // TODO fake lodash
-const sum=arr=>arr.reduce((a,b)=>a+b)
+const sum=arr=>arr.reduce((a,b)=>a+b,0)
 //const times=(n,fn)=>Array(n).map((v,i)=>fn(i))
 const times=(n,fn)=>{
 	var arr=Array(n)
