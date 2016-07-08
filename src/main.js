@@ -142,13 +142,26 @@ $(function(){
 					)
 				}
 			}
-			if (item.form && forClassId!=fromClassId) {
-				$item.append(
-					rec({type:'note',content:[
-						"when equation is written as <em>"+getHtmlName(fromClassId)+"</em>:",
-						"\\["+data.classes[fromClassId].equation+"\\]",
-					]})
-				)
+			if (item.form) {
+				const forClass=data.classes[forClassId]
+				let forForm=forClassId
+				if (forClass.hasForm!==undefined) {
+					forForm=forClass.hasForm
+				}
+				let fromForms={
+					[fromClassId]: true,
+				}
+				if (item.form!==true) {
+					fromForms=item.form
+				}
+				if (!fromForms[forForm]) {
+					$item.append(
+						rec({type:'note',content:[
+							"when equation is written as <em>"+getHtmlName(fromClassId)+"</em>:",
+							"\\["+data.classes[fromClassId].equation+"\\]",
+						]})
+					)
+				}
 			}
 			$item.append(item.content.map(rec))
 			return $item

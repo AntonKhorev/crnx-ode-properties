@@ -72,6 +72,7 @@ module.exports=(nt)=>{
 			`\\( b \\ge 0 \\) is the viscous damping coefficient`,
 			`\\( k > 0 \\) is the spring constant`,
 		],
+		hasForm: 'o2_harmonicOscillator',
 		traits: {},
 	})
 	return {
@@ -192,7 +193,10 @@ module.exports=(nt)=>{
 				orderReduction: lhc_orderReduction('m','b','k'),
 				generalSolutionMethod: lhc_generalSolutionMethod('m','b','k'),
 				equilibriumSolutionMethod: {
-					form: true,
+					form: {
+						o2_harmonicOscillator: true,
+						o2_simpleHarmonicOscillator: true,
+					},
 					content: [
 						`\\[ ${nt.x} = 0 \\]`,
 						{type:'note',content:[
@@ -250,15 +254,6 @@ module.exports=(nt)=>{
 							`k_1 &= ${nt.y}(0) \\\\ `+
 							`k_2 &= \\sqrt{\\frac mk} ${nt.y}'(0) `+
 						`\\end{aligned} \\]`,
-					],
-				},
-				equilibriumSolutionMethod: { // same as in o2_harmonicOscillator b/c form is the same (there's no way to indicate that)
-					form: true,
-					content: [
-						`\\[ ${nt.x} = 0 \\]`,
-						{type:'note',content:[
-							`no other equilibrium solution is possible because \\( k > 0 \\)`,
-						]},
 					],
 				},
 			},
