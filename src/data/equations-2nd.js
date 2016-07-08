@@ -7,22 +7,22 @@ module.exports=(nt)=>{
 		form: true,
 		content: [
 			{type:'derivation',content:[
-				`\\[ ${a} ${nt.dd(nt.x,'t',2)} + ${b} ${nt.dxdt} + ${c} ${nt.x} = 0 \\]`,
+				`\\[ ${a} ${nt.dd(nt.x,'t',2)} `+(b?`+ ${b} ${nt.dxdt} `:``)+`+ ${c} ${nt.x} = 0 \\]`,
 				`substitute \\( ${nt.x} = e^{\\lambda t} \\)`,
-				`\\[ ${a} ${nt.dd('','t',2)} e^{\\lambda t} + ${b} ${nt.ddt} e^{\\lambda t} + ${c} e^{\\lambda t} = 0 \\]`,
-				`\\[ ${a} \\lambda^2 e^{\\lambda t} + ${b} \\lambda e^{\\lambda t} + ${c} e^{\\lambda t} = 0 \\]`,
+				`\\[ ${a} ${nt.dd('','t',2)} e^{\\lambda t} `+(b?`+ ${b} ${nt.ddt} e^{\\lambda t} `:``)+`+ ${c} e^{\\lambda t} = 0 \\]`,
+				`\\[ ${a} \\lambda^2 e^{\\lambda t} `+(b?`+ ${b} \\lambda e^{\\lambda t} `:``)+`+ ${c} e^{\\lambda t} = 0 \\]`,
 				`divide by \\( e^{\\lambda t} \\)`,
 			]},
-			`\\[ ${a} \\lambda^2 + ${b} \\lambda + ${c} = 0 \\]`,
+			`\\[ ${a} \\lambda^2 `+(b?`+ ${b} \\lambda `:``)+`+ ${c} = 0 \\]`,
 		],
 	})
 	const lhc_orderReduction=(a,b,c)=>({
 		title: "Order reduction to a system of 2 first-order linear homogeneous equations with constant coefficients",
 		form: true,
 		content: [
-			`\\[ \\left\\{ \\begin{aligned}`+
-				`${nt.dd(nt.x)} &= ${nt.y} \\\\`+
-				`${nt.dd(nt.y)} &= - \\frac ${c} ${a} ${nt.x} - \\frac ${b} ${a} ${nt.y}`+
+			`\\[ \\left\\{ \\begin{aligned} `+
+				`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
+				`${nt.dd(nt.y)} &= - \\frac ${c} ${a} ${nt.x} `+(b?`- \\frac ${b} ${a} ${nt.y} `:``)+
 			`\\end{aligned} \\right. \\]`,
 		],
 	})
@@ -71,9 +71,9 @@ module.exports=(nt)=>{
 					form: true,
 					content: [
 						`transform to a system of 2 first-order equations`,
-						`\\[ \\left\\{ \\begin{aligned}`+
-							`${nt.dd(nt.x)} &= ${nt.y} \\\\`+
-							`${nt.dd(nt.y)} &= f(t,${nt.x},${nt.y})`+
+						`\\[ \\left\\{ \\begin{aligned} `+
+							`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
+							`${nt.dd(nt.y)} &= f(t,${nt.x},${nt.y}) `+
 						`\\end{aligned} \\right. \\]`,
 					],
 				},
@@ -92,9 +92,9 @@ module.exports=(nt)=>{
 					title: "Order reduction to a system of 2 first-order autonomous equations",
 					form: true,
 					content: [
-						`\\[ \\left\\{ \\begin{aligned}`+
-							`${nt.dd(nt.x)} &= ${nt.y} \\\\`+
-							`${nt.dd(nt.y)} &= f(${nt.x},${nt.y})`+
+						`\\[ \\left\\{ \\begin{aligned} `+
+							`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
+							`${nt.dd(nt.y)} &= f(${nt.x},${nt.y}) `+
 						`\\end{aligned} \\right. \\]`,
 					],
 				},
@@ -133,7 +133,7 @@ module.exports=(nt)=>{
 			name: "second-order linear homogeneous with constant coefficients",
 			htmlName: "second-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Homogeneous_equations_with_constant_coefficients'>linear homogeneous with constant coefficients</a>",
 			importance: 2,
-			equation: `${nt.dd(nt.x,'t',2)} = - \\frac b a ${nt.dxdt} - \\frac c a ${nt.x}`,
+			equation: `${nt.dd(nt.x,'t',2)} = - \\frac ba ${nt.dxdt} - \\frac ca ${nt.x}`,
 			equationNotes: [
 				`usually written as \\( a ${nt.dd(nt.x,'t',2)} + b ${nt.dxdt} + c ${nt.x} = 0 \\)`,
 			],
@@ -163,12 +163,12 @@ module.exports=(nt)=>{
 			name: "harmonic oscillator",
 			htmlName: "<a href='https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator'>harmonic oscillator</a>",
 			importance: 3,
-			equation: `${nt.dd(nt.x,'t',2)} = - \\frac{b}{m} ${nt.dxdt} - \\frac{k}{m} ${nt.x}`,
+			equation: `${nt.dd(nt.x,'t',2)} = - \\frac bm ${nt.dxdt} - \\frac km ${nt.x}`,
 			equationNotes: [
 				`usually written as \\( m ${nt.dd(nt.x,'t',2)} + b ${nt.dxdt} + k ${nt.x} = 0 \\)`,
-				`\\( m &gt; 0 \\) is the mass`,
+				`\\( m > 0 \\) is the mass`,
 				`\\( b \\ge 0 \\) is the viscous damping coefficient`,
-				`\\( k &gt; 0 \\) is the spring constant`,
+				`\\( k > 0 \\) is the spring constant`,
 			],
 			traits: {
 				characteristicEquation: lhc_characteristicEquation('m','b','k'),
@@ -179,7 +179,7 @@ module.exports=(nt)=>{
 					content: [
 						`\\[ ${nt.x} = 0 \\]`,
 						{type:'note',content:[
-							`no other equilibrium solution is possible because \\( k &gt; 0 \\)`,
+							`no other equilibrium solution is possible because \\( k > 0 \\)`,
 						]},
 					],
 				},
@@ -189,15 +189,47 @@ module.exports=(nt)=>{
 			parents: {
 				o2_harmonicOscillator: true,
 			},
-			name: "simple harmonic oscillator",
-			htmlName: "<a href='https://en.wikipedia.org/wiki/Harmonic_oscillator#Simple_harmonic_oscillator'>simple harmonic oscillator</a>",
+			name: "simple (undamped) harmonic oscillator",
+			htmlName: "<a href='https://en.wikipedia.org/wiki/Harmonic_oscillator#Simple_harmonic_oscillator'>simple (undamped) harmonic oscillator</a>",
 			importance: 3,
-			equation: `${nt.dd(nt.x,'t',2)} = - \\frac{k}{m} ${nt.x}`,
+			equation: `${nt.dd(nt.x,'t',2)} = - \\frac km ${nt.x}`,
 			equationNotes: [
-				`\\(m\\) is the mass`,
-				`\\(k\\) is the spring constant`,
+				`usually written as \\( m ${nt.dd(nt.x,'t',2)} + k ${nt.x} = 0 \\)`,
+				`\\( m > 0 \\) is the mass`,
+				`\\( k > 0 \\) is the spring constant`,
 			],
-			traits: {},
+			traits: {
+				characteristicEquation: lhc_characteristicEquation('m',0,'k'),
+				orderReduction: lhc_orderReduction('m',0,'k'),
+				generalSolutionMethod: {
+					title: `General and ${ivp} solution`,
+					form: true,
+					content: [
+						{type:'derivation',content:[
+							`solve characteristic equation for \\( \\lambda \\):`,
+							`\\[ m \\lambda^2 + k = 0 \\]`,
+							`\\[ \\lambda = \\pm i \\sqrt{\\frac km} \\]`,
+							`see harmonic oscillator - general solution - <em>complex conjugate pair</em> case`,
+						]},
+						`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
+						`\\[ ${nt.x} = k_1 \\cos \\sqrt{\\frac km} t + k_2 \\sin \\sqrt{\\frac km} t \\]`,
+						`constants for ${ivp} solution:`,
+						`\\[ \\begin{aligned} `+
+							`k_1 &= ${nt.y}(0) \\\\ `+
+							`k_2 &= \\sqrt{\\frac mk} ${nt.y}'(0) `+
+						`\\end{aligned} \\]`,
+					],
+				},
+				equilibriumSolutionMethod: { // same as in o2_harmonicOscillator b/c form is the same (there's no way to indicate that)
+					form: true,
+					content: [
+						`\\[ ${nt.x} = 0 \\]`,
+						{type:'note',content:[
+							`no other equilibrium solution is possible because \\( k > 0 \\)`,
+						]},
+					],
+				},
+			},
 		},
 		o2_vanDerPol: {
 			parents: {
