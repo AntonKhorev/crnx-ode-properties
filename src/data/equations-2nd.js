@@ -45,10 +45,35 @@ module.exports=(nt)=>({
 			},
 		},
 	},
+	o2_linearHomogeneous: {
+		parents: {
+			o2: true,
+		},
+		name: "second-order linear homogeneous",
+		htmlName: "second-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a> <a href='https://en.wikipedia.org/wiki/Homogeneous_differential_equation#Homogeneous_linear_differential_equations'>homogeneous</a>",
+		importance: 2,
+		equation: `${nt.dd(nt.x,'t',2)} = a(t) \\cdot ${nt.dxdt} + b(t) \\cdot ${nt.x}`,
+		traits: {
+			equilibriumSolutionMethod: {
+				form: true,
+				content: [
+					{type:'switch',title:`\\( b(t) \\) is`,content:[
+						{type:'case',title:`\\( b(t) = 0 \\)`,content:[
+							`\\[ ${nt.x} = C \\]`,
+						]},
+						{type:'case',title:`\\( b(t) \\ne 0 \\)`,content:[
+							`\\[ ${nt.x} = 0 \\]`,
+						]},
+					]},
+				],
+			},
+		},
+	},
 	o2_linearHomogeneousConstant: {
 		parents: {
 			on_linearHomogeneousConstant: true,
 			o2_autonomous: true,
+			o2_linearHomogeneous: true,
 		},
 		name: "second-order linear homogeneous with constant coefficients",
 		htmlName: "second-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Homogeneous_equations_with_constant_coefficients'>linear homogeneous with constant coefficients</a>",
