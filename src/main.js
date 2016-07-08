@@ -124,7 +124,7 @@ $(function(){
 			const rec=(line)=>{
 				if (typeof line == 'string') {
 					return $("<div class='line'>").append(line)
-				} else if (line.type=='derivation' || line.type=='case') {
+				} else if (line.type=='derivation' || line.type=='proof' || line.type=='case') {
 					return $("<details>").append(
 						$("<summary>").append(line.title!==undefined ? line.title : line.type),
 						line.content.map(rec)

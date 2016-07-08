@@ -107,6 +107,7 @@ module.exports=(nt)=>({
 				],
 			},
 			generalSolutionMethod: {
+				title: `General and ${ivp} solution`,
 				form: true,
 				content: [
 					`solve characteristic equation for \\( \\lambda \\):`,
@@ -171,7 +172,7 @@ module.exports=(nt)=>({
 	},
 	o2_harmonicOscillator: {
 		parents: {
-			o2_autonomous: true,
+			o2_linearHomogeneousConstant: true,
 		},
 		name: "harmonic oscillator",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator'>harmonic oscillator</a>",

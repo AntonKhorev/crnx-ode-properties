@@ -72,16 +72,38 @@ module.exports=(nt)=>({
 		vectorEquation: `${nt.dd(nt.X)} = \\mathbf{F}(${nt.X})`,
 		traits: {},
 	},
+	s2_linearHomogeneous: {
+		parents: {
+			s2: true,
+		},
+		name: "system of 2 first-order linear homogeneous equations",
+		importance: 3,
+		equation:
+			`\\left\\{ \\begin{aligned}`+
+				`${nt.dd(nt.x)} &= a(t) \\, ${nt.x} + b(t) \\, ${nt.y} \\\\`+
+				`${nt.dd(nt.y)} &= c(t) \\, ${nt.x} + d(t) \\, ${nt.y}`+
+			`\\end{aligned} \\right.`,
+		vectorEquation: `${nt.dd(nt.X)} = \\mathbf{A}(t) \\, ${nt.X}`,
+		traits: {
+			equilibriumSolutionMethod: {
+				form: true,
+				content: [
+					`\\[ ${nt.X} = ${nt.vec2(0,0)} \\]`,
+				],
+			},
+		},
+	},
 	s2_linearHomogeneousConstant: {
 		parents: {
 			s2_autonomous: true,
+			s2_linearHomogeneous: true,
 		},
 		name: "system of 2 first-order linear homogeneous equations with constant coefficients",
 		importance: 3,
 		equation:
 			`\\left\\{ \\begin{aligned}`+
-				`${nt.dd(nt.x)} &= a_{${nt.x}${nt.x}} ${nt.x} + a_{${nt.x}${nt.y}} ${nt.y} \\\\`+
-				`${nt.dd(nt.y)} &= a_{${nt.y}${nt.x}} ${nt.x} + a_{${nt.y}${nt.y}} ${nt.y}`+
+				`${nt.dd(nt.x)} &= a ${nt.x} + b ${nt.y} \\\\`+
+				`${nt.dd(nt.y)} &= c ${nt.x} + d ${nt.y}`+
 			`\\end{aligned} \\right.`,
 		vectorEquation: `${nt.dd(nt.X)} = \\mathbf{A} ${nt.X}`,
 		traits: {
@@ -95,29 +117,30 @@ module.exports=(nt)=>({
 				],
 			},
 			generalSolutionMethod: {
+				title: `General and ${ivp} solution`,
 				form: true,
 				content: [
-					`includes ${ivp} solution with initial conditions: \\( ${nt.x}_0 = ${nt.x}(0) \\), \\( ${nt.y}_0 = ${nt.y}(0) \\)`,
+					`${ivp} initial conditions are: \\( ${nt.x}_0 = ${nt.x}(0) \\), \\( ${nt.y}_0 = ${nt.y}(0) \\)`,
 					{type:'switch',title:`coefficients satisfy conditions`,content:[
-						{type:'case',title:`\\( a_{${nt.x}${nt.y}} = a_{${nt.y}${nt.x}} = 0 \\)`,content:[
+						{type:'case',title:`\\( b = c = 0 \\)`,content:[
 							`the equation has the form:`,
 							`\\[ ${nt.ddt} ${nt.vec2(nt.x,nt.y)} = ${nt.mat2('\\lambda_1',0,0,'\\lambda_2')} ${nt.vec2(nt.x,nt.y)} \\]`,
 							`general solution (with arbitrary constants \\( ${nt.x}_0 \\), \\( ${nt.y}_0 \\)) and ${ivp} solution:`,
 							`\\[ ${nt.X} = ${nt.x}_0 e^{\\lambda_1 t} ${nt.vec2(1,0)} + ${nt.y}_0 e^{\\lambda_2 t} ${nt.vec2(0,1)} \\]`,
 						]},
-						{type:'case',title:`\\( a_{${nt.x}${nt.x}} = 0 \\) and \\( a_{${nt.x}${nt.y}} = 1 \\) (optional)`,content:[
+						{type:'case',title:`\\( a = 0 \\) and \\( b = 1 \\) (optional)`,content:[
 							{type:'note',content:[
-								`this is an optional case, you can use <em>\\( a_{${nt.x}${nt.y}} \\neq 0 \\) or \\( a_{${nt.y}${nt.x}} \\neq 0 \\)</em> case below`,
+								`this is an optional case, you can use <em>\\( b \\neq 0 \\) or \\( c \\neq 0 \\)</em> case below`,
 								`this case will happen after order reduction of second-order equation`,
 							]},
 							`the equation has the form:`,
-							`\\[ ${nt.ddt} ${nt.vec2(nt.x,nt.y)} = ${nt.mat2(0,1,`a_{${nt.y}${nt.x}}`,`a_{${nt.y}${nt.y}}`)} ${nt.vec2(nt.x,nt.y)} \\]`,
+							`\\[ ${nt.ddt} ${nt.vec2(nt.x,nt.y)} = ${nt.mat2(0,1,`c`,`d`)} ${nt.vec2(nt.x,nt.y)} \\]`,
 							{type:'derivation',content:[
 									`eigenvector for \\( \\lambda_1 \\) is:`,
 									`\\[ ${nt.vec2(`${nt.x}_1`,`${nt.y}_1`)} = ${nt.vec2(1,'\\lambda_1')} \\]`,
 									`eigenvector for \\( \\lambda_2 \\) is:`,
 									`\\[ ${nt.vec2(`${nt.x}_2`,`${nt.y}_2`)} = ${nt.vec2(1,'\\lambda_2')} \\]`,
-									`use these eigenvectors in <em>\\( a_{${nt.x}${nt.y}} \\neq 0 \\) or \\( a_{${nt.y}${nt.x}} \\neq 0 \\)</em> case below`,
+									`use these eigenvectors in <em>\\( b \\neq 0 \\) or \\( c \\neq 0 \\)</em> case below`,
 								]},
 							`get eigenvalues \\( \\lambda_1 \\), \\( \\lambda_2 \\) by solving the characteristic equation for \\( \\lambda \\):`,
 							`\\[ \\det(\\mathbf{A} - \\lambda \\mathbf{I}) = 0 \\]`,
@@ -143,7 +166,7 @@ module.exports=(nt)=>({
 								]},
 							]},
 						]},
-						{type:'case',title:`\\( a_{${nt.x}${nt.y}} \\neq 0 \\) or \\( a_{${nt.y}${nt.x}} \\neq 0 \\)`,content:[
+						{type:'case',title:`\\( b \\neq 0 \\) or \\( c \\neq 0 \\)`,content:[
 							`get eigenvalues \\( \\lambda_1 \\), \\( \\lambda_2 \\) by solving the characteristic equation for \\( \\lambda \\):`,
 							`\\[ \\det(\\mathbf{A} - \\lambda \\mathbf{I}) = 0 \\]`,
 							{type:'switch',title:`eigenvalues \\( \\lambda_1 \\), \\( \\lambda_2 \\) are`,content:[
@@ -183,7 +206,26 @@ module.exports=(nt)=>({
 						]},
 					]},
 				],
-			}
+			},
+			equilibriumSolutionMethod: {
+				form: true,
+				content: [
+					{type:'switch',title:`\\( \\det(\\mathbf{A}) \\) is`,content:[
+						{type:'case',title:`\\( \\det(\\mathbf{A}) = 0 \\)`,content:[
+							`\\[ ${nt.X} = K ${nt.vec2('b','-a')} \\]`,
+							{type:'proof',content:[
+								`\\[ ${nt.dd(nt.X)} = K ${nt.mat2('a','b','c','d')} ${nt.vec2('b','-a')} \\]`,
+								`\\[ ${nt.dd(nt.X)} = K ${nt.vec2('a b - b a','c b - d a')} \\]`,
+								`\\[ a d = b c \\]`,
+								`\\[ ${nt.dd(nt.X)} = ${nt.vec2(0,0)} \\]`,
+							]},
+						]},
+						{type:'case',title:`\\( \\det(\\mathbf{A}) \\ne 0 \\)`,content:[
+							`\\[ ${nt.X} = ${nt.vec2(0,0)} \\]`,
+						]},
+					]},
+				],
+			},
 		},
 	},
 	sn_sir: {
