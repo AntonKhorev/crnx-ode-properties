@@ -57,6 +57,23 @@ module.exports=(nt)=>{
 			]},
 		],
 	})
+	const harmonicOscillatorType=(type,wiki,discriminantRelation)=>({
+		parents: {
+			o2_harmonicOscillator: true,
+		},
+		name: `${type} harmonic oscillator`,
+		htmlName: `<a href='${wiki}'>${type}</a> harmonic oscillator`,
+		importance: 4,
+		equation: `${nt.dd(nt.x,'t',2)} = - \\frac bm ${nt.dxdt} - \\frac km ${nt.x}`,
+		equationNotes: [
+			`\\[ b^2 - 4 m k ${discriminantRelation} 0 \\]`,
+			`usually written as \\( m ${nt.dd(nt.x,'t',2)} + b ${nt.dxdt} + k ${nt.x} = 0 \\)`,
+			`\\( m > 0 \\) is the mass`,
+			`\\( b \\ge 0 \\) is the viscous damping coefficient`,
+			`\\( k > 0 \\) is the spring constant`,
+		],
+		traits: {},
+	})
 	return {
 		o2: {
 			parents: {
@@ -185,9 +202,24 @@ module.exports=(nt)=>{
 				},
 			},
 		},
+		o2_underdampedHarmonicOscillator: harmonicOscillatorType(
+			"underdamped",
+			"https://en.wikipedia.org/wiki/Damping#Under-damping_.280_.E2.89.A4_.CE.B6_.3C_1.29",
+			"&lt;"
+		),
+		o2_criticallyDampedHarmonicOscillator: harmonicOscillatorType(
+			"critically damped",
+			"https://en.wikipedia.org/wiki/Damping#Critical_damping_.28.CE.B6_.3D_1.29",
+			"="
+		),
+		o2_overdampedHarmonicOscillator: harmonicOscillatorType(
+			"overdamped",
+			"https://en.wikipedia.org/wiki/Damping#Over-damping_.28.CE.B6_.3E_1.29",
+			">"
+		),
 		o2_simpleHarmonicOscillator: {
 			parents: {
-				o2_harmonicOscillator: true,
+				o2_underdampedHarmonicOscillator: true,
 			},
 			name: "simple (undamped) harmonic oscillator",
 			htmlName: "<a href='https://en.wikipedia.org/wiki/Harmonic_oscillator#Simple_harmonic_oscillator'>simple (undamped) harmonic oscillator</a>",
