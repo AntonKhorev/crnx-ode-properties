@@ -1,6 +1,9 @@
 'use strict'
 
-const getClosestPointOnHyperbolaIn1stQuadrant=(C,x0,y0)=>{
+// returns coords [x,y] of a point on x*y=C closest to (x0,y0)
+// could have solved x^3*(x-x0)+C*y0*x-C^2=0, y=C/x
+
+const getClosestPointOnPositiveHyperbolaIn1stQuadrant=(C,x0,y0)=>{
 	let x=Math.sqrt(C)
 	let y=x
 	const epsilon2=1e-12
@@ -20,10 +23,24 @@ const getClosestPointOnHyperbolaIn1stQuadrant=(C,x0,y0)=>{
 	return [x,y]
 }
 
-// returns coords [x,y] of a point on x*y=C closest to (x0,y0)
-// could have solved x^3*(x-x0)+C*y0*x-C^2=0, y=C/x
+const getClosestPointOnPositiveHyperbola=(C,x0,y0)=>{
+	if (y0>=-x0) { // top-right branch
+		return getClosestPointOnPositiveHyperbolaIn1stQuadrant(C,x0,y0)
+	} else { // bottom-left branch
+		const xy=getClosestPointOnPositiveHyperbolaIn1stQuadrant(C,-x0,-y0)
+		return [-xy[0],-xy[1]]
+	}
+}
+
 const getClosestPointOnHyperbola=(C,x0,y0)=>{
-	return getClosestPointOnHyperbolaIn1stQuadrant(C,x0,y0)
+	if (C==0) {
+		// TODO
+	} else if (C>0) {
+		return getClosestPointOnPositiveHyperbola(C,x0,y0)
+	} else { // flip y axis
+		const xy=getClosestPointOnPositiveHyperbola(-C,x0,-y0)
+		return [xy[0],-xy[1]]
+	}
 }
 
 module.exports=getClosestPointOnHyperbola
