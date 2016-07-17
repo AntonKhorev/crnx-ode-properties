@@ -3,7 +3,7 @@
 const getClosestPointOnHyperbolaIn1stQuadrant=(C,x0,y0)=>{
 	let x=Math.sqrt(C)
 	let y=x
-	const epsilon2=1e-10
+	const epsilon2=1e-12
 	const iterationLimit=20
 	for (let i=0;i<iterationLimit;i++) {
 		if (x<=0) return [C/y0,y0]
