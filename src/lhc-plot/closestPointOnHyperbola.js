@@ -34,7 +34,11 @@ const getClosestPointOnPositiveHyperbola=(C,x0,y0)=>{
 
 const getClosestPointOnHyperbola=(C,x0,y0)=>{
 	if (C==0) {
-		// TODO
+		if (Math.abs(x0)<Math.abs(y0)) {
+			return [0,y0]
+		} else {
+			return [x0,0]
+		}
 	} else if (C>0) {
 		return getClosestPointOnPositiveHyperbola(C,x0,y0)
 	} else { // flip y axis

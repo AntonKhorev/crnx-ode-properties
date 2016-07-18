@@ -35,4 +35,14 @@ describe("getClosestPointOnHyperbola",()=>{
 			expect(result).to.roughly.deep.equal([1,-1])
 		})
 	})
+	context("with zero C",()=>{
+		it("snaps to x axis",()=>{
+			const result=getClosestPointOnHyperbola(0,2,-1)
+			expect(result).to.roughly.deep.equal([2,0])
+		})
+		it("snaps to y axis",()=>{
+			const result=getClosestPointOnHyperbola(0,1,-2)
+			expect(result).to.roughly.deep.equal([0,-2])
+		})
+	})
 })
