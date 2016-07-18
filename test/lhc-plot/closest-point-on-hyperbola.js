@@ -4,7 +4,7 @@ const chai=require('chai')
 const expect=chai.expect
 chai.use(require('chai-roughly'))
 
-const getClosestPointOnHyperbola=require('../../src/lhc-plot/closestPointOnHyperbola')
+const getClosestPointOnHyperbola=require('../../src/lhc-plot/closest-point-on-hyperbola')
 
 describe("getClosestPointOnHyperbola",()=>{
 	context("with positive C",()=>{
