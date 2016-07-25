@@ -1,5 +1,7 @@
 'use strict'
 
+const LhcPlot=require('../lhc-plot')
+
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
 module.exports=(nt)=>({
@@ -224,6 +226,15 @@ module.exports=(nt)=>({
 							`\\[ ${nt.X} = ${nt.vec2(0,0)} \\]`,
 						]},
 					]},
+				],
+			},
+			plot: {
+				form: true,
+				content: [
+					()=>{
+						const plot=new LhcPlot
+						return plot.$output
+					}
 				],
 			},
 		},

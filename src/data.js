@@ -30,6 +30,7 @@ const traits=[
 		['equilibriumSolutionMethod'],
 		['testSolutionMethod'],
 	]],
+	['plot'],
 ]
 
 // class entries:

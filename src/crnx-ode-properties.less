@@ -29,17 +29,19 @@
 	option.added {
 		font-weight: bold;
 	}
-	table {
+	table.classes {
 		table-layout: fixed;
 		border-collapse: collapse;
-		td, th {
-			min-width: unit(@cell-width,px);
-			max-width: unit(@cell-width,px);
-			padding: 0;
-			position: relative;
-		}
-		td {
-			overflow: hidden;
+		& > thead, & > tfoot, & > tbody {
+			& > tr > td, & > tr > th {
+				min-width: unit(@cell-width,px);
+				max-width: unit(@cell-width,px);
+				padding: 0;
+				position: relative;
+			}
+			& > tr > td {
+				overflow: hidden;
+			}
 		}
 		tr.nodes {
 			@cx: @cell-width;
@@ -237,7 +239,7 @@
 			padding: 5px 0;
 		}
 		tbody {
-			td {
+			& > tr > td {
 				vertical-align: top;
 			}
 			ul {
@@ -362,6 +364,33 @@
 			div.note {
 				font-size: 90%;
 				color: @passive-stroke-color;
+			}
+			div.matrix {
+				table {
+					td {
+						input {
+							box-sizing: border-box;
+							margin: 0;
+						}
+						label {
+							display: block;
+							span.label {
+								display: inline-block;
+								width: 25px;
+							}
+							span.space {
+								display: none;
+							}
+							input {
+								width: 90px;
+							}
+						}
+						input[type=range] {
+							width: 100%;
+							margin-top: 2px;
+						}
+					}
+				}
 			}
 		}
 	}

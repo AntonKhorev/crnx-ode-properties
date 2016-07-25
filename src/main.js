@@ -36,6 +36,8 @@ const i18n=(id)=>{
 		'trait.phaseSolutionMethod': "<a href='https://en.wikipedia.org/wiki/Phase_space'>Phase space</a> trajectory",
 		'trait.equilibriumSolutionMethod': "<a href='https://en.wikipedia.org/wiki/Equilibrium_point'>Equilibrium solutions</a>",
 		'trait.testSolutionMethod': "Solution testing",
+
+		'trait.plot': "Plot",
 	}
 	return strings[id]
 }
@@ -124,6 +126,8 @@ $(function(){
 			const rec=(line)=>{
 				if (typeof line == 'string') {
 					return $("<div class='line'>").append(line)
+				} else if (typeof line == 'function') {
+					return line()
 				} else if (line.type=='derivation' || line.type=='proof' || line.type=='case') {
 					return $("<details>").append(
 						$("<summary>").append(line.title!==undefined ? line.title : line.type),
@@ -491,7 +495,7 @@ $(function(){
 			}
 			$tableContainer.empty()
 			if (Object.keys(selectedNodes).length>0) $tableContainer.append(
-				$("<table>").append(
+				$("<table class='classes'>").append(
 					writeThead(),
 					writeTfoot(),
 					$("<tbody>").append(
