@@ -366,30 +366,44 @@
 				color: @passive-stroke-color;
 			}
 			div.matrix {
+				input {
+					box-sizing: border-box;
+					margin: 0;
+				}
+				label {
+					display: block;
+					span.label {
+						display: inline-block;
+						width: 25%;
+					}
+					span.space {
+						display: none;
+					}
+					input {
+						width: 75%;
+					}
+				}
+				input[type=range] {
+					width: 100%;
+					margin-top: 2px;
+				}
 				table {
+					table-layout: fixed;
+					border-collapse: collapse;
 					td {
-						input {
-							box-sizing: border-box;
-							margin: 0;
-						}
-						label {
-							display: block;
-							span.label {
-								display: inline-block;
-								width: 25px;
-							}
-							span.space {
-								display: none;
-							}
-							input {
-								width: 90px;
-							}
-						}
-						input[type=range] {
-							width: 100%;
-							margin-top: 2px;
+						padding-top: 0;
+						padding-bottom: 5px;
+						padding-right: 0;
+						padding-left: 5px;
+						width: 115px;
+						&:first-child {
+							padding-left: 0;
+							padding-right: 5px;
 						}
 					}
+				}
+				div.tr {
+					padding-bottom: 5px;
 				}
 			}
 		}

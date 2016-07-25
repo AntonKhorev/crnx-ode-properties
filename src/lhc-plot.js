@@ -9,10 +9,20 @@ class LhcPlot {
 			b: 0,
 			c: 0,
 			d: 1,
+			get tr() {
+				return this.a+this.d
+			},
+			get det() {
+				return this.a*this.d-this.b*this.c
+			},
 		}
 		const getCoefInputs=coef=>{
 			const initCoefInput=$input=>$input.attr('min',-5).attr('max',5).attr('step','any').val(coefs[coef])
-			return $("<td>").append(
+			const $div=$("<div>")
+			if (coef.length>1) {
+				$div.addClass(coef)
+			}
+			$div.append(
 				$("<label>").append(
 					`<span class='label'>\\( ${coef} \\)</span>`,
 					`<span class='space'> </span>`,
@@ -21,20 +31,23 @@ class LhcPlot {
 				" ",
 				initCoefInput($("<input type='range'>"))
 			)
+			return $div
 		}
 		this.$output=$("<div class='matrix'>").append(
 			$("<details>").append(
 				$("<summary>").append("equation coefficients"),
 				$("<table>").append(
 					$("<tr>").append(
-						getCoefInputs('a'),
-						getCoefInputs('b')
+						$("<td>").append(getCoefInputs('a')),
+						$("<td>").append(getCoefInputs('b'))
 					),
 					$("<tr>").append(
-						getCoefInputs('c'),
-						getCoefInputs('d')
+						$("<td>").append(getCoefInputs('c')),
+						$("<td>").append(getCoefInputs('d'))
 					)
-				)
+				),
+				getCoefInputs('tr'),
+				getCoefInputs('det')
 			).each(detailsPolyfill),
 			$("<details>").append(
 				$("<summary>").append("tr-det plane"),
