@@ -80,13 +80,10 @@ class LhcPlot {
 							$rangeInputs.det.val(coefs.det)
 						} else {
 							if (originalCoefs===null) {
-								originalCoefs=coefs // TODO deep copy
+								originalCoefs=[coefs.a,coefs.b,coefs.c,coefs.d]
 							}
 							const updatedCoefValues=updateMatrixElementsForTrDet(
-								originalCoefs.a,
-								originalCoefs.b,
-								originalCoefs.c,
-								originalCoefs.d,
+								...originalCoefs,
 								Number($numberInputs.tr.val()),
 								Number($numberInputs.det.val())
 							)
