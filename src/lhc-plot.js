@@ -32,12 +32,12 @@ class LhcPlot {
 		const getCoefInputs=coef=>{
 			const isMatrixElement=coef.length==1
 			const valueRange=coefs.getRange(coef)
-			const initCoefInput=($input,getValue,setValue)=>$input
-				.attr('min',-valueRange)
-				.attr('max',valueRange)
-				.attr('step','any')
-				.val(coefs[coef])
-				.on('input change',function(){
+			const initCoefInput=(type,getValue,setValue)=>{
+				const $input=$(`<input type='${type}'>`).attr('step','any').val(coefs[coef])
+				if (type=='range') {
+					$input.attr('min',-valueRange).attr('max',valueRange)
+				}
+				$input.on('input change',function(){
 					if (this.checkValidity()) {
 						const value=getValue()
 						setValue(value)
@@ -68,6 +68,8 @@ class LhcPlot {
 						}
 					}
 				})
+				return $input
+			}
 			const $div=$("<div>")
 			if (!isMatrixElement) {
 				$div.addClass(coef)
@@ -83,10 +85,10 @@ class LhcPlot {
 				$("<label>").append(
 					`<span class='label'>\\( ${label} \\)</span>`,
 					`<span class='space'> </span>`,
-					$number=initCoefInput($("<input type='number'>"),()=>$number.val(),(v)=>$range.val(v))
+					$number=initCoefInput('number',()=>$number.val(),(v)=>$range.val(v))
 				),
 				" ",
-				$range=initCoefInput($("<input type='range'>"),()=>Number($range.val()).toFixed(2),(v)=>$number.val(v))
+				$range=initCoefInput('range',()=>Number($range.val()).toFixed(2),(v)=>$number.val(v))
 			)
 			$numberInputs[coef]=$number
 			$rangeInputs[coef]=$range
