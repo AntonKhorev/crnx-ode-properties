@@ -29,6 +29,36 @@ class LhcPlot {
 		let originalCoefs=null
 		const $numberInputs={}
 		const $rangeInputs={}
+		let $trDetCanvas,trDetCanvasContext
+		const redrawTrDetCanvas=()=>{
+			const trRange=coefs.getRange('tr')
+			const detRange=coefs.getRange('det')
+			const ctx=trDetCanvasContext
+			const width=$trDetCanvas[0].width
+			const height=$trDetCanvas[0].height
+			const xRange=width/2
+			const yRange=height/2
+			ctx.save()
+			ctx.fillStyle='#FFF'
+			ctx.fillRect(0,0,width,height)
+			ctx.translate(xRange,yRange)
+			ctx.lineWidth=2
+			ctx.beginPath()
+			ctx.moveTo(-xRange,0)
+			ctx.lineTo(+xRange,0)
+			ctx.moveTo(0,-yRange)
+			ctx.lineTo(0,+yRange)
+			let first=true
+			for (let x=-xRange;x<=+xRange;x++) {
+				const T=x*trRange/xRange
+				const D=T*T/4
+				const y=-D*yRange/detRange
+				ctx[first?'moveTo':'lineTo'](x,y)
+				first=false
+			}
+			ctx.stroke()
+			ctx.restore()
+		}
 		const getCoefInputs=coef=>{
 			const isMatrixElement=coef.length==1
 			const valueRange=coefs.getRange(coef)
@@ -50,7 +80,7 @@ class LhcPlot {
 							$rangeInputs.det.val(coefs.det)
 						} else {
 							if (originalCoefs===null) {
-								originalCoefs=coefs
+								originalCoefs=coefs // TODO deep copy
 							}
 							const updatedCoefValues=updateMatrixElementsForTrDet(
 								originalCoefs.a,
@@ -112,13 +142,15 @@ class LhcPlot {
 			).each(detailsPolyfill),
 			$("<details>").append(
 				$("<summary>").append("<a href='https://en.wikipedia.org/wiki/Trace_(linear_algebra)'>tr</a>-<a href='https://en.wikipedia.org/wiki/Determinant'>det</a> plane"),
-				"TODO"
+				$trDetCanvas=$("<canvas width='240' height='240'>")
 			).each(detailsPolyfill),
 			$("<details>").append(
 				$("<summary>").append("<a href='https://en.wikipedia.org/wiki/Phase_space'>phase plane</a>"),
 				"TODO"
 			).each(detailsPolyfill)
 		)
+		trDetCanvasContext=$trDetCanvas[0].getContext('2d')
+		redrawTrDetCanvas()
 	}
 }
 
