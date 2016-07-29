@@ -15,20 +15,38 @@ class LhcPlot {
 			get det() {
 				return this.a*this.d-this.b*this.c
 			},
+			getRange(coef) {
+				if (coef=='tr') {
+					return 10
+				} else if (coef=='det') {
+					return 50
+				} else {
+					return 5
+				}
+			}
 		}
+		const $numberInputs={}
 		const getCoefInputs=coef=>{
+			const isMatrixElement=coef.length==1
+			const valueRange=coefs.getRange(coef)
 			const initCoefInput=($input,getValue,setValue)=>$input
-				.attr('min',-5)
-				.attr('max',5)
+				.attr('min',-valueRange)
+				.attr('max',valueRange)
 				.attr('step','any')
 				.val(coefs[coef])
 				.on('input change',function(){
 					if (this.checkValidity()) {
-						setValue(getValue())
+						const value=getValue()
+						setValue(value)
+						if (isMatrixElement) {
+							coefs[coef]=Number(value)
+							$numberInputs.tr.val(coefs.tr).change()
+							$numberInputs.det.val(coefs.det).change()
+						}
 					}
 				})
 			const $div=$("<div>")
-			if (coef.length>1) {
+			if (!isMatrixElement) {
 				$div.addClass(coef)
 			}
 			let label=coef
@@ -47,6 +65,7 @@ class LhcPlot {
 				" ",
 				$range=initCoefInput($("<input type='range'>"),()=>Number($range.val()).toFixed(2),(v)=>$number.val(v))
 			)
+			$numberInputs[coef]=$number
 			return $div
 		}
 		this.$output=$("<div class='matrix'>").append(
