@@ -1,6 +1,7 @@
 'use strict'
 
 const detailsPolyfill=require('crnx-base/details-polyfill')
+const updateMatrixElementsForTrDet=require('./lhc-plot/matrix-elements-for-tr-det')
 
 class LhcPlot {
 	constructor() {
@@ -25,7 +26,9 @@ class LhcPlot {
 				}
 			}
 		}
+		let originalCoefs=null
 		const $numberInputs={}
+		const $rangeInputs={}
 		const getCoefInputs=coef=>{
 			const isMatrixElement=coef.length==1
 			const valueRange=coefs.getRange(coef)
@@ -39,9 +42,29 @@ class LhcPlot {
 						const value=getValue()
 						setValue(value)
 						if (isMatrixElement) {
+							originalCoefs=null
 							coefs[coef]=Number(value)
-							$numberInputs.tr.val(coefs.tr).change()
-							$numberInputs.det.val(coefs.det).change()
+							$numberInputs.tr.val(coefs.tr)
+							$rangeInputs.tr.val(coefs.tr)
+							$numberInputs.det.val(coefs.det)
+							$rangeInputs.det.val(coefs.det)
+						} else {
+							if (originalCoefs===null) {
+								originalCoefs=coefs
+							}
+							const updatedCoefValues=updateMatrixElementsForTrDet(
+								originalCoefs.a,
+								originalCoefs.b,
+								originalCoefs.c,
+								originalCoefs.d,
+								Number($numberInputs.tr.val()),
+								Number($numberInputs.det.val())
+							)
+							;['a','b','c','d'].forEach((cf,i)=>{
+								coefs[cf]=updatedCoefValues[i]
+								$numberInputs[cf].val(coefs[cf])
+								$rangeInputs[cf].val(coefs[cf])
+							})
 						}
 					}
 				})
@@ -66,6 +89,7 @@ class LhcPlot {
 				$range=initCoefInput($("<input type='range'>"),()=>Number($range.val()).toFixed(2),(v)=>$number.val(v))
 			)
 			$numberInputs[coef]=$number
+			$rangeInputs[coef]=$range
 			return $div
 		}
 		this.$output=$("<div class='matrix'>").append(
