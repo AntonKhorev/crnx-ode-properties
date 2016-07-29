@@ -22,9 +22,15 @@ class LhcPlot {
 			if (coef.length>1) {
 				$div.addClass(coef)
 			}
+			let label=coef
+			if (coef=='tr') {
+				label=`\\operatorname{${coef}}(\\mathbf{A})`
+			} else if (coef=='det') {
+				label=`\\${coef}(\\mathbf{A})`
+			}
 			$div.append(
 				$("<label>").append(
-					`<span class='label'>\\( ${coef} \\)</span>`,
+					`<span class='label'>\\( ${label} \\)</span>`,
 					`<span class='space'> </span>`,
 					initCoefInput($("<input type='number'>"))
 				),
@@ -50,7 +56,7 @@ class LhcPlot {
 				getCoefInputs('det')
 			).each(detailsPolyfill),
 			$("<details>").append(
-				$("<summary>").append("tr-det plane"),
+				$("<summary>").append("<a href='https://en.wikipedia.org/wiki/Trace_(linear_algebra)'>tr</a>-<a href='https://en.wikipedia.org/wiki/Determinant'>det</a> plane"),
 				"TODO"
 			).each(detailsPolyfill),
 			$("<details>").append(
