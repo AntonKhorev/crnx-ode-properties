@@ -17,7 +17,16 @@ class LhcPlot {
 			},
 		}
 		const getCoefInputs=coef=>{
-			const initCoefInput=$input=>$input.attr('min',-5).attr('max',5).attr('step','any').val(coefs[coef])
+			const initCoefInput=($input,getValue,setValue)=>$input
+				.attr('min',-5)
+				.attr('max',5)
+				.attr('step','any')
+				.val(coefs[coef])
+				.on('input change',function(){
+					if (this.checkValidity()) {
+						setValue(getValue())
+					}
+				})
 			const $div=$("<div>")
 			if (coef.length>1) {
 				$div.addClass(coef)
@@ -28,14 +37,15 @@ class LhcPlot {
 			} else if (coef=='det') {
 				label=`\\${coef}(\\mathbf{A})`
 			}
+			let $number,$range
 			$div.append(
 				$("<label>").append(
 					`<span class='label'>\\( ${label} \\)</span>`,
 					`<span class='space'> </span>`,
-					initCoefInput($("<input type='number'>"))
+					$number=initCoefInput($("<input type='number'>"),()=>$number.val(),(v)=>$range.val(v))
 				),
 				" ",
-				initCoefInput($("<input type='range'>"))
+				$range=initCoefInput($("<input type='range'>"),()=>Number($range.val()).toFixed(2),(v)=>$number.val(v))
 			)
 			return $div
 		}
