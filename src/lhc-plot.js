@@ -38,25 +38,45 @@ class LhcPlot {
 			const height=$trDetCanvas[0].height
 			const xRange=width/2
 			const yRange=height/2
+			const drawRegions=()=>{
+				ctx.save()
+				ctx.lineWidth=2
+				ctx.beginPath()
+				ctx.moveTo(-xRange,0)
+				ctx.lineTo(+xRange,0)
+				ctx.moveTo(0,-yRange)
+				ctx.lineTo(0,+yRange)
+				let first=true
+				for (let x=-xRange;x<=+xRange;x++) {
+					const T=x*trRange/xRange
+					const D=T*T/4
+					const y=-D*yRange/detRange
+					ctx[first?'moveTo':'lineTo'](x,y)
+					first=false
+				}
+				ctx.stroke()
+				ctx.restore()
+			}
+			const drawPosition=()=>{
+				ctx.save()
+				const x=coefs.tr/trRange*xRange
+				const y=-coefs.det/detRange*yRange
+				const s=10
+				ctx.strokeStyle='#F00'
+				ctx.beginPath()
+				ctx.moveTo(x-s,y)
+				ctx.lineTo(x+s,y)
+				ctx.moveTo(x,y-s)
+				ctx.lineTo(x,y+s)
+				ctx.stroke()
+				ctx.restore()
+			}
 			ctx.save()
 			ctx.fillStyle='#FFF'
 			ctx.fillRect(0,0,width,height)
 			ctx.translate(xRange,yRange)
-			ctx.lineWidth=2
-			ctx.beginPath()
-			ctx.moveTo(-xRange,0)
-			ctx.lineTo(+xRange,0)
-			ctx.moveTo(0,-yRange)
-			ctx.lineTo(0,+yRange)
-			let first=true
-			for (let x=-xRange;x<=+xRange;x++) {
-				const T=x*trRange/xRange
-				const D=T*T/4
-				const y=-D*yRange/detRange
-				ctx[first?'moveTo':'lineTo'](x,y)
-				first=false
-			}
-			ctx.stroke()
+			drawRegions()
+			drawPosition()
 			ctx.restore()
 		}
 		const getCoefInputs=coef=>{
@@ -93,6 +113,7 @@ class LhcPlot {
 								$rangeInputs[cf].val(coefs[cf])
 							})
 						}
+						redrawTrDetCanvas()
 					}
 				})
 				return $input
