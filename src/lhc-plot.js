@@ -30,54 +30,86 @@ class LhcPlot {
 		const $numberInputs={}
 		const $rangeInputs={}
 		let $trDetCanvas,trDetCanvasContext
-		const redrawTrDetCanvas=()=>{
-			const trRange=coefs.getRange('tr')
-			const detRange=coefs.getRange('det')
-			const ctx=trDetCanvasContext
-			const width=$trDetCanvas[0].width
-			const height=$trDetCanvas[0].height
-			const xRange=width/2
-			const yRange=height/2
-			const drawRegions=()=>{
-				ctx.save()
-				ctx.lineWidth=2
-				ctx.beginPath()
-				ctx.moveTo(-xRange,0)
-				ctx.lineTo(+xRange,0)
-				ctx.moveTo(0,-yRange)
-				ctx.lineTo(0,+yRange)
-				let first=true
-				for (let x=-xRange;x<=+xRange;x++) {
-					const T=x*trRange/xRange
-					const D=T*T/4
-					const y=-D*yRange/detRange
-					ctx[first?'moveTo':'lineTo'](x,y)
-					first=false
+		let $equilibriumType
+		const updateDetails=()=>{
+			const updateEquilibriumType=()=>{
+				const getEquilibriumType=()=>{
+					const D=coefs.det
+					const T=coefs.tr
+					const ssc=(T==0)?"center":((T<0)?"sink":"source")
+					if (D<0) {
+						return "saddle"
+					} else if (D==0) {
+						return "defective" // TODO comb etc
+					} else if (4*D<T*T) {
+						return `nodal (real) ${ssc}`
+					} else if (4*D==T*T) {
+						if (coefs.b==0 && coefs.c==0) {
+							return `star ${ssc}`
+						} else {
+							return `defective nodal (real) ${ssc}`
+						}
+					} else {
+						if (T==0) {
+							return ssc
+						} else {
+							return `spiral ${ssc}`
+						}
+					}
 				}
-				ctx.stroke()
-				ctx.restore()
+				$equilibriumType.text(getEquilibriumType())
 			}
-			const drawPosition=()=>{
+			const redrawTrDetCanvas=()=>{
+				const trRange=coefs.getRange('tr')
+				const detRange=coefs.getRange('det')
+				const ctx=trDetCanvasContext
+				const width=$trDetCanvas[0].width
+				const height=$trDetCanvas[0].height
+				const xRange=width/2
+				const yRange=height/2
+				const drawRegions=()=>{
+					ctx.save()
+					ctx.lineWidth=2
+					ctx.beginPath()
+					ctx.moveTo(-xRange,0)
+					ctx.lineTo(+xRange,0)
+					ctx.moveTo(0,-yRange)
+					ctx.lineTo(0,+yRange)
+					let first=true
+					for (let x=-xRange;x<=+xRange;x++) {
+						const T=x*trRange/xRange
+						const D=T*T/4
+						const y=-D*yRange/detRange
+						ctx[first?'moveTo':'lineTo'](x,y)
+						first=false
+					}
+					ctx.stroke()
+					ctx.restore()
+				}
+				const drawPosition=()=>{
+					ctx.save()
+					const x=coefs.tr/trRange*xRange
+					const y=-coefs.det/detRange*yRange
+					const s=10
+					ctx.strokeStyle='#F00'
+					ctx.beginPath()
+					ctx.moveTo(x-s,y)
+					ctx.lineTo(x+s,y)
+					ctx.moveTo(x,y-s)
+					ctx.lineTo(x,y+s)
+					ctx.stroke()
+					ctx.restore()
+				}
 				ctx.save()
-				const x=coefs.tr/trRange*xRange
-				const y=-coefs.det/detRange*yRange
-				const s=10
-				ctx.strokeStyle='#F00'
-				ctx.beginPath()
-				ctx.moveTo(x-s,y)
-				ctx.lineTo(x+s,y)
-				ctx.moveTo(x,y-s)
-				ctx.lineTo(x,y+s)
-				ctx.stroke()
+				ctx.fillStyle='#FFF'
+				ctx.fillRect(0,0,width,height)
+				ctx.translate(xRange,yRange)
+				drawRegions()
+				drawPosition()
 				ctx.restore()
 			}
-			ctx.save()
-			ctx.fillStyle='#FFF'
-			ctx.fillRect(0,0,width,height)
-			ctx.translate(xRange,yRange)
-			drawRegions()
-			drawPosition()
-			ctx.restore()
+			updateEquilibriumType()
+			redrawTrDetCanvas()
 		}
 		const getCoefInputs=coef=>{
 			const isMatrixElement=coef.length==1
@@ -113,7 +145,7 @@ class LhcPlot {
 								$rangeInputs[cf].val(coefs[cf])
 							})
 						}
-						redrawTrDetCanvas()
+						updateDetails()
 					}
 				})
 				return $input
@@ -159,16 +191,20 @@ class LhcPlot {
 				getCoefInputs('det')
 			).each(detailsPolyfill),
 			$("<details>").append(
+				$("<summary>").append("equilibrium point type"),
+				$equilibriumType=$("<div>unknown</div>")
+			).each(detailsPolyfill),
+			$("<details>").append(
 				$("<summary>").append("<a href='https://en.wikipedia.org/wiki/Trace_(linear_algebra)'>tr</a>-<a href='https://en.wikipedia.org/wiki/Determinant'>det</a> plane"),
 				$trDetCanvas=$("<canvas width='240' height='240'>")
 			).each(detailsPolyfill),
 			$("<details>").append(
 				$("<summary>").append("<a href='https://en.wikipedia.org/wiki/Phase_space'>phase plane</a>"),
-				"TODO"
+				$("<div class='note'>").append("not implemented yet, try to use <a href='http://mathlets.org/mathlets/linear-phase-portraits-matrix-entry/'>MIT Mathlet</a> instead")
 			).each(detailsPolyfill)
 		)
 		trDetCanvasContext=$trDetCanvas[0].getContext('2d')
-		redrawTrDetCanvas()
+		updateDetails()
 	}
 }
 
