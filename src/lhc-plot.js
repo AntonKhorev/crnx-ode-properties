@@ -34,13 +34,23 @@ class LhcPlot {
 		const updateDetails=()=>{
 			const updateEquilibriumType=()=>{
 				const getEquilibriumType=()=>{
+					// names are based on
+					// http://ocw.mit.edu/courses/mathematics/18-03-differential-equations-spring-2010/readings/supp_notes/MIT18_03S10_chapter_26.pdf
 					const D=coefs.det
 					const T=coefs.tr
 					const ssc=(T==0)?"center":((T<0)?"sink":"source")
 					if (D<0) {
-						return "saddle"
+						return `saddle`
 					} else if (D==0) {
-						return "defective" // TODO comb etc
+						if (T==0) {
+							if (coefs.b==0 && coefs.c==0) {
+								return `degenerate everywhere fixed`
+							} else {
+								return `degenerate parallel lines`
+							}
+						} else {
+							return `degenerate comb ${ssc}`
+						}
 					} else if (4*D<T*T) {
 						return `nodal (real) ${ssc}`
 					} else if (4*D==T*T) {
@@ -192,7 +202,7 @@ class LhcPlot {
 			).each(detailsPolyfill),
 			$("<details>").append(
 				$("<summary>").append("equilibrium point type"),
-				$equilibriumType=$("<div>unknown</div>")
+				$equilibriumType=$("<div>")
 			).each(detailsPolyfill),
 			$("<details>").append(
 				$("<summary>").append("<a href='https://en.wikipedia.org/wiki/Trace_(linear_algebra)'>tr</a>-<a href='https://en.wikipedia.org/wiki/Determinant'>det</a> plane"),
