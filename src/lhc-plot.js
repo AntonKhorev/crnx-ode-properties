@@ -164,7 +164,10 @@ class LhcPlot {
 						$("<td>").append(getCoefInputs('c')),
 						$("<td>").append(getCoefInputs('d'))
 					)
-				),
+				)
+			).each(detailsPolyfill),
+			$("<details>").append(
+				$("<summary>").append("matrix parameters"),
 				getCoefInputs('tr'),
 				getCoefInputs('det'),
 				$("<table>").append(
