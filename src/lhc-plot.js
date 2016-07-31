@@ -49,6 +49,9 @@ class LhcPlot {
 				$equilibriumType.text(getEquilibriumType())
 			}
 			const redrawTrDetCanvas=()=>{
+				const crosshairSize=10
+				const pointerSize=5
+				const pointerMargin=3
 				const trRange=matrix.getRange('tr')
 				const detRange=matrix.getRange('det')
 				const ctx=trDetCanvasContext
@@ -77,16 +80,46 @@ class LhcPlot {
 				}
 				const drawPosition=()=>{
 					ctx.save()
-					const x=matrix.tr/trRange*xRange
-					const y=-matrix.det/detRange*yRange
-					const s=10
-					ctx.strokeStyle='#F00'
-					ctx.beginPath()
-					ctx.moveTo(x-s,y)
-					ctx.lineTo(x+s,y)
-					ctx.moveTo(x,y-s)
-					ctx.lineTo(x,y+s)
-					ctx.stroke()
+					ctx.strokeStyle=ctx.fillStyle='#F00'
+					let x=matrix.tr/trRange*xRange
+					let y=-matrix.det/detRange*yRange
+					if (x<0) {
+						ctx.scale(-1,1)
+						x=-x
+					}
+					if (y<0) {
+						ctx.scale(1,-1)
+						y=-y
+					}
+					if (x>xRange-pointerMargin) {
+						ctx.transform(0,1,1,0,0,0)
+						const t=x
+						x=y
+						y=t
+					}
+					if (x>xRange-pointerMargin && y>yRange-pointerMargin) {
+						ctx.beginPath()
+						ctx.moveTo(xRange-pointerMargin,yRange-pointerMargin)
+						ctx.lineTo(xRange-pointerMargin,yRange-pointerMargin-pointerSize*Math.SQRT2)
+						ctx.lineTo(xRange-pointerMargin-pointerSize*Math.SQRT2,yRange-pointerMargin)
+						ctx.closePath()
+						ctx.fill()
+					} else if (y>xRange-pointerMargin) {
+						ctx.beginPath()
+						ctx.moveTo(x,yRange-pointerMargin)
+						ctx.lineTo(x+pointerSize,yRange-pointerMargin-pointerSize)
+						ctx.lineTo(x-pointerSize,yRange-pointerMargin-pointerSize)
+						ctx.closePath()
+						ctx.fill()
+					} else {
+						const s=crosshairSize
+						ctx.beginPath()
+						ctx.moveTo(x-s,y)
+						ctx.lineTo(x+s,y)
+						ctx.moveTo(x,y-s)
+						ctx.lineTo(x,y+s)
+						ctx.stroke()
+					}
 					ctx.restore()
 				}
 				ctx.save()
