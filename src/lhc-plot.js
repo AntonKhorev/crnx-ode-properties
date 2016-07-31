@@ -1,32 +1,11 @@
 'use strict'
 
 const detailsPolyfill=require('crnx-base/details-polyfill')
-const updateMatrixElementsForTrDet=require('./lhc-plot/matrix-elements-for-tr-det')
+const Matrix=require('./lhc-plot/matrix')
 
 class LhcPlot {
 	constructor() {
-		const coefs={
-			a: 1,
-			b: 0,
-			c: 0,
-			d: 1,
-			get tr() {
-				return this.a+this.d
-			},
-			get det() {
-				return this.a*this.d-this.b*this.c
-			},
-			getRange(coef) {
-				if (coef=='tr') {
-					return 10
-				} else if (coef=='det') {
-					return 50
-				} else {
-					return 5
-				}
-			}
-		}
-		let originalCoefs=null
+		const matrix=new Matrix
 		const $numberInputs={}
 		const $rangeInputs={}
 		let $trDetCanvas,trDetCanvasContext
@@ -36,14 +15,14 @@ class LhcPlot {
 				const getEquilibriumType=()=>{
 					// names are based on
 					// http://ocw.mit.edu/courses/mathematics/18-03-differential-equations-spring-2010/readings/supp_notes/MIT18_03S10_chapter_26.pdf
-					const D=coefs.det
-					const T=coefs.tr
+					const D=matrix.det
+					const T=matrix.tr
 					const ssc=(T==0)?"center":((T<0)?"sink":"source")
 					if (D<0) {
 						return `saddle`
 					} else if (D==0) {
 						if (T==0) {
-							if (coefs.b==0 && coefs.c==0) {
+							if (matrix.b==0 && matrix.c==0) {
 								return `degenerate everywhere fixed`
 							} else {
 								return `degenerate parallel lines`
@@ -54,7 +33,7 @@ class LhcPlot {
 					} else if (4*D<T*T) {
 						return `nodal (real) ${ssc}`
 					} else if (4*D==T*T) {
-						if (coefs.b==0 && coefs.c==0) {
+						if (matrix.b==0 && matrix.c==0) {
 							return `star ${ssc}`
 						} else {
 							return `defective nodal (real) ${ssc}`
@@ -70,8 +49,8 @@ class LhcPlot {
 				$equilibriumType.text(getEquilibriumType())
 			}
 			const redrawTrDetCanvas=()=>{
-				const trRange=coefs.getRange('tr')
-				const detRange=coefs.getRange('det')
+				const trRange=matrix.getRange('tr')
+				const detRange=matrix.getRange('det')
 				const ctx=trDetCanvasContext
 				const width=$trDetCanvas[0].width
 				const height=$trDetCanvas[0].height
@@ -84,7 +63,7 @@ class LhcPlot {
 					ctx.moveTo(-xRange,0)
 					ctx.lineTo(+xRange,0)
 					ctx.moveTo(0,-yRange)
-					ctx.lineTo(0,+yRange)
+					ctx.lineTo(0,0)
 					let first=true
 					for (let x=-xRange;x<=+xRange;x++) {
 						const T=x*trRange/xRange
@@ -98,8 +77,8 @@ class LhcPlot {
 				}
 				const drawPosition=()=>{
 					ctx.save()
-					const x=coefs.tr/trRange*xRange
-					const y=-coefs.det/detRange*yRange
+					const x=matrix.tr/trRange*xRange
+					const y=-matrix.det/detRange*yRange
 					const s=10
 					ctx.strokeStyle='#F00'
 					ctx.beginPath()
@@ -123,9 +102,9 @@ class LhcPlot {
 		}
 		const getCoefInputs=coef=>{
 			const isMatrixElement=coef.length==1
-			const valueRange=coefs.getRange(coef)
+			const valueRange=matrix.getRange(coef)
 			const initCoefInput=(type,getValue,setValue)=>{
-				const $input=$(`<input type='${type}'>`).attr('step','any').val(coefs[coef])
+				const $input=$(`<input type='${type}'>`).attr('step','any').val(matrix[coef])
 				if (type=='range') {
 					$input.attr('min',-valueRange).attr('max',valueRange)
 				}
@@ -133,28 +112,11 @@ class LhcPlot {
 					if (this.checkValidity()) {
 						const value=getValue()
 						setValue(value)
-						if (isMatrixElement) {
-							originalCoefs=null
-							coefs[coef]=Number(value)
-							$numberInputs.tr.val(coefs.tr)
-							$rangeInputs.tr.val(coefs.tr)
-							$numberInputs.det.val(coefs.det)
-							$rangeInputs.det.val(coefs.det)
-						} else {
-							if (originalCoefs===null) {
-								originalCoefs=[coefs.a,coefs.b,coefs.c,coefs.d]
-							}
-							const updatedCoefValues=updateMatrixElementsForTrDet(
-								...originalCoefs,
-								Number($numberInputs.tr.val()),
-								Number($numberInputs.det.val())
-							)
-							;['a','b','c','d'].forEach((cf,i)=>{
-								coefs[cf]=updatedCoefValues[i]
-								$numberInputs[cf].val(coefs[cf])
-								$rangeInputs[cf].val(coefs[cf])
-							})
-						}
+						matrix[coef]=Number(value)
+						matrix.forUpdated(cf=>{
+							$numberInputs[cf].val(matrix[cf])
+							$rangeInputs[cf].val(matrix[cf])
+						})
 						updateDetails()
 					}
 				})
@@ -198,7 +160,17 @@ class LhcPlot {
 					)
 				),
 				getCoefInputs('tr'),
-				getCoefInputs('det')
+				getCoefInputs('det'),
+				$("<table>").append(
+					$("<tr>").append(
+						$("<td>").append(getCoefInputs('re1')),
+						$("<td>").append(getCoefInputs('im1'))
+					),
+					$("<tr>").append(
+						$("<td>").append(getCoefInputs('re2')),
+						$("<td>").append(getCoefInputs('im2'))
+					)
+				)
 			).each(detailsPolyfill),
 			$("<details>").append(
 				$("<summary>").append("equilibrium point type"),
