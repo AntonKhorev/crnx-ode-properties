@@ -16,7 +16,7 @@ class Matrix {
 		}
 		this._updated={}
 	}
-	_saveOriginal() {
+	_computeElementsFromTrdet() {
 		if (this._original===null) {
 			this._original={
 				a: this._a,
@@ -25,8 +25,6 @@ class Matrix {
 				d: this._d,
 			}
 		}
-	}
-	_computeElementsFromTrdet() {
 		this._a=(this._original.a+this._tr-this._original.d)/2
 		this._d=this._tr-this._a
 		const bc=getClosestPointOnHyperbola(this._a*this._d-this._det,this._original.b,this._original.c)
@@ -105,25 +103,28 @@ class Matrix {
 	}
 	set tr(v) {
 		this._tr=v
-		this._saveOriginal()
 		this._computeElementsFromTrdet()
 		this._computeEigenvaluesFromTrdet()
 	}
 	set det(v) {
 		this._det=v
-		this._saveOriginal()
 		this._computeElementsFromTrdet()
 		this._computeEigenvaluesFromTrdet()
 	}
-	set re1(v) {
-		this._re1=v
-		this._saveOriginal()
+	_setRe(v,i,j) {
+		this['_re'+i]=v
 		if (this._im1!=0 || this._im2!=0) {
-			this._re2=-this._re1
-			this._updated.re2=true
+			this['_re'+j]=-this['_re'+i]
+			this._updated['re'+j]=true
 		}
 		this._computeTrdetFromEigenvalues()
 		this._computeElementsFromTrdet()
+	}
+	set re1(v) {
+		this._setRe(v,1,2)
+	}
+	set re2(v) {
+		this._setRe(v,2,1)
 	}
 	getRange(coef) {
 		if (coef=='tr') {
