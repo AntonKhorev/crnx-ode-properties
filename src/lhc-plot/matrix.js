@@ -114,7 +114,7 @@ class Matrix {
 	_setRe(v,i,j) {
 		this['_re'+i]=v
 		if (this._im1!=0 || this._im2!=0) {
-			this['_re'+j]=-this['_re'+i]
+			this['_re'+j]=v
 			this._updated['re'+j]=true
 		}
 		this._computeTrdetFromEigenvalues()
@@ -125,6 +125,23 @@ class Matrix {
 	}
 	set re2(v) {
 		this._setRe(v,2,1)
+	}
+	_setIm(v,i,j) {
+		this['_im'+i]=v
+		this['_im'+j]=-v
+		this._updated['im'+j]=true
+		if (v!=0) {
+			this['_re'+j]=this['_re'+i]
+			this._updated['re'+j]=true
+		}
+		this._computeTrdetFromEigenvalues()
+		this._computeElementsFromTrdet()
+	}
+	set im1(v) {
+		this._setIm(v,1,2)
+	}
+	set im2(v) {
+		this._setIm(v,2,1)
 	}
 	getRange(coef) {
 		if (coef=='tr') {
