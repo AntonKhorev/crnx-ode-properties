@@ -26,7 +26,7 @@ class Matrix {
 			}
 		}
 	}
-	_updateElements() {
+	_computeElementsFromTrdet() {
 		this._a=(this._original.a+this._tr-this._original.d)/2
 		this._d=this._tr-this._a
 		const bc=getClosestPointOnHyperbola(this._a*this._d-this._det,this._original.b,this._original.c)
@@ -34,12 +34,12 @@ class Matrix {
 		this._c=bc[1]
 		this._updated.a=this._updated.b=this._updated.c=this._updated.d=true
 	}
-	_updateTrDet() {
+	_computeTrdetFromElements() {
 		this._tr=this._a+this._d
 		this._det=this._a*this._d-this._b*this._c
 		this._updated.tr=this._updated.det=true
 	}
-	_updateEigenvalues() {
+	_computeEigenvaluesFromTrdet() {
 		const discr=this._tr*this._tr-4*this._det
 		if (discr>=0) {
 			const root=Math.sqrt(discr)
@@ -64,6 +64,11 @@ class Matrix {
 		}
 		this._updated.re1=this._updated.re2=this._updated.im1=this._updated.im2=true
 	}
+	_computeTrdetFromEigenvalues() {
+		this._tr=this._re1+this._re2
+		this._det=this._re1*this._re2-this._im1*this._im2
+		this._updated.tr=this._updated.det=true
+	}
 	get a() { return this._a }
 	get b() { return this._b }
 	get c() { return this._c }
@@ -77,38 +82,48 @@ class Matrix {
 	set a(v) {
 		this._a=v
 		this._original=null
-		this._updateTrDet()
-		this._updateEigenvalues()
+		this._computeTrdetFromElements()
+		this._computeEigenvaluesFromTrdet()
 	}
 	set b(v) {
 		this._b=v
 		this._original=null
-		this._updateTrDet()
-		this._updateEigenvalues()
+		this._computeTrdetFromElements()
+		this._computeEigenvaluesFromTrdet()
 	}
 	set c(v) {
 		this._c=v
 		this._original=null
-		this._updateTrDet()
-		this._updateEigenvalues()
+		this._computeTrdetFromElements()
+		this._computeEigenvaluesFromTrdet()
 	}
 	set d(v) {
 		this._d=v
 		this._original=null
-		this._updateTrDet()
-		this._updateEigenvalues()
+		this._computeTrdetFromElements()
+		this._computeEigenvaluesFromTrdet()
 	}
 	set tr(v) {
 		this._tr=v
 		this._saveOriginal()
-		this._updateElements()
-		this._updateEigenvalues()
+		this._computeElementsFromTrdet()
+		this._computeEigenvaluesFromTrdet()
 	}
 	set det(v) {
 		this._det=v
 		this._saveOriginal()
-		this._updateElements()
-		this._updateEigenvalues()
+		this._computeElementsFromTrdet()
+		this._computeEigenvaluesFromTrdet()
+	}
+	set re1(v) {
+		this._re1=v
+		this._saveOriginal()
+		if (this._im1!=0 || this._im2!=0) {
+			this._re2=-this._re1
+			this._updated.re2=true
+		}
+		this._computeTrdetFromEigenvalues()
+		this._computeElementsFromTrdet()
 	}
 	getRange(coef) {
 		if (coef=='tr') {
