@@ -4,10 +4,8 @@ const getClosestPointOnHyperbola=require('./closest-point-on-hyperbola')
 
 class Matrix {
 	constructor() {
-		this._a=this._b=this._c=this._d=0
-		this._tr=this._det=0
-		this._re1=this._re2=this._im1=this._im2=0
-		this._original=null
+		this._updated={}
+		this.setZero()
 		this._updated={}
 	}
 	forUpdated(fn) {
@@ -77,6 +75,17 @@ class Matrix {
 	get re2() { return this._re2 }
 	get im1() { return this._im1 }
 	get im2() { return this._im2 }
+	getRange(coef) {
+		if (coef=='tr') {
+			return 10
+		} else if (coef=='det') {
+			return 50
+		} else if (coef=='a' || coef=='b' || coef=='c' || coef=='d') {
+			return 5
+		} else {
+			return 10 // eigenvalues
+		}
+	}
 	set a(v) {
 		this._a=v
 		this._original=null
@@ -150,16 +159,21 @@ class Matrix {
 	set im2(v) {
 		this._setIm(v,2,1)
 	}
-	getRange(coef) {
-		if (coef=='tr') {
-			return 10
-		} else if (coef=='det') {
-			return 50
-		} else if (coef=='a' || coef=='b' || coef=='c' || coef=='d') {
-			return 5
-		} else {
-			return 10 // eigenvalues
-		}
+	setZero() {
+		this._a=this._b=this._c=this._d=0
+		this._tr=this._det=0
+		this._re1=this._re2=this._im1=this._im2=0
+		this._original=null
+		this._updated.a=this._updated.b=this._updated.c=this._updated.d=true
+		this._updated.tr=this._updated.det=true
+		this._updated.re1=this._updated.re2=this._updated.im1=this._updated.im2=true
+	}
+	setAssociated() { // "associated matrix" http://ocw.mit.edu/courses/mathematics/18-03-differential-equations-spring-2010/readings/supp_notes/MIT18_03S10_chapter_26.pdf
+		this._a=0
+		this._b=1
+		this._c=-this._det
+		this._d=this._tr
+		this._updated.a=this._updated.b=this._updated.c=this._updated.d=true
 	}
 }
 

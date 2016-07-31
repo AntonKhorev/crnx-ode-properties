@@ -197,6 +197,18 @@ class LhcPlot {
 						$("<td>").append(getCoefInputs('c')),
 						$("<td>").append(getCoefInputs('d'))
 					)
+				),
+				$("<div>").append(
+					"Set matrix to ",
+					$("<button>zero</button>").click(function(){
+						matrix.setZero()
+						updateDetails()
+					}),
+					" ",
+					$("<button>associated</button>").click(function(){
+						matrix.setAssociated()
+						updateDetails()
+					})
 				)
 			).each(detailsPolyfill),
 			$("<details>").append(
