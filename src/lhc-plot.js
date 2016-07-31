@@ -131,6 +131,12 @@ class LhcPlot {
 				label=`\\operatorname{${coef}}(\\mathbf{A})`
 			} else if (coef=='det') {
 				label=`\\${coef}(\\mathbf{A})`
+			} else if (coef.slice(0,2)=='re') {
+				//label=`\\lambda_${coef.charAt(2)} =`
+				label=`\\Re \\lambda_${coef.charAt(2)}`
+			} else if (coef.slice(0,2)=='im') {
+				//label=`+ i \\cdot`
+				label=`\\Im \\lambda_${coef.charAt(2)}`
 			}
 			let $number,$range
 			$div.append(
