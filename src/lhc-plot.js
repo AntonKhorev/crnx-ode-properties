@@ -91,20 +91,20 @@ class LhcPlot {
 						ctx.scale(1,-1)
 						y=-y
 					}
-					if (x>xRange-pointerMargin) {
+					if (x>xRange) {
 						ctx.transform(0,1,1,0,0,0)
 						const t=x
 						x=y
 						y=t
 					}
-					if (x>xRange-pointerMargin && y>yRange-pointerMargin) {
+					if ((x>xRange && y>yRange-pointerMargin) || (x>xRange-pointerMargin && y>yRange)) {
 						ctx.beginPath()
 						ctx.moveTo(xRange-pointerMargin,yRange-pointerMargin)
 						ctx.lineTo(xRange-pointerMargin,yRange-pointerMargin-pointerSize*Math.SQRT2)
 						ctx.lineTo(xRange-pointerMargin-pointerSize*Math.SQRT2,yRange-pointerMargin)
 						ctx.closePath()
 						ctx.fill()
-					} else if (y>xRange-pointerMargin) {
+					} else if (y>xRange) {
 						ctx.beginPath()
 						ctx.moveTo(x,yRange-pointerMargin)
 						ctx.lineTo(x+pointerSize,yRange-pointerMargin-pointerSize)
