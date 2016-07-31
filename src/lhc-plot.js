@@ -97,6 +97,10 @@ class LhcPlot {
 				drawPosition()
 				ctx.restore()
 			}
+			matrix.forUpdated(cf=>{
+				$numberInputs[cf].val(matrix[cf])
+				$rangeInputs[cf].val(matrix[cf])
+			})
 			updateEquilibriumType()
 			redrawTrDetCanvas()
 		}
@@ -113,10 +117,6 @@ class LhcPlot {
 						const value=getValue()
 						setValue(value)
 						matrix[coef]=Number(value)
-						matrix.forUpdated(cf=>{
-							$numberInputs[cf].val(matrix[cf])
-							$rangeInputs[cf].val(matrix[cf])
-						})
 						updateDetails()
 					}
 				})
@@ -186,8 +186,19 @@ class LhcPlot {
 				$equilibriumType=$("<div>")
 			).each(detailsPolyfill),
 			$("<details>").append(
-				$("<summary>").append("<a href='https://en.wikipedia.org/wiki/Trace_(linear_algebra)'>tr</a>-<a href='https://en.wikipedia.org/wiki/Determinant'>det</a> plane"),
-				$trDetCanvas=$("<canvas width='246' height='246'>")
+				$("<summary class='bordered'>").append("<a href='https://en.wikipedia.org/wiki/Trace_(linear_algebra)'>tr</a>-<a href='https://en.wikipedia.org/wiki/Determinant'>det</a> plane"),
+				$trDetCanvas=$("<canvas width='246' height='246'>").on('mousedown mousemove',function(ev){
+					if (!ev.buttons&1) return
+					const $canvas=$(this)
+					const w=$canvas.width()
+					const h=$canvas.height()
+					const trim=(v)=>Number(v.toFixed(2))
+					matrix.setTrdetExternally(
+						trim(+(ev.offsetX-w/2+0.5)/(w/2)*matrix.getRange('tr')),
+						trim(-(ev.offsetY-h/2+0.5)/(h/2)*matrix.getRange('det'))
+					)
+					updateDetails()
+				})
 			).each(detailsPolyfill),
 			$("<details>").append(
 				$("<summary>").append("<a href='https://en.wikipedia.org/wiki/Phase_space'>phase plane</a>"),

@@ -111,6 +111,13 @@ class Matrix {
 		this._computeElementsFromTrdet()
 		this._computeEigenvaluesFromTrdet()
 	}
+	setTrdetExternally(T,D) { // for use with clicks on tr-det plane plot
+		this._tr=T
+		this._det=D
+		this._updated.tr=this._updated.det=true
+		this._computeElementsFromTrdet()
+		this._computeEigenvaluesFromTrdet()
+	}
 	_setRe(v,i,j) {
 		this['_re'+i]=v
 		if (this._im1!=0 || this._im2!=0) {
