@@ -8,8 +8,9 @@ class LhcPlot {
 		const matrix=new Matrix
 		const $numberInputs={}
 		const $rangeInputs={}
-		let $trDetCanvas,trDetCanvasContext
 		let $equilibriumType
+		let $trdetCanvas,trdetCanvasContext
+		let $phaseCanvas,phaseCanvasContext
 		const updateDetails=()=>{
 			const updateEquilibriumType=()=>{
 				const getEquilibriumType=()=>{
@@ -48,15 +49,15 @@ class LhcPlot {
 				}
 				$equilibriumType.text(getEquilibriumType())
 			}
-			const redrawTrDetCanvas=()=>{
+			const redrawTrdetCanvas=()=>{
 				const crosshairSize=10
 				const pointerSize=5
 				const pointerMargin=3
 				const trRange=matrix.getRange('tr')
 				const detRange=matrix.getRange('det')
-				const ctx=trDetCanvasContext
-				const width=$trDetCanvas[0].width
-				const height=$trDetCanvas[0].height
+				const ctx=trdetCanvasContext
+				const width=$trdetCanvas[0].width
+				const height=$trdetCanvas[0].height
 				const xRange=width/2
 				const yRange=height/2
 				const drawRegions=()=>{
@@ -130,12 +131,57 @@ class LhcPlot {
 				drawPosition()
 				ctx.restore()
 			}
+			const redrawPhaseCanvas=()=>{
+				const D=matrix.det
+				const T=matrix.tr
+				const ctx=phaseCanvasContext
+				const width=$phaseCanvas[0].width
+				const height=$phaseCanvas[0].height
+				const xRange=width/2
+				const yRange=height/2
+				const drawEigenline=(x,y)=>{
+					ctx.save()
+					if (x<0) {
+						x=-x
+						y=-y
+					}
+					if (y<0) {
+						ctx.scale(1,-1)
+						y=-y
+					}
+					if (x<y) {
+						ctx.transform(0,1,1,0,0,0)
+						const t=x
+						x=y
+						y=t
+					}
+					if (x>0) {
+						ctx.beginPath()
+						ctx.moveTo(-xRange,+yRange*y/x)
+						ctx.lineTo(+xRange,-yRange*y/x)
+						ctx.stroke()
+					}
+					ctx.restore()
+				}
+				ctx.save()
+				ctx.fillStyle='#FFF'
+				ctx.fillRect(0,0,width,height)
+				ctx.translate(xRange,yRange)
+				if (4*D==T*T) {
+					drawEigenline(matrix.b,matrix.re1-matrix.a)
+				} else if (4*D<T*T) {
+					drawEigenline(matrix.b,matrix.re1-matrix.a)
+					drawEigenline(matrix.b,matrix.re2-matrix.a)
+				}
+				ctx.restore()
+			}
 			matrix.forUpdated(cf=>{
 				$numberInputs[cf].val(matrix[cf])
 				$rangeInputs[cf].val(matrix[cf])
 			})
 			updateEquilibriumType()
-			redrawTrDetCanvas()
+			redrawTrdetCanvas()
+			redrawPhaseCanvas()
 		}
 		const getCoefInputs=coef=>{
 			const isMatrixElement=coef.length==1
@@ -232,7 +278,7 @@ class LhcPlot {
 			).each(detailsPolyfill),
 			$("<details>").append(
 				$("<summary class='bordered'>").append("<a href='https://en.wikipedia.org/wiki/Trace_(linear_algebra)'>tr</a>-<a href='https://en.wikipedia.org/wiki/Determinant'>det</a> plane"),
-				$trDetCanvas=$("<canvas width='246' height='246'>").on('mousedown mousemove',function(ev){
+				$trdetCanvas=$("<canvas width='246' height='246'>").on('mousedown mousemove',function(ev){
 					if (!ev.buttons&1) return
 					const $canvas=$(this)
 					const w=$canvas.width()
@@ -247,10 +293,12 @@ class LhcPlot {
 			).each(detailsPolyfill),
 			$("<details>").append(
 				$("<summary>").append("<a href='https://en.wikipedia.org/wiki/Phase_space'>phase plane</a>"),
-				$("<div class='note'>").append("not implemented yet, try to use <a href='http://mathlets.org/mathlets/linear-phase-portraits-matrix-entry/'>MIT Mathlet</a> instead")
-			).each(detailsPolyfill)
+				$phaseCanvas=$("<canvas width='246' height='246'>")
+			).each(detailsPolyfill),
+			$("<div class='note'>").append("plotting is not fully implemented yet, try to use <a href='http://mathlets.org/mathlets/linear-phase-portraits-matrix-entry/'>MIT Mathlet</a> instead")
 		)
-		trDetCanvasContext=$trDetCanvas[0].getContext('2d')
+		trdetCanvasContext=$trdetCanvas[0].getContext('2d')
+		phaseCanvasContext=$phaseCanvas[0].getContext('2d')
 		updateDetails()
 	}
 }
