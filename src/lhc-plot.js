@@ -132,8 +132,6 @@ class LhcPlot {
 				ctx.restore()
 			}
 			const redrawPhaseCanvas=()=>{
-				const D=matrix.det
-				const T=matrix.tr
 				const ctx=phaseCanvasContext
 				const width=$phaseCanvas[0].width
 				const height=$phaseCanvas[0].height
@@ -167,11 +165,11 @@ class LhcPlot {
 				ctx.fillStyle='#FFF'
 				ctx.fillRect(0,0,width,height)
 				ctx.translate(xRange,yRange)
-				if (4*D==T*T) {
+				if (matrix.im1==0) {
 					drawEigenline(matrix.b,matrix.re1-matrix.a)
-				} else if (4*D<T*T) {
-					drawEigenline(matrix.b,matrix.re1-matrix.a)
-					drawEigenline(matrix.b,matrix.re2-matrix.a)
+					if (matrix.re1!=matrix.re2) {
+						drawEigenline(matrix.b,matrix.re2-matrix.a)
+					}
 				}
 				ctx.restore()
 			}
