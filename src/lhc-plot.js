@@ -137,8 +137,17 @@ class LhcPlot {
 				const height=$phaseCanvas[0].height
 				const xRange=width/2
 				const yRange=height/2
-				const drawEigenline=(x,y)=>{
+				const drawEigenline=(lambda)=>{
+					let x,y
+					if (Math.abs(matrix.b)+Math.abs(lambda-matrix.a)>=Math.abs(lambda-matrix.d)+Math.abs(matrix.c)) {
+						x=matrix.b
+						y=lambda-matrix.a
+					} else {
+						x=lambda-matrix.d
+						y=matrix.c
+					}
 					ctx.save()
+					ctx.lineWidth=2
 					if (x<0) {
 						x=-x
 						y=-y
@@ -166,9 +175,9 @@ class LhcPlot {
 				ctx.fillRect(0,0,width,height)
 				ctx.translate(xRange,yRange)
 				if (matrix.im1==0) {
-					drawEigenline(matrix.b,matrix.re1-matrix.a)
+					drawEigenline(matrix.re1)
 					if (matrix.re1!=matrix.re2) {
-						drawEigenline(matrix.b,matrix.re2-matrix.a)
+						drawEigenline(matrix.re2)
 					}
 				}
 				ctx.restore()
@@ -290,7 +299,7 @@ class LhcPlot {
 				})
 			).each(detailsPolyfill),
 			$("<details>").append(
-				$("<summary>").append("<a href='https://en.wikipedia.org/wiki/Phase_space'>phase plane</a>"),
+				$("<summary class='bordered'>").append("<a href='https://en.wikipedia.org/wiki/Phase_space'>phase plane</a>"),
 				$phaseCanvas=$("<canvas width='246' height='246'>")
 			).each(detailsPolyfill),
 			$("<div class='note'>").append("plotting is not fully implemented yet, try to use <a href='http://mathlets.org/mathlets/linear-phase-portraits-matrix-entry/'>MIT Mathlet</a> instead")
