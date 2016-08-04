@@ -182,10 +182,12 @@ class LhcPlot {
 						const xis=iconSize*x0
 						const yis=iconSize*y0
 						const drawEigenlineIcon=()=>{
+							const dir=Math.sign(icon)
+							if (dir==0) return
 							ctx.beginPath()
-							ctx.moveTo(xic-xis-yis,-(yic-yis+xis))
-							ctx.lineTo(xic-xis+yis,-(yic-yis-xis))
-							ctx.lineTo(xic+xis,-(yic+yis))
+							ctx.moveTo(xic+dir*(-xis-yis),-(yic+dir*(-yis+xis)))
+							ctx.lineTo(xic+dir*(-xis+yis),-(yic+dir*(-yis-xis)))
+							ctx.lineTo(xic+dir*xis,-(yic+dir*yis))
 							ctx.closePath()
 							ctx.fill()
 						}
@@ -193,13 +195,11 @@ class LhcPlot {
 						ctx.moveTo(-x1,+y1)
 						ctx.lineTo(+x1,-y1)
 						ctx.stroke()
-						if (icon>0) {
-							ctx.save()
-							drawEigenlineIcon()
-							ctx.scale(-1,-1)
-							drawEigenlineIcon()
-							ctx.restore()
-						}
+						ctx.save()
+						drawEigenlineIcon()
+						ctx.scale(-1,-1)
+						drawEigenlineIcon()
+						ctx.restore()
 					}
 					ctx.restore()
 				}
