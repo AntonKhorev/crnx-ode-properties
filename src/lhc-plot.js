@@ -141,9 +141,9 @@ class LhcPlot {
 					const iconSize=5
 					let icon
 					if (lambda<0) {
-						icon=-1-(lambda<otherLambda)
+						icon=-1-(otherLambda<0 && lambda<otherLambda)
 					} else if (lambda>0) {
-						icon=+1+(lambda>otherLambda)
+						icon=+1+(otherLambda>0 && lambda>otherLambda)
 					} else {
 						icon=0
 					}
@@ -184,12 +184,18 @@ class LhcPlot {
 						const drawEigenlineIcon=()=>{
 							const dir=Math.sign(icon)
 							if (dir==0) return
-							ctx.beginPath()
-							ctx.moveTo(xic+dir*(-xis-yis),-(yic+dir*(-yis+xis)))
-							ctx.lineTo(xic+dir*(-xis+yis),-(yic+dir*(-yis-xis)))
-							ctx.lineTo(xic+dir*xis,-(yic+dir*yis))
-							ctx.closePath()
-							ctx.fill()
+							const drawTriangle=(ofs)=>{
+								ctx.beginPath()
+								ctx.moveTo(xic+dir*(ofs*xis-xis-yis),-(yic+dir*(ofs*yis-yis+xis)))
+								ctx.lineTo(xic+dir*(ofs*xis-xis+yis),-(yic+dir*(ofs*yis-yis-xis)))
+								ctx.lineTo(xic+dir*(ofs*xis+xis    ),-(yic+dir*(ofs*yis+yis    )))
+								ctx.closePath()
+								ctx.fill()
+							}
+							drawTriangle(0)
+							if (Math.abs(icon)>=2) {
+								drawTriangle(2)
+							}
 						}
 						ctx.beginPath()
 						ctx.moveTo(-x1,+y1)
