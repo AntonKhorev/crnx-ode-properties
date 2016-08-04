@@ -137,7 +137,16 @@ class LhcPlot {
 				const height=$phaseCanvas[0].height
 				const xRange=width/2
 				const yRange=height/2
-				const drawEigenline=(lambda)=>{
+				const drawEigenline=(lambda,otherLambda)=>{
+					const iconSize=5
+					let icon
+					if (lambda<0) {
+						icon=-1-(lambda<otherLambda)
+					} else if (lambda>0) {
+						icon=+1+(lambda>otherLambda)
+					} else {
+						icon=0
+					}
 					let x,y
 					if (Math.abs(matrix.b)+Math.abs(lambda-matrix.a)>=Math.abs(lambda-matrix.d)+Math.abs(matrix.c)) {
 						x=matrix.b
@@ -156,28 +165,54 @@ class LhcPlot {
 						ctx.scale(1,-1)
 						y=-y
 					}
-					if (x<y) {
-						ctx.transform(0,1,1,0,0,0)
+					if (x<y) { // TODO this will work only for square canvases, should also swap xRange and yRange
+						ctx.transform(0,1,1,0,0,0) // swap x,y
 						const t=x
 						x=y
 						y=t
 					}
 					if (x>0) {
+						const r=Math.sqrt(x*x+y*y)
+						const x0=x/r
+						const y0=y/r
+						const x1=xRange
+						const y1=yRange*y/x
+						const xic=xRange/2*x0
+						const yic=yRange/2*y0
+						const xis=iconSize*x0
+						const yis=iconSize*y0
+						const drawEigenlineIcon=()=>{
+							ctx.beginPath()
+							ctx.moveTo(xic-xis-yis,-(yic-yis+xis))
+							ctx.lineTo(xic-xis+yis,-(yic-yis-xis))
+							ctx.lineTo(xic+xis,-(yic+yis))
+							ctx.closePath()
+							ctx.fill()
+						}
 						ctx.beginPath()
-						ctx.moveTo(-xRange,+yRange*y/x)
-						ctx.lineTo(+xRange,-yRange*y/x)
+						ctx.moveTo(-x1,+y1)
+						ctx.lineTo(+x1,-y1)
 						ctx.stroke()
+						if (icon>0) {
+							ctx.save()
+							drawEigenlineIcon()
+							ctx.scale(-1,-1)
+							drawEigenlineIcon()
+							ctx.restore()
+						}
 					}
 					ctx.restore()
 				}
 				ctx.save()
 				ctx.fillStyle='#FFF'
 				ctx.fillRect(0,0,width,height)
+				ctx.restore()
+				ctx.save()
 				ctx.translate(xRange,yRange)
 				if (matrix.im1==0) {
-					drawEigenline(matrix.re1)
+					drawEigenline(matrix.re1,matrix.re2)
 					if (matrix.re1!=matrix.re2) {
-						drawEigenline(matrix.re2)
+						drawEigenline(matrix.re2,matrix.re1)
 					}
 				}
 				ctx.restore()
