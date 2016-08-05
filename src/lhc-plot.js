@@ -147,14 +147,8 @@ class LhcPlot {
 					} else {
 						icon=0
 					}
-					let x,y
-					if (Math.abs(matrix.b)+Math.abs(lambda-matrix.a)>=Math.abs(lambda-matrix.d)+Math.abs(matrix.c)) {
-						x=matrix.b
-						y=lambda-matrix.a
-					} else {
-						x=lambda-matrix.d
-						y=matrix.c
-					}
+					const xy=matrix.getEigenvector(lambda)
+					let x=xy[0], y=xy[1]
 					ctx.save()
 					ctx.lineWidth=2
 					if (x<0) {
@@ -221,6 +215,41 @@ class LhcPlot {
 					}
 					ctx.restore()
 				}
+				const drawSolution=(x0,y0)=>{
+					let lambda1,lambda2
+					if (matrix.re1<=matrix.re2) {
+						lambda1=matrix.re1
+						lambda2=matrix.re2
+					} else {
+						lambda1=matrix.re2
+						lambda2=matrix.re1
+					}
+					const xy1=matrix.getEigenvector(lambda1)
+					const x1=xy1[0], y1=xy1[1]
+					const xy2=matrix.getEigenvector(lambda2)
+					const x2=xy2[0], y2=xy2[1]
+					const k1=+(x2*y0-x0*y2)/(x2*y1-x1*y2)
+					const k2=-(x1*y0-x0*y1)/(x2*y1-x1*y2)
+					ctx.save()
+					ctx.lineWidth=2
+					ctx.strokeStyle='#08F'
+					if (lambda1>0) {
+						const nPts=Math.max(xRange,yRange)
+						//const maxT2=2*Math.max(xRange/(k2*x2),yRange/(k2*y2))
+						const maxT2=2*Math.min(xRange/Math.abs(k2*x2),yRange/Math.abs(k2*y2))
+						ctx.beginPath()
+						for (let i=0;i<=nPts;i++) {
+							const T2=i/nPts*maxT2
+							const T1=Math.pow(T2,lambda1/lambda2)
+							ctx[i?'lineTo':'moveTo'](
+								+(k1*x1*T1+k2*x2*T2),
+								-(k1*y1*T1+k2*y2*T2)
+							)
+						}
+						ctx.stroke()
+					}
+					ctx.restore()
+				}
 				ctx.save()
 				ctx.fillStyle='#FFF'
 				ctx.fillRect(0,0,width,height)
@@ -231,6 +260,10 @@ class LhcPlot {
 					drawEigenline(matrix.re1,matrix.re2)
 					if (matrix.re1!=matrix.re2) {
 						drawEigenline(matrix.re2,matrix.re1)
+						drawSolution(+xRange/2,0)
+						drawSolution(-xRange/2,0)
+						drawSolution(0,+yRange/2)
+						drawSolution(0,-yRange/2)
 					}
 				}
 				ctx.restore()

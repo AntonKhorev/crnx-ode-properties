@@ -75,6 +75,13 @@ class Matrix {
 	get re2() { return this._re2 }
 	get im1() { return this._im1 }
 	get im2() { return this._im2 }
+	getEigenvector(lambda) {
+		if (Math.abs(this._b)+Math.abs(lambda-this._a)>=Math.abs(lambda-this._d)+Math.abs(this._c)) {
+			return [this._b,lambda-this._a]
+		} else {
+			return [lambda-this._d,this._c]
+		}
+	}
 	getRange(coef) {
 		if (coef=='tr') {
 			return 10
