@@ -180,6 +180,7 @@ class Matrix {
 		this._b=1
 		this._c=-this._det
 		this._d=this._tr
+		this._original=null
 		this._updated.a=this._updated.b=this._updated.c=this._updated.d=true
 	}
 }
