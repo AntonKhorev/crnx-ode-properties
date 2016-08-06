@@ -82,6 +82,13 @@ class Matrix {
 			return [lambda-this._d,this._c]
 		}
 	}
+	getComplexEigenvector(alpha,beta) {
+		if (Math.abs(this._b)+Math.abs(alpha-this._a)>=Math.abs(alpha-this._d)+Math.abs(this._c)) {
+			return [this._b,0,alpha-this._a,beta]
+		} else {
+			return [alpha-this._d,beta,this._c,0]
+		}
+	}
 	getRange(coef) {
 		if (coef=='tr') {
 			return 10

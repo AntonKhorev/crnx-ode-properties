@@ -137,6 +137,51 @@ class LhcPlot {
 				const height=$phaseCanvas[0].height
 				const xRange=width/2
 				const yRange=height/2
+				const drawDirectionField=()=>{
+					const arrowSpacing=27
+					const arrowLength=5
+					const arrowWidth=2
+					const drawArrow=(x,y)=>{
+						const dx=matrix.a*x+matrix.b*y
+						const dy=matrix.c*x+matrix.d*y
+						const dl=Math.sqrt(dx*dx+dy*dy)
+						ctx.beginPath()
+						ctx.moveTo(
+							+(x-dx/dl*arrowLength),
+							-(y-dy/dl*arrowLength)
+						)
+						ctx.lineTo(+x,-y)
+						ctx.stroke()
+						ctx.beginPath()
+						ctx.moveTo(
+							+(x+dx/dl*arrowLength),
+							-(y+dy/dl*arrowLength)
+						)
+						ctx.lineTo(
+							+(x-dy/dl*arrowWidth),
+							-(y+dx/dl*arrowWidth)
+						)
+						ctx.lineTo(
+							+(x+dy/dl*arrowWidth),
+							-(y-dx/dl*arrowWidth)
+						)
+						ctx.closePath()
+						ctx.fill()
+					}
+					ctx.save()
+					ctx.fillStyle=ctx.strokeStyle='#888'
+					const nx=Math.floor(xRange/arrowSpacing)
+					const ny=Math.floor(yRange/arrowSpacing)
+					for (let i=-nx;i<=nx;i++) {
+						for (let j=-ny;j<=ny;j++) {
+							drawArrow(
+								i*arrowSpacing+0.5*Math.sign(i),
+								j*arrowSpacing+0.5*Math.sign(j)
+							)
+						}
+					}
+					ctx.restore()
+				}
 				const drawEigenline=(lambda,otherLambda)=>{
 					const iconSize=5
 					let icon
@@ -216,88 +261,96 @@ class LhcPlot {
 					ctx.restore()
 				}
 				const drawSolution=(x0,y0)=>{
-					let lambda1,lambda2
-					if (matrix.re1<=matrix.re2) {
-						lambda1=matrix.re1
-						lambda2=matrix.re2
-					} else {
-						lambda1=matrix.re2
-						lambda2=matrix.re1
+					const iterationLimit=100*Math.max(xRange,yRange)
+					const drawNodalSolution=()=>{
+						let lambda1,lambda2
+						if (matrix.re1<=matrix.re2) {
+							lambda1=matrix.re1
+							lambda2=matrix.re2
+						} else {
+							lambda1=matrix.re2
+							lambda2=matrix.re1
+						}
+						const xy1=matrix.getEigenvector(lambda1)
+						const x1=xy1[0], y1=xy1[1]
+						const xy2=matrix.getEigenvector(lambda2)
+						const x2=xy2[0], y2=xy2[1]
+						const k1=+(x2*y0-x0*y2)/(x2*y1-x1*y2)
+						const k2=-(x1*y0-x0*y1)/(x2*y1-x1*y2)
+						if (lambda1>0 && k1!=0 && k2!=0) {
+							let T1=0
+							let T2=0
+							const dT1=1/Math.max(Math.abs(k1*x1),Math.abs(k2*x2))
+							ctx.beginPath()
+							ctx.moveTo(0,0)
+							for (let i=0;i<iterationLimit;i++) {
+								T1+=dT1
+								T2=Math.pow(T1,lambda2/lambda1)
+								ctx.lineTo(
+									+(k1*x1*T1+k2*x2*T2),
+									-(k1*y1*T1+k2*y2*T2)
+								)
+								if (
+									(k1*x1*T1+k2*x2*T2)*Math.sign(k2*x2)>xRange ||
+									(k1*y1*T1+k2*y2*T2)*Math.sign(k2*y2)>yRange
+								) break
+							}
+							ctx.stroke()
+						}
 					}
-					const xy1=matrix.getEigenvector(lambda1)
-					const x1=xy1[0], y1=xy1[1]
-					const xy2=matrix.getEigenvector(lambda2)
-					const x2=xy2[0], y2=xy2[1]
-					const k1=+(x2*y0-x0*y2)/(x2*y1-x1*y2)
-					const k2=-(x1*y0-x0*y1)/(x2*y1-x1*y2)
+					const drawSpiralSolution=()=>{
+						const alpha=matrix.re1
+						let beta=matrix.im1
+						if (beta<0) {
+							beta=-beta
+						}
+						const xxyy=matrix.getComplexEigenvector(alpha,beta)
+						const x1=xxyy[0], x2=xxyy[1]
+						const y1=xxyy[2], y2=xxyy[3]
+						const k1=+(x2*y0-x0*y2)/(x2*y1-x1*y2)
+						const k2=-(x1*y0-x0*y1)/(x2*y1-x1*y2)
+						if (alpha>0) {
+							const kxc=k1*x1+k2*x2
+							const kxs=k2*x1-k1*x2
+							const kyc=k1*y1+k2*y2
+							const kys=k2*y1-k1*y2
+							let A2=kxc*kxc+kyc*kyc
+							let B2=kxs*kxs+kys*kys
+							if (A2>B2) {
+								const t=A2
+								A2=B2
+								B2=t
+							}
+							const B=Math.sqrt(B2)
+							const R2=xRange*xRange+yRange*yRange
+							const t0=-(Math.log(B2)/2+Math.log(Math.exp(2*Math.PI*alpha/beta)-1))/alpha
+							//const t1=(Math.log(R2)-Math.log(A2))/(2*alpha)
+							let t=t0
+							ctx.beginPath()
+							for (let i=0;i<iterationLimit;i++) {
+								const e=Math.exp(alpha*t)
+								const c=Math.cos(beta*t)
+								const s=Math.sin(beta*t)
+								ctx[i?'lineTo':'moveTo'](
+									+e*(kxc*c+kxs*s),
+									-e*(kyc*c+kys*s)
+								)
+								//const dtTan=1/(beta*B*e)
+								const dtRad=Math.log(1/(B*e)+1)/alpha
+								//t+=Math.min(Math.max(dtTan,1/(40*beta)),dtRad)
+								t+=Math.min(dtRad,1/(16*beta))
+								if (e*e*A2>R2) break
+							}
+							ctx.stroke()
+						}
+					}
 					ctx.save()
 					ctx.lineWidth=2
 					ctx.strokeStyle='#08F'
-					if (lambda1>0 && k1!=0 && k2!=0) {
-						const limit=10*Math.max(xRange,yRange)
-						let T1=0
-						let T2=0
-						const dT1=1/Math.max(Math.abs(k1*x1),Math.abs(k2*x2))
-						ctx.beginPath()
-						ctx.moveTo(0,0)
-						for (let i=0;i<limit;i++) {
-							T1+=dT1
-							T2=Math.pow(T1,lambda2/lambda1)
-							ctx.lineTo(
-								+(k1*x1*T1+k2*x2*T2),
-								-(k1*y1*T1+k2*y2*T2)
-							)
-							if (
-								(k1*x1*T1+k2*x2*T2)*Math.sign(k2*x2)>xRange ||
-								(k1*y1*T1+k2*y2*T2)*Math.sign(k2*y2)>yRange
-							) break
-						}
-						ctx.stroke()
-					}
-					ctx.restore()
-				}
-				const drawDirectionField=()=>{
-					const arrowSpacing=27
-					const arrowLength=5
-					const arrowWidth=2
-					const drawArrow=(x,y)=>{
-						const dx=matrix.a*x+matrix.b*y
-						const dy=matrix.c*x+matrix.d*y
-						const dl=Math.sqrt(dx*dx+dy*dy)
-						ctx.beginPath()
-						ctx.moveTo(
-							+(x-dx/dl*arrowLength),
-							-(y-dy/dl*arrowLength)
-						)
-						ctx.lineTo(+x,-y)
-						ctx.stroke()
-						ctx.beginPath()
-						ctx.moveTo(
-							+(x+dx/dl*arrowLength),
-							-(y+dy/dl*arrowLength)
-						)
-						ctx.lineTo(
-							+(x-dy/dl*arrowWidth),
-							-(y+dx/dl*arrowWidth)
-						)
-						ctx.lineTo(
-							+(x+dy/dl*arrowWidth),
-							-(y-dx/dl*arrowWidth)
-						)
-						ctx.closePath()
-						ctx.fill()
-					}
-					ctx.save()
-					ctx.fillStyle=ctx.strokeStyle='#888'
-					const nx=Math.floor(xRange/arrowSpacing)
-					const ny=Math.floor(yRange/arrowSpacing)
-					for (let i=-nx;i<=nx;i++) {
-						for (let j=-ny;j<=ny;j++) {
-							drawArrow(
-								i*arrowSpacing+0.5*Math.sign(i),
-								j*arrowSpacing+0.5*Math.sign(j)
-							)
-						}
+					if (matrix.im1==0 && matrix.re1!=matrix.re2) {
+						drawNodalSolution()
+					} else if (matrix.im1!=0) {
+						drawSpiralSolution()
 					}
 					ctx.restore()
 				}
@@ -312,12 +365,12 @@ class LhcPlot {
 					drawEigenline(matrix.re1,matrix.re2)
 					if (matrix.re1!=matrix.re2) {
 						drawEigenline(matrix.re2,matrix.re1)
-						drawSolution(+xRange/2,0)
-						drawSolution(-xRange/2,0)
-						drawSolution(0,+yRange/2)
-						drawSolution(0,-yRange/2)
 					}
 				}
+				drawSolution(+xRange/2,0)
+				drawSolution(-xRange/2,0)
+				drawSolution(0,+yRange/2)
+				drawSolution(0,-yRange/2)
 				ctx.restore()
 			}
 			matrix.forUpdated(cf=>{
