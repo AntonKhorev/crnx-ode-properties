@@ -256,6 +256,45 @@ class LhcPlot {
 					}
 					ctx.restore()
 				}
+				const drawDirectionField=()=>{
+					const arrowSpacing=40
+					const arrowLength=5
+					const arrowWidth=2
+					const drawArrow=(x,y)=>{
+						const dx=matrix.a*x+matrix.b*y
+						const dy=matrix.c*x+matrix.d*y
+						const dl=Math.sqrt(dx*dx+dy*dy)
+						ctx.beginPath()
+						ctx.moveTo(
+							+(x-dx/dl*arrowLength),
+							-(y-dy/dl*arrowLength)
+						)
+						ctx.lineTo(+x,-y)
+						ctx.stroke()
+						ctx.beginPath()
+						ctx.moveTo(
+							+(x+dx/dl*arrowLength),
+							-(y+dy/dl*arrowLength)
+						)
+						ctx.lineTo(
+							+(x-dy/dl*arrowWidth),
+							-(y+dx/dl*arrowWidth)
+						)
+						ctx.lineTo(
+							+(x+dy/dl*arrowWidth),
+							-(y-dx/dl*arrowWidth)
+						)
+						ctx.closePath()
+						ctx.fill()
+					}
+					const nx=Math.floor(xRange/arrowSpacing)
+					const ny=Math.floor(yRange/arrowSpacing)
+					for (let i=-nx;i<=nx;i++) {
+						for (let j=-ny;j<=ny;j++) {
+							drawArrow(i*arrowSpacing,j*arrowSpacing) // TODO shift by 0.5 away from axes
+						}
+					}
+				}
 				ctx.save()
 				ctx.fillStyle='#FFF'
 				ctx.fillRect(0,0,width,height)
@@ -272,6 +311,7 @@ class LhcPlot {
 						drawSolution(0,-yRange/2)
 					}
 				}
+				drawDirectionField()
 				ctx.restore()
 			}
 			matrix.forUpdated(cf=>{
