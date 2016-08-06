@@ -233,7 +233,8 @@ class LhcPlot {
 					ctx.save()
 					ctx.lineWidth=2
 					ctx.strokeStyle='#08F'
-					if (lambda1>0) {
+					if (lambda1>0 && k1!=0 && k2!=0) {
+						/*
 						const nPts=Math.max(xRange,yRange)
 						//const maxT2=2*Math.max(xRange/(k2*x2),yRange/(k2*y2))
 						const maxT2=2*Math.min(xRange/Math.abs(k2*x2),yRange/Math.abs(k2*y2))
@@ -242,6 +243,91 @@ class LhcPlot {
 							const T2=i/nPts*maxT2
 							const T1=Math.pow(T2,lambda1/lambda2)
 							ctx[i?'lineTo':'moveTo'](
+								+(k1*x1*T1+k2*x2*T2),
+								-(k1*y1*T1+k2*y2*T2)
+							)
+						}
+						ctx.moveTo(0,0)
+						for (let i=1;i<=nPts;i++) { // ok version
+							const T1=i/nPts
+							const T2=Math.pow(T1,lambda2/lambda1)
+							ctx.lineTo(
+								+(k1*x1*T1+k2*x2*T2),
+								-(k1*y1*T1+k2*y2*T2)
+							)
+						}
+						ctx.stroke()
+						*/
+						const calculateAxisTs=(ka1,ka2,aRange)=>{
+							const limit=10*aRange
+							let i=0
+							let T11=0
+							let T21=0
+							//const Tas=[[0,0]]
+							const Tas=[]
+							while (i++<limit) {
+								const dT1=1/Math.abs(ka1)
+								let T12=T11+dT1
+								let T22=Math.pow(T12,lambda2/lambda1)
+								//
+								Tas.push([T12,T22])
+								//if (Math.abs(ka2)*(T22-T21)>1) break
+								if (
+									(k1*x1*T12+k2*x2*T22)*Math.sign(k2*x2)>xRange ||
+									(k1*y1*T12+k2*y2*T22)*Math.sign(k2*y2)>yRange
+								) break
+								//
+								T11=T12
+								T21=T22
+								//Tas.push([T11,T21])
+							}
+							/*
+							while (i++<limit) { // not needed?
+								const dT2=1/Math.abs(ka2)
+								let T22=T21+dT2
+								let T12=Math.pow(T12,lambda1/lambda2)
+								//if ((ka1*T12+ka2*T22)*Math.sign(ka2)>aRange) break
+								if (
+									(k1*x1*T12+k2*x2*T22)*Math.sign(k2*x2)>xRange ||
+									(k1*y1*T12+k2*y2*T22)*Math.sign(k2*y2)>yRange
+								) break
+								T11=T12
+								T21=T22
+								Tas.push([T11,T21])
+							}
+							*/
+							Tas.push([T11,T21])
+							return Tas
+						}
+						const Txs=calculateAxisTs(k1*x1,k2*x2,xRange)
+						const Tys=calculateAxisTs(k1*y1,k2*y2,yRange)
+						const Ts=[[0,0]]
+						let ix=0, iy=0, i=0
+						while (ix<Txs.length && iy<Tys.length) {
+							const merge=(Tas,ia)=>{
+								if (Tas[ia][0]>Ts[i][0]) {
+									Ts.push(Tas[ia])
+									i++
+								}
+							}
+							if (iy>=Tys.length) {
+								merge(Txs,ix++)
+							} else if (ix>=Txs.length) {
+								merge(Tys,iy++)
+							} else {
+								if (Txs[ix][0]<=Tys[iy][0]) {
+									merge(Txs,ix++)
+								} else {
+									merge(Tys,iy++)
+								}
+							}
+						}
+						ctx.beginPath()
+						ctx.moveTo(0,0)
+						for (let i=1;i<Ts.length;i++) {
+							const T1=Ts[i][0]
+							const T2=Ts[i][1]
+							ctx.lineTo(
 								+(k1*x1*T1+k2*x2*T2),
 								-(k1*y1*T1+k2*y2*T2)
 							)
