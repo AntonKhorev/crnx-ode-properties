@@ -257,7 +257,7 @@ class LhcPlot {
 					ctx.restore()
 				}
 				const drawDirectionField=()=>{
-					const arrowSpacing=40
+					const arrowSpacing=27
 					const arrowLength=5
 					const arrowWidth=2
 					const drawArrow=(x,y)=>{
@@ -287,13 +287,19 @@ class LhcPlot {
 						ctx.closePath()
 						ctx.fill()
 					}
+					ctx.save()
+					ctx.fillStyle=ctx.strokeStyle='#888'
 					const nx=Math.floor(xRange/arrowSpacing)
 					const ny=Math.floor(yRange/arrowSpacing)
 					for (let i=-nx;i<=nx;i++) {
 						for (let j=-ny;j<=ny;j++) {
-							drawArrow(i*arrowSpacing,j*arrowSpacing) // TODO shift by 0.5 away from axes
+							drawArrow(
+								i*arrowSpacing+0.5*Math.sign(i),
+								j*arrowSpacing+0.5*Math.sign(j)
+							)
 						}
 					}
+					ctx.restore()
 				}
 				ctx.save()
 				ctx.fillStyle='#FFF'
@@ -301,6 +307,7 @@ class LhcPlot {
 				ctx.restore()
 				ctx.save()
 				ctx.translate(xRange,yRange)
+				drawDirectionField()
 				if (matrix.im1==0) {
 					drawEigenline(matrix.re1,matrix.re2)
 					if (matrix.re1!=matrix.re2) {
@@ -311,7 +318,6 @@ class LhcPlot {
 						drawSolution(0,-yRange/2)
 					}
 				}
-				drawDirectionField()
 				ctx.restore()
 			}
 			matrix.forUpdated(cf=>{
