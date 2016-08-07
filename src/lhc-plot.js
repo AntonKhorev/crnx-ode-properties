@@ -260,7 +260,7 @@ class LhcPlot {
 					}
 					ctx.restore()
 				}
-				const drawSolution=(x0,y0)=>{
+				const drawSolution=(x0,y0,color)=>{
 					const iterationLimit=100*Math.max(xRange,yRange)
 					const drawNodalSolution=()=>{
 						let lambda1,lambda2
@@ -346,7 +346,7 @@ class LhcPlot {
 					}
 					ctx.save()
 					ctx.lineWidth=2
-					ctx.strokeStyle='#08F'
+					ctx.strokeStyle=color
 					if (matrix.im1==0 && matrix.re1!=matrix.re2) {
 						drawNodalSolution()
 					} else if (matrix.im1!=0) {
@@ -367,10 +367,10 @@ class LhcPlot {
 						drawEigenline(matrix.re2,matrix.re1)
 					}
 				}
-				drawSolution(+xRange/2,0)
-				drawSolution(-xRange/2,0)
-				drawSolution(0,+yRange/2)
-				drawSolution(0,-yRange/2)
+				drawSolution(+xRange/2,0,'#08F')
+				drawSolution(-xRange/2,0,'#28F')
+				drawSolution(0,+yRange/2,'#0AF')
+				drawSolution(0,-yRange/2,'#08D')
 				ctx.restore()
 			}
 			matrix.forUpdated(cf=>{

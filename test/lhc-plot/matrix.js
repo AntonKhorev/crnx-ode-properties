@@ -29,6 +29,15 @@ describe("Matrix",()=>{
 		expect(matrix.re2).closeTo(4,delta)
 		expect(matrix.im2).closeTo(0,delta)
 	})
+	it("calculates complex eigenvalues",()=>{
+		const matrix=new Matrix
+		matrix.a=0; matrix.b=1
+		matrix.c=-1; matrix.d=0
+		expect(matrix.re1).closeTo(0,delta)
+		expect(matrix.im1).closeTo(-1,delta)
+		expect(matrix.re2).closeTo(0,delta)
+		expect(matrix.im2).closeTo(1,delta)
+	})
 	it("changes trace of I",()=>{
 		const matrix=new Matrix
 		matrix.a=1; matrix.b=0

@@ -51,11 +51,11 @@ class Matrix {
 			const root=Math.sqrt(-discr)
 			this._re1=this._re2=this._tr/2
 			if (this._im2>=this._im1) {
-				this._im1=-root
-				this._im2=+root
+				this._im1=-root/2
+				this._im2=+root/2
 			} else {
-				this._im2=-root
-				this._im1=+root
+				this._im2=-root/2
+				this._im1=+root/2
 			}
 		}
 		this._updated.re1=this._updated.re2=this._updated.im1=this._updated.im2=true
