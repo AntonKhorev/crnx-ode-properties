@@ -299,17 +299,21 @@ class LhcPlot {
 						}
 					}
 					const drawSpiralSolution=()=>{
-						const alpha=matrix.re1
+						let alpha=matrix.re1
 						let beta=matrix.im1
 						if (beta<0) {
 							beta=-beta
 						}
 						const xxyy=matrix.getComplexEigenvector(alpha,beta)
+						if (alpha<0) {
+							alpha=-alpha
+							beta=-beta
+						}
 						const x1=xxyy[0], x2=xxyy[1]
 						const y1=xxyy[2], y2=xxyy[3]
 						const k1=+(x2*y0-x0*y2)/(x2*y1-x1*y2)
 						const k2=-(x1*y0-x0*y1)/(x2*y1-x1*y2)
-						if (alpha>0 && (k1!=0 || k2!=0)) {
+						if (alpha!=0 && (k1!=0 || k2!=0)) {
 							const kxc=k1*x1+k2*x2
 							const kxs=k2*x1-k1*x2
 							const kyc=k1*y1+k2*y2
@@ -328,9 +332,9 @@ class LhcPlot {
 							const B2=A2B2[1]
 							const B=Math.sqrt(B2)
 							const R2=xRange*xRange+yRange*yRange
-							//const t0=-(Math.log(B2)/2+Math.log(Math.exp(2*Math.PI*alpha/beta)-1))/alpha
+							//const t0=-(Math.log(B2)/2+Math.log(Math.exp(2*Math.PI*alpha/Math.abs(beta))-1))/alpha
 							const lineWidth=2
-							const t0=(Math.log(lineWidth)-Math.log(B2)/2-Math.log(Math.exp(2*Math.PI*alpha/beta)-1))/alpha
+							const t0=(Math.log(lineWidth)-Math.log(B2)/2-Math.log(Math.exp(2*Math.PI*alpha/Math.abs(beta))-1))/alpha
 							//const t1=(Math.log(R2)-Math.log(A2))/(2*alpha)
 							ctx.beginPath()
 							const e0=Math.exp(alpha*t0)
@@ -357,10 +361,10 @@ class LhcPlot {
 									+e*(kxc*c+kxs*s),
 									-e*(kyc*c+kys*s)
 								)
-								//const dtTan=1/(beta*B*e)
+								//const dtTan=1/Math.abs(beta*B*e)
 								const dtRad=Math.log(1/(B*e)+1)/alpha
-								//t+=Math.min(Math.max(dtTan,1/(40*beta)),dtRad)
-								t+=Math.min(dtRad,1/(16*beta))
+								//t+=Math.min(Math.max(dtTan,1/Math.abs(40*beta)),dtRad)
+								t+=Math.min(dtRad,1/Math.abs(16*beta))
 								if (e*e*A2>R2) break
 							}
 							ctx.stroke()
