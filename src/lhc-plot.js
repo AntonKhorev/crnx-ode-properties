@@ -328,10 +328,27 @@ class LhcPlot {
 							const B2=A2B2[1]
 							const B=Math.sqrt(B2)
 							const R2=xRange*xRange+yRange*yRange
-							const t0=-(Math.log(B2)/2+Math.log(Math.exp(2*Math.PI*alpha/beta)-1))/alpha
+							//const t0=-(Math.log(B2)/2+Math.log(Math.exp(2*Math.PI*alpha/beta)-1))/alpha
+							const lineWidth=2
+							const t0=(Math.log(lineWidth)-Math.log(B2)/2-Math.log(Math.exp(2*Math.PI*alpha/beta)-1))/alpha
 							//const t1=(Math.log(R2)-Math.log(A2))/(2*alpha)
-							let t=t0
 							ctx.beginPath()
+							const e0=Math.exp(alpha*t0)
+							const nSegments=Math.ceil(B*e0*2*Math.PI)
+							for (let i=0;i<nSegments;i++) {
+								const t=2*Math.PI*i/nSegments
+								const c0=Math.cos(t)
+								const s0=Math.sin(t)
+								ctx[i?'lineTo':'moveTo'](
+									+e0*(kxc*c0+kxs*s0),
+									-e0*(kyc*c0+kys*s0)
+								)
+							}
+							ctx.closePath()
+							ctx.stroke()
+							ctx.fill()
+							ctx.beginPath()
+							let t=t0
 							for (let i=0;i<iterationLimit;i++) {
 								const e=Math.exp(alpha*t)
 								const c=Math.cos(beta*t)
@@ -351,7 +368,7 @@ class LhcPlot {
 					}
 					ctx.save()
 					ctx.lineWidth=2
-					ctx.strokeStyle=color
+					ctx.strokeStyle=ctx.fillStyle=color
 					if (matrix.im1==0 && matrix.re1!=matrix.re2) {
 						drawNodalSolution()
 					} else if (matrix.im1!=0) {
