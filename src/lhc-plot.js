@@ -309,18 +309,23 @@ class LhcPlot {
 						const y1=xxyy[2], y2=xxyy[3]
 						const k1=+(x2*y0-x0*y2)/(x2*y1-x1*y2)
 						const k2=-(x1*y0-x0*y1)/(x2*y1-x1*y2)
-						if (alpha>0) {
+						if (alpha>0 && (k1!=0 || k2!=0)) {
 							const kxc=k1*x1+k2*x2
 							const kxs=k2*x1-k1*x2
 							const kyc=k1*y1+k2*y2
 							const kys=k2*y1-k1*y2
-							let A2=kxc*kxc+kyc*kyc
-							let B2=kxs*kxs+kys*kys
-							if (A2>B2) {
-								const t=A2
-								A2=B2
-								B2=t
+							const calculateSemiaxes=()=>{ // https://en.wikipedia.org/wiki/Ellipse#Canonical_form
+								const A=kys*kys+kyc*kyc, B=-2*(kxs*kys+kxc*kyc), C=kxs*kxs+kxc*kxc
+								const f=kxc*kys-kxs*kyc
+								const F=-f*f
+								const DIS=B*B-4*A*C
+								const A2=2*DIS*F*(A+C-Math.sqrt((A-C)*(A-C)+B*B))/(DIS*DIS)
+								const B2=2*DIS*F*(A+C+Math.sqrt((A-C)*(A-C)+B*B))/(DIS*DIS)
+								return [A2,B2] // TODO relative axes lengths don't depend on initial conditions, this calculation should be simpler
 							}
+							const A2B2=calculateSemiaxes()
+							const A2=A2B2[0]
+							const B2=A2B2[1]
 							const B=Math.sqrt(B2)
 							const R2=xRange*xRange+yRange*yRange
 							const t0=-(Math.log(B2)/2+Math.log(Math.exp(2*Math.PI*alpha/beta)-1))/alpha
