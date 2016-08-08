@@ -293,7 +293,12 @@ class LhcPlot {
 						if (lambda1>0) { // node
 							let T1=0
 							let T2=0
-							const dT1=1/Math.max(Math.abs(k1*x1),Math.abs(k2*x2)) // TODO why y is not used?
+							const dT1=Math.min( // step size is controlled by slow direction
+								1/Math.abs(k1*x1),
+								1/Math.abs(k1*y1)//,
+								//Math.pow(Math.abs(k2*x2),-lambda1/lambda2),
+								//Math.pow(Math.abs(k2*y2),-lambda1/lambda2)
+							)
 							ctx.beginPath()
 							ctx.moveTo(0,0)
 							for (let i=0;i<iterationLimit;i++) {
