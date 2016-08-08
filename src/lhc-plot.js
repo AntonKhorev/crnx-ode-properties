@@ -262,7 +262,7 @@ class LhcPlot {
 				}
 				const drawSolution=(x0,y0,color)=>{
 					const iterationLimit=100*Math.max(xRange,yRange)
-					const drawNodalSolution=()=>{
+					const drawSaddleOrNodeSolution=()=>{
 						let lambda1,lambda2
 						if (matrix.re1<=matrix.re2) {
 							lambda1=matrix.re1
@@ -289,10 +289,11 @@ class LhcPlot {
 						}
 						const k1=+(x2*y0-x0*y2)/(x2*y1-x1*y2)
 						const k2=-(x1*y0-x0*y1)/(x2*y1-x1*y2)
-						if (lambda1>0 && k1!=0 && k2!=0) {
+						if (k1==0 || k2==0) return
+						if (lambda1>0) { // node
 							let T1=0
 							let T2=0
-							const dT1=1/Math.max(Math.abs(k1*x1),Math.abs(k2*x2))
+							const dT1=1/Math.max(Math.abs(k1*x1),Math.abs(k2*x2)) // TODO why y is not used?
 							ctx.beginPath()
 							ctx.moveTo(0,0)
 							for (let i=0;i<iterationLimit;i++) {
@@ -306,6 +307,35 @@ class LhcPlot {
 									(k1*x1*T1+k2*x2*T2)*Math.sign(k2*x2)>xRange ||
 									(k1*y1*T1+k2*y2*T2)*Math.sign(k2*y2)>yRange
 								) break
+							}
+							ctx.stroke()
+						} else if (lambda1<0 && lambda2>0) { // saddle
+							const t0=Math.min(
+								(Math.log(xRange)-Math.log(Math.abs(k1*x1)))/lambda1,
+								(Math.log(yRange)-Math.log(Math.abs(k1*y1)))/lambda1
+							)
+							const t1=Math.min(
+								(Math.log(xRange)-Math.log(Math.abs(k2*x2)))/lambda2,
+								(Math.log(yRange)-Math.log(Math.abs(k2*y2)))/lambda2
+							)
+							let t=t0
+							//const dt=Math.min(-1/lambda1,1/lambda2)
+							ctx.beginPath()
+							for (let i=0;i<iterationLimit;i++) {
+								const ke1=k1*Math.exp(lambda1*t)
+								const ke2=k2*Math.exp(lambda2*t)
+								ctx[i?'lineTo':'moveTo'](
+									+(x1*ke1+x2*ke2),
+									-(y1*ke1+y2*ke2)
+								)
+								if (t>t1) break
+								const dt=Math.min(
+									1/Math.abs(x1*ke1*lambda1),
+									1/Math.abs(y1*ke1*lambda1),
+									1/Math.abs(x1*ke2*lambda2),
+									1/Math.abs(y1*ke2*lambda2)
+								)
+								t+=dt
 							}
 							ctx.stroke()
 						}
@@ -386,7 +416,7 @@ class LhcPlot {
 					ctx.lineWidth=2
 					ctx.strokeStyle=ctx.fillStyle=color
 					if (matrix.im1==0 && matrix.re1!=matrix.re2) {
-						drawNodalSolution()
+						drawSaddleOrNodeSolution()
 					} else if (matrix.im1!=0) {
 						drawSpiralSolution()
 					}
