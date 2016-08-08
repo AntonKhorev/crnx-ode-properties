@@ -275,7 +275,7 @@ class LhcPlot {
 						let x1=xy1[0], y1=xy1[1]
 						const xy2=matrix.getEigenvector(lambda2)
 						let x2=xy2[0], y2=xy2[1]
-						if (lambda2<0) {
+						if (lambda2<=0) {
 							let t
 							t=lambda1
 							lambda1=-lambda2
