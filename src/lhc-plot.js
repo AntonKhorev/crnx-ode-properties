@@ -360,11 +360,28 @@ class LhcPlot {
 						const y1=xxyy[2], y2=xxyy[3]
 						const k1=+(x2*y0-x0*y2)/(x2*y1-x1*y2)
 						const k2=-(x1*y0-x0*y1)/(x2*y1-x1*y2)
-						if (alpha!=0 && (k1!=0 || k2!=0)) {
-							const kxc=k1*x1+k2*x2
-							const kxs=k2*x1-k1*x2
-							const kyc=k1*y1+k2*y2
-							const kys=k2*y1-k1*y2
+						if (k1==0 && k2==0) return
+						const kxc=k1*x1+k2*x2
+						const kxs=k2*x1-k1*x2
+						const kyc=k1*y1+k2*y2
+						const kys=k2*y1-k1*y2
+						if (alpha==0) { // center
+							ctx.beginPath()
+							const dt=1/Math.max(kxc,kyc,kxs,kys)
+							let t=0
+							for (let i=0;i<iterationLimit;i++) {
+								const c=Math.cos(t)
+								const s=Math.sin(t)
+								ctx[i?'lineTo':'moveTo'](
+									+(kxc*c+kxs*s),
+									-(kyc*c+kys*s)
+								)
+								t+=dt
+								if (t>=2*Math.PI) break
+							}
+							ctx.closePath()
+							ctx.stroke()
+						} else { // spiral
 							const calculateSemiaxes=()=>{ // https://en.wikipedia.org/wiki/Ellipse#Canonical_form
 								const A=kys*kys+kyc*kyc, B=-2*(kxs*kys+kxc*kyc), C=kxs*kxs+kxc*kxc
 								const f=kxc*kys-kxs*kyc
