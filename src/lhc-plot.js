@@ -338,6 +338,19 @@ class LhcPlot {
 								t+=dt
 							}
 							ctx.stroke()
+						} else if (lambda1==0 && lambda2>0) { // comb
+							// TODO allow k1 or k2 == 0
+							ctx.beginPath()
+							ctx.moveTo(
+								+(x1*k1),
+								-(y1*k1)
+							)
+							const k2T=Math.max(Math.abs(xRange/x2),Math.abs(yRange/y2))
+							ctx.lineTo(
+								+(x1*k1+x2*k2T*Math.sign(k2)),
+								-(y1*k1+y2*k2T*Math.sign(k2))
+							)
+							ctx.stroke()
 						}
 					}
 					const drawSpiralSolution=()=>{
