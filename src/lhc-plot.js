@@ -272,9 +272,21 @@ class LhcPlot {
 							lambda2=matrix.re1
 						}
 						const xy1=matrix.getEigenvector(lambda1)
-						const x1=xy1[0], y1=xy1[1]
+						let x1=xy1[0], y1=xy1[1]
 						const xy2=matrix.getEigenvector(lambda2)
-						const x2=xy2[0], y2=xy2[1]
+						let x2=xy2[0], y2=xy2[1]
+						if (lambda2<0) {
+							let t
+							t=lambda1
+							lambda1=-lambda2
+							lambda2=-t
+							t=x1
+							x1=x2
+							x2=t
+							t=y1
+							y1=y2
+							y2=t
+						}
 						const k1=+(x2*y0-x0*y2)/(x2*y1-x1*y2)
 						const k2=-(x1*y0-x0*y1)/(x2*y1-x1*y2)
 						if (lambda1>0 && k1!=0 && k2!=0) {
