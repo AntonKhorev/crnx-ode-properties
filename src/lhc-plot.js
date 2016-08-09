@@ -310,16 +310,22 @@ class LhcPlot {
 							}
 							ctx.stroke()
 						} else if (lambda1<0 && lambda2>0) { // saddle
-							const t0=Math.min(
-								(Math.log(xRange)-Math.log(Math.abs(k1*x1)))/lambda1,
-								(Math.log(yRange)-Math.log(Math.abs(k1*y1)))/lambda1
-							)
-							const t1=Math.min(
-								(Math.log(xRange)-Math.log(Math.abs(k2*x2)))/lambda2,
-								(Math.log(yRange)-Math.log(Math.abs(k2*y2)))/lambda2
-							)
-							let t=t0
-							//const dt=Math.min(-1/lambda1,1/lambda2)
+							let t=0 // assumes starting point is in viewport
+							for (let i=0;i<iterationLimit;i++) {
+								const ke1=k1*Math.exp(lambda1*t)
+								const ke2=k2*Math.exp(lambda2*t)
+								if (
+									(x1*ke1+x2*ke2)*Math.sign(x1*k1)>xRange ||
+									(y1*ke1+y2*ke2)*Math.sign(y1*k1)>yRange
+								) break
+								const dt=Math.min(
+									1/Math.abs(x1*ke1*lambda1),
+									1/Math.abs(y1*ke1*lambda1),
+									1/Math.abs(x1*ke2*lambda2),
+									1/Math.abs(y1*ke2*lambda2)
+								)
+								t-=dt
+							}
 							ctx.beginPath()
 							for (let i=0;i<iterationLimit;i++) {
 								const ke1=k1*Math.exp(lambda1*t)
@@ -328,7 +334,10 @@ class LhcPlot {
 									+(x1*ke1+x2*ke2),
 									-(y1*ke1+y2*ke2)
 								)
-								if (t>t1) break
+								if (t>0 && (
+									(x1*ke1+x2*ke2)*Math.sign(x1*k2)>xRange ||
+									(y1*ke1+y2*ke2)*Math.sign(y1*k2)>yRange
+								)) break
 								const dt=Math.min(
 									1/Math.abs(x1*ke1*lambda1),
 									1/Math.abs(y1*ke1*lambda1),
