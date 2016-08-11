@@ -60,28 +60,9 @@ class LhcPlot {
 				const height=$trdetCanvas[0].height
 				const xRange=width/2
 				const yRange=height/2
-				const drawRegions=()=>{
-					ctx.save()
-					ctx.lineWidth=2
-					ctx.beginPath()
-					ctx.moveTo(-xRange,0)
-					ctx.lineTo(+xRange,0)
-					ctx.moveTo(0,-yRange)
-					ctx.lineTo(0,0)
-					let first=true
-					for (let x=-xRange;x<=+xRange;x++) {
-						const t=x*trRange/xRange
-						const d=t*t/4
-						const y=-d*yRange/detRange
-						ctx[first?'moveTo':'lineTo'](x,y)
-						first=false
-					}
-					ctx.stroke()
-					ctx.restore()
-				}
-				const drawAreaHighlight=()=>{
-					const D=matrix.det
-					const T=matrix.tr
+				const D=matrix.det
+				const T=matrix.tr
+				const drawRegionAreas=()=>{
 					ctx.save()
 					ctx.fillStyle='#FCC'
 					if (D<0) {
@@ -106,6 +87,63 @@ class LhcPlot {
 						ctx.closePath()
 						ctx.fill()
 					}
+					ctx.restore()
+				}
+				const drawRegionLines=()=>{
+					ctx.save()
+					ctx.lineWidth=2
+					ctx.beginPath()
+					ctx.moveTo(-xRange,0)
+					ctx.lineTo(+xRange,0)
+					ctx.moveTo(0,-yRange)
+					ctx.lineTo(0,0)
+					let first=true
+					for (let x=-xRange;x<=+xRange;x++) {
+						const t=x*trRange/xRange
+						const d=t*t/4
+						const y=-d*yRange/detRange
+						ctx[first?'moveTo':'lineTo'](x,y)
+						first=false
+					}
+					ctx.moveTo(-2,-2)
+					ctx.lineTo(-2,+2)
+					ctx.lineTo(+2,+2)
+					ctx.lineTo(+2,-2)
+					ctx.closePath()
+					ctx.stroke()
+					const drawHighlight=()=>{
+						if (D==0 && T<0) {
+							ctx.beginPath()
+							ctx.moveTo(-xRange,0)
+							ctx.lineTo(0,0)
+							ctx.stroke()
+						} else if (D==0 && T>0) {
+							ctx.beginPath()
+							ctx.moveTo(+xRange,0)
+							ctx.lineTo(0,0)
+							ctx.stroke()
+						} else if (D>0 && T==0) {
+							ctx.beginPath()
+							ctx.moveTo(0,-yRange)
+							ctx.lineTo(0,0)
+							ctx.stroke()
+						} else if (D==0 && T==0) {
+							ctx.beginPath()
+							ctx.moveTo(-2,-2)
+							ctx.lineTo(-2,+2)
+							ctx.lineTo(+2,+2)
+							ctx.lineTo(+2,-2)
+							ctx.closePath()
+							ctx.stroke()
+						}
+					}
+					ctx.lineCap='round'
+					ctx.lineWidth=4
+					ctx.strokeStyle='#F88'
+					drawHighlight()
+					ctx.lineWidth=2
+					ctx.strokeStyle='#400'
+					drawHighlight()
 					ctx.restore()
 				}
 				const drawPosition=()=>{
@@ -156,8 +194,8 @@ class LhcPlot {
 				ctx.fillStyle='#FFF'
 				ctx.fillRect(0,0,width,height)
 				ctx.translate(xRange,yRange)
-				drawAreaHighlight()
-				drawRegions()
+				drawRegionAreas()
+				drawRegionLines()
 				drawPosition()
 				ctx.restore()
 			}
