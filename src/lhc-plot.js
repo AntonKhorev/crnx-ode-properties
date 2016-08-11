@@ -529,8 +529,12 @@ class LhcPlot {
 							x1=-x1
 							y1=-y1
 						}
-						if (lambda==0) { // parallel lines
-							if (x1==0 && y1==0) return
+						if (lambda==0 && x1==0 && y1==0) { // everywhere fixed
+							const fixedPointSize=3
+							ctx.beginPath()
+							ctx.arc(x0,y0,fixedPointSize,0,2*Math.PI)
+							ctx.fill()
+						} if (lambda==0) { // parallel lines
 							const t0=Math.min(
 								(-Math.sign(x1)*xRange-x0)/x1,
 								(-Math.sign(y1)*yRange-y0)/y1
