@@ -326,6 +326,12 @@ class LhcPlot {
 				}
 				const drawSolution=(x0,y0,color)=>{
 					const iterationLimit=100*Math.max(xRange,yRange)
+					const drawFixedPoint=()=>{
+						const fixedPointSize=3
+						ctx.beginPath()
+						ctx.arc(x0,y0,fixedPointSize,0,2*Math.PI)
+						ctx.fill()
+					}
 					const drawSaddleOrNodeSolution=()=>{
 						let lambda1,lambda2
 						if (matrix.re1<=matrix.re2) {
@@ -353,8 +359,8 @@ class LhcPlot {
 						}
 						const k1=+(x2*y0-x0*y2)/(x2*y1-x1*y2)
 						const k2=-(x1*y0-x0*y1)/(x2*y1-x1*y2)
-						if (k1==0 || k2==0) return
 						if (lambda1>0) { // node
+							if (k1==0 && k2==0) return
 							let T1=0
 							let T2=0
 							const dT1=1/Math.max(Math.abs(k1*x1),Math.abs(k1*y1)) // step size is controlled by slow direction
@@ -374,6 +380,7 @@ class LhcPlot {
 							}
 							ctx.stroke()
 						} else if (lambda1<0 && lambda2>0) { // saddle
+							if (k1==0 || k2==0) return // TODO special case of straight line
 							let t=0 // assumes starting point is in viewport
 							for (let i=0;i<iterationLimit;i++) {
 								const ke1=k1*Math.exp(lambda1*t)
@@ -412,22 +419,25 @@ class LhcPlot {
 							}
 							ctx.stroke()
 						} else if (lambda1==0 && lambda2>0) { // comb
-							// TODO allow k1 or k2 == 0
-							const T=Math.min(
-								(Math.sign(x2*k2)*xRange-x1*k1)/(x2*k2),
-								(Math.sign(y2*k2)*xRange-y1*k1)/(y2*k2)
-							)
-							if (T>0) {
-								ctx.beginPath()
-								ctx.moveTo(
-									+(x1*k1),
-									-(y1*k1)
+							if (k2==0) {
+								drawFixedPoint()
+							} else {
+								const T=Math.min(
+									(Math.sign(x2*k2)*xRange-x1*k1)/(x2*k2),
+									(Math.sign(y2*k2)*xRange-y1*k1)/(y2*k2)
 								)
-								ctx.lineTo(
-									+(x1*k1+x2*k2*T),
-									-(y1*k1+y2*k2*T)
-								)
-								ctx.stroke()
+								if (T>0) {
+									ctx.beginPath()
+									ctx.moveTo(
+										+(x1*k1),
+										-(y1*k1)
+									)
+									ctx.lineTo(
+										+(x1*k1+x2*k2*T),
+										-(y1*k1+y2*k2*T)
+									)
+									ctx.stroke()
+								}
 							}
 						}
 					}
@@ -530,10 +540,7 @@ class LhcPlot {
 							y1=-y1
 						}
 						if (lambda==0 && x1==0 && y1==0) { // everywhere fixed
-							const fixedPointSize=3
-							ctx.beginPath()
-							ctx.arc(x0,y0,fixedPointSize,0,2*Math.PI)
-							ctx.fill()
+							drawFixedPoint()
 						} if (lambda==0) { // parallel lines
 							const t0=Math.min(
 								(-Math.sign(x1)*xRange-x0)/x1,
