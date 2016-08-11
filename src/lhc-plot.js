@@ -91,59 +91,55 @@ class LhcPlot {
 				}
 				const drawRegionLines=()=>{
 					ctx.save()
-					ctx.lineWidth=2
-					ctx.beginPath()
-					ctx.moveTo(-xRange,0)
-					ctx.lineTo(+xRange,0)
-					ctx.moveTo(0,-yRange)
-					ctx.lineTo(0,0)
-					let first=true
-					for (let x=-xRange;x<=+xRange;x++) {
-						const t=x*trRange/xRange
-						const d=t*t/4
-						const y=-d*yRange/detRange
-						ctx[first?'moveTo':'lineTo'](x,y)
-						first=false
-					}
-					ctx.moveTo(-2,-2)
-					ctx.lineTo(-2,+2)
-					ctx.lineTo(+2,+2)
-					ctx.lineTo(+2,-2)
-					ctx.closePath()
-					ctx.stroke()
-					const drawHighlight=()=>{
-						if (D==0 && T<0) {
-							ctx.beginPath()
+					const drawRegionLinesOnce=(all)=>{
+						const drawParabola=()=>{
+							for (let x=0;x<=+xRange;x++) {
+								const t=x*trRange/xRange
+								const d=t*t/4
+								const y=-d*yRange/detRange
+								ctx[x?'lineTo':'moveTo'](x,y)
+							}
+						}
+						ctx.beginPath()
+						if (all || (D==0 && T<0)) {
 							ctx.moveTo(-xRange,0)
 							ctx.lineTo(0,0)
-							ctx.stroke()
-						} else if (D==0 && T>0) {
-							ctx.beginPath()
+						}
+						if (all || (D==0 && T>0)) {
 							ctx.moveTo(+xRange,0)
 							ctx.lineTo(0,0)
-							ctx.stroke()
-						} else if (D>0 && T==0) {
-							ctx.beginPath()
+						}
+						if (all || (D>0 && T==0)) {
 							ctx.moveTo(0,-yRange)
 							ctx.lineTo(0,0)
-							ctx.stroke()
-						} else if (D==0 && T==0) {
-							ctx.beginPath()
+						}
+						if (all || (4*D==T*T && T<0)) {
+							ctx.save()
+							ctx.scale(-1,1)
+							drawParabola()
+							ctx.restore()
+						}
+						if (all || (4*D==T*T && T>0)) {
+							drawParabola()
+						}
+						if (all || (D==0 && T==0)) {
 							ctx.moveTo(-2,-2)
 							ctx.lineTo(-2,+2)
 							ctx.lineTo(+2,+2)
 							ctx.lineTo(+2,-2)
 							ctx.closePath()
-							ctx.stroke()
 						}
+						ctx.stroke()
 					}
+					ctx.lineWidth=2
+					drawRegionLinesOnce(true)
 					ctx.lineCap='round'
 					ctx.lineWidth=4
 					ctx.strokeStyle='#F88'
-					drawHighlight()
+					drawRegionLinesOnce()
 					ctx.lineWidth=2
 					ctx.strokeStyle='#400'
-					drawHighlight()
+					drawRegionLinesOnce()
 					ctx.restore()
 				}
 				const drawPosition=()=>{
