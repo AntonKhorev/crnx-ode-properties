@@ -131,9 +131,9 @@ class LhcPlot {
 						}
 						ctx.stroke()
 					}
+					ctx.lineCap='square'
 					ctx.lineWidth=2
 					drawRegionLinesOnce(true)
-					ctx.lineCap='round'
 					ctx.lineWidth=4
 					ctx.strokeStyle='#F88'
 					drawRegionLinesOnce()
@@ -664,13 +664,20 @@ class LhcPlot {
 					const dClose=2*dRange/(h/2)
 					let t=trim(+(ev.offsetX-w/2+0.5)/(w/2)*tRange)
 					let d=trim(-(ev.offsetY-h/2+0.5)/(h/2)*dRange)
+					const p=t*t/4
 					if (Math.abs(d)<=dClose && Math.abs(t)<=tClose) {
 						t=0
 						d=0
-					} else if (Math.abs(d)<=dClose) {
-						d=0
 					} else if (d>0 && Math.abs(t)<=tClose) {
 						t=0
+					} else if (d<0 && d>=-dClose) {
+						d=0
+					} else if (d-p>0 && d-p<=dClose) {
+						d=p
+					} else if (d>0 && d<=dClose) {
+						d=0
+					} else if (d-p<0 && d-p>=-dClose) {
+						d=p
 					}
 					matrix.setTrdetExternally(t,d)
 					updateDetails()
