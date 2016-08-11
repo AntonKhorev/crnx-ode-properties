@@ -522,7 +522,6 @@ class LhcPlot {
 					}
 					const drawDefectiveSolution=()=>{
 						let lambda=matrix.re1
-						if (lambda==0) return
 						let x1=(matrix.a-lambda)*x0+matrix.b*y0
 						let y1=matrix.c*x0+(matrix.d-lambda)*y0
 						if (lambda<0) {
@@ -530,23 +529,45 @@ class LhcPlot {
 							x1=-x1
 							y1=-y1
 						}
-						ctx.beginPath()
-						ctx.moveTo(0,0)
-						let T=0
-						const dT=1/Math.max(Math.abs(x0),Math.abs(y0))
-						for (let i=0;i<iterationLimit;i++) {
-							T+=dT
-							const t=Math.log(T)/lambda
-							ctx.lineTo(
-								+T*(x0+t*x1),
-								-T*(y0+t*y1)
+						if (lambda==0) { // parallel lines
+							if (x1==0 && y1==0) return
+							const t0=Math.min(
+								(-Math.sign(x1)*xRange-x0)/x1,
+								(-Math.sign(y1)*yRange-y0)/y1
 							)
-							if (
-								T*(x0+t*x1)*Math.sign(x0)>xRange ||
-								T*(y0+t*y1)*Math.sign(y0)>yRange
-							) break
+							const t1=Math.max(
+								(+Math.sign(x1)*xRange-x0)/x1,
+								(+Math.sign(y1)*yRange-y0)/y1
+							)
+							ctx.beginPath()
+							ctx.moveTo(
+								+(x0+t0*x1),
+								-(y0+t0*y1)
+							)
+							ctx.lineTo(
+								+(x0+t1*x1),
+								-(y0+t1*y1)
+							)
+							ctx.stroke()
+						} else { // star or defective node
+							ctx.beginPath()
+							ctx.moveTo(0,0)
+							let T=0
+							const dT=1/Math.max(Math.abs(x0),Math.abs(y0))
+							for (let i=0;i<iterationLimit;i++) {
+								T+=dT
+								const t=Math.log(T)/lambda
+								ctx.lineTo(
+									+T*(x0+t*x1),
+									-T*(y0+t*y1)
+								)
+								if (
+									T*(x0+t*x1)*Math.sign(x0)>xRange ||
+									T*(y0+t*y1)*Math.sign(y0)>yRange
+								) break
+							}
+							ctx.stroke()
 						}
-						ctx.stroke()
 					}
 					ctx.save()
 					ctx.lineWidth=2
