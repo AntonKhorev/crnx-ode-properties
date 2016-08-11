@@ -520,11 +520,25 @@ class LhcPlot {
 							ctx.stroke()
 						}
 					}
+					const drawDefectiveSolution=()=>{
+						if (matrix.b==0 && matrix.c==0 && matrix.re1!=0) { // star source
+							const r0=Math.sqrt(x0*x0+y0*y0)
+							const R=Math.sqrt(xRange*xRange+yRange*yRange)
+							if (r0>0) {
+								ctx.beginPath()
+								ctx.moveTo(0,0)
+								ctx.lineTo(x0*R/r0,y0*R/r0)
+								ctx.stroke()
+							}
+						}
+					}
 					ctx.save()
 					ctx.lineWidth=2
 					ctx.strokeStyle=ctx.fillStyle=color
 					if (matrix.im1==0 && matrix.re1!=matrix.re2) {
 						drawSaddleOrNodeSolution()
+					} else if (matrix.im1==0 && matrix.re1==matrix.re2) {
+						drawDefectiveSolution()
 					} else if (matrix.im1!=0) {
 						drawSpiralSolution()
 					}
