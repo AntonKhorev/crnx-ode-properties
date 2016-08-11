@@ -521,7 +521,9 @@ class LhcPlot {
 						}
 					}
 					const drawDefectiveSolution=()=>{
-						if (matrix.b==0 && matrix.c==0 && matrix.re1!=0) { // star source
+						let lambda=matrix.re1
+						if (lambda==0) return
+						if (matrix.b==0 && matrix.c==0) { // star source/sink
 							const r0=Math.sqrt(x0*x0+y0*y0)
 							const R=Math.sqrt(xRange*xRange+yRange*yRange)
 							if (r0>0) {
@@ -530,6 +532,31 @@ class LhcPlot {
 								ctx.lineTo(x0*R/r0,y0*R/r0)
 								ctx.stroke()
 							}
+						} else { // defective nodal source/sink
+							let x1=(matrix.a-lambda)*x0+matrix.b*y0
+							let y1=matrix.c*x0+(matrix.d-lambda)*y0
+							if (lambda<0) {
+								lambda=-lambda
+								x1=-x1
+								y1=-y1
+							}
+							ctx.beginPath()
+							ctx.moveTo(0,0)
+							let T=0
+							const dT=1/Math.max(Math.abs(x0),Math.abs(y0))
+							for (let i=0;i<iterationLimit;i++) {
+								T+=dT
+								const t=Math.log(T)/lambda
+								ctx.lineTo(
+									+T*(x0+t*x1),
+									-T*(y0+t*y1)
+								)
+								if (
+									T*(x0+t*x1)*Math.sign(x0)>xRange ||
+									T*(y0+t*y1)*Math.sign(y0)>yRange
+								) break
+							}
+							ctx.stroke()
 						}
 					}
 					ctx.save()
