@@ -286,12 +286,12 @@ class LhcPlot {
 						const yis=iconSize*y0
 						const drawEigenlineIcon=()=>{
 							const dir=Math.sign(icon)
-							const drawSquare=()=>{
+							const drawDiamond=()=>{
 								ctx.beginPath()
-								ctx.moveTo(xic+(-xis-yis),-(yic+(-yis+xis)))
-								ctx.lineTo(xic+(-xis+yis),-(yic+(-yis-xis)))
-								ctx.lineTo(xic+(+xis+yis),-(yic+(+yis-xis)))
-								ctx.lineTo(xic+(+xis-yis),-(yic+(+yis+xis)))
+								ctx.moveTo(xic-xis,-(yic-yis))
+								ctx.lineTo(xic+yis,-(yic-xis))
+								ctx.lineTo(xic+xis,-(yic+yis))
+								ctx.lineTo(xic-yis,-(yic+xis))
 								ctx.closePath()
 								ctx.fill()
 							}
@@ -304,7 +304,7 @@ class LhcPlot {
 								ctx.fill()
 							}
 							if (dir==0) {
-								drawSquare()
+								drawDiamond()
 							} else {
 								drawTriangle(0)
 								if (Math.abs(icon)>=2) {
