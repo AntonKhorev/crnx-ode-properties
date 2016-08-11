@@ -658,10 +658,21 @@ class LhcPlot {
 					const w=$canvas.width()
 					const h=$canvas.height()
 					const trim=(v)=>Number(v.toFixed(2))
-					matrix.setTrdetExternally(
-						trim(+(ev.offsetX-w/2+0.5)/(w/2)*matrix.getRange('tr')),
-						trim(-(ev.offsetY-h/2+0.5)/(h/2)*matrix.getRange('det'))
-					)
+					const tRange=matrix.getRange('tr')
+					const dRange=matrix.getRange('det')
+					const tClose=2*tRange/(w/2)
+					const dClose=2*dRange/(h/2)
+					let t=trim(+(ev.offsetX-w/2+0.5)/(w/2)*tRange)
+					let d=trim(-(ev.offsetY-h/2+0.5)/(h/2)*dRange)
+					if (Math.abs(d)<=dClose && Math.abs(t)<=tClose) {
+						t=0
+						d=0
+					} else if (Math.abs(d)<=dClose) {
+						d=0
+					} else if (d>0 && Math.abs(t)<=tClose) {
+						t=0
+					}
+					matrix.setTrdetExternally(t,d)
 					updateDetails()
 				})
 			).each(detailsPolyfill),
