@@ -2,6 +2,7 @@
 
 const detailsPolyfill=require('crnx-base/details-polyfill')
 const Matrix=require('./lhc-plot/matrix')
+const TrdetCanvas=require('./lhc-plot/trdet-canvas')
 
 // works like this: http://mathlets.org/mathlets/linear-phase-portraits-matrix-entry/
 class LhcPlot {
@@ -10,7 +11,7 @@ class LhcPlot {
 		const $numberInputs={}
 		const $rangeInputs={}
 		let $equilibriumType
-		let $trdetCanvas,trdetCanvasContext
+		const trdetCanvas=new TrdetCanvas
 		let $phaseCanvas,phaseCanvasContext
 		const updateDetails=()=>{
 			const updateEquilibriumType=()=>{
@@ -49,152 +50,6 @@ class LhcPlot {
 					}
 				}
 				$equilibriumType.text(getEquilibriumType())
-			}
-			const redrawTrdetCanvas=()=>{
-				const crosshairSize=10
-				const pointerSize=5
-				const pointerMargin=3
-				const trRange=matrix.getRange('tr')
-				const detRange=matrix.getRange('det')
-				const ctx=trdetCanvasContext
-				const width=$trdetCanvas[0].width
-				const height=$trdetCanvas[0].height
-				const xRange=width/2
-				const yRange=height/2
-				const D=matrix.det
-				const T=matrix.tr
-				const drawRegionAreas=()=>{
-					ctx.save()
-					ctx.fillStyle='#FCC'
-					if (D<0) {
-						ctx.fillRect(-xRange,0,xRange*2,yRange)
-					} else if ((D>0 && 4*D<T*T) || (4*D>T*T) && T!=0) {
-						if (T<0) {
-							ctx.scale(-1,1)
-						}
-						ctx.beginPath()
-						if (4*D>T*T) {
-							ctx.moveTo(xRange,-yRange)
-							ctx.lineTo(0,-yRange)
-						} else {
-							ctx.moveTo(xRange,0)
-						}
-						for (let x=0;x<=xRange;x++) {
-							const t=x*trRange/xRange
-							const d=t*t/4
-							const y=-d*yRange/detRange
-							ctx.lineTo(x,y)
-						}
-						ctx.closePath()
-						ctx.fill()
-					}
-					ctx.restore()
-				}
-				const drawRegionLines=()=>{
-					ctx.save()
-					const drawRegionLinesOnce=(all)=>{
-						const drawParabola=()=>{
-							for (let x=0;x<=+xRange;x++) {
-								const t=x*trRange/xRange
-								const d=t*t/4
-								const y=-d*yRange/detRange
-								ctx[x?'lineTo':'moveTo'](x,y)
-							}
-						}
-						ctx.beginPath()
-						if (all || (D==0 && T<0)) {
-							ctx.moveTo(-xRange,0)
-							ctx.lineTo(0,0)
-						}
-						if (all || (D==0 && T>0)) {
-							ctx.moveTo(+xRange,0)
-							ctx.lineTo(0,0)
-						}
-						if (all || (D>0 && T==0)) {
-							ctx.moveTo(0,-yRange)
-							ctx.lineTo(0,0)
-						}
-						if (all || (4*D==T*T && T<0)) {
-							ctx.save()
-							ctx.scale(-1,1)
-							drawParabola()
-							ctx.restore()
-						}
-						if (all || (4*D==T*T && T>0)) {
-							drawParabola()
-						}
-						if (all || (D==0 && T==0)) {
-							ctx.moveTo(-2,-2)
-							ctx.lineTo(-2,+2)
-							ctx.lineTo(+2,+2)
-							ctx.lineTo(+2,-2)
-							ctx.closePath()
-						}
-						ctx.stroke()
-					}
-					ctx.lineCap='square'
-					ctx.lineWidth=2
-					drawRegionLinesOnce(true)
-					ctx.lineWidth=4
-					ctx.strokeStyle='#F88'
-					drawRegionLinesOnce()
-					ctx.lineWidth=2
-					ctx.strokeStyle='#400'
-					drawRegionLinesOnce()
-					ctx.restore()
-				}
-				const drawPosition=()=>{
-					ctx.save()
-					ctx.strokeStyle=ctx.fillStyle='#F00'
-					let x=matrix.tr/trRange*xRange
-					let y=-matrix.det/detRange*yRange
-					if (x<0) {
-						ctx.scale(-1,1)
-						x=-x
-					}
-					if (y<0) {
-						ctx.scale(1,-1)
-						y=-y
-					}
-					if (x>xRange) {
-						ctx.transform(0,1,1,0,0,0)
-						const t=x
-						x=y
-						y=t
-					}
-					if ((x>xRange && y>yRange-pointerMargin) || (x>xRange-pointerMargin && y>yRange)) {
-						ctx.beginPath()
-						ctx.moveTo(xRange-pointerMargin,yRange-pointerMargin)
-						ctx.lineTo(xRange-pointerMargin,yRange-pointerMargin-pointerSize*Math.SQRT2)
-						ctx.lineTo(xRange-pointerMargin-pointerSize*Math.SQRT2,yRange-pointerMargin)
-						ctx.closePath()
-						ctx.fill()
-					} else if (y>xRange) {
-						ctx.beginPath()
-						ctx.moveTo(x,yRange-pointerMargin)
-						ctx.lineTo(x+pointerSize,yRange-pointerMargin-pointerSize)
-						ctx.lineTo(x-pointerSize,yRange-pointerMargin-pointerSize)
-						ctx.closePath()
-						ctx.fill()
-					} else {
-						const s=crosshairSize
-						ctx.beginPath()
-						ctx.moveTo(x-s,y)
-						ctx.lineTo(x+s,y)
-						ctx.moveTo(x,y-s)
-						ctx.lineTo(x,y+s)
-						ctx.stroke()
-					}
-					ctx.restore()
-				}
-				ctx.save()
-				ctx.fillStyle='#FFF'
-				ctx.fillRect(0,0,width,height)
-				ctx.translate(xRange,yRange)
-				drawRegionAreas()
-				drawRegionLines()
-				drawPosition()
-				ctx.restore()
 			}
 			const redrawPhaseCanvas=()=>{
 				const ctx=phaseCanvasContext
@@ -629,7 +484,7 @@ class LhcPlot {
 				$rangeInputs[cf].val(matrix[cf])
 			})
 			updateEquilibriumType()
-			redrawTrdetCanvas()
+			trdetCanvas.redraw(matrix)
 			redrawPhaseCanvas()
 		}
 		const getCoefInputs=coef=>{
@@ -727,7 +582,7 @@ class LhcPlot {
 			).each(detailsPolyfill),
 			$("<details>").append(
 				$("<summary class='bordered'>").append("<a href='https://en.wikipedia.org/wiki/Trace_(linear_algebra)'>tr</a>-<a href='https://en.wikipedia.org/wiki/Determinant'>det</a> plane"),
-				$trdetCanvas=$("<canvas width='246' height='246'>").on('mousedown mousemove',function(ev){
+				trdetCanvas.$output.on('mousedown mousemove',function(ev){
 					if (!ev.buttons&1) return
 					const $canvas=$(this)
 					const w=$canvas.width()
@@ -763,7 +618,6 @@ class LhcPlot {
 				$phaseCanvas=$("<canvas width='246' height='246'>")
 			).each(detailsPolyfill)
 		)
-		trdetCanvasContext=$trdetCanvas[0].getContext('2d')
 		phaseCanvasContext=$phaseCanvas[0].getContext('2d')
 		updateDetails()
 	}
