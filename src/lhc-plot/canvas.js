@@ -23,8 +23,8 @@ class Canvas {
 		}
 		ctx.save()
 		ctx.lineWidth=6
-		ctx.strokeStyle='rgba(0,0,0,0.1)'
-		ctx.fillStyle='rgba(0,0,0,0.15)'
+		ctx.strokeStyle='#DDD'
+		ctx.fillStyle='#CCC'
 		ctx.font='30px sans-serif'
 		drawAxis()
 		ctx.save()

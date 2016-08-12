@@ -143,9 +143,9 @@ class TrdetCanvas extends Canvas {
 		ctx.fillRect(0,0,this.width,this.height)
 		ctx.translate(xRange,yRange)
 		drawRegionAreas()
+		this.drawAxes('tr','det')
 		drawRegionLines()
 		drawPosition()
-		this.drawAxes('tr','det')
 		ctx.restore()
 	}
 }

@@ -416,6 +416,7 @@ class PhaseCanvas extends Canvas {
 		ctx.restore()
 		ctx.save()
 		ctx.translate(xRange,yRange)
+		this.drawAxes('x','y') // TODO get labels from notation
 		drawDirectionField()
 		if (matrix.im1==0) {
 			drawEigenline(matrix.re1,matrix.re2)
@@ -427,7 +428,6 @@ class PhaseCanvas extends Canvas {
 		drawSolution(-xRange/2,0,'#28F')
 		drawSolution(0,+yRange/2,'#0AF')
 		drawSolution(0,-yRange/2,'#08D')
-		this.drawAxes('x','y') // TODO get labels from notation
 		ctx.restore()
 	}
 }
