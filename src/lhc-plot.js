@@ -3,6 +3,7 @@
 const detailsPolyfill=require('crnx-base/details-polyfill')
 const Matrix=require('./lhc-plot/matrix')
 
+// works like this: http://mathlets.org/mathlets/linear-phase-portraits-matrix-entry/
 class LhcPlot {
 	constructor() {
 		const matrix=new Matrix
@@ -760,8 +761,7 @@ class LhcPlot {
 			$("<details>").append(
 				$("<summary class='bordered'>").append("<a href='https://en.wikipedia.org/wiki/Phase_space'>phase plane</a>"),
 				$phaseCanvas=$("<canvas width='246' height='246'>")
-			).each(detailsPolyfill),
-			$("<div class='note'>").append("plotting is not fully implemented yet, try to use <a href='http://mathlets.org/mathlets/linear-phase-portraits-matrix-entry/'>MIT Mathlet</a> instead")
+			).each(detailsPolyfill)
 		)
 		trdetCanvasContext=$trdetCanvas[0].getContext('2d')
 		phaseCanvasContext=$phaseCanvas[0].getContext('2d')
