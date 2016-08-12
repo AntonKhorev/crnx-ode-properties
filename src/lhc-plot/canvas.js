@@ -24,11 +24,18 @@ class Canvas {
 		ctx.save()
 		ctx.lineWidth=6
 		ctx.strokeStyle='rgba(0,0,0,0.1)'
+		ctx.fillStyle='rgba(0,0,0,0.15)'
+		ctx.font='30px sans-serif'
 		drawAxis()
 		ctx.save()
 		ctx.rotate(-Math.PI/2)
 		drawAxis()
 		ctx.restore()
+		ctx.textBaseline='middle'
+		ctx.fillText(xLabel,xAxisSize+10,0)
+		ctx.textBaseline='alphabetic'
+		ctx.textAlign='center'
+		ctx.fillText(yLabel,0,-yAxisSize-10)
 		ctx.restore()
 	}
 }
