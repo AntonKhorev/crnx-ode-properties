@@ -422,10 +422,18 @@ class LhcPlot {
 							if (k2==0) {
 								drawFixedPoint()
 							} else {
-								const T=Math.min(
-									(Math.sign(x2*k2)*xRange-x1*k1)/(x2*k2),
-									(Math.sign(y2*k2)*xRange-y1*k1)/(y2*k2)
-								)
+								const xNum=Math.sign(x2*k2)*xRange-x1*k1
+								const yNum=Math.sign(y2*k2)*yRange-y1*k1
+								const xDen=x2*k2
+								const yDen=y2*k2
+								let T=0
+								if (xDen!=0 && yDen!=0) {
+									T=Math.min(xNum/xDen,yNum/yDen)
+								} else if (xDen==0 && yDen!=0) {
+									T=yNum/yDen
+								} else if (xDen!=0 && yDen==0) {
+									T=xNum/xDen
+								}
 								if (T>0) {
 									ctx.beginPath()
 									ctx.moveTo(
