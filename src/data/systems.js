@@ -56,6 +56,33 @@ module.exports=(nt)=>({
 				content: [
 					`Solve \\(${nt.dd(nt.y)} = g(t,${nt.y}) \\).`,
 					`Substitute \\( ${nt.y} \\) into \\( ${nt.dd(nt.x)} = f(t,${nt.x},${nt.y}) \\).`,
+					{type:'example',content:[
+						`\\[ \\left\\{ \\begin{aligned}`+
+							`${nt.dd(nt.x)} &= 2 ${nt.y} - ${nt.x} \\\\`+
+							`${nt.dd(nt.y)} &= ${nt.y}`+
+						`\\end{aligned} \\right. \\]`,
+						`solve the second equation`,
+						`\\[ ${nt.y} = ${nt.y}_0 e^t \\]`,
+						`substitute \\( ${nt.y} \\) into the first equation`,
+						`\\[ ${nt.dd(nt.x)} = 2 ${nt.y}_0 e^t - ${nt.x} \\]`,
+						`solve the first equation`,
+						{type:'derivation',content:[
+							`solve the associated homogeneous equation \\( ${nt.dd(nt.x)} = - ${nt.x} \\)`,
+							`\\[ ${nt.x}_h = K e^{-t} \\]`,
+							`find a particular solution of \\( ${nt.dd(nt.x+'_p')} + ${nt.x}_p = 2 ${nt.y}_0 e^t \\)`,
+							{type:'derivation',content:[
+								`guess a solution`,
+								`\\[ ${nt.x}_p = \\alpha e^t \\]`,
+								`substitute the guess into the equation`,
+								`\\[ \\alpha e^t + \\alpha e^t = 2 ${nt.y}_0 e^t \\]`,
+								`\\[ \\alpha = ${nt.y}_0 \\]`,
+							]},
+							`\\[ ${nt.x}_p = ${nt.y}_0 e^t \\]`,
+							`\\[ ${nt.x} = ${nt.x}_p + ${nt.x}_h \\]`,
+							`\\[ ${nt.x} = ${nt.y}_0 e^t + K e^{-t} \\]`,
+						]},
+						`\\[ ${nt.x} = ${nt.y}_0 e^t + (${nt.x}_0 - ${nt.y}_0) e^{-t} \\]`,
+					]},
 				],
 			},
 		},

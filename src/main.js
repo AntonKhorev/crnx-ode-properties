@@ -137,7 +137,7 @@ $(function(){
 					return $("<div class='line'>").append(line)
 				} else if (typeof line == 'function') {
 					return line()
-				} else if (line.type=='derivation' || line.type=='proof' || line.type=='case') {
+				} else if (line.type=='derivation' || line.type=='proof' || line.type=='example' || line.type=='case') {
 					return $("<details>").append(
 						$("<summary>").append(line.title!==undefined ? line.title : line.type),
 						line.content.map(rec)
