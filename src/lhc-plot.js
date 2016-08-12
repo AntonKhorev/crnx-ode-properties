@@ -350,17 +350,25 @@ class LhcPlot {
 							t=lambda1
 							lambda1=-lambda2
 							lambda2=-t
-							t=x1
-							x1=x2
-							x2=t
-							t=y1
-							y1=y2
-							y2=t
+							t=x1; x1=x2; x2=t
+							t=y1; y1=y2; y2=t
 						}
-						const k1=+(x2*y0-x0*y2)/(x2*y1-x1*y2)
-						const k2=-(x1*y0-x0*y1)/(x2*y1-x1*y2)
+						let k1=+(x2*y0-x0*y2)/(x2*y1-x1*y2)
+						let k2=-(x1*y0-x0*y1)/(x2*y1-x1*y2)
+						if ((k1==0 && k2==0) || (lambda1==0 && k2==0)) {
+							drawFixedPoint()
+							return
+						} else if (k1==0 && lambda2!=0) {
+							lambda1=0 // trigger comb case below
+						} else if (k2==0 && lambda1!=0) {
+							lambda2=Math.abs(lambda1)
+							lambda1=0 // trigger comb case below
+							let t
+							t=x1; x1=x2; x2=t
+							t=y1; y1=y2; y2=t
+							t=k1; k1=k2; k2=t
+						}
 						if (lambda1>0) { // node
-							if (k1==0 && k2==0) return
 							let T1=0
 							let T2=0
 							const dT1=1/Math.max(Math.abs(k1*x1),Math.abs(k1*y1)) // step size is controlled by slow direction
@@ -380,7 +388,6 @@ class LhcPlot {
 							}
 							ctx.stroke()
 						} else if (lambda1<0 && lambda2>0) { // saddle
-							if (k1==0 || k2==0) return // TODO special case of straight line
 							let t=0 // assumes starting point is in viewport
 							for (let i=0;i<iterationLimit;i++) {
 								const ke1=k1*Math.exp(lambda1*t)
@@ -419,33 +426,29 @@ class LhcPlot {
 							}
 							ctx.stroke()
 						} else if (lambda1==0 && lambda2>0) { // comb
-							if (k2==0) {
-								drawFixedPoint()
-							} else {
-								const xNum=Math.sign(x2*k2)*xRange-x1*k1
-								const yNum=Math.sign(y2*k2)*yRange-y1*k1
-								const xDen=x2*k2
-								const yDen=y2*k2
-								let T=0
-								if (xDen!=0 && yDen!=0) {
-									T=Math.min(xNum/xDen,yNum/yDen)
-								} else if (xDen==0 && yDen!=0) {
-									T=yNum/yDen
-								} else if (xDen!=0 && yDen==0) {
-									T=xNum/xDen
-								}
-								if (T>0) {
-									ctx.beginPath()
-									ctx.moveTo(
-										+(x1*k1),
-										-(y1*k1)
-									)
-									ctx.lineTo(
-										+(x1*k1+x2*k2*T),
-										-(y1*k1+y2*k2*T)
-									)
-									ctx.stroke()
-								}
+							const xNum=Math.sign(x2*k2)*xRange-x1*k1
+							const yNum=Math.sign(y2*k2)*yRange-y1*k1
+							const xDen=x2*k2
+							const yDen=y2*k2
+							let t=0
+							if (xDen!=0 && yDen!=0) {
+								t=Math.min(xNum/xDen,yNum/yDen)
+							} else if (xDen==0 && yDen!=0) {
+								t=yNum/yDen
+							} else if (xDen!=0 && yDen==0) {
+								t=xNum/xDen
+							}
+							if (t>0) {
+								ctx.beginPath()
+								ctx.moveTo(
+									+(x1*k1),
+									-(y1*k1)
+								)
+								ctx.lineTo(
+									+(x1*k1+x2*k2*t),
+									-(y1*k1+y2*k2*t)
+								)
+								ctx.stroke()
 							}
 						}
 					}
