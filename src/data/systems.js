@@ -65,12 +65,10 @@ module.exports=(nt)=>({
 						`\\[ ${nt.y} = ${nt.y}_0 e^t \\]`,
 						`substitute \\( ${nt.y} \\) into the first equation`,
 						`\\[ ${nt.dd(nt.x)} = 2 ${nt.y}_0 e^t - ${nt.x} \\]`,
-						`solve the first equation`,
-						{type:'derivation',content:[
+						{type:'derivation',title:`solve the first equation`,content:[
 							`solve the associated homogeneous equation \\( ${nt.dd(nt.x)} = - ${nt.x} \\)`,
 							`\\[ ${nt.x}_h = K e^{-t} \\]`,
-							`find a particular solution of \\( ${nt.dd(nt.x+'_p')} + ${nt.x}_p = 2 ${nt.y}_0 e^t \\)`,
-							{type:'derivation',content:[
+							{type:'derivation',title:`find a particular solution of \\( ${nt.dd(nt.x+'_p')} + ${nt.x}_p = 2 ${nt.y}_0 e^t \\)`,content:[
 								`guess a solution`,
 								`\\[ ${nt.x}_p = \\alpha e^t \\]`,
 								`substitute the guess into the equation`,
