@@ -23,9 +23,8 @@ class Canvas {
 		}
 		ctx.save()
 		ctx.lineWidth=6
-		ctx.strokeStyle='#DDD'
-		ctx.fillStyle='#CCC'
-		ctx.font='30px sans-serif'
+		ctx.strokeStyle=ctx.fillStyle='#DDD'
+		ctx.font='900 30px sans-serif'
 		drawAxis()
 		ctx.save()
 		ctx.rotate(-Math.PI/2)
