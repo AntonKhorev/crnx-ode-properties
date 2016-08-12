@@ -326,6 +326,15 @@ class LhcPlot {
 				}
 				const drawSolution=(x0,y0,color)=>{
 					const iterationLimit=100*Math.max(xRange,yRange)
+					const fnOnFractions=(fn,xNum,xDen,yNum,yDen)=>{
+						if (xDen!=0 && yDen!=0) {
+							return fn(xNum/xDen,yNum/yDen)
+						} else if (xDen==0 && yDen!=0) {
+							return yNum/yDen
+						} else if (xDen!=0 && yDen==0) {
+							return xNum/xDen
+						}
+					}
 					const drawFixedPoint=()=>{
 						const fixedPointSize=3
 						ctx.beginPath()
@@ -426,18 +435,10 @@ class LhcPlot {
 							}
 							ctx.stroke()
 						} else if (lambda1==0 && lambda2>0) { // comb
-							const xNum=Math.sign(x2*k2)*xRange-x1*k1
-							const yNum=Math.sign(y2*k2)*yRange-y1*k1
-							const xDen=x2*k2
-							const yDen=y2*k2
-							let t=0
-							if (xDen!=0 && yDen!=0) {
-								t=Math.min(xNum/xDen,yNum/yDen)
-							} else if (xDen==0 && yDen!=0) {
-								t=yNum/yDen
-							} else if (xDen!=0 && yDen==0) {
-								t=xNum/xDen
-							}
+							const t=fnOnFractions(Math.min,
+								Math.sign(x2*k2)*xRange-x1*k1, x2*k2,
+								Math.sign(y2*k2)*yRange-y1*k1, y2*k2
+							)
 							if (t>0) {
 								ctx.beginPath()
 								ctx.moveTo(
@@ -553,13 +554,13 @@ class LhcPlot {
 						if (lambda==0 && x1==0 && y1==0) { // everywhere fixed
 							drawFixedPoint()
 						} if (lambda==0) { // parallel lines
-							const t0=Math.min(
-								(-Math.sign(x1)*xRange-x0)/x1,
-								(-Math.sign(y1)*yRange-y0)/y1
+							const t0=fnOnFractions(Math.min,
+								-Math.sign(x1)*xRange-x0, x1,
+								-Math.sign(y1)*yRange-y0, y1
 							)
-							const t1=Math.max(
-								(+Math.sign(x1)*xRange-x0)/x1,
-								(+Math.sign(y1)*yRange-y0)/y1
+							const t1=fnOnFractions(Math.max,
+								+Math.sign(x1)*xRange-x0, x1,
+								+Math.sign(y1)*yRange-y0, y1
 							)
 							ctx.beginPath()
 							ctx.moveTo(
