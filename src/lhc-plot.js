@@ -7,7 +7,7 @@ const PhaseCanvas=require('./lhc-plot/phase-canvas')
 
 // works like this: http://mathlets.org/mathlets/linear-phase-portraits-matrix-entry/
 class LhcPlot {
-	constructor() {
+	constructor(xLabel,yLabel) {
 		const matrix=new Matrix
 		const $numberInputs={}
 		const $rangeInputs={}
@@ -58,7 +58,7 @@ class LhcPlot {
 			})
 			updateEquilibriumType()
 			trdetCanvas.redraw(matrix)
-			phaseCanvas.redraw(matrix)
+			phaseCanvas.redraw(matrix,xLabel,yLabel)
 		}
 		const getCoefInputs=coef=>{
 			const isMatrixElement=coef.length==1

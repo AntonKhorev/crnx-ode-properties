@@ -3,7 +3,7 @@
 const Canvas=require('./canvas')
 
 class PhaseCanvas extends Canvas {
-	redraw(matrix) {
+	redraw(matrix,xLabel,yLabel) {
 		const ctx=this.ctx
 		const xRange=this.width/2
 		const yRange=this.height/2
@@ -416,7 +416,7 @@ class PhaseCanvas extends Canvas {
 		ctx.restore()
 		ctx.save()
 		ctx.translate(xRange,yRange)
-		this.drawAxes('x','y') // TODO get labels from notation
+		this.drawAxes(xLabel,yLabel)
 		drawDirectionField()
 		if (matrix.im1==0) {
 			drawEigenline(matrix.re1,matrix.re2)

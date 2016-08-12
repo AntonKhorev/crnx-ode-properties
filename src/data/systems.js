@@ -232,7 +232,7 @@ module.exports=(nt)=>({
 				form: true,
 				content: [
 					()=>{
-						const plot=new LhcPlot
+						const plot=new LhcPlot(nt.x,nt.y)
 						return plot.$output
 					}
 				],
