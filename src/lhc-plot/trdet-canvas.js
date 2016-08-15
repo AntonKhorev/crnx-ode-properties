@@ -109,9 +109,7 @@ class TrdetCanvas extends Canvas {
 			}
 			if (x>xRange) {
 				ctx.transform(0,1,1,0,0,0)
-				const t=x
-				x=y
-				y=t
+				;[x,y]=[y,x]
 			}
 			if ((x>xRange && y>yRange-pointerMargin) || (x>xRange-pointerMargin && y>yRange)) {
 				ctx.beginPath()

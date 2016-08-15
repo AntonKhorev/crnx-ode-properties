@@ -76,9 +76,7 @@ class PhaseCanvas extends Canvas {
 			}
 			if (x<y) { // TODO this will work only for square canvases, should also swap xRange and yRange
 				ctx.transform(0,1,1,0,0,0) // swap x,y
-				const t=x
-				x=y
-				y=t
+				;[x,y]=[y,x]
 			}
 			if (x>0) {
 				const r=Math.sqrt(x*x+y*y)
@@ -161,12 +159,9 @@ class PhaseCanvas extends Canvas {
 				const xy2=matrix.getEigenvector(lambda2)
 				let x2=xy2[0], y2=xy2[1]
 				if (lambda2<=0) {
-					let t
-					t=lambda1
-					lambda1=-lambda2
-					lambda2=-t
-					t=x1; x1=x2; x2=t
-					t=y1; y1=y2; y2=t
+					;[lambda1,lambda2]=[-lambda2,-lambda1]
+					;[x1,x2]=[x2,x1]
+					;[y1,y2]=[y2,y1]
 				}
 				let k1=+(x2*y0-x0*y2)/(x2*y1-x1*y2)
 				let k2=-(x1*y0-x0*y1)/(x2*y1-x1*y2)
@@ -178,10 +173,9 @@ class PhaseCanvas extends Canvas {
 				} else if (k2==0 && lambda1!=0) {
 					lambda2=Math.abs(lambda1)
 					lambda1=0 // trigger comb case below
-					let t
-					t=x1; x1=x2; x2=t
-					t=y1; y1=y2; y2=t
-					t=k1; k1=k2; k2=t
+					;[x1,x2]=[x2,x1]
+					;[y1,y2]=[y2,y1]
+					;[k1,k2]=[k2,k1]
 				}
 				if (lambda1>0) { // node
 					let T1=0
