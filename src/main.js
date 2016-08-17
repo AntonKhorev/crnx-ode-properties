@@ -271,11 +271,11 @@ $(function(){
 			const $equations={}
 			let $attachedMenu, $attachedToButton, attachedDirection, attachTimeoutId
 			const setCellClasses=($cell,cell)=>{
-				;['b','t','bt','rl','rt','bl'].forEach(dir=>{
+				for (let dir of ['b','t','bt','rl','rt','bl']) {
 					if (cell[dir]) {
 						$cell.addClass(dir)
 					}
-				})
+				}
 			}
 			const writeTheadButton=($cell,text,tip,dir,nodes)=>{
 				const keyCodeEnter=13
@@ -456,7 +456,7 @@ $(function(){
 				//	suggested names: u, v, w, x, y, z
 				//	examples: x,y,w; y,v,z
 				const $container=$("<form>Dependent variables notation (main variable, second variable in 2d system, substitution variable):</form>")
-				availableDependentVariables.forEach(dvs=>{
+				for (let dvs of availableDependentVariables) {
 					$container.append(
 						" ",
 						$("<label>").append(
@@ -468,7 +468,7 @@ $(function(){
 							" "+viewDependentVariables[dvs]
 						)
 					)
-				})
+				}
 				return $container
 			}
 			const writeEquation=(id)=>{

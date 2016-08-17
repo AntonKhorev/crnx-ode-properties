@@ -48,9 +48,9 @@ module.exports=(nodeLabelLayers,arcLocationLayers)=>{
 	// fill cells
 	let x=0
 	for (let i=0;i<nodeLabelLayers.length;i++) {
-		nodeLabelLayers[i].forEach(node=>{
+		for (const node of nodeLabelLayers[i]) {
 			nodeLayoutLayers[i][x++].node=node
-		})
+		}
 		if (i>=arcLocationLayers.length) continue
 		for (let j=0;j<arcLocationLayers[i].length;j++) {
 			const parentLocations=arcLocationLayers[i][j][0]

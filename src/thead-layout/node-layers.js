@@ -38,9 +38,9 @@ module.exports=(visibleParents,visibleDepthNodes)=>{
 				return 0
 			}
 		})
-		orderedVisibleDepthNodes[depth].forEach(node=>{
+		for (const node of orderedVisibleDepthNodes[depth]) {
 			parentOrder[node]=nextParentOrder++
-		})
+		}
 	}
 	return orderedVisibleDepthNodes
 }

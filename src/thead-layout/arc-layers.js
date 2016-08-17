@@ -24,9 +24,9 @@ module.exports=(depthList,parents)=>{ // TODO would prefer ordered parents list
 	const xs={}
 	let x=0
 	for (let i=0;i<depthList.length;i++) {
-		depthList[i].forEach(node=>{
+		for (const node of depthList[i]) {
 			xs[node]=x++
-		})
+		}
 		if (i>0) {
 			const arcs=[]
 			for (let j=depthList[i].length-1;j>=0;j--) {

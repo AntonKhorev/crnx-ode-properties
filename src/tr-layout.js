@@ -60,9 +60,9 @@ class TrLayout {
 				if (traitChildren) {
 					traitChildren.forEach(walkTraits)
 				} else {
-					getIntegratedClassesForTrait(classId,traitId).forEach(id=>{
+					for (const id of getIntegratedClassesForTrait(classId,traitId)) {
 						cell.push([id,traitId])
-					})
+					}
 				}
 			}
 			walkTraits(traitSubtree)
@@ -71,14 +71,16 @@ class TrLayout {
 
 		// compared traits filtering
 		const keepTraits={}
-		cells.forEach(cell=>cell.forEach(classTraitId=>{
-			const classId=classTraitId[0]
-			const traitId=classTraitId[1]
-			const trait=this.classData[classId].traits[traitId]
-			if (!trait.compare) {
-				keepTraits[traitId]=true
+		for (const cell of cells) {
+			for (const classTraitId of cell) {
+				const classId=classTraitId[0]
+				const traitId=classTraitId[1]
+				const trait=this.classData[classId].traits[traitId]
+				if (!trait.compare) {
+					keepTraits[traitId]=true
+				}
 			}
-		}))
+		}
 		for (let i=0;i<cells.length;i++) {
 			cells[i]=cells[i].filter(classTraitId=>{
 				const traitId=classTraitId[1]
