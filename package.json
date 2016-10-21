@@ -9,12 +9,12 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-roughly": "^1.0.0",
-    "crnx-build": "github:antonkhorev/crnx-build#v0.1.5",
+    "crnx-build": "github:antonkhorev/crnx-build#v0.1.7",
     "gulp": "^3.9.1",
     "mocha": "^2.4.5"
   },
   "dependencies": {
-    "crnx-base": "github:antonkhorev/crnx-base#v0.5.3"
+    "crnx-base": "github:antonkhorev/crnx-base#v0.7.0"
   },
   "repository": "AntonKhorev/crnx-ode-properties",
   "bugs": {
