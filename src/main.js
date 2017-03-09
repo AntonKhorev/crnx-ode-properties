@@ -45,7 +45,7 @@ const i18n=(id)=>{
 const mathjaxDetailsFixAndPolyfill=function(){
 	detailsPolyfill.apply(this)
 	$(this).one('toggle',function(){ // assumes <details> was closed
-		MathJax.Hub.Queue(["Reprocess",MathJax.Hub,this]) // mathjax common html renderer needs this to set correct font size
+		MathJax.Hub.Queue(["Rerender",MathJax.Hub,this]) // mathjax common html renderer needs this to set correct font size
 	})
 }
 
