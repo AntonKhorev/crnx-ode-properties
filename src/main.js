@@ -42,6 +42,13 @@ const i18n=(id)=>{
 	return strings[id]
 }
 
+const mathjaxDetailsFixAndPolyfill=function(){
+	detailsPolyfill.apply(this)
+	$(this).one('toggle',function(){ // assumes <details> was closed
+		MathJax.Hub.Queue(["Reprocess",MathJax.Hub,this]) // mathjax common html renderer needs this to set correct font size
+	})
+}
+
 $(function(){
 	$('.crnx-ode-properties').each(function(){
 		const $container=$(this).empty()
@@ -122,7 +129,7 @@ $(function(){
 			}
 			const $item=$("<details class='trait'>").append(
 				$("<summary>").append(getTitle())
-			).each(detailsPolyfill)
+			).each(mathjaxDetailsFixAndPolyfill)
 			const rec=(line)=>{
 				if (typeof line == 'string') {
 					return $("<div class='line'>").append(line)
@@ -132,7 +139,7 @@ $(function(){
 					return $("<details>").append(
 						$("<summary>").append(line.title!==undefined ? line.title : line.type),
 						line.content.map(rec)
-					).each(detailsPolyfill)
+					).each(mathjaxDetailsFixAndPolyfill)
 				} else if (line.type=='switch') {
 					return $("<div class='"+line.type+"'>").append(
 						$("<div class='condition'>").append(line.title!==undefined ? line.title : line.type,':'),
@@ -546,7 +553,7 @@ $(function(){
 				"<p>General notes:</p>",
 				writeGeneralNotes()
 			)
-			MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+			MathJax.Hub.Queue(["Typeset",MathJax.Hub])
 		}
 		$container.append(
 			writeQuickSelectControls(),
