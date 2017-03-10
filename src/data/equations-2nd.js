@@ -251,8 +251,8 @@ module.exports=(nt)=>{
 						`\\[ ${nt.x} = k_1 \\cos \\sqrt{\\frac km} t + k_2 \\sin \\sqrt{\\frac km} t \\]`,
 						`constants for ${ivp} solution:`,
 						`\\[ \\begin{aligned} `+
-							`k_1 &= ${nt.y}(0) \\\\ `+
-							`k_2 &= \\sqrt{\\frac mk} ${nt.y}'(0) `+
+							`k_1 &= ${nt.x}(0) \\\\ `+
+							`k_2 &= \\sqrt{\\frac mk} ${nt.x}'(0) `+
 						`\\end{aligned} \\]`,
 					],
 				},
