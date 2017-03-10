@@ -410,19 +410,22 @@ module.exports=(nt)=>({
 			},
 		},
 	},
-	o1_expGrowth: {
+	o1_linearHomogeneousConstant: {
 		parents: {
 			on_linearHomogeneousConstant: true,
 			o1_autonomous: true,
 			o1_linearHomogeneous: true,
 		},
-		name: "first-order linear homogeneous with constant coefficients (exponential growth)",
-		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Homogeneous_equations_with_constant_coefficients'>linear homogeneous with constant coefficients</a> (<a href='https://en.wikipedia.org/wiki/Exponential_growth#Differential_equation'>exponential growth</a>)",
+		name: "first-order linear homogeneous with constant coefficients",
+		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Homogeneous_equations_with_constant_coefficients'>linear homogeneous with constant coefficients</a>",
 		importance: 2,
 		equation: `${nt.dxdt} = k \\cdot ${nt.x}`,
 		traits: {
 			characteristicEquation: {
-				form: true,
+				form: {
+					o1_linearHomogeneousConstant: true,
+					o1_expGrowth: true,
+				},
 				content: [
 					{type:'derivation',content:[
 						`\\[ ${nt.dxdt} = k \\cdot ${nt.x} \\]`,
@@ -435,7 +438,10 @@ module.exports=(nt)=>({
 				],
 			},
 			generalSolutionMethod: {
-				form: true,
+				form: {
+					o1_linearHomogeneousConstant: true,
+					o1_expGrowth: true,
+				},
 				content: [
 					{type:'derivation',content:[
 						`\\[ ${nt.dxdt} = k \\cdot ${nt.x} \\]`,
@@ -459,6 +465,19 @@ module.exports=(nt)=>({
 				],
 			},
 		},
+	},
+	o1_expGrowth: {
+		parents: {
+			o1_linearHomogeneousConstant: true,
+		},
+		name: "exponential (natural) growth",
+		htmlName: "<a href='https://en.wikipedia.org/wiki/Exponential_growth#Differential_equation'>exponential (natural) growth</a>",
+		importance: 3,
+		equation: `${nt.dxdt} = k \\cdot ${nt.x}`,
+		equationNotes: [
+			`\\( k > 0 \\) is the growth constant`,
+		],
+		traits: {},
 	},
 	o1_logisticGrowth: {
 		parents: {
