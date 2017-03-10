@@ -42,7 +42,7 @@ const traits=[
 //	content
 //	form = have to present the equation in which this trait was defined
 //		if true: form type is equal to class id
-//		otherwise: object: { formType1:true, formType2:true, ... }
+//		otherwise: object: { formType1:true, formType2:true, ... }; usually lists children forms
 //	close = children don't need to inherit this trait; display it only if parents have it displayed
 //	compare = show only if other classes have this property without compare entry
 module.exports=(nt)=>{
