@@ -231,10 +231,44 @@ module.exports=(nt)=>({
 							`\\[ \\mu(t) ${nt.x} = ${nt.int('\\mu(t) b(t)')} + C \\]`,
 						]},
 						`\\[ \\mu(t) = e^{-${nt.sint('a(t)')}} \\]`,
-						`\\[ \\mu(t) y = ${nt.int('\\mu(t) b(t)')} + C \\]`,
+						`\\[ \\mu(t) ${nt.x} = ${nt.int('\\mu(t) b(t)')} + C \\]`,
+					]},
+					{type:'case',title:"method of <a href='https://en.wikipedia.org/wiki/Variation_of_parameters'>variation of parameters</a>",content:[
+						{type:'note',content:[
+							`mathematically equivalent to the method of integrating factors`,
+						]},
+						`find the general solution \\( K ${nt.x}_h \\) of the associated homogeneous equation`,
+						`\\[ ${nt.x}_h = e^{${nt.sint('a(t)')}} \\]`,
+						{type:'derivation',title:`find \\( ${nt.x} \\) as \\( ${nt.x}_h \\) multiplied by an unknown function`,content:[
+							`\\[ ${nt.x} = u(t) ${nt.x}_h \\]`,
+							`substitute \\( ${nt.x} \\) into the original equation`,
+							`\\[ ${nt.ddt}(u(t) ${nt.x}_h) = a(t) u(t) ${nt.x}_h + b(t) \\]`,
+							`\\[ \\begin{multline}`+
+								`${nt.dd('u(t)')} ${nt.x}_h + u(t) ${nt.dd(`${nt.x}_h`)} = \\\\ `+
+								`= a(t) u(t) ${nt.x}_h + b(t) `+
+							`\\end{multline} \\]`,
+							`\\[ \\begin{multline}`+
+								`${nt.dd('u(t)')} ${nt.x}_h + u(t) ${nt.ddt}(e^{${nt.sint('a(t)')}}) = \\\\ `+
+								`= a(t) u(t) ${nt.x}_h + b(t) `+
+							`\\end{multline} \\]`,
+							`\\[ \\begin{multline}`+
+								`${nt.dd('u(t)')} ${nt.x}_h + u(t) a(t) e^{${nt.sint('a(t)')}} = \\\\ `+
+								`= a(t) u(t) ${nt.x}_h + b(t) `+
+							`\\end{multline} \\]`,
+							`\\[ \\begin{multline}`+
+								`${nt.dd('u(t)')} ${nt.x}_h + u(t) a(t) ${nt.x}_h = \\\\ `+
+								`= a(t) u(t) ${nt.x}_h + b(t) `+
+							`\\end{multline} \\]`,
+							`\\[ ${nt.dd('u(t)')} ${nt.x}_h = b(t) \\]`,
+							`\\[ ${nt.dd('u(t)')} = \\frac{b(t)}{${nt.x}_h} \\]`,
+							`\\[ u(t) = ${nt.int(`\\frac{b(t)}{${nt.x}_h}`)} + C \\]`,
+							`substitute \\( u(t) \\) into the expression for \\( ${nt.x} \\)`,
+						]},
+						`\\[ ${nt.x} = ${nt.x}_h \\left( ${nt.int(`\\frac{b(t)}{${nt.x}_h}`)} + C \\right) \\]`,
 					]},
 					{type:'case',title:"<a href='https://en.wikipedia.org/wiki/Method_of_undetermined_coefficients'>method of undetermined coefficients</a>",content:[
-						`find the general solution \\( K ${nt.x}_h \\) of the associated homogeneous equation \\( ${nt.dxdt} = a(t) \\cdot ${nt.x} \\)`,
+						`find the general solution \\( K ${nt.x}_h \\) of the associated homogeneous equation`,
+						`\\[ ${nt.x}_h = e^{${nt.sint('a(t)')}} \\]`,
 						{type:'derivation',title:`find a particular solution \\( ${nt.x}_p \\) of the original equation`,content:[
 							`guess the solution form with coefficients to be solved for`,
 							`solve for coefficients`,
