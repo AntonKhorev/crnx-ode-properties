@@ -44,8 +44,13 @@ const i18n=(id)=>{
 
 const mathjaxDetailsFixAndPolyfill=function(){
 	detailsPolyfill.apply(this)
-	$(this).one('toggle',function(){ // assumes <details> was closed
-		MathJax.Hub.Queue(["Rerender",MathJax.Hub,this]) // mathjax common html renderer needs this to set correct font size
+	$(this).on('toggle',function(){
+		// mathjax common html renderer needs this to set correct font size
+		// have to do it on every details opening, not just once b/c user can request redraw at any time
+		// closed <details> behave like display:none; see http://stackoverflow.com/questions/36779037/mathjax-2-6-font-size-in-hidden-elements
+		if ($(this).attr('open')) { // can't test for prop('open') when it's polyfilled
+			MathJax.Hub.Queue(["Rerender",MathJax.Hub,this])
+		}
 	})
 }
 
@@ -553,7 +558,7 @@ $(function(){
 				"<p>General notes:</p>",
 				writeGeneralNotes()
 			)
-			MathJax.Hub.Queue(["Typeset",MathJax.Hub])
+			MathJax.Hub.Queue(["Typeset",MathJax.Hub]) // TODO pass table container
 		}
 		$container.append(
 			writeQuickSelectControls(),
