@@ -13,6 +13,7 @@ const i18n=(id)=>{
 		'trait.entity': "Associated entities",
 		'trait.associatedHomogeneousEquation': "Associated homogeneous equation",
 		'trait.characteristicEquation': "<a href='https://en.wikipedia.org/wiki/Characteristic_equation_(calculus)'>Characteristic equation</a>",
+		'trait.halfLife': "<a href='https://en.wikipedia.org/wiki/Half-life'>Half-life</a>",
 
 		'trait.property': "Properties",
 		'trait.isoclineProperty': "Property of <a href='https://en.wikipedia.org/wiki/Isocline'>isoclines</a>",

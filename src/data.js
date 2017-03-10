@@ -4,6 +4,7 @@ const traits=[
 	['entity',[
 		['associatedHomogeneousEquation'],
 		['characteristicEquation'],
+		['halfLife'],
 	]],
 	['property',[
 		['isoclineProperty'],

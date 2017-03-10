@@ -504,6 +504,19 @@ module.exports=(nt)=>({
 					`\\[ \\lambda = -k \\]`,
 				],
 			},
+			halfLife: {
+				form: true,
+				content: [
+					{type:'derivation',content:[
+						`\\[ ${nt.x}(t_{1/2}) = \\frac 12 \\cdot ${nt.x}(0) \\]`,
+						`substitute general solution \\( ${nt.x}(t) = ${nt.x}(0) e^{-kt} \\)`,
+						`\\[ ${nt.x}(0) e^{-kt_{1/2}} = \\frac 12 \\cdot ${nt.x}(0) \\]`,
+						`\\[ e^{-kt_{1/2}} = \\frac 12 \\]`,
+						`\\[ -kt_{1/2} = -\\ln 2 \\]`,
+					]},
+					`\\[ t_{1/2} = \\frac{\\ln 2}{k} \\]`,
+				],
+			},
 			generalSolutionMethod: {
 				form: true,
 				content: [
