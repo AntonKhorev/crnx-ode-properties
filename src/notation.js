@@ -1,5 +1,9 @@
 'use strict'
 
+// TODO replace with:
+//	symbols table
+//	tex helpers
+
 class Notation {
 	constructor(dependentVariables) {
 		this.dependentVariables=dependentVariables // main variable, second variable in 2d system, substitution variable

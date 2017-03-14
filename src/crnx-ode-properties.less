@@ -78,6 +78,11 @@
 					.arc(@cx,@cy,"M @{hcx} 0 V @{cy}");
 					background-repeat+: repeat-y;
 				}
+				transition: 300ms;
+				&.highlight {
+					background-color: #FEA;
+					transition: none;
+				}
 				button {
 					@obx: @button-width;
 					@oby: @button-height;
@@ -350,12 +355,6 @@
 			div.equation {
 				border: solid 1px @separator-color;
 				margin: 0 5px;
-				transition: 300ms;
-				&.highlight {
-					background: #FEA;
-					border: solid 1px @active-stroke-color;
-					transition: none;
-				}
 				& div.alt-separator {
 					text-align: center;
 					font-size: 90%;

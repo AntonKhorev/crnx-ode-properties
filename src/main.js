@@ -272,7 +272,7 @@ $(function(){
 				visibleAncestors[id]={}
 				computeVisibleAncestors(id,id)
 			}
-			const $equations={}
+			const $classHighlightables={}
 			let $attachedMenu, $attachedToButton, attachedDirection, attachTimeoutId
 			const setCellClasses=($cell,cell)=>{
 				for (let dir of ['b','t','bt','rl','rt','bl']) {
@@ -374,21 +374,32 @@ $(function(){
 				const $cell=$("<th>")
 				setCellClasses($cell,cell)
 				if (cell.node!==undefined) {
-					$cell.append(getHtmlName(cell.node))
-					const ancestors=breadthWalk(unorderedClassSubgraph.allParents,cell.node).reverse()
+					const id=cell.node
+					$classHighlightables[id]=$cell
+					$cell.append(getHtmlName(id))
+					const ancestors=breadthWalk(unorderedClassSubgraph.allParents,id).reverse()
 					if (ancestors.length>0) {
 						$cell.append(
 							" ",
 							writeTheadButton($cell,"Add ancestor","Add one of supertypes of this equation type",'t',ancestors)
 						)
 					}
-					const descendants=breadthWalk(unorderedClassSubgraph.allChildren,cell.node)
+					const descendants=breadthWalk(unorderedClassSubgraph.allChildren,id)
 					if (descendants.length>0) {
 						$cell.append(
 							" ",
 							writeTheadButton($cell,"Add descendant","Add one of subtypes of this equation type",'b',descendants)
 						)
 					}
+					$cell.hover(function(){
+						for (let aid in visibleAncestors[id]) {
+							$classHighlightables[aid].addClass('highlight')
+						}
+					},function(){
+						for (let aid in visibleAncestors[id]) {
+							$classHighlightables[aid].removeClass('highlight')
+						}
+					})
 				}
 				return $cell
 			}
@@ -476,20 +487,11 @@ $(function(){
 				return $container
 			}
 			const writeEquation=(id)=>{
-				$equations[id]=$("<div class='equation'>").append("\\["+data.classes[id].equation+"\\]")
+				const $equation=$("<div class='equation'>").append("\\["+data.classes[id].equation+"\\]")
 				if (data.classes[id].vectorEquation) {
-					$equations[id].append("<div class='alt-separator'>or in vector format</div>","\\["+data.classes[id].vectorEquation+"\\]")
+					$equation.append("<div class='alt-separator'>or in vector format</div>","\\["+data.classes[id].vectorEquation+"\\]")
 				}
-				$equations[id].hover(function(){
-					for (let aid in visibleAncestors[id]) {
-						$equations[aid].addClass('highlight')
-					}
-				},function(){
-					for (let aid in visibleAncestors[id]) {
-						$equations[aid].removeClass('highlight')
-					}
-				})
-				return $equations[id]
+				return $equation
 			}
 			const writeGeneralNotes=()=>{
 				const nt=notation
@@ -529,11 +531,11 @@ $(function(){
 											$("<ul>").append(columnParents.map(pid=>{
 												const $li=$("<li>").append(
 													$("<em>"+getHtmlName(pid)+"</em>").hover(function(){
-														$equations[pid].addClass('highlight')
+														$classHighlightables[pid].addClass('highlight')
 														$li.addClass('highlight')
 													},function(){
 														$li.removeClass('highlight')
-														$equations[pid].removeClass('highlight')
+														$classHighlightables[pid].removeClass('highlight')
 													})
 												)
 												return $li
