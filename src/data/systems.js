@@ -12,7 +12,7 @@ module.exports={
 		importance: 3,
 		forms: [
 			{
-				is: ['t','xi','system_sn'],
+				is: 't,xi,system_sn',
 				equation: nt=>`\\left\\{ \\begin{array}{c}`+
 					`${nt.dd(`${nt.x}_1`)} = f_1(t,${nt.x}_1,\\dotsc,${nt.x}_n) \\\\`+
 					`\\vdots \\\\`+
@@ -20,7 +20,7 @@ module.exports={
 				`\\end{array} \\right.`,
 			},
 			{
-				is: ['t','X','vector_sn'],
+				is: 't,X,vector_sn',
 				equation: nt=>`${nt.dd(nt.X)} = \\mathbf{F}(t,${nt.X})`,
 			},
 		],
@@ -46,14 +46,14 @@ module.exports={
 		importance: 3,
 		forms: [
 			{
-				is: ['t','xy','system_s2'],
+				is: 't,xy,system_s2',
 				equation: nt=>`\\left\\{ \\begin{aligned}`+
 					`${nt.dd(nt.x)} &= f(t,${nt.x},${nt.y}) \\\\`+
 					`${nt.dd(nt.y)} &= g(t,${nt.x},${nt.y})`+
 				`\\end{aligned} \\right.`,
 			},
 			{
-				is: ['t','X','vector_s2'],
+				is: 't,X,vector_s2',
 				equation: nt=>`${nt.dd(nt.X)} = \\mathbf{F}(t,${nt.X})`,
 			},
 		],

@@ -13,7 +13,7 @@ module.exports={
 		importance: 0,
 		forms: [
 			{
-				is: ['t','x','resolved_o1'],
+				is: 't,x,resolved_o1',
 				equation: nt=>`${nt.dxdt} = f(t,${nt.x})`,
 			},
 		],
@@ -38,7 +38,7 @@ module.exports={
 		importance: 1,
 		forms: [
 			{
-				is: ['t','x','resolved_o1_separable'],
+				is: 't,x,resolved_o1_separable',
 				equation: nt=>`${nt.dxdt} = f_1(t) \\cdot f_2(${nt.x})`,
 			},
 		],
@@ -73,7 +73,7 @@ module.exports={
 		importance: 1,
 		forms: [
 			{
-				is: ['t','x','resolved_o1_autonomous'],
+				is: 't,x,resolved_o1_autonomous',
 				equation: nt=>`${nt.dxdt} = f(${nt.x})`,
 			},
 		],
@@ -530,7 +530,7 @@ module.exports={
 		importance: 3,
 		forms: [
 			{
-				is: ['t','x','resolved_o1_linearHomogeneousConstant','resolved_o1_expGrowth'],
+				is: 't,x,resolved_o1_linearHomogeneousConstant,resolved_o1_expGrowth',
 				equation: nt=>`${nt.dxdt} = k \\cdot ${nt.x}`,
 				notes: nt=>[
 					`\\( k > 0 \\) is the growth constant`,

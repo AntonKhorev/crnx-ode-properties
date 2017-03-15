@@ -10,7 +10,7 @@ module.exports={
 		importance: 2,
 		forms: [
 			{
-				is: ['t','x','resolved_on'],
+				is: 't,x,resolved_on',
 				equation: nt=>`${nt.dd(nt.x,'t','n')} = f(t,${nt.x},${nt.dxdt},\\dotsc,${nt.dd(nt.x,'t','n-1')})`,
 			},
 			// TODO as systen of n 1st order

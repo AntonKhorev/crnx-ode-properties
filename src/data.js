@@ -44,7 +44,7 @@ const traits=[
 //	hasForm = use this value as form type instead of class id
 
 // form entries:
-//	is = array of form types (common types are t,x,xy,xi,X,resolved_*,system_*,vector_*)
+//	is = comma-separated list of form types (common types are t,x,xy,xi,X,resolved_*,system_*,vector_*)
 //	equation
 //	notes = (nt => array)
 

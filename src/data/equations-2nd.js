@@ -87,11 +87,11 @@ module.exports={
 		importance: 2,
 		forms: [
 			{
-				is: ['t','x','resolved_o2'],
+				is: 't,x,resolved_o2',
 				equation: nt=>`${nt.dd(nt.x,'t',2)} = f(t,${nt.x},${nt.dxdt})`,
 			},
 			{
-				is: ['t','xy','system_o2'],
+				is: 't,xy,system_o2',
 				equation: nt=>`\\left\\{ \\begin{aligned} `+
 					`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
 					`${nt.dd(nt.y)} &= f(t,${nt.x},${nt.y}) `+

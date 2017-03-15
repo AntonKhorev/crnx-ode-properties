@@ -7,6 +7,7 @@ const TheadLayout=require('./thead-layout')
 const TrLayout=require('./tr-layout')
 const Notation=require('./notation')
 const data=require('./data')
+const TraitRowsOutput=require('./trait-rows-output')
 
 const i18n=(id)=>{
 	const strings={
@@ -177,24 +178,6 @@ $(function(){
 			}
 			$item.append(item.content.map(rec))
 			return $item
-		}
-		const writeTraitCell=(forClassId,traitCell)=>{
-			const $cell=$("<td>")
-			if (traitCell.length>0) {
-				$cell.append(traitCell.map(classTraitId=>{
-					const classId=classTraitId[0]
-					const traitId=classTraitId[1]
-					return writeTraitItem(forClassId,classId,traitId)
-				}))
-			}
-			return $cell
-		}
-		const writeTraitRow=(traitSubtree)=>{
-			const traitCells=trLayout.getSubtreeLayout(traitSubtree)
-			if (!traitCells) return null
-			return $("<tr>").append(traitCells.map(
-				(traitCell,i)=>writeTraitCell(theadLayout.columns[i],traitCell)
-			))
 		}
 
 		let $tableContainer,$quickSelect,$quickSelectButton
@@ -431,20 +414,6 @@ $(function(){
 					)
 				)
 			}
-			const writeTraitRows=()=>{
-				const output=[]
-				const rec=(traitSubtree,depth)=>{
-					const traitId=traitSubtree[0]
-					const traitChildren=traitSubtree[1]
-					if (depth>=traitAlignmentLevel || !traitChildren) {
-						output.push(writeTraitRow(traitSubtree))
-					} else {
-						traitChildren.forEach(traitChild=>rec(traitChild,depth+1))
-					}
-				}
-				rec(['root',data.traits],0)
-				return output
-			}
 			const writeTraitAlignmentControls=()=>{
 				const $container=$("<form>Trait alignment level:</form>")
 				for (let i=0;i<=maxTraitAlignmentLevel;i++) {
@@ -544,6 +513,7 @@ $(function(){
 				)
 			}
 			$tableContainer.empty()
+			const traitRowsOutput=new TraitRowsOutput(theadLayout,trLayout,data.traits,traitAlignmentLevel)
 			if (Object.keys(selectedNodes).length>0) $tableContainer.append(
 				$("<table class='classes'>").append(
 					writeThead(),
@@ -551,8 +521,8 @@ $(function(){
 					$("<tbody>").append(
 						$("<tr>").append( // equations
 							theadLayout.columns.map(writeEquations)
-						)/*,
-						writeTraitRows()*/
+						),
+						traitRowsOutput.$trs
 					)
 				)
 			)
