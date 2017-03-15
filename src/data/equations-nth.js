@@ -1,20 +1,30 @@
 'use strict'
 
-module.exports=(nt)=>({
+module.exports={
 	on: {
-		parents: {},
+		parents: {
+			sn: true,
+		},
 		name: "nth-order",
 		htmlName: "<em>n</em>th-order",
 		importance: 2,
-		equation: `${nt.dd(nt.x,'t','n')} = f(t,${nt.x},${nt.dxdt},\\dotsc,${nt.dd(nt.x,'t','n-1')})`,
+		forms: [
+			{
+				is: ['t','x','resolved_on'],
+				equation: nt=>`${nt.dd(nt.x,'t','n')} = f(t,${nt.x},${nt.dxdt},\\dotsc,${nt.dd(nt.x,'t','n-1')})`,
+			},
+			// TODO as systen of n 1st order
+		],
 		traits: {
 			testSolutionMethod: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`Can test if \\( ${nt.x}_p \\) is a solution by substituting \\( ${nt.x} = ${nt.x}_p \\) into the equation.`,
 				],
 			},
 		}
 	},
+/*
 	on_linearHomogeneousConstant: {
 		parents: {
 			on: true,
@@ -43,4 +53,5 @@ module.exports=(nt)=>({
 			},
 		},
 	},
-})
+*/
+}

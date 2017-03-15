@@ -4,24 +4,37 @@ const LhcPlot=require('../lhc-plot')
 
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
-module.exports=(nt)=>({
+module.exports={
 	sn: {
 		parents: {},
 		name: "system of n first-order",
 		htmlName: "system of <em>n</em> first-order",
 		importance: 3,
-		equation:
-			`\\left\\{ \\begin{array}{c}`+
-				`${nt.dd(`${nt.x}_1`)} = f_1(t,${nt.x}_1,\\dotsc,${nt.x}_n) \\\\`+
-				`\\vdots \\\\`+
-				`${nt.dd(`${nt.x}_n`)} = f_n(t,${nt.x}_1,\\dotsc,${nt.x}_n)`+
-			`\\end{array} \\right.`,
-		vectorEquation: `${nt.dd(nt.X)} = \\mathbf{F}(t,${nt.X})`,
+		forms: [
+			{
+				is: ['t','xi','system_sn'],
+				equation: nt=>`\\left\\{ \\begin{array}{c}`+
+					`${nt.dd(`${nt.x}_1`)} = f_1(t,${nt.x}_1,\\dotsc,${nt.x}_n) \\\\`+
+					`\\vdots \\\\`+
+					`${nt.dd(`${nt.x}_n`)} = f_n(t,${nt.x}_1,\\dotsc,${nt.x}_n)`+
+				`\\end{array} \\right.`,
+			},
+			{
+				is: ['t','X','vector_sn'],
+				equation: nt=>`${nt.dd(nt.X)} = \\mathbf{F}(t,${nt.X})`,
+			},
+		],
 		traits: {
 			testSolutionMethod: {
-				content: [
-					`Can test if \\( ${nt.X}_p \\) is a solution by substituting \\( ${nt.X} = ${nt.X}_p \\) into the equation.`,
-				],
+				formType: 'xi',
+				contents: {
+					xi: nt=>[
+						`Can test if \\( ${nt.x}_{1,p}, ..., ${nt.x}_{n,p} \\) is a solution by substituting \\( ${nt.x}_1 = ${nt.x}_{1,p}, ..., ${nt.x}_n = ${nt.x}_{n,p} \\) into the equation.`,
+					],
+					X: nt=>[
+						`Can test if \\( ${nt.X}_p \\) is a solution by substituting \\( ${nt.X} = ${nt.X}_p \\) into the equation.`,
+					],
+				},
 			},
 		},
 	},
@@ -31,15 +44,35 @@ module.exports=(nt)=>({
 		},
 		name: "system of 2 first-order",
 		importance: 3,
-		equation:
-			`\\left\\{ \\begin{aligned}`+
-				`${nt.dd(nt.x)} &= f(t,${nt.x},${nt.y}) \\\\`+
-				`${nt.dd(nt.y)} &= g(t,${nt.x},${nt.y})`+
-			`\\end{aligned} \\right.`,
-		vectorEquation: `${nt.dd(nt.X)} = \\mathbf{F}(t,${nt.X})`,
-		traits: {},
+		forms: [
+			{
+				is: ['t','xy','system_s2'],
+				equation: nt=>`\\left\\{ \\begin{aligned}`+
+					`${nt.dd(nt.x)} &= f(t,${nt.x},${nt.y}) \\\\`+
+					`${nt.dd(nt.y)} &= g(t,${nt.x},${nt.y})`+
+				`\\end{aligned} \\right.`,
+			},
+			{
+				is: ['t','X','vector_s2'],
+				equation: nt=>`${nt.dd(nt.X)} = \\mathbf{F}(t,${nt.X})`,
+			},
+		],
+		traits: {
+			testSolutionMethod: {
+				formType: 'xy',
+				contents: {
+					xy: nt=>[
+						`Can test if \\( ${nt.x}_p, ${nt.y}_p \\) is a solution by substituting \\( ${nt.x} = ${nt.x}_p, ${nt.y} = ${nt.y}_p \\) into the equation.`,
+					],
+					X: nt=>[
+						`Can test if \\( ${nt.X}_p \\) is a solution by substituting \\( ${nt.X} = ${nt.X}_p \\) into the equation.`,
+					],
+				},
+			},
+		},
 	},
-	s2_partlyDecoupled: {
+/*
+	s2_partlyDecoupled: { // TODO other kind of partly decoupled: f(t,x); g(t,x,y)
 		parents: {
 			s2: true,
 		},
@@ -330,4 +363,5 @@ module.exports=(nt)=>({
 			},
 		},
 	},
-})
+*/
+}

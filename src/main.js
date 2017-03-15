@@ -6,7 +6,7 @@ const OrderedClassSubgraph=require('./ordered-class-subgraph')
 const TheadLayout=require('./thead-layout')
 const TrLayout=require('./tr-layout')
 const Notation=require('./notation')
-const dataGenerator=require('./data')
+const data=require('./data')
 
 const i18n=(id)=>{
 	const strings={
@@ -29,6 +29,7 @@ const i18n=(id)=>{
 		'trait.nAffineCombinationSolutionRelation': "<a href='https://en.wikipedia.org/wiki/Affine_combination'>Affine combination</a> property of solutions",
 		'trait.associatedSolutionRelation': "Associated homogeneous equation solution",
 
+		// TODO remove
 		'trait.transform': "Transforms to different types",
 		'trait.orderReduction': "Order reduction",
 
@@ -69,13 +70,7 @@ $(function(){
 			xyw: `\\( x \\), \\( y \\), \\( w \\)`,
 			yvz: `\\( y \\), \\( v \\), \\( z \\)`,
 		}
-
-		let notation,data
-		const regenerateData=()=>{
-			notation=new Notation(dependentVariables)
-			data=dataGenerator(notation)
-		}
-		regenerateData()
+		let notation=new Notation(dependentVariables)
 
 		for (let id in data.classes) {
 			if (data.classes[id].importance<=1) {
@@ -477,7 +472,7 @@ $(function(){
 						$("<label>").append(
 							$("<input type='radio' name='dependent-variables'>").prop('checked',dvs==dependentVariables).click(function(){
 								dependentVariables=dvs
-								regenerateData()
+								notation=new Notation(dependentVariables)
 								writeTable()
 							}),
 							" "+viewDependentVariables[dvs]
@@ -486,12 +481,52 @@ $(function(){
 				}
 				return $container
 			}
-			const writeEquation=(id)=>{
-				const $equation=$("<div class='equation'>").append("\\["+data.classes[id].equation+"\\]")
-				if (data.classes[id].vectorEquation) {
-					$equation.append("<div class='alt-separator'>or in vector format</div>","\\["+data.classes[id].vectorEquation+"\\]")
+			const writeEquations=(id)=>{
+				const $cell=$("<td>")
+				data.classes[id].forms.forEach((formData,i)=>{
+					if (i) {
+						$cell.append(
+							"<div class='alt-separator'>or</div>"
+						)
+					}
+					$cell.append(
+						$("<div class='equation'>").append("\\["+formData.equation(notation)+"\\]")
+					)
+					if (formData.notes!==undefined) {
+						$cell.append(
+							$("<ul>").append(
+								formData.notes(notation).map(
+									noteText=>`<li><div class='note'>${noteText}</div></li>`
+								)
+							)
+						)
+					}
+				})
+				const columnParents=orderedClassSubgraph.visibleParents[id]
+				if (columnParents.length>0) {
+					$cell.append(
+						$("<ul>").append(
+							$("<li>").append(
+								$("<div class='note'>").append(
+									"can also be written as and has all properties of:",
+									$("<ul>").append(columnParents.map(pid=>{
+										const $li=$("<li>").append(
+											$("<em>"+getHtmlName(pid)+"</em>").hover(function(){
+												$classHighlightables[pid].addClass('highlight')
+												$li.addClass('highlight')
+											},function(){
+												$li.removeClass('highlight')
+												$classHighlightables[pid].removeClass('highlight')
+											})
+										)
+										return $li
+									}))
+								)
+							)
+						)
+					)
 				}
-				return $equation
+				return $cell
 			}
 			const writeGeneralNotes=()=>{
 				const nt=notation
@@ -515,43 +550,9 @@ $(function(){
 					writeTfoot(),
 					$("<tbody>").append(
 						$("<tr>").append( // equations
-							theadLayout.columns.map(id=>{
-								const $td=$("<td>").append(writeEquation(id))
-								const notes=[]
-								if (data.classes[id].equationNotes!==undefined) {
-									notes.push(...data.classes[id].equationNotes.map(
-										noteText=>$("<div class='note'>").append(noteText)
-									))
-								}
-								const columnParents=orderedClassSubgraph.visibleParents[id]
-								if (columnParents.length>0) {
-									notes.push(
-										$("<div class='note'>").append(
-											"can also be written as and has all properties of:",
-											$("<ul>").append(columnParents.map(pid=>{
-												const $li=$("<li>").append(
-													$("<em>"+getHtmlName(pid)+"</em>").hover(function(){
-														$classHighlightables[pid].addClass('highlight')
-														$li.addClass('highlight')
-													},function(){
-														$li.removeClass('highlight')
-														$classHighlightables[pid].removeClass('highlight')
-													})
-												)
-												return $li
-											}))
-										)
-									)
-								}
-								if (notes.length>0) {
-									$td.append($("<ul>").append(notes.map(
-										note=>$("<li>").append(note)
-									)))
-								}
-								return $td
-							})
-						),
-						writeTraitRows()
+							theadLayout.columns.map(writeEquations)
+						)/*,
+						writeTraitRows()*/
 					)
 				)
 			)

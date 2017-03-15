@@ -2,21 +2,31 @@
 
 const eqsol=(name)=>`<a href='https://en.wikipedia.org/wiki/Equilibrium_point'>${name}</a>`
 
-module.exports=(nt)=>({
+// TODO trivial vector forms
+
+module.exports={
 	o1: {
 		parents: {
-			sn: true,
 			on: true,
 		},
 		name: "first-order",
 		importance: 0,
-		equation: `${nt.dxdt} = f(t,${nt.x})`,
+		forms: [
+			{
+				is: ['t','x','resolved_o1'],
+				equation: nt=>`${nt.dxdt} = f(t,${nt.x})`,
+			},
+		],
 		traits: {
-			testSolutionMethod: { // same as in 'on', done to mask 'sn's trait
-				content: [
+			// TODO is it still required? : same as in 'on', done to mask 'sn's trait
+			/*
+			testSolutionMethod: {
+				formType: 'x',
+				content: nt=>[
 					`Can test if \\( ${nt.x}_p \\) is a solution by substituting \\( ${nt.x} = ${nt.x}_p \\) into the equation.`,
 				],
 			},
+			*/
 		},
 	},
 	o1_separable: {
@@ -26,11 +36,15 @@ module.exports=(nt)=>({
 		name: "first-order separable",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Separation_of_variables#Ordinary_differential_equations_.28ODE.29'>separable</a>",
 		importance: 1,
-		equation: `${nt.dxdt} = f_1(t) \\cdot f_2(${nt.x})`,
+		forms: [
+			{
+				is: ['t','x','resolved_o1_separable'],
+				equation: nt=>`${nt.dxdt} = f_1(t) \\cdot f_2(${nt.x})`,
+			},
+		],
 		traits: {
 			generalSolutionMethod: {
-				form: true,
-				content: [
+				content: nt=>[
 					{type:'derivation',content:[
 						`\\[ ${nt.dxdt} = f_1(t) \\cdot f_2(${nt.x}) \\]`,
 						`\\[ \\frac{1}{f_2(${nt.x})} \\cdot ${nt.dxdt} = f_1(t) \\]`,
@@ -43,8 +57,7 @@ module.exports=(nt)=>({
 				],
 			},
 			equilibriumSolutionMethod: {
-				form: true,
-				content: [
+				content: nt=>[
 					`solve \\( f_2(${nt.x}) = 0 \\) for constant \\( ${nt.x} \\)`,
 				],
 				//`domain is not necessary \\( -\\infty &lt; t &lt; +\\infty \\)`
@@ -58,21 +71,27 @@ module.exports=(nt)=>({
 		name: "first-order autonomous",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Autonomous_system_%28mathematics%29'>autonomous</a>",
 		importance: 1,
-		equation: `${nt.dxdt} = f(${nt.x})`,
+		forms: [
+			{
+				is: ['t','x','resolved_o1_autonomous'],
+				equation: nt=>`${nt.dxdt} = f(${nt.x})`,
+			},
+		],
 		traits: {
 			isoclineProperty: {
-				content: [
+				formType: 't',
+				content: nt=>[
 					`isoclines are horizontal`,
 				],
 			},
 			shiftSolutionRelation: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`If \\( ${nt.x}_p(t) \\) is a solution, then \\( ${nt.x}_p(t+C) \\) is a solution`,
 				],
 			},
 			generalSolutionMethod: {
-				form: true,
-				content: [
+				content: nt=>[
 					{type:'derivation',content:[
 						`\\[ ${nt.dxdt} = f(${nt.x}) \\]`,
 						`\\[ \\frac{1}{f(${nt.x})} \\cdot ${nt.dxdt} = 1 \\]`,
@@ -85,14 +104,14 @@ module.exports=(nt)=>({
 				],
 			},
 			equilibriumSolutionMethod: {
-				form: true,
-				content: [
+				content: nt=>[
 					`solve \\( f(${nt.x}) = 0 \\) for constant \\( ${nt.x} \\)`,
 				],
 				//`domain is \\( -\\infty &lt; t &lt; +\\infty \\)` // only if f(y) is continuous
 			},
 		},
 	},
+/*
 	o1_bernoulli: {
 		parents: {
 			o1: true,
@@ -500,19 +519,27 @@ module.exports=(nt)=>({
 			},
 		},
 	},
+*/
 	o1_expGrowth: {
 		parents: {
-			o1_linearHomogeneousConstant: true,
+			// o1_linearHomogeneousConstant: true, // TODO uncomment
+			o1_autonomous: true, // TODO delete
 		},
 		name: "exponential (natural) growth",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Exponential_growth#Differential_equation'>exponential (natural) growth</a>",
 		importance: 3,
-		equation: `${nt.dxdt} = k \\cdot ${nt.x}`,
-		equationNotes: [
-			`\\( k > 0 \\) is the growth constant`,
+		forms: [
+			{
+				is: ['t','x','resolved_o1_linearHomogeneousConstant','resolved_o1_expGrowth'],
+				equation: nt=>`${nt.dxdt} = k \\cdot ${nt.x}`,
+				notes: nt=>[
+					`\\( k > 0 \\) is the growth constant`,
+				],
+			},
 		],
 		traits: {},
 	},
+/*
 	o1_expDecay: {
 		parents: {
 			o1_linearHomogeneousConstant: true,
@@ -594,4 +621,5 @@ module.exports=(nt)=>({
 			},
 		},
 	},
-})
+*/
+}
