@@ -130,7 +130,6 @@ module.exports={
 				`${nt.dd(nt.y)} &= g(${nt.x},${nt.y})`+
 			`\\end{aligned} \\right.`,
 		vectorEquation: `${nt.dd(nt.X)} = \\mathbf{F}(${nt.X})`,
-		traits: {},
 	},
 	s2_linearHomogeneous: {
 		parents: {

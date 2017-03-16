@@ -73,7 +73,6 @@ const harmonicOscillatorType=(type,wiki,discriminantRelation)=>({
 		`\\( k > 0 \\) is the spring constant`,
 	],
 	hasForm: 'o2_harmonicOscillator',
-	traits: {},
 })
 */
 
@@ -99,7 +98,6 @@ module.exports={
 			},
 			// TODO vector form
 		],
-		traits: {},
 	},
 /*
 	o2_autonomous: {
@@ -271,7 +269,6 @@ module.exports={
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Van_der_Pol_oscillator'>Van der Pol</a>",
 		importance: 3,
 		equation: `${nt.dd(nt.x,'t',2)} = \\mu(1-${nt.x}^2)${nt.dxdt} - ${nt.x}`,
-		traits: {},
 	},
 	o2_unforcedDuffing: {
 		parents: {
@@ -281,7 +278,6 @@ module.exports={
 		htmlName: "unforced <a href='https://en.wikipedia.org/wiki/Duffing_equation'>Duffing</a>",
 		importance: 3,
 		equation: `${nt.dd(nt.x,'t',2)} = - \\delta ${nt.dxdt} - \\alpha ${nt.x} - \\beta ${nt.x}^3`,
-		traits: {},
 	},
 */
 }

@@ -17,7 +17,7 @@ module.exports={
 				equation: nt=>`${nt.dxdt} = f(t,${nt.x})`,
 			},
 		],
-		traits: {
+		//traits: {
 			// TODO is it still required? : same as in 'on', done to mask 'sn's trait
 			/*
 			testSolutionMethod: {
@@ -27,7 +27,7 @@ module.exports={
 				],
 			},
 			*/
-		},
+		//},
 	},
 	o1_separable: {
 		parents: {
@@ -537,7 +537,6 @@ module.exports={
 				],
 			},
 		],
-		traits: {},
 	},
 /*
 	o1_expDecay: {

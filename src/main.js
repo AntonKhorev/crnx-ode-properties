@@ -1,6 +1,5 @@
 'use strict'
 
-const detailsPolyfill=require('crnx-base/details-polyfill')
 const UnorderedClassSubgraph=require('./unordered-class-subgraph')
 const OrderedClassSubgraph=require('./ordered-class-subgraph')
 const TheadLayout=require('./thead-layout')
@@ -45,18 +44,6 @@ const i18n=(id)=>{
 	return strings[id]
 }
 
-const mathjaxDetailsFixAndPolyfill=function(){
-	detailsPolyfill.apply(this)
-	$(this).on('toggle',function(){
-		// mathjax common html renderer needs this to set correct font size
-		// have to do it on every details opening, not just once b/c user can request redraw at any time
-		// closed <details> behave like display:none; see http://stackoverflow.com/questions/36779037/mathjax-2-6-font-size-in-hidden-elements
-		if ($(this).attr('open')) { // can't test for prop('open') when it's polyfilled
-			MathJax.Hub.Queue(["Rerender",MathJax.Hub,this])
-		}
-	})
-}
-
 $(function(){
 	$('.crnx-ode-properties').each(function(){
 		const $container=$(this).empty()
@@ -78,10 +65,6 @@ $(function(){
 				selectedNodes[id]=true
 			}
 		}
-		const getHtmlName=id=>(data.classes[id].htmlName!==undefined
-			? data.classes[id].htmlName
-			: data.classes[id].name
-		)
 
 		let unorderedClassSubgraph,theadLayout,orderedClassSubgraph,trLayout
 		const recomputeLayouts=()=>{
@@ -116,68 +99,6 @@ $(function(){
 				$button.attr('title',tip)
 			}
 			return $button
-		}
-		const writeTraitItem=(forClassId,fromClassId,traitId)=>{
-			const item=data.classes[fromClassId].traits[traitId]
-			if (!item.content) return
-			const getTitle=()=>{
-				if (item.title!==undefined) {
-					return item.title
-				} else if (item.compare) {
-					return "Property comparable to <em>"+i18n('trait.'+traitId)+"</em>"
-				} else {
-					return i18n('trait.'+traitId)
-				}
-			}
-			const $item=$("<details class='trait'>").append(
-				$("<summary>").append(getTitle())
-			).each(mathjaxDetailsFixAndPolyfill)
-			const rec=(line)=>{
-				if (typeof line == 'string') {
-					return $("<div class='line'>").append(line)
-				} else if (typeof line == 'function') {
-					return line()
-				} else if (line.type=='derivation' || line.type=='proof' || line.type=='example' || line.type=='case') {
-					return $("<details>").append(
-						$("<summary>").append(line.title!==undefined ? line.title : line.type),
-						line.content.map(rec)
-					).each(mathjaxDetailsFixAndPolyfill)
-				} else if (line.type=='switch') {
-					return $("<div class='"+line.type+"'>").append(
-						$("<div class='condition'>").append(line.title!==undefined ? line.title : line.type,':'),
-						$("<div class='cases'>").append(
-							line.content.map(rec)
-						)
-					)
-				} else {
-					return $("<div class='"+line.type+"'>").append(
-						line.content.map(rec)
-					)
-				}
-			}
-			if (item.form) {
-				const forClass=data.classes[forClassId]
-				let forForm=forClassId
-				if (forClass.hasForm!==undefined) {
-					forForm=forClass.hasForm
-				}
-				let fromForms={
-					[fromClassId]: true,
-				}
-				if (item.form!==true) {
-					fromForms=item.form
-				}
-				if (!fromForms[forForm]) {
-					$item.append(
-						rec({type:'note',content:[
-							"when equation is written as <em>"+getHtmlName(fromClassId)+"</em>:",
-							"\\["+data.classes[fromClassId].equation+"\\]",
-						]})
-					)
-				}
-			}
-			$item.append(item.content.map(rec))
-			return $item
 		}
 
 		let $tableContainer,$quickSelect,$quickSelectButton
@@ -354,7 +275,7 @@ $(function(){
 				if (cell.node!==undefined) {
 					const id=cell.node
 					$classHighlightables[id]=$cell
-					$cell.append(getHtmlName(id))
+					$cell.append(data.classes[id].htmlName)
 					const ancestors=breadthWalk(unorderedClassSubgraph.allParents,id).reverse()
 					if (ancestors.length>0) {
 						$cell.append(
@@ -480,7 +401,7 @@ $(function(){
 									"can also be written as and has all properties of:",
 									$("<ul>").append(columnParents.map(pid=>{
 										const $li=$("<li>").append(
-											$("<em>"+getHtmlName(pid)+"</em>").hover(function(){
+											$("<em>"+data.classes[pid].htmlName+"</em>").hover(function(){
 												$classHighlightables[pid].addClass('highlight')
 												$li.addClass('highlight')
 											},function(){
@@ -513,7 +434,11 @@ $(function(){
 				)
 			}
 			$tableContainer.empty()
-			const traitRowsOutput=new TraitRowsOutput(theadLayout,trLayout,data.traits,traitAlignmentLevel)
+			const traitRowsOutput=new TraitRowsOutput(
+				i18n,theadLayout,trLayout,
+				data.traits,data.classes,
+				traitAlignmentLevel,notation
+			)
 			if (Object.keys(selectedNodes).length>0) $tableContainer.append(
 				$("<table class='classes'>").append(
 					writeThead(),

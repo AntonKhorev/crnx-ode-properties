@@ -71,4 +71,26 @@ merge(require('./data/equations-2nd'))
 merge(require('./data/equations-nth'))
 merge(require('./data/systems'))
 
+// preprocess data
+for (let classId in classes) {
+	const classData=classes[classId]
+	if (classData.htmlName===undefined) {
+		classData.htmlName=classData.name
+	}
+	if (classData.traits===undefined) {
+		classData.traits={}
+	}
+	for (let traitId in classData.traits) {
+		const traitData=classData.traits[traitId]
+		if (traitData.formType===undefined) {
+			traitData.formType=classData.forms[0].is.split(',').pop()
+		}
+		if (traitData.contents===undefined) {
+			traitData.contents={}
+			traitData.contents[traitData.formType]=traitData.content
+			delete traitData.content
+		}
+	}
+}
+
 module.exports={traits,classes}
