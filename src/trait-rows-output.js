@@ -59,7 +59,7 @@ class TraitRowsOutput {
 			let hasSelectedForm=false
 			for (let selectedFormType of selectedForm.split(',')) {
 				if (trait.contents[selectedFormType]!==undefined) {
-					$trait.append(trait.contents[selectedFormType](notation))
+					$trait.append(trait.contents[selectedFormType](notation).map(rec))
 					hasSelectedForm=true
 					break
 				}
@@ -76,7 +76,7 @@ class TraitRowsOutput {
 						"when equation is written as"+(forClassId!=fromClassId ? " <em>"+classData[fromClassId].htmlName+"</em>:" : ":"),
 						"\\["+preferredForm.equation(notation)+"\\]",
 					]}),
-					trait.contents[trait.formType](notation)
+					trait.contents[trait.formType](notation).map(rec)
 				)
 			}
 			return $trait
