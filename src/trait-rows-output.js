@@ -120,6 +120,7 @@ class TraitRowsOutput {
 	}
 	updateForm(classId,form) {
 		// TODO
+		console.log('called updateForm',classId,form)
 	}
 }
 

@@ -6,6 +6,7 @@ const TheadLayout=require('./thead-layout')
 const TrLayout=require('./tr-layout')
 const Notation=require('./notation')
 const data=require('./data')
+const FormRowsOutput=require('./form-rows-output')
 const TraitRowsOutput=require('./trait-rows-output')
 
 const i18n=(id)=>{
@@ -371,53 +372,6 @@ $(function(){
 				}
 				return $container
 			}
-			const writeEquations=(id)=>{
-				const $cell=$("<td>")
-				data.classes[id].forms.forEach((formData,i)=>{
-					if (i) {
-						$cell.append(
-							"<div class='alt-separator'>or</div>"
-						)
-					}
-					$cell.append(
-						$("<div class='equation'>").append("\\["+formData.equation(notation)+"\\]")
-					)
-					if (formData.notes!==undefined) {
-						$cell.append(
-							$("<ul>").append(
-								formData.notes(notation).map(
-									noteText=>`<li><div class='note'>${noteText}</div></li>`
-								)
-							)
-						)
-					}
-				})
-				const columnParents=orderedClassSubgraph.visibleParents[id]
-				if (columnParents.length>0) {
-					$cell.append(
-						$("<ul>").append(
-							$("<li>").append(
-								$("<div class='note'>").append(
-									"can also be written as and has all properties of:",
-									$("<ul>").append(columnParents.map(pid=>{
-										const $li=$("<li>").append(
-											$("<em>"+data.classes[pid].htmlName+"</em>").hover(function(){
-												$classHighlightables[pid].addClass('highlight')
-												$li.addClass('highlight')
-											},function(){
-												$li.removeClass('highlight')
-												$classHighlightables[pid].removeClass('highlight')
-											})
-										)
-										return $li
-									}))
-								)
-							)
-						)
-					)
-				}
-				return $cell
-			}
 			const writeGeneralNotes=()=>{
 				const nt=notation
 				return $("<ul>").append(
@@ -436,17 +390,22 @@ $(function(){
 			$tableContainer.empty()
 			const traitRowsOutput=new TraitRowsOutput(
 				i18n,theadLayout,trLayout,
-				data.traits,data.classes,
+				data.traits,data.classes, // TODO pass data before layouts
 				traitAlignmentLevel,notation
+			)
+			const formRowsOutput=new FormRowsOutput(
+				i18n,orderedClassSubgraph,theadLayout,
+				data.classes,
+				notation,
+				$classHighlightables,
+				(classId,form)=>traitRowsOutput.updateForm(classId,form)
 			)
 			if (Object.keys(selectedNodes).length>0) $tableContainer.append(
 				$("<table class='classes'>").append(
 					writeThead(),
 					writeTfoot(),
 					$("<tbody>").append(
-						$("<tr>").append( // equations
-							theadLayout.columns.map(writeEquations)
-						),
+						formRowsOutput.$trs,
 						traitRowsOutput.$trs
 					)
 				)
