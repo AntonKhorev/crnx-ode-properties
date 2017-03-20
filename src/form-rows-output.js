@@ -4,7 +4,7 @@
 // currently produces only one <tr> but this is going to change if alignment options are introduced
 class FormRowsOutput {
 	constructor(i18n,orderedClassSubgraph,theadLayout,classData,notation,$classHighlightables,formSelectCallback) {
-		const writeEquations=(classId)=>{
+		const writeEquations=(classId,iColumn)=>{
 			const $cell=$("<td>")
 			let $classEquations=$()
 			classData[classId].forms.forEach((formData,i)=>{
@@ -27,7 +27,7 @@ class FormRowsOutput {
 					if ($equation.hasClass('selected')) return
 					unselect($classEquations)
 					select($equation)
-					formSelectCallback(classId,formData.is)
+					formSelectCallback(iColumn,formData.is)
 				})
 				if (formData.notes!==undefined) {
 					$cell.append(

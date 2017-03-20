@@ -17,6 +17,7 @@ const mathjaxDetailsFixAndPolyfill=function(){
 // produces array of <tr>'s in this.$trs
 class TraitRowsOutput {
 	constructor(i18n,theadLayout,trLayout,traitData,classData,traitAlignmentLevel,notation) {
+		this.columnTraitCells=theadLayout.columns.map(()=>[])
 		const writeTraitItem=(forClassId,fromClassId,traitId,selectedForm)=>{
 			const trait=classData[fromClassId].traits[traitId]
 			//if (!trait.contents) return // impossible? TODO check if it's possible
@@ -80,11 +81,10 @@ class TraitRowsOutput {
 			}
 			return $trait
 		}
-		const writeTraitCell=(forClassId,traitCell)=>{
+		const writeTraitCell=(forClassId,traitCell,selectedForm)=>{
 			const $cell=$("<td>")
 			if (traitCell.length>0) {
 				// TODO put trait+form logic into TrLayout
-				const selectedForm=classData[forClassId].forms[0].is // TODO pass to ctor
 				const selectedFormTypes=selectedForm.split(',')
 				let traitCellFitting=traitCell.filter(([fromClassId,traitId])=>{
 					const trait=classData[fromClassId].traits[traitId]
@@ -103,7 +103,14 @@ class TraitRowsOutput {
 			const traitCells=trLayout.getSubtreeLayout(traitSubtree)
 			if (!traitCells) return null
 			return $("<tr>").append(traitCells.map(
-				(traitCell,i)=>writeTraitCell(theadLayout.columns[i],traitCell)
+				(traitCell,iColumn)=>{
+					const forClassId=theadLayout.columns[iColumn]
+					const selectedForm=classData[forClassId].forms[0].is
+					const cellWriterForForm=form=>writeTraitCell(forClassId,traitCell,form)
+					const $cell=cellWriterForForm(selectedForm)
+					this.columnTraitCells[iColumn].push([$cell,cellWriterForForm])
+					return $cell
+				}
 			))
 		}
 		this.$trs=[]
@@ -118,9 +125,14 @@ class TraitRowsOutput {
 		}
 		rec(['root',traitData],0)
 	}
-	updateForm(classId,form) {
-		// TODO
-		console.log('called updateForm',classId,form)
+	updateForm(iColumn,form) {
+		for (let i=0;i<this.columnTraitCells[iColumn].length;i++) {
+			const [$oldCell,cellWriterForForm]=this.columnTraitCells[iColumn][i]
+			const $newCell=cellWriterForForm(form)
+			$oldCell.replaceWith($newCell)
+			this.columnTraitCells[iColumn][i][0]=$newCell
+			MathJax.Hub.Queue(["Typeset",MathJax.Hub,$newCell[0]])
+		}
 	}
 }
 
