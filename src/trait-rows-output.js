@@ -85,15 +85,19 @@ class TraitRowsOutput {
 			const $cell=$("<td>")
 			if (traitCell.length>0) {
 				// TODO put trait+form logic into TrLayout
-				const selectedFormTypes=selectedForm.split(',')
-				let traitCellFitting=traitCell.filter(([fromClassId,traitId])=>{
-					const trait=classData[fromClassId].traits[traitId]
-					return selectedFormTypes.some(selectedFormType=>trait.contents[selectedFormType]!==undefined)
-				})
-				if (traitCellFitting.length==0) {
-					traitCellFitting=traitCell
-				}
-				$cell.append(traitCellFitting.map(([fromClassId,traitId])=>{
+				// ..or not - not sure if it's useful
+				//const selectedFormTypes=selectedForm.split(',')
+				//let traitCellFitting=traitCell.filter(([fromClassId,traitId])=>{
+				//	const trait=classData[fromClassId].traits[traitId]
+				//	return selectedFormTypes.some(selectedFormType=>trait.contents[selectedFormType]!==undefined)
+				//})
+				//if (traitCellFitting.length==0) { // TODO wrong! need to have at least one of each trait
+				//	traitCellFitting=traitCell
+				//}
+				//$cell.append(traitCellFitting.map(([fromClassId,traitId])=>{
+				//	return writeTraitItem(forClassId,fromClassId,traitId,selectedForm)
+				//}))
+				$cell.append(traitCell.map(([fromClassId,traitId])=>{
 					return writeTraitItem(forClassId,fromClassId,traitId,selectedForm)
 				}))
 			}
