@@ -6,15 +6,24 @@ class FormRowsOutput {
 	constructor(i18n,orderedClassSubgraph,theadLayout,classData,notation,$classHighlightables,formSelectCallback) {
 		const writeEquations=(classId)=>{
 			const $cell=$("<td>")
+			let $classEquations=$()
 			classData[classId].forms.forEach((formData,i)=>{
-				if (i) {
+				if (i>0) {
 					$cell.append(
 						"<div class='alt-separator'>or</div>"
 					)
 				}
-				$cell.append(
-					$("<div class='equation'>").append("\\["+formData.equation(notation)+"\\]")
-				)
+				const $equation=$("<div class='equation'>").append("\\["+formData.equation(notation)+"\\]")
+				$classEquations=$classEquations.add($equation)
+				$cell.append($equation)
+				if (i==0) {
+					$equation.addClass('selected')
+				}
+				$equation.click(function(){
+					$classEquations.removeClass('selected')
+					$equation.addClass('selected')
+					formSelectCallback(classId,formData.is)
+				})
 				if (formData.notes!==undefined) {
 					$cell.append(
 						$("<ul>").append(

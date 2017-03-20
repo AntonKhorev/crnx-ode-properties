@@ -354,7 +354,14 @@
 			}
 			div.equation {
 				border: solid 1px @separator-color;
-				margin: 0 5px;
+				margin: 5px;
+				&:hover {
+					border: solid 1px @active-stroke-color;
+				}
+				&.selected {
+					border: solid 1px @passive-stroke-color;
+					outline: solid 1px @passive-stroke-color;
+				}
 			}
 			div.alt-separator {
 				text-align: center;
