@@ -16,12 +16,17 @@ class FormRowsOutput {
 				const $equation=$("<div class='equation'>").append("\\["+formData.equation(notation)+"\\]")
 				$classEquations=$classEquations.add($equation)
 				$cell.append($equation)
+				const select=$e=>$e.addClass('selected').removeAttr('title')
+				const unselect=$e=>$e.removeClass('selected').attr('title','Rewrite equation properties in terms of this form')
 				if (i==0) {
-					$equation.addClass('selected')
+					select($equation)
+				} else {
+					unselect($equation)
 				}
 				$equation.click(function(){
-					$classEquations.removeClass('selected')
-					$equation.addClass('selected')
+					if ($equation.hasClass('selected')) return
+					unselect($classEquations)
+					select($equation)
 					formSelectCallback(classId,formData.is)
 				})
 				if (formData.notes!==undefined) {
