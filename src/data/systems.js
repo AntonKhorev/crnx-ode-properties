@@ -74,6 +74,137 @@ const s2_partlyDecoupled=(i)=>{
 	}
 }
 
+const s2_linearHomogeneousConstant_characteristicEquation=scalar=>(scalar
+	? `\\[ \\lambda^2 - (a+d)\\lambda + ad - bc = 0 \\]`
+	: `\\[ \\det(\\mathbf{A} - \\lambda \\mathbf{I}) = 0 \\]`
+)
+const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
+	const genSolX0=`general solution (with arbitrary `+(scalar?`constants \\( ${nt.x}_0 \\), \\( ${nt.y}_0 \\)`:`constant \\( ${nt.X}_0 \\)`)+`) and ${ivp} solution:`
+	return [
+		`${ivp} initial conditions are: \\( ${nt.x}_0 = ${nt.x}(0) \\), \\( ${nt.y}_0 = ${nt.y}(0) \\)`, // TODO
+		{type:'switch',title:(scalar?`coefficients satisfy conditions`:`matrix \\( \\mathbf{A} \\) has a form`),content:[
+			{type:'case',title:(scalar?`\\( b = c = 0 \\)`:`\\( \\mathbf{A} = ${nt.mat2('*',0,0,'*')} \\)`),content:[
+				{type:'note',content:[
+					`this is a completely decoupled system`,
+				]},
+				`the `+(scalar?`equations have`:`equation has`)+` the form:`,
+				(scalar
+					? `\\[ \\left\\{ \\begin{aligned}`+
+						`${nt.dd(nt.x)} &= \\lambda_1 ${nt.x} \\\\`+
+						`${nt.dd(nt.y)} &= \\lambda_2 ${nt.y}`+
+					`\\end{aligned} \\right. \\]`
+					: `\\[ ${nt.dd(nt.X)} = ${nt.mat2('\\lambda_1',0,0,'\\lambda_2')} ${nt.X} \\]`
+				),
+				genSolX0,
+				(scalar
+					? `\\[ \\left\\{ \\begin{aligned}`+
+						`${nt.x} &= ${nt.x}_0 e^{\\lambda_1 t} \\\\`+
+						`${nt.y} &= ${nt.y}_0 e^{\\lambda_2 t}`+
+					`\\end{aligned} \\right. \\]`
+					: `\\[ ${nt.X} = ${nt.mat2('e^{\\lambda_1 t}',0,0,'e^{\\lambda_2 t}')} ${nt.X}_0 \\]`
+				),
+			]},
+			{type:'case',title:(scalar?`\\( a = 0 \\) and \\( b = 1 \\)`:`\\( \\mathbf{A} = ${nt.mat2(0,1,'*','*')} \\)`)+` (optional)`,content:[
+				{type:'note',content:[
+					`this is an optional case, you can use <em>`+(scalar?`\\( b \\ne 0 \\) or \\( c \\ne 0 \\)`:`\\( \\mathbf{A} \\ne ${nt.mat2('*',0,0,'*')} \\)`)+`</em> case below`,
+					`this case will happen after order reduction of second-order equation`, // TODO now we don't mention order reduction, say this is just a second-order equation
+				]},
+				`the `+(scalar?`equations have`:`equation has`)+` the form:`,
+				(scalar
+					? `\\[ \\left\\{ \\begin{aligned}`+
+						`${nt.dd(nt.x)} &= ${nt.y} \\\\`+
+						`${nt.dd(nt.y)} &= c ${nt.x} + d ${nt.y}`+
+					`\\end{aligned} \\right. \\]`
+					: `\\[ ${nt.dd(nt.X)} = ${nt.mat2(0,1,'c','d')} ${nt.X} \\]`
+				),
+				{type:'derivation',content:[ // TODO maybe move to a different place
+						`eigenvector for \\( \\lambda_1 \\) is:`,
+						`\\[ ${nt.vec2(`${nt.x}_1`,`${nt.y}_1`)} = ${nt.vec2(1,'\\lambda_1')} \\]`,
+						`eigenvector for \\( \\lambda_2 \\) is:`,
+						`\\[ ${nt.vec2(`${nt.x}_2`,`${nt.y}_2`)} = ${nt.vec2(1,'\\lambda_2')} \\]`,
+						`use these eigenvectors in <em>\\( b \\neq 0 \\) or \\( c \\neq 0 \\)</em> case below`,
+					]},
+				`get eigenvalues \\( \\lambda_1 \\), \\( \\lambda_2 \\) by solving the characteristic equation for \\( \\lambda \\):`,
+				(scalar
+					? `\\[ \\lambda^2 - d \\lambda - c = 0 \\]`
+					: s2_linearHomogeneousConstant_characteristicEquation(scalar)
+				),
+				{type:'switch',title:`eigenvalues \\( \\lambda_1 \\), \\( \\lambda_2 \\) are`,content:[ // TODO
+					{type:'case',title:`repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,content:[
+						genSolX0,
+						(scalar
+							? `\\[ \\left\\{ \\begin{aligned}`+
+								`${nt.x} &= (${nt.x}_0 + (${nt.y}_0 - ${nt.x}_0 \\lambda) t) e^{\\lambda t} \\\\`+
+								`${nt.y} &= (${nt.y}_0 + (${nt.x}_0 c + ${nt.y}_0 (d-\\lambda)) t) e^{\\lambda t}`+
+							`\\end{aligned} \\right. \\]`
+							: `\\[ ${nt.X} = e^{\\lambda t} (\\mathbf{I} + t (\\mathbf{A} - \\lambda \\mathbf{I})) ${nt.X}_0 \\]`
+						),
+					]},
+					{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[
+						`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
+						`\\[ ${nt.X} = k_1 e^{\\lambda_1 t} ${nt.vec2(1,'\\lambda_1')} + k_2 e^{\\lambda_2 t} ${nt.vec2(1,'\\lambda_2')} \\]`,
+						`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+						`\\[ ${nt.mat2(1,1,'\\lambda_1','\\lambda_2')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}_0`,`${nt.y}_0`)} \\]`,
+					]},
+					{type:'case',title:`complex conjugate pair \\( ( \\lambda = \\alpha \\pm i \\beta; \\beta \\ne 0 ) \\)`,content:[
+						`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
+						`\\[ \\begin{aligned} `+
+							`${nt.X} = \\: & k_1 e^{\\alpha t} ${nt.vec2('\\cos \\beta t','\\alpha \\cos \\beta t - \\beta \\sin \\beta t')} \\\\`+
+								`+ \\: & k_2 e^{\\alpha t} ${nt.vec2('\\sin \\beta t','\\alpha \\sin \\beta t + \\beta \\cos \\beta t')} `+
+						`\\end{aligned} \\]`,
+						`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+						`\\[ ${nt.mat2(1,0,'\\alpha','\\beta')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}_0`,`${nt.y}_0`)} \\]`,
+					]},
+				]},
+			]},
+			{type:'case',title:(scalar?`\\( b \\ne 0 \\) or \\( c \\ne 0 \\)`:`\\( \\mathbf{A} \\ne ${nt.mat2('*',0,0,'*')} \\)`),content:[
+				`get eigenvalues \\( \\lambda_1 \\), \\( \\lambda_2 \\) by solving the characteristic equation for \\( \\lambda \\):`,
+				s2_linearHomogeneousConstant_characteristicEquation(scalar),
+				{type:'switch',title:`eigenvalues \\( \\lambda_1 \\), \\( \\lambda_2 \\) are`,content:[
+					{type:'case',title:`repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,content:[
+						genSolX0,
+						(scalar
+							? `\\[ \\left\\{ \\begin{aligned}`+
+								`${nt.x} &= (${nt.x}_0 + (${nt.x}_0 (a-\\lambda) + ${nt.y}_0 b) t) e^{\\lambda t} \\\\`+
+								`${nt.y} &= (${nt.y}_0 + (${nt.x}_0 c + ${nt.y}_0 (d-\\lambda)) t) e^{\\lambda t}`+
+							`\\end{aligned} \\right. \\]`
+							: `\\[ ${nt.X} = e^{\\lambda t} (\\mathbf{I} + t (\\mathbf{A} - \\lambda \\mathbf{I})) ${nt.X}_0 \\]`
+						),
+					]},
+					{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[ // TODO
+						`find eigenvector \\( ${nt.svec2(`${nt.x}_1`,`${nt.y}_1`)} \\) by solving:`,
+						`\\[ (\\mathbf{A} - \\lambda_1 \\mathbf{I}) ${nt.vec2(`${nt.x}_1`,`${nt.y}_1`)} = 0 \\]`,
+						`find eigenvector \\( ${nt.svec2(`${nt.x}_2`,`${nt.y}_2`)} \\) by solving:`,
+						`\\[ (\\mathbf{A} - \\lambda_2 \\mathbf{I}) ${nt.vec2(`${nt.x}_2`,`${nt.y}_2`)} = 0 \\]`,
+						`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
+						`\\[ ${nt.X} = k_1 e^{\\lambda_1 t} ${nt.vec2(`${nt.x}_1`,`${nt.y}_1`)} + k_2 e^{\\lambda_2 t} ${nt.vec2(`${nt.x}_2`,`${nt.y}_2`)} \\]`,
+						`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+						`\\[ ${nt.mat2(`${nt.x}_1`,`${nt.x}_2`,`${nt.y}_1`,`${nt.y}_2`)} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}_0`,`${nt.y}_0`)} \\]`,
+					]},
+					{type:'case',title:`complex conjugate pair \\( ( \\lambda = \\alpha \\pm i \\beta; \\beta \\ne 0 ) \\)`,content:[ // TODO
+						`select one of eigenvalues \\( \\lambda_1 = \\alpha + i \\beta \\)`,
+						`find complex-valued eigenvector \\( ${nt.svec2(`${nt.x}_1 + i ${nt.x}_2`,`${nt.y}_1 + i ${nt.y}_2`)} \\) by solving:`,
+						`\\[ (\\mathbf{A} - \\lambda_1 \\mathbf{I}) ${nt.vec2(`${nt.x}_1 + i ${nt.x}_2`,`${nt.y}_1 + i ${nt.y}_2`)} = 0 \\]`,
+						{type:'derivation',content:[
+							`one of complex-valued solutions:`,
+							`\\[ ${nt.X}_c = e^{\\alpha t} (\\cos \\beta t + i \\sin \\beta t) ${nt.svec2(`${nt.x}_1 + i ${nt.x}_2`,`${nt.y}_1 + i ${nt.y}_2`)} \\]`,
+							`find general solution by taking real and imaginary parts of a complex-valued solution:`,
+							`\\[ ${nt.X} = k_1 \\operatorname{Re}(${nt.X}_c) + k_2 \\operatorname{Im}(${nt.X}_c) \\]`,
+						]},
+						`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
+						`\\[ \\begin{aligned} `+
+							`${nt.X} = \\: & k_1 e^{\\alpha t} ${nt.vec2(`${nt.x}_1 \\cos \\beta t - ${nt.x}_2 \\sin \\beta t`,`${nt.y}_1 \\cos \\beta t - ${nt.y}_2 \\sin \\beta t`)} \\\\`+
+								`+ \\: & k_2 e^{\\alpha t} ${nt.vec2(`${nt.x}_1 \\sin \\beta t + ${nt.x}_2 \\cos \\beta t`,`${nt.y}_1 \\sin \\beta t + ${nt.y}_2 \\cos \\beta t`)} `+
+						`\\end{aligned} \\]`,
+						`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+						`\\[ ${nt.mat2(`${nt.x}_1`,`${nt.x}_2`,`${nt.y}_1`,`${nt.y}_2`)} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}_0`,`${nt.y}_0`)} \\]`,
+					]},
+				]},
+			]},
+		]},
+	]
+}
+
 module.exports={
 	sn: {
 		parents: {},
@@ -253,105 +384,22 @@ module.exports={
 				formType: 'vector_s2_linearHomogeneousConstant',
 				contents: {
 					system_s2_linearHomogeneousConstant: nt=>[
-						`\\[ \\lambda^2 - (a+d)\\lambda + ad - bc = 0 \\]`,
+						s2_linearHomogeneousConstant_characteristicEquation(true),
 					],
 					vector_s2_linearHomogeneousConstant: nt=>[
-						`\\[ \\det(\\mathbf{A} - \\lambda \\mathbf{I}) = 0 \\]`,
+						s2_linearHomogeneousConstant_characteristicEquation(false),
 						{type:'note',content:[
 							`\\( \\lambda \\) is an eigenvalue of \\( \\mathbf{A} \\)`,
 						]},
 					],
 				},
 			},
-			generalSolutionMethod: { // TODO
+			generalSolutionMethod: {
 				title: `General and ${ivp} solution`,
-				content: nt=>[
-					`${ivp} initial conditions are: \\( ${nt.x}_0 = ${nt.x}(0) \\), \\( ${nt.y}_0 = ${nt.y}(0) \\)`,
-					{type:'switch',title:`coefficients satisfy conditions`,content:[
-						{type:'case',title:`\\( b = c = 0 \\)`,content:[
-							`the equation has the form:`,
-							`\\[ ${nt.ddt} ${nt.vec2(nt.x,nt.y)} = ${nt.mat2('\\lambda_1',0,0,'\\lambda_2')} ${nt.vec2(nt.x,nt.y)} \\]`,
-							`general solution (with arbitrary constants \\( ${nt.x}_0 \\), \\( ${nt.y}_0 \\)) and ${ivp} solution:`,
-							`\\[ ${nt.X} = ${nt.x}_0 e^{\\lambda_1 t} ${nt.vec2(1,0)} + ${nt.y}_0 e^{\\lambda_2 t} ${nt.vec2(0,1)} \\]`,
-						]},
-						{type:'case',title:`\\( a = 0 \\) and \\( b = 1 \\) (optional)`,content:[
-							{type:'note',content:[
-								`this is an optional case, you can use <em>\\( b \\neq 0 \\) or \\( c \\neq 0 \\)</em> case below`,
-								`this case will happen after order reduction of second-order equation`,
-							]},
-							`the equation has the form:`,
-							`\\[ ${nt.ddt} ${nt.vec2(nt.x,nt.y)} = ${nt.mat2(0,1,`c`,`d`)} ${nt.vec2(nt.x,nt.y)} \\]`,
-							{type:'derivation',content:[
-									`eigenvector for \\( \\lambda_1 \\) is:`,
-									`\\[ ${nt.vec2(`${nt.x}_1`,`${nt.y}_1`)} = ${nt.vec2(1,'\\lambda_1')} \\]`,
-									`eigenvector for \\( \\lambda_2 \\) is:`,
-									`\\[ ${nt.vec2(`${nt.x}_2`,`${nt.y}_2`)} = ${nt.vec2(1,'\\lambda_2')} \\]`,
-									`use these eigenvectors in <em>\\( b \\neq 0 \\) or \\( c \\neq 0 \\)</em> case below`,
-								]},
-							`get eigenvalues \\( \\lambda_1 \\), \\( \\lambda_2 \\) by solving the characteristic equation for \\( \\lambda \\):`,
-							`\\[ \\det(\\mathbf{A} - \\lambda \\mathbf{I}) = 0 \\]`,
-							{type:'switch',title:`eigenvalues \\( \\lambda_1 \\), \\( \\lambda_2 \\) are`,content:[
-								{type:'case',title:`repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,content:[
-									`general solution (with arbitrary constants \\( ${nt.x}_0 \\), \\( ${nt.y}_0 \\)) and ${ivp} solution:`,
-									`\\[ ${nt.X} = e^{\\lambda t} ${nt.vec2(nt.x+'_0',nt.y+'_0')} + t e^{\\lambda t} (\\mathbf{A} - \\lambda \\mathbf{I}) ${nt.vec2(nt.x+'_0',nt.y+'_0')} \\]`,
-								]},
-								{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[
-									`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
-									`\\[ ${nt.X} = k_1 e^{\\lambda_1 t} ${nt.vec2(1,'\\lambda_1')} + k_2 e^{\\lambda_2 t} ${nt.vec2(1,'\\lambda_2')} \\]`,
-									`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-									`\\[ ${nt.mat2(1,1,'\\lambda_1','\\lambda_2')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}_0`,`${nt.y}_0`)} \\]`,
-								]},
-								{type:'case',title:`complex conjugate pair \\( ( \\lambda = \\alpha \\pm i \\beta; \\beta \\ne 0 ) \\)`,content:[
-									`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
-									`\\[ \\begin{aligned} `+
-										`${nt.X} = \\: & k_1 e^{\\alpha t} ${nt.vec2('\\cos \\beta t','\\alpha \\cos \\beta t - \\beta \\sin \\beta t')} \\\\`+
-										        `+ \\: & k_2 e^{\\alpha t} ${nt.vec2('\\sin \\beta t','\\alpha \\sin \\beta t + \\beta \\cos \\beta t')} `+
-									`\\end{aligned} \\]`,
-									`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-									`\\[ ${nt.mat2(1,0,'\\alpha','\\beta')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}_0`,`${nt.y}_0`)} \\]`,
-								]},
-							]},
-						]},
-						{type:'case',title:`\\( b \\neq 0 \\) or \\( c \\neq 0 \\)`,content:[
-							`get eigenvalues \\( \\lambda_1 \\), \\( \\lambda_2 \\) by solving the characteristic equation for \\( \\lambda \\):`,
-							`\\[ \\det(\\mathbf{A} - \\lambda \\mathbf{I}) = 0 \\]`,
-							{type:'switch',title:`eigenvalues \\( \\lambda_1 \\), \\( \\lambda_2 \\) are`,content:[
-								{type:'case',title:`repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,content:[
-									`general solution (with arbitrary constants \\( ${nt.x}_0 \\), \\( ${nt.y}_0 \\)) and ${ivp} solution:`,
-									`\\[ ${nt.X} = e^{\\lambda t} ${nt.vec2(nt.x+'_0',nt.y+'_0')} + t e^{\\lambda t} (\\mathbf{A} - \\lambda \\mathbf{I}) ${nt.vec2(nt.x+'_0',nt.y+'_0')} \\]`,
-								]},
-								{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[
-									`find eigenvector \\( ${nt.svec2(`${nt.x}_1`,`${nt.y}_1`)} \\) by solving:`,
-									`\\[ (\\mathbf{A} - \\lambda_1 \\mathbf{I}) ${nt.vec2(`${nt.x}_1`,`${nt.y}_1`)} = 0 \\]`,
-									`find eigenvector \\( ${nt.svec2(`${nt.x}_2`,`${nt.y}_2`)} \\) by solving:`,
-									`\\[ (\\mathbf{A} - \\lambda_2 \\mathbf{I}) ${nt.vec2(`${nt.x}_2`,`${nt.y}_2`)} = 0 \\]`,
-									`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
-									`\\[ ${nt.X} = k_1 e^{\\lambda_1 t} ${nt.vec2(`${nt.x}_1`,`${nt.y}_1`)} + k_2 e^{\\lambda_2 t} ${nt.vec2(`${nt.x}_2`,`${nt.y}_2`)} \\]`,
-									`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-									`\\[ ${nt.mat2(`${nt.x}_1`,`${nt.x}_2`,`${nt.y}_1`,`${nt.y}_2`)} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}_0`,`${nt.y}_0`)} \\]`,
-								]},
-								{type:'case',title:`complex conjugate pair \\( ( \\lambda = \\alpha \\pm i \\beta; \\beta \\ne 0 ) \\)`,content:[
-									`select one of eigenvalues \\( \\lambda_1 = \\alpha + i \\beta \\)`,
-									`find complex-valued eigenvector \\( ${nt.svec2(`${nt.x}_1 + i ${nt.x}_2`,`${nt.y}_1 + i ${nt.y}_2`)} \\) by solving:`,
-									`\\[ (\\mathbf{A} - \\lambda_1 \\mathbf{I}) ${nt.vec2(`${nt.x}_1 + i ${nt.x}_2`,`${nt.y}_1 + i ${nt.y}_2`)} = 0 \\]`,
-									{type:'derivation',content:[
-										`one of complex-valued solutions:`,
-										`\\[ ${nt.X}_c = e^{\\alpha t} (\\cos \\beta t + i \\sin \\beta t) ${nt.svec2(`${nt.x}_1 + i ${nt.x}_2`,`${nt.y}_1 + i ${nt.y}_2`)} \\]`,
-										`find general solution by taking real and imaginary parts of a complex-valued solution:`,
-										`\\[ ${nt.X} = k_1 \\operatorname{Re}(${nt.X}_c) + k_2 \\operatorname{Im}(${nt.X}_c) \\]`,
-									]},
-									`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
-									`\\[ \\begin{aligned} `+
-										`${nt.X} = \\: & k_1 e^{\\alpha t} ${nt.vec2(`${nt.x}_1 \\cos \\beta t - ${nt.x}_2 \\sin \\beta t`,`${nt.y}_1 \\cos \\beta t - ${nt.y}_2 \\sin \\beta t`)} \\\\`+
-										        `+ \\: & k_2 e^{\\alpha t} ${nt.vec2(`${nt.x}_1 \\sin \\beta t + ${nt.x}_2 \\cos \\beta t`,`${nt.y}_1 \\sin \\beta t + ${nt.y}_2 \\cos \\beta t`)} `+
-									`\\end{aligned} \\]`,
-									`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-									`\\[ ${nt.mat2(`${nt.x}_1`,`${nt.x}_2`,`${nt.y}_1`,`${nt.y}_2`)} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}_0`,`${nt.y}_0`)} \\]`,
-								]},
-							]},
-						]},
-					]},
-				],
+				contents: {
+					system_s2_linearHomogeneousConstant: s2_linearHomogeneousConstant_generalSolutionMethod_content(true),
+					vector_s2_linearHomogeneousConstant: s2_linearHomogeneousConstant_generalSolutionMethod_content(false),
+				},
 			},
 			equilibriumSolutionMethod: {
 				contents: {
