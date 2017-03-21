@@ -172,38 +172,59 @@ module.exports={
 			},
 		},
 	},
-/*
 	s2_autonomous: {
 		parents: {
 			s2: true,
 		},
 		name: "system of 2 first-order autonomous",
 		importance: 3,
-		equation:
-			`\\left\\{ \\begin{aligned}`+
-				`${nt.dd(nt.x)} &= f(${nt.x},${nt.y}) \\\\`+
-				`${nt.dd(nt.y)} &= g(${nt.x},${nt.y})`+
-			`\\end{aligned} \\right.`,
-		vectorEquation: `${nt.dd(nt.X)} = \\mathbf{F}(${nt.X})`,
+		forms: [
+			{
+				is: `t,xy,system_s2_autonomous`,
+				equation: nt=>`\\left\\{ \\begin{aligned}`+
+					`${nt.dd(nt.x)} &= f(${nt.x},${nt.y}) \\\\`+
+					`${nt.dd(nt.y)} &= g(${nt.x},${nt.y})`+
+				`\\end{aligned} \\right.`,
+			},
+			{
+				is: `t,X,vector_s2_autonomous`,
+				equation: nt=>`${nt.dd(nt.X)} = \\mathbf{F}(${nt.X})`,
+			},
+		],
 	},
 	s2_linearHomogeneous: {
 		parents: {
 			s2: true,
 		},
-		name: "system of 2 first-order linear homogeneous equations",
+		name: "system of 2 first-order linear homogeneous",
 		importance: 3,
-		equation:
-			`\\left\\{ \\begin{aligned}`+
-				`${nt.dd(nt.x)} &= a(t) \\, ${nt.x} + b(t) \\, ${nt.y} \\\\`+
-				`${nt.dd(nt.y)} &= c(t) \\, ${nt.x} + d(t) \\, ${nt.y}`+
-			`\\end{aligned} \\right.`,
-		vectorEquation: `${nt.dd(nt.X)} = \\mathbf{A}(t) \\, ${nt.X}`,
+		forms: [
+			{
+				is: `t,xy,system_s2_linearHomogeneous`,
+				equation: nt=>`\\left\\{ \\begin{aligned}`+
+					`${nt.dd(nt.x)} &= a(t) \\, ${nt.x} + b(t) \\, ${nt.y} \\\\`+
+					`${nt.dd(nt.y)} &= c(t) \\, ${nt.x} + d(t) \\, ${nt.y}`+
+				`\\end{aligned} \\right.`,
+			},
+			{
+				is: `t,X,vector_s2_linearHomogeneous`,
+				equation: nt=>`${nt.dd(nt.X)} = \\mathbf{A}(t) \\, ${nt.X}`,
+			},
+		],
 		traits: {
 			equilibriumSolutionMethod: {
-				form: true,
-				content: [
-					`\\[ ${nt.X} = ${nt.vec2(0,0)} \\]`,
-				],
+				formType: 'xy',
+				contents: {
+					xy: nt=>[
+						`\\[ \\left\\{ \\begin{aligned}`+
+							`${nt.x} &= 0 \\\\`+
+							`${nt.y} &= 0`+
+						`\\end{aligned} \\right. \\]`,
+					],
+					X: nt=>[
+						`\\[ ${nt.X} = ${nt.vec2(0,0)} \\]`,
+					],
+				},
 			},
 		},
 	},
@@ -212,28 +233,39 @@ module.exports={
 			s2_autonomous: true,
 			s2_linearHomogeneous: true,
 		},
-		name: "system of 2 first-order linear homogeneous equations with constant coefficients",
+		name: "system of 2 first-order linear homogeneous with constant coefficients",
 		importance: 3,
-		equation:
-			`\\left\\{ \\begin{aligned}`+
-				`${nt.dd(nt.x)} &= a ${nt.x} + b ${nt.y} \\\\`+
-				`${nt.dd(nt.y)} &= c ${nt.x} + d ${nt.y}`+
-			`\\end{aligned} \\right.`,
-		vectorEquation: `${nt.dd(nt.X)} = \\mathbf{A} ${nt.X}`,
+		forms: [
+			{
+				is: `t,xy,system_s2_linearHomogeneousConstant`,
+				equation: nt=>`\\left\\{ \\begin{aligned}`+
+					`${nt.dd(nt.x)} &= a ${nt.x} + b ${nt.y} \\\\`+
+					`${nt.dd(nt.y)} &= c ${nt.x} + d ${nt.y}`+
+				`\\end{aligned} \\right.`,
+			},
+			{
+				is: `t,X,vector_s2_linearHomogeneousConstant`,
+				equation: nt=>`${nt.dd(nt.X)} = \\mathbf{A} ${nt.X}`,
+			},
+		],
 		traits: {
 			characteristicEquation: {
-				form: true,
-				content: [
-					`\\[ \\det(\\mathbf{A} - \\lambda \\mathbf{I}) = 0 \\]`,
-					{type:'note',content:[
-						`\\( \\lambda \\) is an eigenvalue of \\( \\mathbf{A} \\)`,
-					]},
-				],
+				formType: 'vector_s2_linearHomogeneousConstant',
+				contents: {
+					system_s2_linearHomogeneousConstant: nt=>[
+						`\\[ \\lambda^2 - (a+d)\\lambda + ad - bc = 0 \\]`,
+					],
+					vector_s2_linearHomogeneousConstant: nt=>[
+						`\\[ \\det(\\mathbf{A} - \\lambda \\mathbf{I}) = 0 \\]`,
+						{type:'note',content:[
+							`\\( \\lambda \\) is an eigenvalue of \\( \\mathbf{A} \\)`,
+						]},
+					],
+				},
 			},
-			generalSolutionMethod: {
+			generalSolutionMethod: { // TODO
 				title: `General and ${ivp} solution`,
-				form: true,
-				content: [
+				content: nt=>[
 					`${ivp} initial conditions are: \\( ${nt.x}_0 = ${nt.x}(0) \\), \\( ${nt.y}_0 = ${nt.y}(0) \\)`,
 					{type:'switch',title:`coefficients satisfy conditions`,content:[
 						{type:'case',title:`\\( b = c = 0 \\)`,content:[
@@ -322,27 +354,60 @@ module.exports={
 				],
 			},
 			equilibriumSolutionMethod: {
-				form: true,
-				content: [
-					{type:'switch',title:`\\( \\det(\\mathbf{A}) \\) is`,content:[
-						{type:'case',title:`\\( \\det(\\mathbf{A}) = 0 \\)`,content:[
-							`\\[ ${nt.X} = K ${nt.vec2('b','-a')} \\]`,
-							{type:'proof',content:[
-								`\\[ ${nt.dd(nt.X)} = K ${nt.mat2('a','b','c','d')} ${nt.vec2('b','-a')} \\]`,
-								`\\[ ${nt.dd(nt.X)} = K ${nt.vec2('a b - b a','c b - d a')} \\]`,
-								`\\[ a d = b c \\]`,
-								`\\[ ${nt.dd(nt.X)} = ${nt.vec2(0,0)} \\]`,
+				contents: {
+					system_s2_linearHomogeneousConstant: nt=>[
+						{type:'switch',title:`\\( ad-bc \\) is`,content:[
+							{type:'case',title:`\\( ad-bc = 0 \\)`,content:[
+								`\\[ \\left\\{ \\begin{aligned}`+
+									`${nt.x} &= K b \\\\`+
+									`${nt.y} &= -K a`+
+								`\\end{aligned} \\right. \\]`,
+								{type:'proof',content:[
+									`\\[ \\left\\{ \\begin{aligned}`+
+										`${nt.dd(nt.x)} &= a (K b) + b (-K a) \\\\`+
+										`${nt.dd(nt.y)} &= c (K b) + d (-K a)`+
+									`\\end{aligned} \\right. \\]`,
+									`\\[ \\left\\{ \\begin{aligned}`+
+										`${nt.dd(nt.x)} &= K (ab-ab) \\\\`+
+										`${nt.dd(nt.y)} &= K (bc-ad)`+
+									`\\end{aligned} \\right. \\]`,
+									`\\[ a d = b c \\]`,
+									`\\[ \\left\\{ \\begin{aligned}`+
+										`${nt.dd(nt.x)} &= 0 \\\\`+
+										`${nt.dd(nt.y)} &= 0`+
+									`\\end{aligned} \\right. \\]`,
+								]},
+							]},
+							{type:'case',title:`\\( ad-bc \\ne 0 \\)`,content:[
+								`\\[ \\left\\{ \\begin{aligned}`+
+									`${nt.x} &= 0 \\\\`+
+									`${nt.y} &= 0`+
+								`\\end{aligned} \\right. \\]`,
 							]},
 						]},
-						{type:'case',title:`\\( \\det(\\mathbf{A}) \\ne 0 \\)`,content:[
-							`\\[ ${nt.X} = ${nt.vec2(0,0)} \\]`,
+					],
+					vector_s2_linearHomogeneousConstant: nt=>[
+						{type:'switch',title:`\\( \\det(\\mathbf{A}) \\) is`,content:[
+							{type:'case',title:`\\( \\det(\\mathbf{A}) = 0 \\)`,content:[
+								`let \\( \\mathbf{A} = ${nt.mat2('a','b','c','d')} \\)`,
+								`then equilibrium solution is:`,
+								`\\[ ${nt.X} = K ${nt.vec2('b','-a')} \\]`,
+								{type:'proof',content:[
+									`\\[ ${nt.dd(nt.X)} = K ${nt.mat2('a','b','c','d')} ${nt.vec2('b','-a')} \\]`,
+									`\\[ ${nt.dd(nt.X)} = K ${nt.vec2('a b - b a','c b - d a')} \\]`,
+									`\\[ a d = b c \\]`,
+									`\\[ ${nt.dd(nt.X)} = ${nt.vec2(0,0)} \\]`,
+								]},
+							]},
+							{type:'case',title:`\\( \\det(\\mathbf{A}) \\ne 0 \\)`,content:[
+								`\\[ ${nt.X} = ${nt.vec2(0,0)} \\]`,
+							]},
 						]},
-					]},
-				],
+					],
+				},
 			},
 			plot: {
-				form: true,
-				content: [
+				content: nt=>[
 					()=>{
 						const plot=new LhcPlot(nt.x,nt.y)
 						return plot.$output
@@ -351,6 +416,7 @@ module.exports={
 			},
 		},
 	},
+/*
 	sn_sir: {
 		parents: {
 			sn: true,
