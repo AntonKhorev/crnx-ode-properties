@@ -4,6 +4,66 @@ const LhcPlot=require('../lhc-plot')
 
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
+const s2_partlyDecoupled=(i,ith,choose,f,g)=>({
+	parents: {
+		s2: true,
+	},
+	name: `system of 2 first-order with ${ith} variable decoupled`, // partially decoupled
+	importance: 3,
+	forms: [
+		{
+			is: `t,xy,system_s2_partlyDecoupled${i}`,
+			equation: nt=>`\\left\\{ \\begin{aligned}`+
+				`${nt.dd(nt.x)} &= ${f(nt.x,nt.y)} \\\\`+
+				`${nt.dd(nt.y)} &= ${g(nt.x,nt.y)}`+
+			`\\end{aligned} \\right.`,
+		},
+		{
+			is: `t,X,vector_s2_partlyDecoupled${i}`,
+			equation: nt=>`${nt.dd(nt.X)} = ${nt.ddt}`+nt.vec2(`${nt.x}_1`,`${nt.x}_2`)+` = `+nt.vec2(f(`${nt.x}_1`,`${nt.x}_2`),g(`${nt.x}_1`,`${nt.x}_2`)),
+		},
+	],
+	traits: {
+		generalSolutionMethod: {
+			content: nt=>{
+				const [dv,cv]=choose(nt.x,nt.y) // decoupled/coupled variable/function
+				const [df,cf]=choose('f','g')
+				const [ex1,ex2]=choose(dv,`2 ${dv} - ${cv}`)
+				const [dth,cth]=choose("first","second")
+				return [
+					`Solve \\(${nt.dd(dv)} = ${df}(t,${dv}) \\).`,
+					`Substitute \\( ${dv} \\) into \\( ${nt.dd(cv)} = ${cf}(t,${nt.x},${nt.y}) \\).`,
+					{type:'example',content:[
+						`\\[ \\left\\{ \\begin{aligned}`+
+							`${nt.dd(nt.x)} &= ${ex1} \\\\`+
+							`${nt.dd(nt.y)} &= ${ex2}`+
+						`\\end{aligned} \\right. \\]`,
+						`solve the ${dth} equation`,
+						`\\[ ${dv} = ${dv}_0 e^t \\]`,
+						`substitute \\( ${dv} \\) into the ${cth} equation`,
+						`\\[ ${nt.dd(cv)} = 2 ${dv}_0 e^t - ${cv} \\]`,
+						{type:'derivation',title:`solve the ${cth} equation`,content:[
+							`solve the associated homogeneous equation \\( ${nt.dd(cv)} = - ${cv} \\)`,
+							`\\[ ${cv}_h = K e^{-t} \\]`,
+							{type:'derivation',title:`find a particular solution of \\( ${nt.dd(cv+'_p')} + ${cv}_p = 2 ${dv}_0 e^t \\)`,content:[
+								`guess a solution`,
+								`\\[ ${cv}_p = \\alpha e^t \\]`,
+								`substitute the guess into the equation`,
+								`\\[ \\alpha e^t + \\alpha e^t = 2 ${dv}_0 e^t \\]`,
+								`\\[ \\alpha = ${dv}_0 \\]`,
+							]},
+							`\\[ ${cv}_p = ${dv}_0 e^t \\]`,
+							`\\[ ${cv} = ${cv}_p + ${cv}_h \\]`,
+							`\\[ ${cv} = ${dv}_0 e^t + K e^{-t} \\]`,
+						]},
+						`\\[ ${cv} = ${dv}_0 e^t + (${cv}_0 - ${dv}_0) e^{-t} \\]`,
+					]},
+				]
+			},
+		},
+	},
+})
+
 module.exports={
 	sn: {
 		parents: {},
@@ -71,53 +131,19 @@ module.exports={
 			},
 		},
 	},
+	s2_partlyDecoupled1: s2_partlyDecoupled(
+		1,'1st',
+		(x,y)=>[x,y],
+		(x,y)=>`f(t,${x})`,
+		(x,y)=>`g(t,${x},${y})`
+	),
+	s2_partlyDecoupled2: s2_partlyDecoupled(
+		2,'2nd',
+		(x,y)=>[y,x],
+		(x,y)=>`f(t,${x},${y})`,
+		(x,y)=>`g(t,${y})`
+	),
 /*
-	s2_partlyDecoupled: { // TODO other kind of partly decoupled: f(t,x); g(t,x,y)
-		parents: {
-			s2: true,
-		},
-		name: "partly decoupled system of 2 first-order",
-		importance: 3,
-		equation:
-			`\\left\\{ \\begin{aligned}`+
-				`${nt.dd(nt.x)} &= f(t,${nt.x},${nt.y}) \\\\`+
-				`${nt.dd(nt.y)} &= g(t,${nt.y})`+
-			`\\end{aligned} \\right.`,
-		traits: {
-			generalSolutionMethod: {
-				form: true,
-				content: [
-					`Solve \\(${nt.dd(nt.y)} = g(t,${nt.y}) \\).`,
-					`Substitute \\( ${nt.y} \\) into \\( ${nt.dd(nt.x)} = f(t,${nt.x},${nt.y}) \\).`,
-					{type:'example',content:[
-						`\\[ \\left\\{ \\begin{aligned}`+
-							`${nt.dd(nt.x)} &= 2 ${nt.y} - ${nt.x} \\\\`+
-							`${nt.dd(nt.y)} &= ${nt.y}`+
-						`\\end{aligned} \\right. \\]`,
-						`solve the second equation`,
-						`\\[ ${nt.y} = ${nt.y}_0 e^t \\]`,
-						`substitute \\( ${nt.y} \\) into the first equation`,
-						`\\[ ${nt.dd(nt.x)} = 2 ${nt.y}_0 e^t - ${nt.x} \\]`,
-						{type:'derivation',title:`solve the first equation`,content:[
-							`solve the associated homogeneous equation \\( ${nt.dd(nt.x)} = - ${nt.x} \\)`,
-							`\\[ ${nt.x}_h = K e^{-t} \\]`,
-							{type:'derivation',title:`find a particular solution of \\( ${nt.dd(nt.x+'_p')} + ${nt.x}_p = 2 ${nt.y}_0 e^t \\)`,content:[
-								`guess a solution`,
-								`\\[ ${nt.x}_p = \\alpha e^t \\]`,
-								`substitute the guess into the equation`,
-								`\\[ \\alpha e^t + \\alpha e^t = 2 ${nt.y}_0 e^t \\]`,
-								`\\[ \\alpha = ${nt.y}_0 \\]`,
-							]},
-							`\\[ ${nt.x}_p = ${nt.y}_0 e^t \\]`,
-							`\\[ ${nt.x} = ${nt.x}_p + ${nt.x}_h \\]`,
-							`\\[ ${nt.x} = ${nt.y}_0 e^t + K e^{-t} \\]`,
-						]},
-						`\\[ ${nt.x} = ${nt.y}_0 e^t + (${nt.x}_0 - ${nt.y}_0) e^{-t} \\]`,
-					]},
-				],
-			},
-		},
-	},
 	s2_autonomous: {
 		parents: {
 			s2: true,
