@@ -134,10 +134,10 @@ const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
 						genSolX0,
 						(scalar
 							? `\\[ \\left\\{ \\begin{aligned}`+
-								`${nt.x} &= (${nt.x}_0 + (${nt.y}_0 - ${nt.x}_0 \\lambda) t) e^{\\lambda t} \\\\`+
-								`${nt.y} &= (${nt.y}_0 + (${nt.x}_0 c + ${nt.y}_0 (d-\\lambda)) t) e^{\\lambda t}`+
+								`${nt.x} &= ${nt.x}_0 e^{\\lambda t} \\,{+}\\, (${nt.y}_0 \\,{-}\\, ${nt.x}_0 \\lambda) t e^{\\lambda t} \\\\`+
+								`${nt.y} &= ${nt.y}_0 e^{\\lambda t} \\,{+}\\, (${nt.x}_0 c \\,{+}\\, ${nt.y}_0 (d \\,{-}\\, \\lambda)) t e^{\\lambda t}`+
 							`\\end{aligned} \\right. \\]`
-							: `\\[ ${nt.X} = e^{\\lambda t} (\\mathbf{I} + t (\\mathbf{A} - \\lambda \\mathbf{I})) ${nt.X}_0 \\]`
+							: `\\[ ${nt.X} = e^{\\lambda t} ${nt.X}_0 + t e^{\\lambda t} (\\mathbf{A} - \\lambda \\mathbf{I}) ${nt.X}_0 \\]`
 						),
 					]},
 					{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[
@@ -165,10 +165,10 @@ const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
 						genSolX0,
 						(scalar
 							? `\\[ \\left\\{ \\begin{aligned}`+
-								`${nt.x} &= (${nt.x}_0 + (${nt.x}_0 (a-\\lambda) + ${nt.y}_0 b) t) e^{\\lambda t} \\\\`+
-								`${nt.y} &= (${nt.y}_0 + (${nt.x}_0 c + ${nt.y}_0 (d-\\lambda)) t) e^{\\lambda t}`+
+								`${nt.x} &= ${nt.x}_0 e^{\\lambda t} \\,{+}\\, (${nt.x}_0 (a \\,{-}\\, \\lambda) \\,{+}\\, ${nt.y}_0 b) t e^{\\lambda t} \\\\`+
+								`${nt.y} &= ${nt.y}_0 e^{\\lambda t} \\,{+}\\, (${nt.x}_0 c \\,{+}\\, ${nt.y}_0 (d \\,{-}\\, \\lambda)) t e^{\\lambda t}`+
 							`\\end{aligned} \\right. \\]`
-							: `\\[ ${nt.X} = e^{\\lambda t} (\\mathbf{I} + t (\\mathbf{A} - \\lambda \\mathbf{I})) ${nt.X}_0 \\]`
+							: `\\[ ${nt.X} = e^{\\lambda t} ${nt.X}_0 + t e^{\\lambda t} (\\mathbf{A} - \\lambda \\mathbf{I}) ${nt.X}_0 \\]`
 						),
 					]},
 					{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[ // TODO
