@@ -4,65 +4,71 @@ const LhcPlot=require('../lhc-plot')
 
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
-const s2_partlyDecoupled=(i,ith,choose,f,g)=>({
-	parents: {
-		s2: true,
-	},
-	name: `system of 2 first-order with ${ith} variable decoupled`, // partially decoupled
-	importance: 3,
-	forms: [
-		{
-			is: `t,xy,system_s2_partlyDecoupled${i}`,
-			equation: nt=>`\\left\\{ \\begin{aligned}`+
-				`${nt.dd(nt.x)} &= ${f(nt.x,nt.y)} \\\\`+
-				`${nt.dd(nt.y)} &= ${g(nt.x,nt.y)}`+
-			`\\end{aligned} \\right.`,
+const s2_partlyDecoupled=(i)=>{
+	const ith=[,"1st","2nd"][i]
+	const choose=[,(x,y)=>[x,y],(x,y)=>[y,x]][i]
+	const f=(x,y)=>"f(t,"+[,x,x+','+y][i]+")"
+	const g=(x,y)=>"g(t,"+[,x+','+y,y][i]+")"
+	return {
+		parents: {
+			s2: true,
 		},
-		{
-			is: `t,X,vector_s2_partlyDecoupled${i}`,
-			equation: nt=>`${nt.dd(nt.X)} = ${nt.ddt}`+nt.vec2(`${nt.x}_1`,`${nt.x}_2`)+` = `+nt.vec2(f(`${nt.x}_1`,`${nt.x}_2`),g(`${nt.x}_1`,`${nt.x}_2`)),
-		},
-	],
-	traits: {
-		generalSolutionMethod: {
-			content: nt=>{
-				const [dv,cv]=choose(nt.x,nt.y) // decoupled/coupled variable/function
-				const [df,cf]=choose('f','g')
-				const [ex1,ex2]=choose(dv,`2 ${dv} - ${cv}`)
-				const [dth,cth]=choose("first","second")
-				return [
-					`Solve \\(${nt.dd(dv)} = ${df}(t,${dv}) \\).`,
-					`Substitute \\( ${dv} \\) into \\( ${nt.dd(cv)} = ${cf}(t,${nt.x},${nt.y}) \\).`,
-					{type:'example',content:[
-						`\\[ \\left\\{ \\begin{aligned}`+
-							`${nt.dd(nt.x)} &= ${ex1} \\\\`+
-							`${nt.dd(nt.y)} &= ${ex2}`+
-						`\\end{aligned} \\right. \\]`,
-						`solve the ${dth} equation`,
-						`\\[ ${dv} = ${dv}_0 e^t \\]`,
-						`substitute \\( ${dv} \\) into the ${cth} equation`,
-						`\\[ ${nt.dd(cv)} = 2 ${dv}_0 e^t - ${cv} \\]`,
-						{type:'derivation',title:`solve the ${cth} equation`,content:[
-							`solve the associated homogeneous equation \\( ${nt.dd(cv)} = - ${cv} \\)`,
-							`\\[ ${cv}_h = K e^{-t} \\]`,
-							{type:'derivation',title:`find a particular solution of \\( ${nt.dd(cv+'_p')} + ${cv}_p = 2 ${dv}_0 e^t \\)`,content:[
-								`guess a solution`,
-								`\\[ ${cv}_p = \\alpha e^t \\]`,
-								`substitute the guess into the equation`,
-								`\\[ \\alpha e^t + \\alpha e^t = 2 ${dv}_0 e^t \\]`,
-								`\\[ \\alpha = ${dv}_0 \\]`,
+		name: `system of 2 first-order with ${ith} variable decoupled`, // partially decoupled
+		importance: 3,
+		forms: [
+			{
+				is: `t,xy,system_s2_partlyDecoupled${i}`,
+				equation: nt=>`\\left\\{ \\begin{aligned}`+
+					`${nt.dd(nt.x)} &= ${f(nt.x,nt.y)} \\\\`+
+					`${nt.dd(nt.y)} &= ${g(nt.x,nt.y)}`+
+				`\\end{aligned} \\right.`,
+			},
+			{
+				is: `t,X,vector_s2_partlyDecoupled${i}`,
+				equation: nt=>`${nt.dd(nt.X)} = ${nt.ddt}`+nt.vec2(`${nt.x}_1`,`${nt.x}_2`)+` = `+nt.vec2(f(`${nt.x}_1`,`${nt.x}_2`),g(`${nt.x}_1`,`${nt.x}_2`)),
+			},
+		],
+		traits: {
+			generalSolutionMethod: {
+				content: nt=>{
+					const [dv,cv]=choose(nt.x,nt.y) // decoupled/coupled variable/function
+					const [df,cf]=choose('f','g')
+					const [ex1,ex2]=choose(dv,`2 ${dv} - ${cv}`)
+					const [dth,cth]=choose("first","second")
+					return [
+						`Solve \\(${nt.dd(dv)} = ${df}(t,${dv}) \\).`,
+						`Substitute \\( ${dv} \\) into \\( ${nt.dd(cv)} = ${cf}(t,${nt.x},${nt.y}) \\).`,
+						{type:'example',content:[
+							`\\[ \\left\\{ \\begin{aligned}`+
+								`${nt.dd(nt.x)} &= ${ex1} \\\\`+
+								`${nt.dd(nt.y)} &= ${ex2}`+
+							`\\end{aligned} \\right. \\]`,
+							`solve the ${dth} equation`,
+							`\\[ ${dv} = ${dv}_0 e^t \\]`,
+							`substitute \\( ${dv} \\) into the ${cth} equation`,
+							`\\[ ${nt.dd(cv)} = 2 ${dv}_0 e^t - ${cv} \\]`,
+							{type:'derivation',title:`solve the ${cth} equation`,content:[
+								`solve the associated homogeneous equation \\( ${nt.dd(cv)} = - ${cv} \\)`,
+								`\\[ ${cv}_h = K e^{-t} \\]`,
+								{type:'derivation',title:`find a particular solution of \\( ${nt.dd(cv+'_p')} + ${cv}_p = 2 ${dv}_0 e^t \\)`,content:[
+									`guess a solution`,
+									`\\[ ${cv}_p = \\alpha e^t \\]`,
+									`substitute the guess into the equation`,
+									`\\[ \\alpha e^t + \\alpha e^t = 2 ${dv}_0 e^t \\]`,
+									`\\[ \\alpha = ${dv}_0 \\]`,
+								]},
+								`\\[ ${cv}_p = ${dv}_0 e^t \\]`,
+								`\\[ ${cv} = ${cv}_p + ${cv}_h \\]`,
+								`\\[ ${cv} = ${dv}_0 e^t + K e^{-t} \\]`,
 							]},
-							`\\[ ${cv}_p = ${dv}_0 e^t \\]`,
-							`\\[ ${cv} = ${cv}_p + ${cv}_h \\]`,
-							`\\[ ${cv} = ${dv}_0 e^t + K e^{-t} \\]`,
+							`\\[ ${cv} = ${dv}_0 e^t + (${cv}_0 - ${dv}_0) e^{-t} \\]`,
 						]},
-						`\\[ ${cv} = ${dv}_0 e^t + (${cv}_0 - ${dv}_0) e^{-t} \\]`,
-					]},
-				]
+					]
+				},
 			},
 		},
-	},
-})
+	}
+}
 
 module.exports={
 	sn: {
@@ -131,18 +137,8 @@ module.exports={
 			},
 		},
 	},
-	s2_partlyDecoupled1: s2_partlyDecoupled(
-		1,'1st',
-		(x,y)=>[x,y],
-		(x,y)=>`f(t,${x})`,
-		(x,y)=>`g(t,${x},${y})`
-	),
-	s2_partlyDecoupled2: s2_partlyDecoupled(
-		2,'2nd',
-		(x,y)=>[y,x],
-		(x,y)=>`f(t,${x},${y})`,
-		(x,y)=>`g(t,${y})`
-	),
+	s2_partlyDecoupled1: s2_partlyDecoupled(1),
+	s2_partlyDecoupled2: s2_partlyDecoupled(2),
 	s2_completelyDecoupled: {
 		parents: {
 			s2_partlyDecoupled1: true,
