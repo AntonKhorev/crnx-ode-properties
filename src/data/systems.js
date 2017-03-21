@@ -143,6 +143,35 @@ module.exports={
 		(x,y)=>`f(t,${x},${y})`,
 		(x,y)=>`g(t,${y})`
 	),
+	s2_completelyDecoupled: {
+		parents: {
+			s2_partlyDecoupled1: true,
+			s2_partlyDecoupled2: true,
+		},
+		name: "completely decoupled system of 2 first-order",
+		importance: 3,
+		forms: [
+			{
+				is: `t,xy,system_s2_completelyDecoupled`,
+				equation: nt=>`\\left\\{ \\begin{aligned}`+
+					`${nt.dd(nt.x)} &= f(t,${nt.x}) \\\\`+
+					`${nt.dd(nt.y)} &= g(t,${nt.y})`+
+				`\\end{aligned} \\right.`,
+			},
+			{
+				is: `t,X,vector_s2_completelyDecoupled`,
+				equation: nt=>`${nt.dd(nt.X)} = ${nt.ddt}`+nt.vec2(`${nt.x}_1`,`${nt.x}_2`)+` = `+nt.vec2(`f(t,${nt.x}_1)`,`g(t,${nt.x}_2)`),
+			},
+		],
+		traits: {
+			generalSolutionMethod: {
+				formType: 'xy',
+				content: nt=>[
+					`Solve each equation separately.`,
+				],
+			},
+		},
+	},
 /*
 	s2_autonomous: {
 		parents: {
