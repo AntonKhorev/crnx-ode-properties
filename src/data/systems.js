@@ -79,9 +79,47 @@ const s2_linearHomogeneousConstant_characteristicEquation=scalar=>(scalar
 	: `\\[ \\det(\\mathbf{A} - \\lambda \\mathbf{I}) = 0 \\]`
 )
 const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
+	const none=s=>(s==1 ? '' : s)
 	const genSolX0=`general solution (with arbitrary `+(scalar?`constants \\( ${nt.x}_0 \\), \\( ${nt.y}_0 \\)`:`constant \\( ${nt.X}_0 \\)`)+`) and ${ivp} solution:`
+	const findRealEigenvector=i=>{
+		const lead=`find eigenvector \\( ${nt.svec2(`${nt.x}_${i}`,`${nt.y}_${i}`)} \\) by solving`
+		if (scalar) {
+			return [
+				lead+` either:`,
+				`\\[ (a - \\lambda_${i}) ${nt.x}_${i} + b ${nt.y}_${i} = 0 \\]`,
+				`or:`,
+				`\\[ c ${nt.x}_${i} + (d - \\lambda_${i}) ${nt.y}_${i} = 0 \\]`,
+			]
+		} else {
+			return [
+				lead+`:`,
+				`\\[ (\\mathbf{A} - \\lambda_${i} \\mathbf{I}) ${nt.vec2(`${nt.x}_${i}`,`${nt.y}_${i}`)} = 0 \\]`,
+			]
+		}
+	}
+	const generalRealSolution=(eigx1,eigx2,eigy1,eigy2)=>[
+		`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
+		(scalar
+			? `\\[ \\left\\{ \\begin{aligned}`+
+				`${nt.x} &= k_1 ${none(eigx1)} e^{\\lambda_1 t} + k_2 ${none(eigx2)} e^{\\lambda_2 t} \\\\`+
+				`${nt.y} &= k_1 ${none(eigy1)} e^{\\lambda_1 t} + k_2 ${none(eigy2)} e^{\\lambda_2 t}`+
+			`\\end{aligned} \\right. \\]`
+			: `\\[ ${nt.X} = k_1 e^{\\lambda_1 t} ${nt.vec2(eigx1,eigy1)} + k_2 e^{\\lambda_2 t} ${nt.vec2(eigx2,eigy2)} \\]`
+		),
+		`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+		(scalar
+			? `\\[ \\left\\{ \\begin{aligned}`+
+				`${none(eigx1)} k_1 + ${none(eigx2)} k_2 &= ${nt.x}_0 \\\\`+
+				`${none(eigy1)} k_1 + ${none(eigy2)} k_2 &= ${nt.y}_0`+
+			`\\end{aligned} \\right. \\]`
+			: `\\[ ${nt.mat2(eigx1,eigx2,eigy1,eigy2)} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}_0`,`${nt.y}_0`)} \\]`
+		),
+	]
 	return [
-		`${ivp} initial conditions are: \\( ${nt.x}_0 = ${nt.x}(0) \\), \\( ${nt.y}_0 = ${nt.y}(0) \\)`, // TODO
+		`${ivp} initial conditions are: `+(scalar
+			? `\\( ${nt.x}_0 = ${nt.x}(0) \\), \\( ${nt.y}_0 = ${nt.y}(0) \\)`
+			: `\\( ${nt.X}_0 = ${nt.X}(0) \\)`
+		),
 		{type:'switch',title:(scalar?`coefficients satisfy conditions`:`matrix \\( \\mathbf{A} \\) has a form`),content:[
 			{type:'case',title:(scalar?`\\( b = c = 0 \\)`:`\\( \\mathbf{A} = ${nt.mat2('*',0,0,'*')} \\)`),content:[
 				{type:'note',content:[
@@ -141,10 +179,7 @@ const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
 						),
 					]},
 					{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[
-						`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
-						`\\[ ${nt.X} = k_1 e^{\\lambda_1 t} ${nt.vec2(1,'\\lambda_1')} + k_2 e^{\\lambda_2 t} ${nt.vec2(1,'\\lambda_2')} \\]`,
-						`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-						`\\[ ${nt.mat2(1,1,'\\lambda_1','\\lambda_2')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}_0`,`${nt.y}_0`)} \\]`,
+						...generalRealSolution(1,1,`\\lambda_1`,`\\lambda_2`),
 					]},
 					{type:'case',title:`complex conjugate pair \\( ( \\lambda = \\alpha \\pm i \\beta; \\beta \\ne 0 ) \\)`,content:[
 						`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
@@ -172,14 +207,9 @@ const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
 						),
 					]},
 					{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[ // TODO
-						`find eigenvector \\( ${nt.svec2(`${nt.x}_1`,`${nt.y}_1`)} \\) by solving:`,
-						`\\[ (\\mathbf{A} - \\lambda_1 \\mathbf{I}) ${nt.vec2(`${nt.x}_1`,`${nt.y}_1`)} = 0 \\]`,
-						`find eigenvector \\( ${nt.svec2(`${nt.x}_2`,`${nt.y}_2`)} \\) by solving:`,
-						`\\[ (\\mathbf{A} - \\lambda_2 \\mathbf{I}) ${nt.vec2(`${nt.x}_2`,`${nt.y}_2`)} = 0 \\]`,
-						`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
-						`\\[ ${nt.X} = k_1 e^{\\lambda_1 t} ${nt.vec2(`${nt.x}_1`,`${nt.y}_1`)} + k_2 e^{\\lambda_2 t} ${nt.vec2(`${nt.x}_2`,`${nt.y}_2`)} \\]`,
-						`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-						`\\[ ${nt.mat2(`${nt.x}_1`,`${nt.x}_2`,`${nt.y}_1`,`${nt.y}_2`)} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}_0`,`${nt.y}_0`)} \\]`,
+						...findRealEigenvector(1),
+						...findRealEigenvector(2),
+						...generalRealSolution(`${nt.x}_1`,`${nt.x}_2`,`${nt.y}_1`,`${nt.y}_2`),
 					]},
 					{type:'case',title:`complex conjugate pair \\( ( \\lambda = \\alpha \\pm i \\beta; \\beta \\ne 0 ) \\)`,content:[ // TODO
 						`select one of eigenvalues \\( \\lambda_1 = \\alpha + i \\beta \\)`,
