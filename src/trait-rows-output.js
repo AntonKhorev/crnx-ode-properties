@@ -67,7 +67,7 @@ class TraitRowsOutput {
 			if (!hasSelectedForm) {
 				let preferredForm
 				for (let form of classData[fromClassId].forms) {
-					if (form.is.split(',').includes(trait.formType)) {
+					if (form.is.split(',')/*:Array*/.includes(trait.formType)) {
 						preferredForm=form
 					}
 				}
