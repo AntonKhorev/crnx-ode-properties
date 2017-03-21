@@ -56,6 +56,14 @@ class Notation {
 	mat2(a,b,c,d) {
 		return `\\begin{bmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{bmatrix}`
 	}
+	sub(x,s) {
+		const i=x.indexOf('_')
+		if (i<0) {
+			return x+'_'+s
+		} else {
+			return x.slice(0,i)+'_{'+x.slice(i+1)+','+s+'}'
+		}
+	}
 }
 
 module.exports=Notation
