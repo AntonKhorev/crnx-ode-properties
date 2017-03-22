@@ -56,6 +56,9 @@ class Notation {
 	mat2(a,b,c,d) {
 		return `\\begin{bmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{bmatrix}`
 	}
+	smat2(a,b,c,d) {
+		return `\\left[ \\begin{smallmatrix} ${a} & ${b} \\\\ ${c} & ${d} \\end{smallmatrix} \\right]`
+	}
 	sub(x,s) {
 		const i=x.indexOf('_')
 		if (i<0) {
