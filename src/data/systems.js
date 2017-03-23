@@ -345,14 +345,14 @@ module.exports={
 		importance: 3,
 		forms: [
 			{
-				is: `t,xy,system_s2_completelyDecoupled`,
+				is: 't,xy,system_s2_completelyDecoupled',
 				equation: nt=>`\\left\\{ \\begin{aligned}`+
 					`${nt.dd(nt.x)} &= f(t,${nt.x}) \\\\`+
 					`${nt.dd(nt.y)} &= g(t,${nt.y})`+
 				`\\end{aligned} \\right.`,
 			},
 			{
-				is: `t,X,vector_s2_completelyDecoupled`,
+				is: 't,X,vector_s2_completelyDecoupled',
 				equation: nt=>`${nt.dd(nt.X)} = ${nt.ddt}`+nt.vec2(`${nt.x}_1`,`${nt.x}_2`)+` = `+nt.vec2(`f(t,${nt.x}_1)`,`g(t,${nt.x}_2)`),
 			},
 		],
@@ -393,14 +393,14 @@ module.exports={
 		importance: 3,
 		forms: [
 			{
-				is: `t,xy,system_s2_linearHomogeneous`,
+				is: 't,xy,system_s2_linearHomogeneous',
 				equation: nt=>`\\left\\{ \\begin{aligned}`+
 					`${nt.dd(nt.x)} &= a(t) \\, ${nt.x} + b(t) \\, ${nt.y} \\\\`+
 					`${nt.dd(nt.y)} &= c(t) \\, ${nt.x} + d(t) \\, ${nt.y}`+
 				`\\end{aligned} \\right.`,
 			},
 			{
-				is: `t,X,vector_s2_linearHomogeneous`,
+				is: 't,X,vector_s2_linearHomogeneous',
 				equation: nt=>`${nt.dd(nt.X)} = \\mathbf{A}(t) \\, ${nt.X}`,
 			},
 		],
@@ -430,14 +430,14 @@ module.exports={
 		importance: 3,
 		forms: [
 			{
-				is: `t,xy,system_s2_linearHomogeneousConstant`,
+				is: 't,xy,system_s2_linearHomogeneousConstant',
 				equation: nt=>`\\left\\{ \\begin{aligned}`+
 					`${nt.dd(nt.x)} &= a ${nt.x} + b ${nt.y} \\\\`+
 					`${nt.dd(nt.y)} &= c ${nt.x} + d ${nt.y}`+
 				`\\end{aligned} \\right.`,
 			},
 			{
-				is: `t,X,vector_s2_linearHomogeneousConstant`,
+				is: 't,X,vector_s2_linearHomogeneousConstant',
 				equation: nt=>`${nt.dd(nt.X)} = \\mathbf{A} ${nt.X}`,
 			},
 		],
@@ -526,7 +526,6 @@ module.exports={
 			},
 		},
 	},
-/*
 	sn_sir: {
 		parents: {
 			sn: true,
@@ -534,24 +533,27 @@ module.exports={
 		name: "SIR model",
 		htmlName: "<a href='https://en.wikipedia.org/w/index.php?title=SIR_model'>SIR</a> model",
 		importance: 3,
-		equation:
-			`\\left\\{ \\begin{aligned}`+
-				`${nt.dd('S')} &= -\\alpha S I \\\\`+
-				`${nt.dd('I')} &= \\alpha S I - \\beta I \\\\ `+
-				`${nt.dd('R')} &= \\beta I`+
-			`\\end{aligned} \\right.`,
-		equationNotes: [
-			`\\( S = \\) number susceptible`,
-			`\\( I = \\) number infectious`,
-			`\\( R = \\) number recovered (immune)`,
-			`\\( \\alpha = \\) contact rate`,
-			`\\( \\beta = \\) recovery rate`,
-			`all quantities are nonnegative`,
+		forms: [
+			{
+				is: 't,system_sn_sir',
+				equation: nt=>`\\left\\{ \\begin{aligned}`+
+					`${nt.dd('S')} &= -\\alpha S I \\\\`+
+					`${nt.dd('I')} &= \\alpha S I - \\beta I \\\\ `+
+					`${nt.dd('R')} &= \\beta I`+
+				`\\end{aligned} \\right.`,
+				notes: nt=>[
+					`\\( S = \\) number susceptible`,
+					`\\( I = \\) number infectious`,
+					`\\( R = \\) number recovered (immune)`,
+					`\\( \\alpha = \\) contact rate`,
+					`\\( \\beta = \\) recovery rate`,
+					`all quantities are nonnegative`,
+				],
+			},
 		],
 		traits: {
 			phaseSolutionMethod: {
-				form: true,
-				content: [
+				content: nt=>[
 					`threshold value \\( \\rho = \\frac\\beta\\alpha \\):`,
 					`\\( I \\) increases when \\( S &gt; \\rho \\)`,
 					`\\( S \\) decreases`,
@@ -586,12 +588,10 @@ module.exports={
 				],
 			},
 			equilibriumSolutionMethod: {
-				form: true,
-				content: [
+				content: nt=>[
 					`\\[ I = 0 \\]`,
 				],
 			},
 		},
 	},
-*/
 }
