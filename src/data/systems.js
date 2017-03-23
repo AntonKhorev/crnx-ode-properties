@@ -104,7 +104,7 @@ const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
 				`${nt.x} &= k_1 ${none(eigx1)} e^{\\lambda_1 t} + k_2 ${none(eigx2)} e^{\\lambda_2 t} \\\\`+
 				`${nt.y} &= k_1 ${none(eigy1)} e^{\\lambda_1 t} + k_2 ${none(eigy2)} e^{\\lambda_2 t}`+
 			`\\end{aligned} \\right. \\]`
-			: `\\[ ${nt.X} = k_1 e^{\\lambda_1 t} ${nt.vec2(eigx1,eigy1)} + k_2 e^{\\lambda_2 t} ${nt.vec2(eigx2,eigy2)} \\]`
+			: `\\[ ${nt.X} = ${nt.mat2(eigx1,eigx2,eigy1,eigy2)} ${nt.vec2(`k_1 e^{\\lambda_1 t}`,`k_2 e^{\\lambda_2 t}`)} \\]`
 		),
 	]
 	const specificSolution=(eigx1,eigx2,eigy1,eigy2)=>[
