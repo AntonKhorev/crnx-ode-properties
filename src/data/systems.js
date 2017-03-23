@@ -80,7 +80,9 @@ const s2_linearHomogeneousConstant_characteristicEquation=scalar=>(scalar
 )
 const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
 	const none=s=>(s==1 ? '' : s)
-	const genSolX0=`general solution (with arbitrary `+(scalar?`constants \\( ${nt.x}_0 \\), \\( ${nt.y}_0 \\)`:`constant \\( ${nt.X}_0 \\)`)+`) and ${ivp} solution:`
+	const generalSolutionLeadX0=`general solution (with arbitrary `+(scalar?`constants \\( ${nt.x}_0 \\), \\( ${nt.y}_0 \\)`:`constant \\( ${nt.X}_0 \\)`)+`):`
+	const specificSolutionLeadX0=(scalar?`constants`:`constant`)+` value for ${ivp} solution: `+(scalar?`\\( ${nt.x}_0 = ${nt.x}(0) \\), \\( ${nt.y}_0 = ${nt.y}(0) \\)`:`\\( ${nt.X}_0 = ${nt.X}(0) \\)`)
+	const generalAndSpecificSolutionLeadX0=`general and ${ivp} solution (with arbitrary `+(scalar?`constants \\( ${nt.x}(0) \\), \\( ${nt.y}(0) \\)`:`constant \\( ${nt.X}(0) \\)`)+`):`
 	const findRealEigenvector=i=>[
 		`find eigenvector \\( ${nt.svec2(`${nt.x}_${i}`,`${nt.y}_${i}`)} \\) by solving:`,
 		(scalar
@@ -107,13 +109,9 @@ const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
 	]
 	const specificSolution=(eigx1,eigx2,eigy1,eigy2)=>[
 		`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-		`\\[ ${nt.mat2(eigx1,eigx2,eigy1,eigy2)} ${nt.vec2('k_1','k_2')} = `+(scalar?`${nt.vec2(`${nt.x}_0`,`${nt.y}_0`)}`:`${nt.X}_0`)+` \\]`,
+		`\\[ ${nt.mat2(eigx1,eigx2,eigy1,eigy2)} ${nt.vec2('k_1','k_2')} = `+(scalar?`${nt.vec2(`${nt.x}(0)`,`${nt.y}(0)`)}`:`${nt.X}(0)`)+` \\]`,
 	]
 	return [
-		`${ivp} initial conditions are: `+(scalar
-			? `\\( ${nt.x}_0 = ${nt.x}(0) \\), \\( ${nt.y}_0 = ${nt.y}(0) \\)`
-			: `\\( ${nt.X}_0 = ${nt.X}(0) \\)`
-		),
 		{type:'switch',title:(scalar?`coefficients satisfy conditions`:`matrix \\( \\mathbf{A} \\) has a form`),content:[
 			{type:'case',title:(scalar?`\\( b = c = 0 \\)`:`\\( \\mathbf{A} = ${nt.mat2('*',0,0,'*')} \\)`),content:[
 				{type:'note',content:[
@@ -127,13 +125,13 @@ const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
 					`\\end{aligned} \\right. \\]`
 					: `\\[ ${nt.dd(nt.X)} = ${nt.mat2('\\lambda_1',0,0,'\\lambda_2')} ${nt.X} \\]`
 				),
-				genSolX0,
+				generalAndSpecificSolutionLeadX0,
 				(scalar
 					? `\\[ \\left\\{ \\begin{aligned}`+
-						`${nt.x} &= ${nt.x}_0 e^{\\lambda_1 t} \\\\`+
-						`${nt.y} &= ${nt.y}_0 e^{\\lambda_2 t}`+
+						`${nt.x} &= ${nt.x}(0) e^{\\lambda_1 t} \\\\`+
+						`${nt.y} &= ${nt.y}(0) e^{\\lambda_2 t}`+
 					`\\end{aligned} \\right. \\]`
-					: `\\[ ${nt.X} = ${nt.mat2('e^{\\lambda_1 t}',0,0,'e^{\\lambda_2 t}')} ${nt.X}_0 \\]`
+					: `\\[ ${nt.X} = ${nt.mat2('e^{\\lambda_1 t}',0,0,'e^{\\lambda_2 t}')} ${nt.X}(0) \\]`
 				),
 			]},
 			{type:'case',title:(scalar?`\\( a = 0 \\) and \\( b = 1 \\)`:`\\( \\mathbf{A} = ${nt.mat2(0,1,'*','*')} \\)`)+` (optional)`,content:[
@@ -163,7 +161,7 @@ const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
 				),
 				{type:'switch',title:`eigenvalues \\( \\lambda_1 \\), \\( \\lambda_2 \\) are`,content:[
 					{type:'case',title:`repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,content:[
-						genSolX0,
+						generalSolutionLeadX0,
 						(scalar
 							? `\\[ \\left\\{ \\begin{aligned}`+
 								`${nt.x} &= ${nt.x}_0 e^{\\lambda t} \\,{+}\\, (${nt.y}_0 \\,{-}\\, ${nt.x}_0 \\lambda) t e^{\\lambda t} \\\\`+
@@ -171,6 +169,7 @@ const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
 							`\\end{aligned} \\right. \\]`
 							: `\\[ ${nt.X} = e^{\\lambda t} ${nt.X}_0 + t e^{\\lambda t} (\\mathbf{A} - \\lambda \\mathbf{I}) ${nt.X}_0 \\]`
 						),
+						specificSolutionLeadX0,
 					]},
 					{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[
 						...generalRealSolution(1,1,`\\lambda_1`,`\\lambda_2`),
@@ -199,7 +198,7 @@ const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
 				s2_linearHomogeneousConstant_characteristicEquation(scalar),
 				{type:'switch',title:`eigenvalues \\( \\lambda_1 \\), \\( \\lambda_2 \\) are`,content:[
 					{type:'case',title:`repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,content:[
-						genSolX0,
+						generalSolutionLeadX0,
 						(scalar
 							? `\\[ \\left\\{ \\begin{aligned}`+
 								`${nt.x} &= ${nt.x}_0 e^{\\lambda t} \\,{+}\\, (${nt.x}_0 (a \\,{-}\\, \\lambda) \\,{+}\\, ${nt.y}_0 b) t e^{\\lambda t} \\\\`+
@@ -207,6 +206,7 @@ const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
 							`\\end{aligned} \\right. \\]`
 							: `\\[ ${nt.X} = e^{\\lambda t} ${nt.X}_0 + t e^{\\lambda t} (\\mathbf{A} - \\lambda \\mathbf{I}) ${nt.X}_0 \\]`
 						),
+						specificSolutionLeadX0,
 					]},
 					{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[
 						...findRealEigenvector(1),
