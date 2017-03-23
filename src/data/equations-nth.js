@@ -45,6 +45,9 @@ module.exports={
 			{
 				is: 't,x,linear_on_linearHomogeneousConstant',
 				equation: nt=>`\\sum_{i=0}^n a_i ${nt.dd(nt.x,'t','i')} = 0`,
+				notes: nt=>[
+					`\\( a \\ne 0 \\)`,
+				],
 			},
 			{
 				is: 't,x,resolved_on_linearHomogeneousConstant',

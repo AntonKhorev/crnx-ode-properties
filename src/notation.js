@@ -47,6 +47,9 @@ class Notation {
 	int(f,t) {
 		return this.sint(f+'\\,',t)
 	}
+	sys2(a,b) {
+		return `\\left\\{ \\begin{aligned} ${a} \\\\ ${b} \\end{aligned} \\right.`
+	}
 	vec2(a,b) {
 		return `\\begin{bmatrix} ${a} \\\\ ${b} \\end{bmatrix}`
 	}

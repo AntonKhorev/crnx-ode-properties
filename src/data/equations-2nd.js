@@ -2,6 +2,17 @@
 
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
+const o2_linearHomogeneous_equilibriumSolutionMethod_content=(xMultiplier,case0,case1)=>[
+	{type:'switch',title:`\\( ${xMultiplier} \\) is`,content:[
+		{type:'case',title:`\\( ${xMultiplier} = 0 \\)`,content:[
+			`\\[ ${case0} \\]`,
+		]},
+		{type:'case',title:`\\( ${xMultiplier} \\ne 0 \\)`,content:[
+			`\\[ ${case1} \\]`,
+		]},
+	]},
+]
+
 /*
 const lhc_characteristicEquation=(a,b,c)=>({
 	form: true,
@@ -120,31 +131,50 @@ module.exports={
 			},
 		],
 	},
-/*
 	o2_linearHomogeneous: {
 		parents: {
+			s2_linearHomogeneous: true,
 			o2: true,
 		},
 		name: "second-order linear homogeneous",
 		htmlName: "second-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a> <a href='https://en.wikipedia.org/wiki/Homogeneous_differential_equation#Homogeneous_linear_differential_equations'>homogeneous</a>",
 		importance: 2,
-		equation: `${nt.dd(nt.x,'t',2)} = a(t) \\cdot ${nt.dxdt} + b(t) \\cdot ${nt.x}`,
+		forms: [
+			{
+				is: 't,x,linear_o2_linearHomogeneous',
+				equation: nt=>`${nt.dd(nt.x,'t',2)} + p(t) \\cdot ${nt.dxdt} + q(t) \\cdot ${nt.x} = 0`,
+			},
+			{
+				is: 't,x,resolved_o2_linearHomogeneous',
+				equation: nt=>`${nt.dd(nt.x,'t',2)} = a(t) \\cdot ${nt.dxdt} + b(t) \\cdot ${nt.x}`,
+			},
+			{
+				is: 't,xy,system_o2_linearHomogeneous',
+				equation: nt=>`\\left\\{ \\begin{aligned} `+
+					`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
+					`${nt.dd(nt.y)} &= c(t) \\cdot ${nt.x} + d(t) \\cdot ${nt.y} `+
+				`\\end{aligned} \\right.`,
+			},
+			{
+				is: 't,X,vector_o2_linearHomogeneous',
+				equation: nt=>`${nt.dd(nt.X)} = \\begin{bmatrix}`+
+					`0 & 1 \\\\`+
+					`c(t) & d(t)`+
+				`\\end{bmatrix} ${nt.X}`,
+			},
+		],
 		traits: {
 			equilibriumSolutionMethod: {
-				form: true,
-				content: [
-					{type:'switch',title:`\\( b(t) \\) is`,content:[
-						{type:'case',title:`\\( b(t) = 0 \\)`,content:[
-							`\\[ ${nt.x} = K \\]`,
-						]},
-						{type:'case',title:`\\( b(t) \\ne 0 \\)`,content:[
-							`\\[ ${nt.x} = 0 \\]`,
-						]},
-					]},
-				],
+				contents: {
+					linear_o2_linearHomogeneous:   nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`q(t)`,`${nt.x} = K`,`${nt.x} = 0`),
+					resolved_o2_linearHomogeneous: nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`b(t)`,`${nt.x} = K`,`${nt.x} = 0`),
+					system_o2_linearHomogeneous:   nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`c(t)`,nt.sys2(`${nt.x} &= K`,`${nt.y} &= 0`),nt.sys2(`${nt.x} &= 0`,`${nt.y} &= 0`)),
+					vector_o2_linearHomogeneous:   nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`c(t)`,`${nt.X} = ${nt.vec2('K',0)}`,`${nt.X} = \\mathbf{0}`),
+				},
 			},
 		},
 	},
+/*
 	o2_linearHomogeneousConstant: {
 		parents: {
 			on_linearHomogeneousConstant: true,
