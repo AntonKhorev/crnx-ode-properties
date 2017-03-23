@@ -96,31 +96,31 @@ module.exports={
 					`${nt.dd(nt.y)} &= f(t,${nt.x},${nt.y}) `+
 				`\\end{aligned} \\right.`,
 			},
-			// TODO vector form
 		],
 	},
-/*
 	o2_autonomous: {
 		parents: {
 			o2: true,
+			s2_autonomous: true,
 		},
 		name: "second-order autonomous",
 		htmlName: "second-order <a href='https://en.wikipedia.org/wiki/Autonomous_system_%28mathematics%29'>autonomous</a>",
 		importance: 2,
-		equation: `${nt.dd(nt.x,'t',2)} = f(${nt.x},${nt.dxdt})`,
-		traits: {
-			orderReduction: {
-				title: "Order reduction to a system of 2 first-order autonomous equations",
-				form: true,
-				content: [
-					`\\[ \\left\\{ \\begin{aligned} `+
-						`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
-						`${nt.dd(nt.y)} &= f(${nt.x},${nt.y}) `+
-					`\\end{aligned} \\right. \\]`,
-				],
+		forms: [
+			{
+				is: 't,x,resolved_o2_autonomous',
+				equation: nt=>`${nt.dd(nt.x,'t',2)} = f(${nt.x},${nt.dxdt})`,
 			},
-		},
+			{
+				is: 't,xy,system_o2_autonomous',
+				equation: nt=>`\\left\\{ \\begin{aligned} `+
+					`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
+					`${nt.dd(nt.y)} &= f(${nt.x},${nt.y}) `+
+				`\\end{aligned} \\right.`,
+			},
+		],
 	},
+/*
 	o2_linearHomogeneous: {
 		parents: {
 			o2: true,
