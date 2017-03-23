@@ -104,7 +104,10 @@ const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
 				`${nt.x} &= k_1 ${none(eigx1)} e^{\\lambda_1 t} + k_2 ${none(eigx2)} e^{\\lambda_2 t} \\\\`+
 				`${nt.y} &= k_1 ${none(eigy1)} e^{\\lambda_1 t} + k_2 ${none(eigy2)} e^{\\lambda_2 t}`+
 			`\\end{aligned} \\right. \\]`
-			: `\\[ ${nt.X} = ${nt.mat2(eigx1,eigx2,eigy1,eigy2)} ${nt.vec2(`k_1 e^{\\lambda_1 t}`,`k_2 e^{\\lambda_2 t}`)} \\]`
+			: `\\[ \\begin{aligned}`+
+				`${nt.X} &= k_1 e^{\\lambda_1 t} ${nt.vec2(eigx1,eigy1)} + k_2 e^{\\lambda_2 t} ${nt.vec2(eigx2,eigy2)} \\\\`+
+				       ` &= ${nt.mat2(eigx1,eigx2,eigy1,eigy2)} ${nt.vec2(`k_1 e^{\\lambda_1 t}`,`k_2 e^{\\lambda_2 t}`)}`+
+			`\\end{aligned} \\]`
 		),
 	]
 	const specificSolution=(eigx1,eigx2,eigy1,eigy2)=>[
@@ -186,7 +189,8 @@ const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
 							`\\end{aligned} \\right. \\]`
 							: `\\[ \\begin{aligned} `+
 								`${nt.X} = \\: & k_1 e^{\\alpha t} ${nt.vec2('\\cos \\beta t','\\alpha \\cos \\beta t - \\beta \\sin \\beta t')} \\\\`+
-								        `+ \\: & k_2 e^{\\alpha t} ${nt.vec2('\\sin \\beta t','\\alpha \\sin \\beta t + \\beta \\cos \\beta t')} `+
+								        `+ \\: & k_2 e^{\\alpha t} ${nt.vec2('\\sin \\beta t','\\alpha \\sin \\beta t + \\beta \\cos \\beta t')} \\\\`+
+									`= \\: & e^{\\alpha t} ${nt.smat2(1,0,'\\alpha','\\beta')} ${nt.smat2('\\cos \\beta t','\\sin \\beta t','- \\sin \\beta t','\\cos \\beta t')} ${nt.svec2('k_1','k_2')}`+
 							`\\end{aligned} \\]`
 						),
 						...specificSolution(1,0,`\\alpha`,`\\beta`),
@@ -251,7 +255,8 @@ const s2_linearHomogeneousConstant_generalSolutionMethod_content=scalar=>nt=>{
 							`\\end{aligned} \\right. \\]`
 							: `\\[ \\begin{aligned}`+
 								`${nt.X} = \\: & k_1 e^{\\alpha t} ${nt.vec2(`${nt.x}_1 \\cos \\beta t - ${nt.x}_2 \\sin \\beta t`,`${nt.y}_1 \\cos \\beta t - ${nt.y}_2 \\sin \\beta t`)} \\\\`+
-								        `+ \\: & k_2 e^{\\alpha t} ${nt.vec2(`${nt.x}_1 \\sin \\beta t + ${nt.x}_2 \\cos \\beta t`,`${nt.y}_1 \\sin \\beta t + ${nt.y}_2 \\cos \\beta t`)} `+
+								        `+ \\: & k_2 e^{\\alpha t} ${nt.vec2(`${nt.x}_1 \\sin \\beta t + ${nt.x}_2 \\cos \\beta t`,`${nt.y}_1 \\sin \\beta t + ${nt.y}_2 \\cos \\beta t`)} \\\\`+
+									`= \\: & e^{\\alpha t} ${nt.smat2(`${nt.x}_1`,`${nt.x}_2`,`${nt.y}_1`,`${nt.y}_2`)} ${nt.smat2(`\\cos \\beta t`,`\\sin \\beta t`,`- \\sin \\beta t`,`\\cos \\beta t`)} ${nt.svec2(`k_1`,`k_2`)}`+
 							`\\end{aligned} \\]`
 						),
 						...specificSolution(`${nt.x}_1`,`${nt.x}_2`,`${nt.y}_1`,`${nt.y}_2`),
