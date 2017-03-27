@@ -13,6 +13,13 @@ const o2_linearHomogeneous_equilibriumSolutionMethod_content=(xMultiplier,case0,
 	]},
 ]
 
+const o2_simpleHarmonicOscillator_equilibriumSolutionMethod_content=(case0)=>[
+	`\\[ ${case0} \\]`,
+	{type:'note',content:[
+		`no other equilibrium solution is possible because \\( k > 0 \\)`,
+	]},
+]
+
 const lhc_characteristicEquation_linear_content=(a2,a1,a0)=>nt=>[
 	{type:'derivation',content:[
 		`\\[ ${a2} ${nt.dd(nt.x,'t',2)} `+(a1?`+ ${a1} ${nt.dxdt} `:``)+`+ ${a0} ${nt.x} = 0 \\]`,
@@ -215,8 +222,6 @@ module.exports={
 					`c & d`+
 				`\\end{bmatrix} ${nt.X}`,
 			},
-			// TODO remove: originally was:
-			//	`${nt.dd(nt.x,'t',2)} = - \\frac ba ${nt.dxdt} - \\frac ca ${nt.x}`,
 		],
 		traits: {
 			characteristicEquation: {
@@ -232,6 +237,7 @@ module.exports={
 				contents: {
 					linear_o2_linearHomogeneousConstant:   lhc_generalSolutionMethod_scalar_content(`a_2 \\lambda^2 + a_1 \\lambda + a_0 = 0`),
 					resolved_o2_linearHomogeneousConstant: lhc_generalSolutionMethod_scalar_content(`\\lambda^2 - b_1 \\lambda - b_0 = 0`),
+					// TODO other forms
 				},
 			},
 			equilibriumSolutionMethod: {
@@ -244,7 +250,6 @@ module.exports={
 			},
 		},
 	},
-/*
 	o2_harmonicOscillator: {
 		parents: {
 			o2_linearHomogeneousConstant: true,
@@ -252,31 +257,67 @@ module.exports={
 		name: "harmonic oscillator",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator'>harmonic oscillator</a>",
 		importance: 3,
-		equation: `${nt.dd(nt.x,'t',2)} = - \\frac bm ${nt.dxdt} - \\frac km ${nt.x}`,
-		equationNotes: [
-			`usually written as \\( m ${nt.dd(nt.x,'t',2)} + b ${nt.dxdt} + k ${nt.x} = 0 \\)`,
-			`\\( m > 0 \\) is the mass`,
-			`\\( b \\ge 0 \\) is the viscous damping coefficient`,
-			`\\( k > 0 \\) is the spring constant`,
+		forms: [
+			{
+				is: 't,x,scalar_o2_simpleHarmonicOscillator,scalar_o2_harmonicOscillator,linear_o2_harmonicOscillator',
+				equation: nt=>`m \\cdot ${nt.dd(nt.x,'t',2)} + b \\cdot ${nt.dxdt} + k \\cdot ${nt.x} = 0`,
+				notes: nt=>[ // TODO all-forms notes
+					`\\( m > 0 \\) is the mass`,
+					`\\( b \\ge 0 \\) is the viscous damping coefficient`,
+					`\\( k > 0 \\) is the spring constant`,
+				],
+			},
+			{
+				is: 't,x,scalar_o2_simpleHarmonicOscillator,scalar_o2_harmonicOscillator,resolved_o2_harmonicOscillator',
+				equation: nt=>`${nt.dd(nt.x,'t',2)} = - \\frac bm \\cdot ${nt.dxdt} - \\frac km \\cdot ${nt.x}`,
+			},
+			{
+				is: 't,xy,system_o2_simpleHarmonicOscillator,system_o2_harmonicOscillator',
+				equation: nt=>`\\left\\{ \\begin{aligned} `+
+					`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
+					`${nt.dd(nt.y)} &= - \\frac km \\cdot ${nt.x} - \\frac bm \\cdot ${nt.y} `+
+				`\\end{aligned} \\right.`,
+			},
+			{
+				is: 't,X,vector_o2_simpleHarmonicOscillator,vector_o2_harmonicOscillator',
+				equation: nt=>`${nt.dd(nt.X)} = \\begin{bmatrix}`+
+					`0 & 1 \\\\`+
+					`- \\frac km & - \\frac bm`+
+				`\\end{bmatrix} ${nt.X}`,
+			},
 		],
 		traits: {
-			characteristicEquation: lhc_characteristicEquation('m','b','k'),
-			orderReduction: lhc_orderReduction('m','b','k'),
-			generalSolutionMethod: lhc_generalSolutionMethod('m','b','k'),
-			equilibriumSolutionMethod: {
-				form: {
-					o2_harmonicOscillator: true,
-					o2_simpleHarmonicOscillator: true,
+			characteristicEquation: {
+				contents: {
+					linear_o2_harmonicOscillator: lhc_characteristicEquation_linear_content('m','b','k'),
+					resolved_o2_harmonicOscillator: nt=>[
+						`\\[ m \\lambda^2 + b \\lambda + k = 0 \\]`,
+					],
+					system_o2_harmonicOscillator: nt=>[
+						`\\[ m \\lambda^2 + b \\lambda + k = 0 \\]`,
+					],
+					vector_o2_harmonicOscillator: lhc_characteristicEquation_vector_content('- \\frac km','- \\frac bm'),
 				},
-				content: [
-					`\\[ ${nt.x} = 0 \\]`,
-					{type:'note',content:[
-						`no other equilibrium solution is possible because \\( k > 0 \\)`,
-					]},
-				],
+			},
+			generalSolutionMethod: {
+				title: `General and ${ivp} solution`,
+				formType: 'scalar_o2_harmonicOscillator',
+				contents: {
+					scalar_o2_harmonicOscillator: lhc_generalSolutionMethod_scalar_content(`m \\lambda^2 + b \\lambda + k = 0`),
+					// TODO other forms
+				},
+			},
+			equilibriumSolutionMethod: {
+				formType: 'scalar_o2_simpleHarmonicOscillator',
+				contents: {
+					scalar_o2_simpleHarmonicOscillator: nt=>o2_simpleHarmonicOscillator_equilibriumSolutionMethod_content(`${nt.x} = 0`),
+					system_o2_simpleHarmonicOscillator: nt=>o2_simpleHarmonicOscillator_equilibriumSolutionMethod_content(nt.sys2(`${nt.x} &= 0`,`${nt.y} &= 0`)),
+					vector_o2_simpleHarmonicOscillator: nt=>o2_simpleHarmonicOscillator_equilibriumSolutionMethod_content(`${nt.X} = \\mathbf{0}`),
+				},
 			},
 		},
 	},
+/*
 	o2_underdampedHarmonicOscillator: harmonicOscillatorType(
 		"underdamped",
 		"https://en.wikipedia.org/wiki/Damping#Under-damping_.280_.E2.89.A4_.CE.B6_.3C_1.29",
