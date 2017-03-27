@@ -40,49 +40,39 @@ const lhc_characteristicEquation_system_content=(c,d)=>nt=>[
 const lhc_characteristicEquation_vector_content=(c,d)=>nt=>[
 	`\\[ \\det\\left(${nt.mat2('-\\lambda',1,c,`${d}-\\lambda`)}\\right) = 0 \\]`,
 ]
-
-/*
-const lhc_orderReduction=(a,b,c)=>({
-	title: "Order reduction to a system of 2 first-order linear homogeneous equations with constant coefficients",
-	form: true,
-	content: [
-		`\\[ \\left\\{ \\begin{aligned} `+
-			`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
-			`${nt.dd(nt.y)} &= - \\frac ${c} ${a} ${nt.x} `+(b?`- \\frac ${b} ${a} ${nt.y} `:``)+
-		`\\end{aligned} \\right. \\]`,
-	],
-})
-const lhc_generalSolutionMethod=(a,b,c)=>({
-	title: `General and ${ivp} solution`,
-	form: true,
-	content: [
-		`solve characteristic equation for \\( \\lambda \\):`,
-		`\\[ ${a} \\lambda^2 + ${b} \\lambda + ${c} = 0 \\]`,
-		{type:'switch',title:`roots \\( \\lambda \\) are`,content:[
-			{type:'case',title:`repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,content:[
-				`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
-				`\\[ ${nt.x} = k_1 e^{\\lambda t} + k_2 t e^{\\lambda t} \\]`,
-				`constants for ${ivp} solution:`,
-				`\\[ \\begin{aligned} `+
-					`k_1 &= ${nt.x}(0) \\\\ `+
-					`k_2 &= ${nt.x}'(0) - \\lambda ${nt.x}(0) `+
-				`\\end{aligned} \\]`,
-			]},
-			{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[
-				`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
-				`\\[ ${nt.x} = k_1 e^{\\lambda_1 t} + k_2 e^{\\lambda_2 t} \\]`,
-				`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-				`\\[ ${nt.mat2(1,1,'\\lambda_1','\\lambda_2')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}(0)`,`${nt.x}'(0)`)} \\]`,
-			]},
-			{type:'case',title:`complex conjugate pair \\( ( \\lambda = \\alpha \\pm i \\beta; \\beta \\ne 0 ) \\)`,content:[
-				`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
-				`\\[ ${nt.x} = k_1 e^{\\alpha t} \\cos \\beta t + k_2 e^{\\alpha t} \\sin \\beta t \\]`,
-				`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-				`\\[ ${nt.mat2(1,0,'\\alpha','\\beta')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}(0)`,`${nt.x}'(0)`)} \\]`,
-			]},
+// general sol'n for system form repeated case:
+//`\\[ \\left\\{ \\begin{aligned}`+
+//	`${nt.x} &= k_1 e^{\\lambda t} \\,{+}\\, k_2 t e^{\\lambda t} \\\\`+
+//	`${nt.y} &= (k_1 \\lambda + k_2) e^{\\lambda t} \\,{+}\\, k_2 \\lambda t e^{\\lambda t}`+
+//`\\end{aligned} \\right. \\]`,
+const lhc_generalSolutionMethod_scalar_content=(charEqn)=>nt=>[
+	`solve characteristic equation for \\( \\lambda \\):`,
+	`\\[ ${charEqn} \\]`,
+	{type:'switch',title:`roots \\( \\lambda \\) are`,content:[
+		{type:'case',title:`repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,content:[
+			`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
+			`\\[ ${nt.x} = k_1 e^{\\lambda t} + k_2 t e^{\\lambda t} \\]`,
+			`constants for ${ivp} solution:`,
+			`\\[ \\begin{aligned} `+
+				`k_1 &= ${nt.x}(0) \\\\ `+
+				`k_2 &= ${nt.x}'(0) - \\lambda ${nt.x}(0) `+
+			`\\end{aligned} \\]`,
 		]},
-	],
-})
+		{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[
+			`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
+			`\\[ ${nt.x} = k_1 e^{\\lambda_1 t} + k_2 e^{\\lambda_2 t} \\]`,
+			`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+			`\\[ ${nt.mat2(1,1,'\\lambda_1','\\lambda_2')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}(0)`,`${nt.x}'(0)`)} \\]`,
+		]},
+		{type:'case',title:`complex conjugate pair \\( ( \\lambda = \\alpha \\pm i \\beta; \\beta \\ne 0 ) \\)`,content:[
+			`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
+			`\\[ ${nt.x} = k_1 e^{\\alpha t} \\cos \\beta t + k_2 e^{\\alpha t} \\sin \\beta t \\]`,
+			`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+			`\\[ ${nt.mat2(1,0,'\\alpha','\\beta')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}(0)`,`${nt.x}'(0)`)} \\]`,
+		]},
+	]},
+]
+/*
 const harmonicOscillatorType=(type,wiki,discriminantRelation)=>({
 	parents: {
 		o2_harmonicOscillator: true,
@@ -237,7 +227,13 @@ module.exports={
 					vector_o2_linearHomogeneousConstant:   lhc_characteristicEquation_vector_content('c','d'),
 				},
 			},
-			//generalSolutionMethod: lhc_generalSolutionMethod('a','b','c'),
+			generalSolutionMethod: {
+				title: `General and ${ivp} solution`,
+				contents: {
+					linear_o2_linearHomogeneousConstant:   lhc_generalSolutionMethod_scalar_content(`a_2 \\lambda^2 + a_1 \\lambda + a_0 = 0`),
+					resolved_o2_linearHomogeneousConstant: lhc_generalSolutionMethod_scalar_content(`\\lambda^2 - b_1 \\lambda - b_0 = 0`),
+				},
+			},
 			equilibriumSolutionMethod: {
 				contents: {
 					linear_o2_linearHomogeneousConstant:   nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`a_0`,`${nt.x} = K`,`${nt.x} = 0`),
