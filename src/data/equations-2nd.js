@@ -13,20 +13,35 @@ const o2_linearHomogeneous_equilibriumSolutionMethod_content=(xMultiplier,case0,
 	]},
 ]
 
+const lhc_characteristicEquation_linear_content=(a2,a1,a0)=>nt=>[
+	{type:'derivation',content:[
+		`\\[ ${a2} ${nt.dd(nt.x,'t',2)} `+(a1?`+ ${a1} ${nt.dxdt} `:``)+`+ ${a0} ${nt.x} = 0 \\]`,
+		`substitute \\( ${nt.x} = e^{\\lambda t} \\)`,
+		`\\[ ${a2} ${nt.dd('','t',2)} e^{\\lambda t} `+(a1?`+ ${a1} ${nt.ddt} e^{\\lambda t} `:``)+`+ ${a0} e^{\\lambda t} = 0 \\]`,
+		`\\[ ${a2} \\lambda^2 e^{\\lambda t} `+(a1?`+ ${a1} \\lambda e^{\\lambda t} `:``)+`+ ${a0} e^{\\lambda t} = 0 \\]`,
+		`divide by \\( e^{\\lambda t} \\)`,
+	]},
+	`\\[ ${a2} \\lambda^2 `+(a1?`+ ${a1} \\lambda `:``)+`+ ${a0} = 0 \\]`,
+]
+const lhc_characteristicEquation_resolved_content=(b1,b0)=>nt=>[
+	{type:'derivation',content:[
+		`\\[ ${nt.dd(nt.x,'t',2)} = `+(b1?`${b1} ${nt.dxdt} + `:``)+`${b0} ${nt.x} = 0 \\]`,
+		`substitute \\( ${nt.x} = e^{\\lambda t} \\)`,
+		`\\[ ${nt.dd('','t',2)} e^{\\lambda t} = `+(b1?`${b1} ${nt.ddt} e^{\\lambda t} + `:``)+`${b0} e^{\\lambda t} = 0 \\]`,
+		`\\[ \\lambda^2 e^{\\lambda t} = `+(b1?`${b1} \\lambda e^{\\lambda t} + `:``)+`${b0} e^{\\lambda t} = 0 \\]`,
+		`divide by \\( e^{\\lambda t} \\)`,
+		`\\[ \\lambda^2 = `+(b1?`${b1} \\lambda + `:``)+`${b0} = 0 \\]`,
+	]},
+	`\\[ \\lambda^2 `+(b1?`- ${b1} \\lambda `:``)+`- ${b0} = 0 \\]`,
+]
+const lhc_characteristicEquation_system_content=(c,d)=>nt=>[
+	`\\[ \\lambda^2 - d \\lambda - c = 0 \\]`,
+]
+const lhc_characteristicEquation_vector_content=(c,d)=>nt=>[
+	`\\[ \\det\\left(${nt.mat2('-\\lambda',1,c,`${d}-\\lambda`)}\\right) = 0 \\]`,
+]
+
 /*
-const lhc_characteristicEquation=(a,b,c)=>({
-	form: true,
-	content: [
-		{type:'derivation',content:[
-			`\\[ ${a} ${nt.dd(nt.x,'t',2)} `+(b?`+ ${b} ${nt.dxdt} `:``)+`+ ${c} ${nt.x} = 0 \\]`,
-			`substitute \\( ${nt.x} = e^{\\lambda t} \\)`,
-			`\\[ ${a} ${nt.dd('','t',2)} e^{\\lambda t} `+(b?`+ ${b} ${nt.ddt} e^{\\lambda t} `:``)+`+ ${c} e^{\\lambda t} = 0 \\]`,
-			`\\[ ${a} \\lambda^2 e^{\\lambda t} `+(b?`+ ${b} \\lambda e^{\\lambda t} `:``)+`+ ${c} e^{\\lambda t} = 0 \\]`,
-			`divide by \\( e^{\\lambda t} \\)`,
-		]},
-		`\\[ ${a} \\lambda^2 `+(b?`+ ${b} \\lambda `:``)+`+ ${c} = 0 \\]`,
-	],
-})
 const lhc_orderReduction=(a,b,c)=>({
 	title: "Order reduction to a system of 2 first-order linear homogeneous equations with constant coefficients",
 	form: true,
@@ -174,9 +189,9 @@ module.exports={
 			},
 		},
 	},
-/*
 	o2_linearHomogeneousConstant: {
 		parents: {
+			s2_linearHomogeneousConstant: true,
 			on_linearHomogeneousConstant: true,
 			o2_autonomous: true,
 			o2_linearHomogeneous: true,
@@ -184,29 +199,56 @@ module.exports={
 		name: "second-order linear homogeneous with constant coefficients",
 		htmlName: "second-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Homogeneous_equations_with_constant_coefficients'>linear homogeneous with constant coefficients</a>",
 		importance: 2,
-		equation: `${nt.dd(nt.x,'t',2)} = - \\frac ba ${nt.dxdt} - \\frac ca ${nt.x}`,
-		equationNotes: [
-			`usually written as \\( a ${nt.dd(nt.x,'t',2)} + b ${nt.dxdt} + c ${nt.x} = 0 \\)`,
+		forms: [
+			{
+				is: 't,x,linear_o2_linearHomogeneousConstant',
+				equation: nt=>`a_2 \\cdot ${nt.dd(nt.x,'t',2)} + a_1 \\cdot ${nt.dxdt} + a_0 \\cdot ${nt.x} = 0`,
+				notes: nt=>[
+					`\\( a_2 \\ne 0 \\)`,
+				],
+			},
+			{
+				is: 't,x,resolved_o2_linearHomogeneousConstant',
+				equation: nt=>`${nt.dd(nt.x,'t',2)} = b_1 \\cdot ${nt.dxdt} + b_0 \\cdot ${nt.x}`,
+			},
+			{
+				is: 't,xy,system_o2_linearHomogeneousConstant',
+				equation: nt=>`\\left\\{ \\begin{aligned} `+
+					`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
+					`${nt.dd(nt.y)} &= c \\cdot ${nt.x} + d \\cdot ${nt.y} `+
+				`\\end{aligned} \\right.`,
+			},
+			{
+				is: 't,X,vector_o2_linearHomogeneousConstant',
+				equation: nt=>`${nt.dd(nt.X)} = \\begin{bmatrix}`+
+					`0 & 1 \\\\`+
+					`c & d`+
+				`\\end{bmatrix} ${nt.X}`,
+			},
+			// TODO remove: originally was:
+			//	`${nt.dd(nt.x,'t',2)} = - \\frac ba ${nt.dxdt} - \\frac ca ${nt.x}`,
 		],
 		traits: {
-			characteristicEquation: lhc_characteristicEquation('a','b','c'),
-			orderReduction: lhc_orderReduction('a','b','c'),
-			generalSolutionMethod: lhc_generalSolutionMethod('a','b','c'),
+			characteristicEquation: {
+				contents: {
+					linear_o2_linearHomogeneousConstant:   lhc_characteristicEquation_linear_content('a_2','a_1','a_0'),
+					resolved_o2_linearHomogeneousConstant: lhc_characteristicEquation_resolved_content('b_1','b_0'),
+					system_o2_linearHomogeneousConstant:   lhc_characteristicEquation_system_content('c','d'),
+					vector_o2_linearHomogeneousConstant:   lhc_characteristicEquation_vector_content('c','d'),
+				},
+			},
+			//generalSolutionMethod: lhc_generalSolutionMethod('a','b','c'),
 			equilibriumSolutionMethod: {
-				form: true,
-				content: [
-					{type:'switch',title:`\\( c \\) is`,content:[
-						{type:'case',title:`\\( c = 0 \\)`,content:[
-							`\\[ ${nt.x} = K \\]`,
-						]},
-						{type:'case',title:`\\( c \\ne 0 \\)`,content:[
-							`\\[ ${nt.x} = 0 \\]`,
-						]},
-					]},
-				],
+				contents: {
+					linear_o2_linearHomogeneousConstant:   nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`a_0`,`${nt.x} = K`,`${nt.x} = 0`),
+					resolved_o2_linearHomogeneousConstant: nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`b_0`,`${nt.x} = K`,`${nt.x} = 0`),
+					system_o2_linearHomogeneousConstant:   nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`c`,nt.sys2(`${nt.x} &= K`,`${nt.y} &= 0`),nt.sys2(`${nt.x} &= 0`,`${nt.y} &= 0`)),
+					vector_o2_linearHomogeneousConstant:   nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`c`,`${nt.X} = ${nt.vec2('K',0)}`,`${nt.X} = \\mathbf{0}`),
+				},
 			},
 		},
 	},
+/*
 	o2_harmonicOscillator: {
 		parents: {
 			o2_linearHomogeneousConstant: true,

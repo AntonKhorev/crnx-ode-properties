@@ -395,8 +395,8 @@ module.exports={
 			{
 				is: 't,xy,system_s2_linearHomogeneous',
 				equation: nt=>`\\left\\{ \\begin{aligned}`+
-					`${nt.dd(nt.x)} &= a(t) \\, ${nt.x} + b(t) \\, ${nt.y} \\\\`+
-					`${nt.dd(nt.y)} &= c(t) \\, ${nt.x} + d(t) \\, ${nt.y}`+
+					`${nt.dd(nt.x)} &= a(t) \\cdot ${nt.x} + b(t) \\cdot ${nt.y} \\\\`+
+					`${nt.dd(nt.y)} &= c(t) \\cdot ${nt.x} + d(t) \\cdot ${nt.y}`+
 				`\\end{aligned} \\right.`,
 			},
 			{
@@ -432,8 +432,8 @@ module.exports={
 			{
 				is: 't,xy,system_s2_linearHomogeneousConstant',
 				equation: nt=>`\\left\\{ \\begin{aligned}`+
-					`${nt.dd(nt.x)} &= a ${nt.x} + b ${nt.y} \\\\`+
-					`${nt.dd(nt.y)} &= c ${nt.x} + d ${nt.y}`+
+					`${nt.dd(nt.x)} &= a \\cdot ${nt.x} + b \\cdot ${nt.y} \\\\`+
+					`${nt.dd(nt.y)} &= c \\cdot ${nt.x} + d \\cdot ${nt.y}`+
 				`\\end{aligned} \\right.`,
 			},
 			{
