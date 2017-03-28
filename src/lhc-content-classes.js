@@ -21,4 +21,24 @@ LhcContent.Linear = class {
 	}
 }
 
+LhcContent.Resolved = class {
+	constructor(param) {
+		this.param=param
+	}
+	getContentFor_characteristicEquation() {
+		const b=i=>this.param.resolved(i)
+		return nt=>[
+			{type:'derivation',content:[
+				`\\[ ${nt.dd(nt.x,'t',2)} = `+(b(1)?`${b(1)} ${nt.dxdt} + `:``)+`${b(0)} ${nt.x} \\]`,
+				`substitute \\( ${nt.x} = e^{\\lambda t} \\)`,
+				`\\[ ${nt.dd('','t',2)} e^{\\lambda t} = `+(b(1)?`${b(1)} ${nt.ddt} e^{\\lambda t} + `:``)+`${b(0)} e^{\\lambda t} \\]`,
+				`\\[ \\lambda^2 e^{\\lambda t} = `+(b(1)?`${b(1)} \\lambda e^{\\lambda t} + `:``)+`${b(0)} e^{\\lambda t} \\]`,
+				`divide by \\( e^{\\lambda t} \\)`,
+				`\\[ \\lambda^2 = `+(b(1)?`${b(1)} \\lambda + `:``)+`${b(0)} \\]`,
+			]},
+			`\\[ \\lambda^2 `+(b(1)?`- ${b(1)} \\lambda `:``)+`- ${b(0)} = 0 \\]`,
+		]
+	}
+}
+
 module.exports=LhcContent

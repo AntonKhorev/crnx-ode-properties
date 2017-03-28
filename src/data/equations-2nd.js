@@ -23,17 +23,6 @@ const o2_simpleHarmonicOscillator_equilibriumSolutionMethod_content=(case0)=>[
 	]},
 ]
 
-const lhc_characteristicEquation_resolved_content=(b1,b0)=>nt=>[
-	{type:'derivation',content:[
-		`\\[ ${nt.dd(nt.x,'t',2)} = `+(b1?`${b1} ${nt.dxdt} + `:``)+`${b0} ${nt.x} = 0 \\]`,
-		`substitute \\( ${nt.x} = e^{\\lambda t} \\)`,
-		`\\[ ${nt.dd('','t',2)} e^{\\lambda t} = `+(b1?`${b1} ${nt.ddt} e^{\\lambda t} + `:``)+`${b0} e^{\\lambda t} = 0 \\]`,
-		`\\[ \\lambda^2 e^{\\lambda t} = `+(b1?`${b1} \\lambda e^{\\lambda t} + `:``)+`${b0} e^{\\lambda t} = 0 \\]`,
-		`divide by \\( e^{\\lambda t} \\)`,
-		`\\[ \\lambda^2 = `+(b1?`${b1} \\lambda + `:``)+`${b0} = 0 \\]`,
-	]},
-	`\\[ \\lambda^2 `+(b1?`- ${b1} \\lambda `:``)+`- ${b0} = 0 \\]`,
-]
 const lhc_characteristicEquation_system_content=(c,d)=>nt=>[
 	`\\[ \\lambda^2 - d \\lambda - c = 0 \\]`,
 ]
@@ -220,7 +209,7 @@ module.exports={
 			characteristicEquation: {
 				contents: {
 					linear_o2_linearHomogeneousConstant:   new LhcContent.Linear(new LhcParam.Linear('a_2','a_1','a_0')).getContentFor_characteristicEquation(),
-					resolved_o2_linearHomogeneousConstant: lhc_characteristicEquation_resolved_content('b_1','b_0'),
+					resolved_o2_linearHomogeneousConstant: new LhcContent.Resolved(new LhcParam.Resolved('b_1','b_0')).getContentFor_characteristicEquation(),
 					system_o2_linearHomogeneousConstant:   lhc_characteristicEquation_system_content('c','d'),
 					vector_o2_linearHomogeneousConstant:   lhc_characteristicEquation_vector_content('c','d'),
 				},

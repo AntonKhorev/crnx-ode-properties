@@ -11,4 +11,13 @@ LhcParam.Linear = class {
 	}
 }
 
+LhcParam.Resolved = class {
+	constructor(b1,b0) {
+		this.b=[b0,b1]
+	}
+	resolved(i) {
+		return this.b[i]
+	}
+}
+
 module.exports=LhcParam
