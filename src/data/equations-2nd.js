@@ -1,5 +1,8 @@
 'use strict'
 
+const LhcParam=require('../lhc-param-classes')
+const LhcContent=require('../lhc-content-classes')
+
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
 const o2_linearHomogeneous_equilibriumSolutionMethod_content=(xMultiplier,case0,case1)=>[
@@ -20,16 +23,6 @@ const o2_simpleHarmonicOscillator_equilibriumSolutionMethod_content=(case0)=>[
 	]},
 ]
 
-const lhc_characteristicEquation_linear_content=(a2,a1,a0)=>nt=>[
-	{type:'derivation',content:[
-		`\\[ ${a2} ${nt.dd(nt.x,'t',2)} `+(a1?`+ ${a1} ${nt.dxdt} `:``)+`+ ${a0} ${nt.x} = 0 \\]`,
-		`substitute \\( ${nt.x} = e^{\\lambda t} \\)`,
-		`\\[ ${a2} ${nt.dd('','t',2)} e^{\\lambda t} `+(a1?`+ ${a1} ${nt.ddt} e^{\\lambda t} `:``)+`+ ${a0} e^{\\lambda t} = 0 \\]`,
-		`\\[ ${a2} \\lambda^2 e^{\\lambda t} `+(a1?`+ ${a1} \\lambda e^{\\lambda t} `:``)+`+ ${a0} e^{\\lambda t} = 0 \\]`,
-		`divide by \\( e^{\\lambda t} \\)`,
-	]},
-	`\\[ ${a2} \\lambda^2 `+(a1?`+ ${a1} \\lambda `:``)+`+ ${a0} = 0 \\]`,
-]
 const lhc_characteristicEquation_resolved_content=(b1,b0)=>nt=>[
 	{type:'derivation',content:[
 		`\\[ ${nt.dd(nt.x,'t',2)} = `+(b1?`${b1} ${nt.dxdt} + `:``)+`${b0} ${nt.x} = 0 \\]`,
@@ -226,7 +219,7 @@ module.exports={
 		traits: {
 			characteristicEquation: {
 				contents: {
-					linear_o2_linearHomogeneousConstant:   lhc_characteristicEquation_linear_content('a_2','a_1','a_0'),
+					linear_o2_linearHomogeneousConstant:   new LhcContent.Linear(new LhcParam.Linear('a_2','a_1','a_0')).getContentFor_characteristicEquation(),
 					resolved_o2_linearHomogeneousConstant: lhc_characteristicEquation_resolved_content('b_1','b_0'),
 					system_o2_linearHomogeneousConstant:   lhc_characteristicEquation_system_content('c','d'),
 					vector_o2_linearHomogeneousConstant:   lhc_characteristicEquation_vector_content('c','d'),
@@ -289,7 +282,7 @@ module.exports={
 		traits: {
 			characteristicEquation: {
 				contents: {
-					linear_o2_harmonicOscillator: lhc_characteristicEquation_linear_content('m','b','k'),
+					linear_o2_harmonicOscillator: new LhcContent.Linear(new LhcParam.Linear('m','b','k')).getContentFor_characteristicEquation(),
 					resolved_o2_harmonicOscillator: nt=>[
 						`\\[ m \\lambda^2 + b \\lambda + k = 0 \\]`,
 					],
