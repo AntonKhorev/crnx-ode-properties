@@ -5,17 +5,6 @@ const LhcContent=require('../lhc-content-classes')
 
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
-const o2_linearHomogeneous_equilibriumSolutionMethod_content=(xMultiplier,case0,case1)=>[
-	{type:'switch',title:`\\( ${xMultiplier} \\) is`,content:[
-		{type:'case',title:`\\( ${xMultiplier} = 0 \\)`,content:[
-			`\\[ ${case0} \\]`,
-		]},
-		{type:'case',title:`\\( ${xMultiplier} \\ne 0 \\)`,content:[
-			`\\[ ${case1} \\]`,
-		]},
-	]},
-]
-
 const o2_simpleHarmonicOscillator_equilibriumSolutionMethod_content=(case0)=>[
 	`\\[ ${case0} \\]`,
 	{type:'note',content:[
@@ -160,10 +149,10 @@ module.exports={
 		traits: {
 			equilibriumSolutionMethod: {
 				contents: {
-					linear_o2_linearHomogeneous:   nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`q(t)`,`${nt.x} = K`,`${nt.x} = 0`),
-					resolved_o2_linearHomogeneous: nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`b(t)`,`${nt.x} = K`,`${nt.x} = 0`),
-					system_o2_linearHomogeneous:   nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`c(t)`,nt.sys2(`${nt.x} &= K`,`${nt.y} &= 0`),nt.sys2(`${nt.x} &= 0`,`${nt.y} &= 0`)),
-					vector_o2_linearHomogeneous:   nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`c(t)`,`${nt.X} = ${nt.vec2('K',0)}`,`${nt.X} = \\mathbf{0}`),
+					linear_o2_linearHomogeneous:   new LhcContent.Linear(new LhcParam.Linear(1,'p(t)','q(t)')).getContentFor_equilibriumSolutionMethod(),
+					resolved_o2_linearHomogeneous: new LhcContent.Resolved(new LhcParam.Resolved('a(t)','b(t)')).getContentFor_equilibriumSolutionMethod(),
+					system_o2_linearHomogeneous:   new LhcContent.ReducedSystem(new LhcParam.ReducedSystem('c(t)','d(t)')).getContentFor_equilibriumSolutionMethod(),
+					vector_o2_linearHomogeneous:   new LhcContent.ReducedVector(new LhcParam.ReducedSystem('c(t)','d(t)')).getContentFor_equilibriumSolutionMethod(),
 				},
 			},
 		},
@@ -224,10 +213,10 @@ module.exports={
 			},
 			equilibriumSolutionMethod: {
 				contents: {
-					linear_o2_linearHomogeneousConstant:   nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`a_0`,`${nt.x} = K`,`${nt.x} = 0`),
-					resolved_o2_linearHomogeneousConstant: nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`b_0`,`${nt.x} = K`,`${nt.x} = 0`),
-					system_o2_linearHomogeneousConstant:   nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`c`,nt.sys2(`${nt.x} &= K`,`${nt.y} &= 0`),nt.sys2(`${nt.x} &= 0`,`${nt.y} &= 0`)),
-					vector_o2_linearHomogeneousConstant:   nt=>o2_linearHomogeneous_equilibriumSolutionMethod_content(`c`,`${nt.X} = ${nt.vec2('K',0)}`,`${nt.X} = \\mathbf{0}`),
+					linear_o2_linearHomogeneousConstant:   new LhcContent.Linear(new LhcParam.Linear('a_2','a_1','a_0')).getContentFor_equilibriumSolutionMethod(),
+					resolved_o2_linearHomogeneousConstant: new LhcContent.Resolved(new LhcParam.Resolved('b_1','b_0')).getContentFor_equilibriumSolutionMethod(),
+					system_o2_linearHomogeneousConstant:   new LhcContent.ReducedSystem(new LhcParam.ReducedSystem('c','d')).getContentFor_equilibriumSolutionMethod(),
+					vector_o2_linearHomogeneousConstant:   new LhcContent.ReducedVector(new LhcParam.ReducedSystem('c','d')).getContentFor_equilibriumSolutionMethod(),
 				},
 			},
 		},

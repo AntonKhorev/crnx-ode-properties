@@ -20,4 +20,13 @@ LhcParam.Resolved = class {
 	}
 }
 
+LhcParam.ReducedSystem = class {
+	constructor(c,d) {
+		this.A=[[0,1],[c,d]]
+	}
+	system(i,j) {
+		return this.A[i-1][j-1]
+	}
+}
+
 module.exports=LhcParam

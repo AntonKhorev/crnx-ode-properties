@@ -2,10 +2,13 @@
 
 const LhcContent={}
 
-LhcContent.Linear = class {
+LhcContent.Base = class {
 	constructor(param) {
 		this.param=param
 	}
+}
+
+LhcContent.Linear = class extends LhcContent.Base {
 	getContentFor_characteristicEquation() {
 		const a=i=>this.param.linear(i)
 		return nt=>[
@@ -19,12 +22,22 @@ LhcContent.Linear = class {
 			`\\[ ${a(2)} \\lambda^2 `+(a(1)?`+ ${a(1)} \\lambda `:``)+`+ ${a(0)} = 0 \\]`,
 		]
 	}
+	getContentFor_equilibriumSolutionMethod() {
+		const a=i=>this.param.linear(i)
+		return nt=>[
+			{type:'switch',title:`\\( ${a(0)} \\) is`,content:[
+				{type:'case',title:`\\( ${a(0)} = 0 \\)`,content:[
+					`\\[ ${nt.x} = K \\]`,
+				]},
+				{type:'case',title:`\\( ${a(0)} \\ne 0 \\)`,content:[
+					`\\[ ${nt.x} = 0 \\]`,
+				]},
+			]},
+		]
+	}
 }
 
-LhcContent.Resolved = class {
-	constructor(param) {
-		this.param=param
-	}
+LhcContent.Resolved = class extends LhcContent.Base {
 	getContentFor_characteristicEquation() {
 		const b=i=>this.param.resolved(i)
 		return nt=>[
@@ -37,6 +50,51 @@ LhcContent.Resolved = class {
 				`\\[ \\lambda^2 = `+(b(1)?`${b(1)} \\lambda + `:``)+`${b(0)} \\]`,
 			]},
 			`\\[ \\lambda^2 `+(b(1)?`- ${b(1)} \\lambda `:``)+`- ${b(0)} = 0 \\]`,
+		]
+	}
+	getContentFor_equilibriumSolutionMethod() {
+		const b=i=>this.param.resolved(i)
+		return nt=>[
+			{type:'switch',title:`\\( ${b(0)} \\) is`,content:[
+				{type:'case',title:`\\( ${b(0)} = 0 \\)`,content:[
+					`\\[ ${nt.x} = K \\]`,
+				]},
+				{type:'case',title:`\\( ${b(0)} \\ne 0 \\)`,content:[
+					`\\[ ${nt.x} = 0 \\]`,
+				]},
+			]},
+		]
+	}
+}
+
+LhcContent.ReducedSystem = class extends LhcContent.Base {
+	getContentFor_equilibriumSolutionMethod() {
+		const c=this.param.system(2,1)
+		return nt=>[
+			{type:'switch',title:`\\( ${c} \\) is`,content:[
+				{type:'case',title:`\\( ${c} = 0 \\)`,content:[
+					`\\[ `+nt.sys2(`${nt.x} &= K`,`${nt.y} &= 0`)+` \\]`,
+				]},
+				{type:'case',title:`\\( ${c} \\ne 0 \\)`,content:[
+					`\\[ `+nt.sys2(`${nt.x} &= 0`,`${nt.y} &= 0`)+` \\]`,
+				]},
+			]},
+		]
+	}
+}
+
+LhcContent.ReducedVector = class extends LhcContent.Base {
+	getContentFor_equilibriumSolutionMethod() {
+		const c=this.param.system(2,1)
+		return nt=>[
+			{type:'switch',title:`\\( ${c} \\) is`,content:[
+				{type:'case',title:`\\( ${c} = 0 \\)`,content:[
+					`\\[ ${nt.X} = ${nt.vec2('K',0)} \\]`,
+				]},
+				{type:'case',title:`\\( ${c} \\ne 0 \\)`,content:[
+					`\\[ ${nt.X} = \\mathbf{0} \\]`,
+				]},
+			]},
 		]
 	}
 }
