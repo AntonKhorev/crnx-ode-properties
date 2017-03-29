@@ -1,5 +1,34 @@
 'use strict'
 
+const TexSum=(...terms)=>{
+	let result=''
+	let lead=''
+	let first=true
+	for (let term of terms) {
+		if (Array.isArray(term)) {
+			if (term[0][0]=='-') {
+				if (lead=='+') {
+					term[0]=term[0].slice(1)
+					lead='-'
+				} else if (lead=='-') {
+					term[0]=term[0].slice(1)
+					lead='+'
+				}
+			}
+			if (first) {
+				first=false
+			} else {
+				result+=' '
+			}
+			result+=lead+' '+term.join(' ')
+		} else {
+			lead=term
+		}
+	}
+	return result
+}
+const BlockTexSum=(...terms)=>`\\[ `+TexSum(...terms)+` \\]`
+
 const LhcContent={}
 
 LhcContent.Base = class {
@@ -42,14 +71,14 @@ LhcContent.Resolved = class extends LhcContent.Base {
 		const b=i=>this.param.resolved(i)
 		return nt=>[
 			{type:'derivation',content:[
-				`\\[ ${nt.dd(nt.x,'t',2)} = `+(b(1)?`${b(1)} ${nt.dxdt} + `:``)+`${b(0)} ${nt.x} \\]`,
+				BlockTexSum([nt.dd(nt.x,'t',2)],'=',[b(1),nt.dxdt],'+',[b(0),nt.x]),
 				`substitute \\( ${nt.x} = e^{\\lambda t} \\)`,
-				`\\[ ${nt.dd('','t',2)} e^{\\lambda t} = `+(b(1)?`${b(1)} ${nt.ddt} e^{\\lambda t} + `:``)+`${b(0)} e^{\\lambda t} \\]`,
-				`\\[ \\lambda^2 e^{\\lambda t} = `+(b(1)?`${b(1)} \\lambda e^{\\lambda t} + `:``)+`${b(0)} e^{\\lambda t} \\]`,
+				BlockTexSum([`${nt.dd('','t',2)} e^{\\lambda t}`],'=',[b(1),`${nt.ddt} e^{\\lambda t}`],'+',[b(0),`e^{\\lambda t}`]),
+				BlockTexSum([`\\lambda^2 e^{\\lambda t}`],'=',[b(1),`\\lambda e^{\\lambda t}`],'+',[b(0),`e^{\\lambda t}`]),
 				`divide by \\( e^{\\lambda t} \\)`,
-				`\\[ \\lambda^2 = `+(b(1)?`${b(1)} \\lambda + `:``)+`${b(0)} \\]`,
+				BlockTexSum([`\\lambda^2`],'=',[b(1),`\\lambda`],'+',[b(0)]),
 			]},
-			`\\[ \\lambda^2 `+(b(1)?`- ${b(1)} \\lambda `:``)+`- ${b(0)} = 0 \\]`,
+			BlockTexSum([`\\lambda^2`],'-',[b(1),`\\lambda`],'-',[b(0)],'=',[0]),
 		]
 	}
 	getContentFor_equilibriumSolutionMethod() {
@@ -68,6 +97,13 @@ LhcContent.Resolved = class extends LhcContent.Base {
 }
 
 LhcContent.ReducedSystem = class extends LhcContent.Base {
+	getContentFor_characteristicEquation() {
+		const c=this.param.system(2,1)
+		const d=this.param.system(2,2)
+		return nt=>[
+			BlockTexSum([`\\lambda^2`],'-',[d,`\\lambda`],'-',[c],'=',[0]),
+		]
+	}
 	getContentFor_equilibriumSolutionMethod() {
 		const c=this.param.system(2,1)
 		return nt=>[
@@ -84,6 +120,13 @@ LhcContent.ReducedSystem = class extends LhcContent.Base {
 }
 
 LhcContent.ReducedVector = class extends LhcContent.Base {
+	getContentFor_characteristicEquation() {
+		const c=this.param.system(2,1)
+		const d=this.param.system(2,2)
+		return nt=>[
+			`\\[ \\det\\left(${nt.mat2('-\\lambda',1,c,`${d}-\\lambda`)}\\right) = 0 \\]`,
+		]
+	}
 	getContentFor_equilibriumSolutionMethod() {
 		const c=this.param.system(2,1)
 		return nt=>[

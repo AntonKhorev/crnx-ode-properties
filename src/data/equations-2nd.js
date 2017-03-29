@@ -12,12 +12,6 @@ const o2_simpleHarmonicOscillator_equilibriumSolutionMethod_content=(case0)=>[
 	]},
 ]
 
-const lhc_characteristicEquation_system_content=(c,d)=>nt=>[
-	`\\[ \\lambda^2 - d \\lambda - c = 0 \\]`,
-]
-const lhc_characteristicEquation_vector_content=(c,d)=>nt=>[
-	`\\[ \\det\\left(${nt.mat2('-\\lambda',1,c,`${d}-\\lambda`)}\\right) = 0 \\]`,
-]
 // general sol'n for system form repeated case:
 //`\\[ \\left\\{ \\begin{aligned}`+
 //	`${nt.x} &= k_1 e^{\\lambda t} \\,{+}\\, k_2 t e^{\\lambda t} \\\\`+
@@ -233,8 +227,8 @@ module.exports={
 				contents: {
 					linear_o2_linearHomogeneousConstant:   new LhcContent.Linear(new LhcParam.Linear('a_2','a_1','a_0')).getContentFor_characteristicEquation(),
 					resolved_o2_linearHomogeneousConstant: new LhcContent.Resolved(new LhcParam.Resolved('b_1','b_0')).getContentFor_characteristicEquation(),
-					system_o2_linearHomogeneousConstant:   lhc_characteristicEquation_system_content('c','d'),
-					vector_o2_linearHomogeneousConstant:   lhc_characteristicEquation_vector_content('c','d'),
+					system_o2_linearHomogeneousConstant:   new LhcContent.ReducedSystem(new LhcParam.ReducedSystem('c','d')).getContentFor_characteristicEquation(),
+					vector_o2_linearHomogeneousConstant:   new LhcContent.ReducedVector(new LhcParam.ReducedSystem('c','d')).getContentFor_characteristicEquation(),
 				},
 			},
 			generalSolutionMethod: {
@@ -294,14 +288,10 @@ module.exports={
 		traits: {
 			characteristicEquation: {
 				contents: {
-					linear_o2_harmonicOscillator: new LhcContent.Linear(new LhcParam.Linear('m','b','k')).getContentFor_characteristicEquation(),
-					resolved_o2_harmonicOscillator: nt=>[
-						`\\[ m \\lambda^2 + b \\lambda + k = 0 \\]`,
-					],
-					system_o2_harmonicOscillator: nt=>[
-						`\\[ m \\lambda^2 + b \\lambda + k = 0 \\]`,
-					],
-					vector_o2_harmonicOscillator: lhc_characteristicEquation_vector_content('- \\frac km','- \\frac bm'),
+					linear_o2_harmonicOscillator:   new LhcContent.Linear(new LhcParam.Linear('m','b','k')).getContentFor_characteristicEquation(),
+					resolved_o2_harmonicOscillator: new LhcContent.Resolved(new LhcParam.Linear('m','b','k')).getContentFor_characteristicEquation(),
+					system_o2_harmonicOscillator:   new LhcContent.ReducedSystem(new LhcParam.Linear('m','b','k')).getContentFor_characteristicEquation(),
+					vector_o2_harmonicOscillator:   new LhcContent.ReducedSystem(new LhcParam.Linear('m','b','k')).getContentFor_characteristicEquation(),
 				},
 			},
 			generalSolutionMethod: {
