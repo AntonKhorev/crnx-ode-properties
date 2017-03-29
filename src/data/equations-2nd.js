@@ -50,7 +50,6 @@ const lhc_generalSolutionMethod_scalar_content=(charEqn)=>nt=>[
 		]},
 	]},
 ]
-/*
 const harmonicOscillatorType=(type,wiki,discriminantRelation)=>({
 	parents: {
 		o2_harmonicOscillator: true,
@@ -58,17 +57,52 @@ const harmonicOscillatorType=(type,wiki,discriminantRelation)=>({
 	name: `${type} harmonic oscillator`,
 	htmlName: `<a href='${wiki}'>${type}</a> harmonic oscillator`,
 	importance: 4,
-	equation: `${nt.dd(nt.x,'t',2)} = - \\frac bm ${nt.dxdt} - \\frac km ${nt.x}`,
-	equationNotes: [
-		`\\[ b^2 - 4 m k ${discriminantRelation} 0 \\]`,
-		`usually written as \\( m ${nt.dd(nt.x,'t',2)} + b ${nt.dxdt} + k ${nt.x} = 0 \\)`,
-		`\\( m > 0 \\) is the mass`,
-		`\\( b \\ge 0 \\) is the viscous damping coefficient`,
-		`\\( k > 0 \\) is the spring constant`,
+	forms: [
+		{
+			is: 't,x,scalar_o2_simpleHarmonicOscillator,scalar_o2_harmonicOscillator,linear_o2_harmonicOscillator',
+			equation: nt=>`m \\cdot ${nt.dd(nt.x,'t',2)} + b \\cdot ${nt.dxdt} + k \\cdot ${nt.x} = 0`,
+			notes: nt=>[
+				`\\[ b^2 - 4 m k ${discriminantRelation} 0 \\]`,
+				`\\( m > 0 \\) is the mass`,
+				`\\( b \\ge 0 \\) is the viscous damping coefficient`,
+				`\\( k > 0 \\) is the spring constant`,
+			],
+		},
+		// copypasted from harmonic oscillator
+		{
+			is: 't,x,scalar_o2_simpleHarmonicOscillator,scalar_o2_harmonicOscillator,resolved_o2_harmonicOscillator',
+			equation: nt=>`${nt.dd(nt.x,'t',2)} = - \\frac bm \\cdot ${nt.dxdt} - \\frac km \\cdot ${nt.x}`,
+		},
+		{
+			is: 't,xy,system_o2_simpleHarmonicOscillator,system_o2_harmonicOscillator',
+			equation: nt=>`\\left\\{ \\begin{aligned} `+
+				`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
+				`${nt.dd(nt.y)} &= - \\frac km \\cdot ${nt.x} - \\frac bm \\cdot ${nt.y} `+
+			`\\end{aligned} \\right.`,
+		},
+		{
+			is: 't,X,vector_o2_simpleHarmonicOscillator,vector_o2_harmonicOscillator',
+			equation: nt=>`${nt.dd(nt.X)} = \\begin{bmatrix}`+
+				`0 & 1 \\\\`+
+				`- \\frac km & - \\frac bm`+
+			`\\end{bmatrix} ${nt.X}`,
+		},
 	],
-	hasForm: 'o2_harmonicOscillator',
 })
-*/
+
+const o2OrderReductionForms=(classId,resolvedFormFn)=>[ // resolvedFormFn: (x,y)=>`...`
+	{
+		is: `t,x,resolved_${classId}`,
+		equation: nt=>`${nt.dd(nt.x,'t',2)} = `+resolvedFormFn(nt.x,nt.dxdt),
+	},
+	{
+		is: 't,xy,system_${classId}',
+		equation: nt=>`\\left\\{ \\begin{aligned} `+
+			`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
+			`${nt.dd(nt.y)} &= `+resolvedFormFn(nt.x,nt.y)+` `+
+		`\\end{aligned} \\right.`,
+	},
+]
 
 module.exports={
 	o2: {
@@ -288,7 +322,6 @@ module.exports={
 			},
 		},
 	},
-/*
 	o2_underdampedHarmonicOscillator: harmonicOscillatorType(
 		"underdamped",
 		"https://en.wikipedia.org/wiki/Damping#Under-damping_.280_.E2.89.A4_.CE.B6_.3C_1.29",
@@ -311,15 +344,37 @@ module.exports={
 		name: "simple (undamped) harmonic oscillator",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Harmonic_oscillator#Simple_harmonic_oscillator'>simple (undamped) harmonic oscillator</a>",
 		importance: 3,
-		equation: `${nt.dd(nt.x,'t',2)} = - \\frac km ${nt.x}`,
-		equationNotes: [
-			`usually written as \\( m ${nt.dd(nt.x,'t',2)} + k ${nt.x} = 0 \\)`,
-			`\\( m > 0 \\) is the mass`,
-			`\\( k > 0 \\) is the spring constant`,
+		forms: [
+			{
+				is: 't,x,scalar_o2_simpleHarmonicOscillator,linear_o2_simpleHarmonicOscillator',
+				equation: nt=>`m \\cdot ${nt.dd(nt.x,'t',2)} + k \\cdot ${nt.x} = 0`,
+				notes: nt=>[
+					`\\( m > 0 \\) is the mass`,
+					`\\( k > 0 \\) is the spring constant`,
+				],
+			},
+			{
+				is: 't,x,scalar_o2_simpleHarmonicOscillator,resolved_o2_simpleHarmonicOscillator',
+				equation: nt=>`${nt.dd(nt.x,'t',2)} = - \\frac km \\cdot ${nt.x}`,
+			},
+			{
+				is: 't,xy,system_o2_simpleHarmonicOscillator',
+				equation: nt=>`\\left\\{ \\begin{aligned} `+
+					`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
+					`${nt.dd(nt.y)} &= - \\frac km \\cdot ${nt.x} `+
+				`\\end{aligned} \\right.`,
+			},
+			{
+				is: 't,X,vector_o2_simpleHarmonicOscillator',
+				equation: nt=>`${nt.dd(nt.X)} = \\begin{bmatrix}`+
+					`0 & 1 \\\\`+
+					`- \\frac km & 0`+
+				`\\end{bmatrix} ${nt.X}`,
+			},
 		],
 		traits: {
+			/*
 			characteristicEquation: lhc_characteristicEquation('m',0,'k'),
-			orderReduction: lhc_orderReduction('m',0,'k'),
 			generalSolutionMethod: {
 				title: `General and ${ivp} solution`,
 				form: true,
@@ -339,6 +394,7 @@ module.exports={
 					`\\end{aligned} \\]`,
 				],
 			},
+			*/
 		},
 	},
 	o2_vanDerPol: {
@@ -348,7 +404,7 @@ module.exports={
 		name: "Van der Pol",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Van_der_Pol_oscillator'>Van der Pol</a>",
 		importance: 3,
-		equation: `${nt.dd(nt.x,'t',2)} = \\mu(1-${nt.x}^2)${nt.dxdt} - ${nt.x}`,
+		forms: o2OrderReductionForms('o2_vanDerPol',(x,y)=>`\\mu(1-${x}^2)${y} - ${x}`),
 	},
 	o2_unforcedDuffing: {
 		parents: {
@@ -357,7 +413,6 @@ module.exports={
 		name: "unforced Duffing",
 		htmlName: "unforced <a href='https://en.wikipedia.org/wiki/Duffing_equation'>Duffing</a>",
 		importance: 3,
-		equation: `${nt.dd(nt.x,'t',2)} = - \\delta ${nt.dxdt} - \\alpha ${nt.x} - \\beta ${nt.x}^3`,
+		forms: o2OrderReductionForms('o2_unforcedDuffing',(x,y)=>`- \\delta ${y} - \\alpha ${x} - \\beta ${x}^3`),
 	},
-*/
 }
