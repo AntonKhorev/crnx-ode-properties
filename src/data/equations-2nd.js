@@ -5,13 +5,6 @@ const LhcContent=require('../lhc-content-classes')
 
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
-const o2_simpleHarmonicOscillator_equilibriumSolutionMethod_content=(case0)=>[
-	`\\[ ${case0} \\]`,
-	{type:'note',content:[
-		`no other equilibrium solution is possible because \\( k > 0 \\)`,
-	]},
-]
-
 // general sol'n for system form repeated case:
 //`\\[ \\left\\{ \\begin{aligned}`+
 //	`${nt.x} &= k_1 e^{\\lambda t} \\,{+}\\, k_2 t e^{\\lambda t} \\\\`+
@@ -305,9 +298,9 @@ module.exports={
 			equilibriumSolutionMethod: {
 				formType: 'scalar_o2_simpleHarmonicOscillator',
 				contents: {
-					scalar_o2_simpleHarmonicOscillator: nt=>o2_simpleHarmonicOscillator_equilibriumSolutionMethod_content(`${nt.x} = 0`),
-					system_o2_simpleHarmonicOscillator: nt=>o2_simpleHarmonicOscillator_equilibriumSolutionMethod_content(nt.sys2(`${nt.x} &= 0`,`${nt.y} &= 0`)),
-					vector_o2_simpleHarmonicOscillator: nt=>o2_simpleHarmonicOscillator_equilibriumSolutionMethod_content(`${nt.X} = \\mathbf{0}`),
+					scalar_o2_simpleHarmonicOscillator: new LhcContent.Linear(new LhcParam.Linear('m','b','k')).getContentFor_equilibriumSolutionMethod0(),
+					system_o2_simpleHarmonicOscillator: new LhcContent.ReducedSystem(new LhcParam.Linear('m','b','k')).getContentFor_equilibriumSolutionMethod0(),
+					vector_o2_simpleHarmonicOscillator: new LhcContent.ReducedSystem(new LhcParam.Linear('m','b','k')).getContentFor_equilibriumSolutionMethod0(),
 				},
 			},
 		},

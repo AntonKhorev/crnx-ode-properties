@@ -64,6 +64,15 @@ LhcContent.Linear = class extends LhcContent.Base {
 			]},
 		]
 	}
+	getContentFor_equilibriumSolutionMethod0() {
+		const a=i=>this.param.linear(i)
+		return nt=>[
+			`\\[ ${nt.x} = 0 \\]`,
+			{type:'note',content:[
+				`no other equilibrium solution is possible because \\( ${a(0)} \\ne 0 \\)`,
+			]},
+		]
+	}
 }
 
 LhcContent.Resolved = class extends LhcContent.Base {
@@ -94,6 +103,15 @@ LhcContent.Resolved = class extends LhcContent.Base {
 			]},
 		]
 	}
+	getContentFor_equilibriumSolutionMethod0() {
+		const b=i=>this.param.resolved(i)
+		return nt=>[
+			`\\[ ${nt.x} = 0 \\]`,
+			{type:'note',content:[
+				`no other equilibrium solution is possible because \\( ${b(0)} \\ne 0 \\)`,
+			]},
+		]
+	}
 }
 
 LhcContent.ReducedSystem = class extends LhcContent.Base {
@@ -117,6 +135,15 @@ LhcContent.ReducedSystem = class extends LhcContent.Base {
 			]},
 		]
 	}
+	getContentFor_equilibriumSolutionMethod0() {
+		const c=this.param.system(2,1)
+		return nt=>[
+			`\\[ ${nt.sys2(`${nt.x} &= 0`,`${nt.y} &= 0`)} \\]`,
+			{type:'note',content:[
+				`no other equilibrium solution is possible because \\( ${c} \\ne 0 \\)`,
+			]},
+		]
+	}
 }
 
 LhcContent.ReducedVector = class extends LhcContent.Base {
@@ -137,6 +164,15 @@ LhcContent.ReducedVector = class extends LhcContent.Base {
 				{type:'case',title:`\\( ${c} \\ne 0 \\)`,content:[
 					`\\[ ${nt.X} = \\mathbf{0} \\]`,
 				]},
+			]},
+		]
+	}
+	getContentFor_equilibriumSolutionMethod0() {
+		const c=this.param.system(2,1)
+		return nt=>[
+			`\\[ ${nt.X} = \\mathbf{0} \\]`,
+			{type:'note',content:[
+				`no other equilibrium solution is possible because \\( ${c} \\ne 0 \\)`,
 			]},
 		]
 	}
