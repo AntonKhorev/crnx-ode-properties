@@ -5,12 +5,12 @@ const LhcContent=require('../lhc-content-classes')
 
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
-const harmonicOscillatorType=(type,wiki,discriminantRelation)=>({
+const harmonicOscillatorType=(type,discriminantRelation,contentMethodName)=>({
 	parents: {
 		o2_harmonicOscillator: true,
 	},
 	name: `${type} harmonic oscillator`,
-	htmlName: `<a href='${wiki}'>${type}</a> harmonic oscillator`,
+	htmlName: `${type} <a href='https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator'>harmonic oscillator</a>`,
 	importance: 4,
 	forms: [
 		{
@@ -43,6 +43,18 @@ const harmonicOscillatorType=(type,wiki,discriminantRelation)=>({
 			`\\end{bmatrix} ${nt.X}`,
 		},
 	],
+	traits: {
+		generalSolutionMethod: {
+			title: `General and ${ivp} solution`,
+			formType: 'scalar_o2_harmonicOscillator',
+			contents: {
+				scalar_o2_harmonicOscillator:   new LhcContent.Linear(new LhcParam.Linear('m','b','k'))[contentMethodName](),
+				resolved_o2_harmonicOscillator: new LhcContent.Resolved(new LhcParam.Linear('m','b','k'))[contentMethodName](),
+				system_o2_harmonicOscillator:   new LhcContent.ReducedSystem(new LhcParam.Linear('m','b','k'))[contentMethodName](),
+				vector_o2_harmonicOscillator:   new LhcContent.ReducedVector(new LhcParam.Linear('m','b','k'))[contentMethodName](),
+			},
+		},
+	},
 })
 
 const o2OrderReductionForms=(classId,resolvedFormFn)=>[ // resolvedFormFn: (x,y)=>`...`
@@ -278,18 +290,18 @@ module.exports={
 	},
 	o2_underdampedHarmonicOscillator: harmonicOscillatorType(
 		"underdamped",
-		"https://en.wikipedia.org/wiki/Damping#Under-damping_.280_.E2.89.A4_.CE.B6_.3C_1.29",
-		"&lt;"
+		"&lt;",
+		'getContentFor_generalSolutionMethod_Complex'
 	),
 	o2_criticallyDampedHarmonicOscillator: harmonicOscillatorType(
 		"critically damped",
-		"https://en.wikipedia.org/wiki/Damping#Critical_damping_.28.CE.B6_.3D_1.29",
-		"="
+		"=",
+		'getContentFor_generalSolutionMethod_Repeated'
 	),
 	o2_overdampedHarmonicOscillator: harmonicOscillatorType(
 		"overdamped",
-		"https://en.wikipedia.org/wiki/Damping#Over-damping_.28.CE.B6_.3E_1.29",
-		">"
+		">",
+		'getContentFor_generalSolutionMethod_Real'
 	),
 	o2_simpleHarmonicOscillator: {
 		parents: {

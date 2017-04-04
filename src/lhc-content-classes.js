@@ -50,37 +50,79 @@ LhcContent.Base = class {
 			return `${nt.vec2('k_1','k_2')} = ${kmatlead} ${nt.mat2(kx1,ky1,kx2,ky2)} ${this.getX0(nt)}`
 		}
 	}
-	getContentFor_generalSolutionMethod() {
-		return nt=>{
-			const x0=this.getx0(nt)
-			const y0=this.gety0(nt)
+	getGeneralSolutionRepeatedCase(nt) {
+		const x0=this.getx0(nt)
+		const y0=this.gety0(nt)
 		return [
+			`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
+			`\\[ ${this.getRepeatedGeneralSolution(nt)} \\]`,
+			`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+			`\\[ ${this.getGeneralSolutionConstantsEquation(nt,1,0,'\\lambda',1)} \\]`,
+			`\\[ ${this.getGeneralSolutionConstantsSolution(nt,'',1,0,'-\\lambda',1,x0,`${y0} - \\lambda \\cdot ${x0}`)} \\]`,
+		]
+	}
+	getGeneralSolutionRealCase(nt) {
+		const x0=this.getx0(nt)
+		const y0=this.gety0(nt)
+		return [
+			`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
+			`\\[ ${this.getRealGeneralSolution(nt)} \\]`,
+			`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+			`\\[ ${this.getGeneralSolutionConstantsEquation(nt,1,1,'\\lambda_1','\\lambda_2')} \\]`,
+			`\\[ ${this.getGeneralSolutionConstantsSolution(nt,'\\frac1{λ_2{-}λ_1}','λ_2',-1,'-λ_1',1,`\\frac{λ_2 \\cdot ${x0} - ${y0}}{λ_2 - λ_1}`,`\\frac{λ_1 \\cdot ${x0} - ${y0}}{λ_1 - λ_2}`)} \\]`,
+		]
+	}
+	getGeneralSolutionComplexCase(nt) {
+		const x0=this.getx0(nt)
+		const y0=this.gety0(nt)
+		return [
+			`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
+			`\\[ ${this.getComplexGeneralSolution(nt)} \\]`,
+			`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+			`\\[ ${this.getGeneralSolutionConstantsEquation(nt,1,0,'\\alpha','\\beta')} \\]`,
+			`\\[ ${this.getGeneralSolutionConstantsSolution(nt,'\\frac1{\\beta}','\\beta',0,'-\\alpha',1,x0,`\\frac{${y0} - α \\cdot ${x0}}{β}`)} \\]`,
+		]
+	}
+	getContentFor_generalSolutionMethod_Repeated() {
+		return nt=>[
+			`solve characteristic equation for \\( \\lambda \\):`,
+			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
+			`roots \\( \\lambda \\) are going to be repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,
+			...this.getGeneralSolutionRepeatedCase(nt),
+		]
+	}
+	getContentFor_generalSolutionMethod_Real() {
+		return nt=>[
+			`solve characteristic equation for \\( \\lambda \\):`,
+			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
+			`roots \\( \\lambda \\) are going to be real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,
+			...this.getGeneralSolutionRealCase(nt),
+		]
+	}
+	getContentFor_generalSolutionMethod_Complex() {
+		return nt=>[
+			`solve characteristic equation for \\( \\lambda \\):`,
+			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
+			`roots \\( \\lambda \\) are going to be complex conjugate \\( ( \\lambda = \\alpha \\pm i \\beta; \\beta \\ne 0 ) \\)`,
+			...this.getGeneralSolutionComplexCase(nt),
+		]
+	}
+	getContentFor_generalSolutionMethod() {
+		return nt=>[
 			`solve characteristic equation for \\( \\lambda \\):`,
 			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
 			{type:'switch',title:`roots \\( \\lambda \\) are`,content:[
-				{type:'case',title:`repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,content:[
-					`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
-					`\\[ ${this.getRepeatedGeneralSolution(nt)} \\]`,
-					`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-					`\\[ ${this.getGeneralSolutionConstantsEquation(nt,1,0,'\\lambda',1)} \\]`,
-					`\\[ ${this.getGeneralSolutionConstantsSolution(nt,'',1,0,'-\\lambda',1,x0,`${y0} - \\lambda \\cdot ${x0}`)} \\]`,
-				]},
-				{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[
-					`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
-					`\\[ ${this.getRealGeneralSolution(nt)} \\]`,
-					`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-					`\\[ ${this.getGeneralSolutionConstantsEquation(nt,1,1,'\\lambda_1','\\lambda_2')} \\]`,
-					`\\[ ${this.getGeneralSolutionConstantsSolution(nt,'\\frac1{λ_2{-}λ_1}','λ_2',-1,'-λ_1',1,`\\frac{λ_2 \\cdot ${x0} - ${y0}}{λ_2 - λ_1}`,`\\frac{λ_1 \\cdot ${x0} - ${y0}}{λ_1 - λ_2}`)} \\]`,
-				]},
-				{type:'case',title:`complex conjugate pair \\( ( \\lambda = \\alpha \\pm i \\beta; \\beta \\ne 0 ) \\)`,content:[
-					`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
-					`\\[ ${this.getComplexGeneralSolution(nt)} \\]`,
-					`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-					`\\[ ${this.getGeneralSolutionConstantsEquation(nt,1,0,'\\alpha','\\beta')} \\]`,
-					`\\[ ${this.getGeneralSolutionConstantsSolution(nt,'\\frac1{\\beta}','\\beta',0,'-\\alpha',1,x0,`\\frac{${y0} - α \\cdot ${x0}}{β}`)} \\]`,
-				]},
+				{type:'case',title:`repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,
+					content:this.getGeneralSolutionRepeatedCase(nt)
+				},
+				{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,
+					content:this.getGeneralSolutionRealCase(nt)
+				},
+				{type:'case',title:`complex conjugate pair \\( ( \\lambda = \\alpha \\pm i \\beta; \\beta \\ne 0 ) \\)`,
+					content:this.getGeneralSolutionComplexCase(nt)
+				},
 			]},
-		]}
+		]
 	}
 }
 
