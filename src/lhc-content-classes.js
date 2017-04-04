@@ -38,42 +38,58 @@ LhcContent.Base = class {
 		this.param=param
 	}
 	getContentFor_generalSolutionMethod() {
-		// general sol'n for system form repeated case:
-		//`\\[ \\left\\{ \\begin{aligned}`+
-		//	`${nt.x} &= k_1 e^{\\lambda t} \\,{+}\\, k_2 t e^{\\lambda t} \\\\`+
-		//	`${nt.y} &= (k_1 \\lambda + k_2) e^{\\lambda t} \\,{+}\\, k_2 \\lambda t e^{\\lambda t}`+
-		//`\\end{aligned} \\right. \\]`,
 		return nt=>[
 			`solve characteristic equation for \\( \\lambda \\):`,
 			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
 			{type:'switch',title:`roots \\( \\lambda \\) are`,content:[
 				{type:'case',title:`repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,content:[
 					`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
-					`\\[ ${nt.x} = k_1 e^{\\lambda t} + k_2 t e^{\\lambda t} \\]`,
+					`\\[ ${this.getRepeatedGeneralSolution(nt)} \\]`,
 					`constants for ${ivp} solution:`,
-					`\\[ \\begin{aligned} `+
-						`k_1 &= ${nt.x}(0) \\\\ `+
-						`k_2 &= ${nt.x}'(0) - \\lambda ${nt.x}(0) `+
-					`\\end{aligned} \\]`,
+					`\\[ ${this.getRepeatedGeneralSolutionConstants(nt)} \\]`,
 				]},
 				{type:'case',title:`real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,content:[
 					`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
-					`\\[ ${nt.x} = k_1 e^{\\lambda_1 t} + k_2 e^{\\lambda_2 t} \\]`,
+					`\\[ ${this.getRealGeneralSolution(nt)} \\]`,
 					`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-					`\\[ ${nt.mat2(1,1,'\\lambda_1','\\lambda_2')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}(0)`,`${nt.x}'(0)`)} \\]`,
+					`\\[ ${this.getRealGeneralSolutionConstants(nt)} \\]`,
 				]},
 				{type:'case',title:`complex conjugate pair \\( ( \\lambda = \\alpha \\pm i \\beta; \\beta \\ne 0 ) \\)`,content:[
 					`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
-					`\\[ ${nt.x} = k_1 e^{\\alpha t} \\cos \\beta t + k_2 e^{\\alpha t} \\sin \\beta t \\]`,
+					`\\[ ${this.getComplexGeneralSolution(nt)} \\]`,
 					`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-					`\\[ ${nt.mat2(1,0,'\\alpha','\\beta')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}(0)`,`${nt.x}'(0)`)} \\]`,
+					`\\[ ${this.getComplexGeneralSolutionConstants(nt)} \\]`,
 				]},
 			]},
 		]
 	}
 }
 
-LhcContent.Linear = class extends LhcContent.Base {
+LhcContent.Scalar = class extends LhcContent.Base {
+	getRepeatedGeneralSolution(nt) {
+		return `${nt.x} = k_1 e^{\\lambda t} + k_2 t e^{\\lambda t}`
+	}
+	getRepeatedGeneralSolutionConstants(nt) {
+		return `\\begin{aligned} `+
+			`k_1 &= ${nt.x}(0) \\\\ `+
+			`k_2 &= ${nt.x}'(0) - \\lambda ${nt.x}(0) `+
+		`\\end{aligned}`
+	}
+	getRealGeneralSolution(nt) {
+		return `${nt.x} = k_1 e^{\\lambda_1 t} + k_2 e^{\\lambda_2 t}`
+	}
+	getRealGeneralSolutionConstants(nt) {
+		return `${nt.mat2(1,1,'\\lambda_1','\\lambda_2')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}(0)`,`${nt.x}'(0)`)}`
+	}
+	getComplexGeneralSolution(nt) {
+		return `${nt.x} = k_1 e^{\\alpha t} \\cos \\beta t + k_2 e^{\\alpha t} \\sin \\beta t`
+	}
+	getComplexGeneralSolutionConstants(nt) {
+		return `${nt.mat2(1,0,'\\alpha','\\beta')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}(0)`,`${nt.x}'(0)`)}`
+	}
+}
+
+LhcContent.Linear = class extends LhcContent.Scalar {
 	getCharacteristicEquation(nt) {
 		const a=i=>this.param.linear(i)
 		return TexSum([a(2),`\\lambda^2`],'+',[a(1),`\\lambda`],'+',[a(0)],'=',[0])
@@ -115,7 +131,7 @@ LhcContent.Linear = class extends LhcContent.Base {
 	}
 }
 
-LhcContent.Resolved = class extends LhcContent.Base {
+LhcContent.Resolved = class extends LhcContent.Scalar {
 	getCharacteristicEquation(nt) {
 		const b=i=>this.param.resolved(i)
 		return TexSum([`\\lambda^2`],'-',[b(1),`\\lambda`],'-',[b(0)],'=',[0])
@@ -159,11 +175,46 @@ LhcContent.Resolved = class extends LhcContent.Base {
 }
 
 LhcContent.ReducedSystem = class extends LhcContent.Base {
-	getContentFor_characteristicEquation() {
+	getCharacteristicEquation(nt) {
 		const c=this.param.system(2,1)
 		const d=this.param.system(2,2)
+		return TexSum([`\\lambda^2`],'-',[d,`\\lambda`],'-',[c],'=',[0])
+	}
+	getRepeatedGeneralSolution(nt) {
+		return `\\left\\{ \\begin{aligned}`+
+			`${nt.x} &= k_1 e^{\\lambda t} + k_2 t e^{\\lambda t} \\\\`+
+			`${nt.y} &= (k_1 \\lambda + k_2) e^{\\lambda t} + k_2 \\lambda t e^{\\lambda t}`+
+		`\\end{aligned} \\right.`
+	}
+	getRepeatedGeneralSolutionConstants(nt) {
+		return `\\begin{aligned} `+
+			`k_1 &= ${nt.x}(0) \\\\ `+
+			`k_2 &= ${nt.y}(0) - \\lambda ${nt.x}(0) `+
+		`\\end{aligned}`
+	}
+	getRealGeneralSolution(nt) {
+		return `\\left\\{ \\begin{aligned}`+
+			`${nt.x} &= k_1 e^{\\lambda_1 t} + k_2 e^{\\lambda_2 t} \\\\`+
+			`${nt.y} &= k_1 \\lambda_1 e^{\\lambda_1 t} + k_2 \\lambda_2 e^{\\lambda_2 t}`+
+		`\\end{aligned} \\right.`
+	}
+	getRealGeneralSolutionConstants(nt) {
+		return `${nt.mat2(1,1,'\\lambda_1','\\lambda_2')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}(0)`,`${nt.y}(0)`)}`
+	}
+	getComplexGeneralSolution(nt) {
+		return `\\left\\{ \\begin{aligned}`+
+			`${nt.x} = \\: & k_1 e^{\\alpha t} \\cos \\beta t \\\\`+
+				`+ \\: & k_2 e^{\\alpha t} \\sin \\beta t \\\\`+
+			`${nt.y} = \\: & k_1 e^{\\alpha t} (\\alpha \\cos \\beta t - \\beta \\sin \\beta t) \\\\`+
+				`+ \\: & k_2 e^{\\alpha t} (\\alpha \\sin \\beta t + \\beta \\cos \\beta t)`+
+		`\\end{aligned} \\right.`
+	}
+	getComplexGeneralSolutionConstants(nt) {
+		return `${nt.mat2(1,0,'\\alpha','\\beta')} ${nt.vec2('k_1','k_2')} = ${nt.vec2(`${nt.x}(0)`,`${nt.y}(0)`)}`
+	}
+	getContentFor_characteristicEquation() {
 		return nt=>[
-			BlockTexSum([`\\lambda^2`],'-',[d,`\\lambda`],'-',[c],'=',[0]),
+			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
 		]
 	}
 	getContentFor_equilibriumSolutionMethod() {
