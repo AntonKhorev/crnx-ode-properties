@@ -260,8 +260,10 @@ module.exports={
 				title: `General and ${ivp} solution`,
 				formType: 'scalar_o2_harmonicOscillator',
 				contents: {
-					scalar_o2_harmonicOscillator: new LhcContent.Linear(new LhcParam.Linear('m','b','k')).getContentFor_generalSolutionMethod(),
-					// TODO other forms
+					scalar_o2_harmonicOscillator:   new LhcContent.Linear(new LhcParam.Linear('m','b','k')).getContentFor_generalSolutionMethod(),
+					resolved_o2_harmonicOscillator: new LhcContent.Resolved(new LhcParam.Linear('m','b','k')).getContentFor_generalSolutionMethod(),
+					system_o2_harmonicOscillator:   new LhcContent.ReducedSystem(new LhcParam.Linear('m','b','k')).getContentFor_generalSolutionMethod(),
+					vector_o2_harmonicOscillator:   new LhcContent.ReducedVector(new LhcParam.Linear('m','b','k')).getContentFor_generalSolutionMethod(),
 				},
 			},
 			equilibriumSolutionMethod: {
@@ -269,7 +271,7 @@ module.exports={
 				contents: {
 					scalar_o2_simpleHarmonicOscillator: new LhcContent.Linear(new LhcParam.Linear('m','b','k')).getContentFor_equilibriumSolutionMethod0(),
 					system_o2_simpleHarmonicOscillator: new LhcContent.ReducedSystem(new LhcParam.Linear('m','b','k')).getContentFor_equilibriumSolutionMethod0(),
-					vector_o2_simpleHarmonicOscillator: new LhcContent.ReducedSystem(new LhcParam.Linear('m','b','k')).getContentFor_equilibriumSolutionMethod0(),
+					vector_o2_simpleHarmonicOscillator: new LhcContent.ReducedVector(new LhcParam.Linear('m','b','k')).getContentFor_equilibriumSolutionMethod0(),
 				},
 			},
 		},
