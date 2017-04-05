@@ -2,8 +2,6 @@
 
 const eqsol=(name)=>`<a href='https://en.wikipedia.org/wiki/Equilibrium_point'>${name}</a>`
 
-// TODO trivial vector forms
-
 module.exports={
 	o1: {
 		parents: {
@@ -17,17 +15,6 @@ module.exports={
 				equation: nt=>`${nt.dxdt} = f(t,${nt.x})`,
 			},
 		],
-		//traits: {
-			// TODO is it still required? : same as in 'on', done to mask 'sn's trait
-			/*
-			testSolutionMethod: {
-				formType: 'x',
-				content: nt=>[
-					`Can test if \\( ${nt.x}_p \\) is a solution by substituting \\( ${nt.x} = ${nt.x}_p \\) into the equation.`,
-				],
-			},
-			*/
-		//},
 	},
 	o1_separable: {
 		parents: {
@@ -111,7 +98,6 @@ module.exports={
 			},
 		},
 	},
-/*
 	o1_bernoulli: {
 		parents: {
 			o1: true,
@@ -119,15 +105,19 @@ module.exports={
 		name: "Bernoulli",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Bernoulli_differential_equation'>Bernoulli</a>",
 		importance: 2,
-		equation: `${nt.dxdt} = a(t) \\cdot ${nt.x} + b(t) \\cdot ${nt.x}^n`,
-		equationNotes: [
-			`\\( n \\neq 1 \\)`,
-			`usually it's also defined that additionally \\( n \\neq 0 \\), but we ignore this requirement here`,
+		forms: [
+			{
+				is: 't,x,o1_bernoulli',
+				equation: nt=>`${nt.dxdt} = a(t) \\cdot ${nt.x} + b(t) \\cdot ${nt.x}^n`,
+				notes: nt=>[
+					`\\( n \\neq 1 \\)`,
+					`usually it's also defined that additionally \\( n \\neq 0 \\), but we ignore this requirement here`,
+				],
+			},
 		],
 		traits: {
 			generalSolutionMethod: {
-				form: true,
-				content: [
+				content: nt=>[
 					{type:'derivation',content:[
 						`\\[ ${nt.dxdt} = a(t) \\cdot ${nt.x} + b(t) \\cdot ${nt.x}^n \\]`,
 						`multiply the equation by \\( \\frac{1-n}{${nt.x}^n} \\)`,
@@ -151,13 +141,13 @@ module.exports={
 				],
 			},
 			equilibriumSolutionMethod: {
-				form: true,
-				content: [
+				content: nt=>[
 					`if \\( n>0 \\), there's an equilibrium solution \\( ${nt.x} = 0 \\)`,
 				],
 			},
 		},
 	},
+/*
 	o1_linear: {
 		parents: {
 			o1_bernoulli: true,
