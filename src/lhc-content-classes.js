@@ -56,11 +56,23 @@ LhcContent.Base = class {
 			`\\[ ${this.getGeneralSolutionConstantsSolution(nt,'\\frac1{\\beta}','\\beta',0,'-\\alpha',1,x0,`\\frac{${y0} - α \\cdot ${x0}}{β}`)} \\]`,
 		]
 	}
+	getGeneralSolutionImaginaryCase(nt) {
+		const x0=this.getx0(nt)
+		const y0=this.gety0(nt)
+		return [
+			`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
+			`\\[ ${this.getImaginaryGeneralSolution(nt)} \\]`,
+			`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+			`\\[ ${this.getGeneralSolutionConstantsEquation(nt,1,0,0,'\\beta')} \\]`,
+			`\\[ ${this.getGeneralSolutionConstantsSolution(nt,'',1,0,0,'β^{-1}',x0,`\\frac{${y0}}{β}`)} \\]`,
+		]
+	}
 	getContentFor_generalSolutionMethod_Repeated() {
 		return nt=>[
 			`solve characteristic equation for \\( \\lambda \\):`,
 			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
-			`roots \\( \\lambda \\) are going to be repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,
+			`roots \\( \\lambda \\) are going to be repeated:`,
+			`\\[ \\lambda_1 = \\lambda_2 = \\lambda \\]`,
 			...this.getGeneralSolutionRepeatedCase(nt),
 		]
 	}
@@ -68,7 +80,9 @@ LhcContent.Base = class {
 		return nt=>[
 			`solve characteristic equation for \\( \\lambda \\):`,
 			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
-			`roots \\( \\lambda \\) are going to be real distinct \\( ( \\lambda_1 \\ne \\lambda_2; \\lambda_1, \\lambda_2 \\in \\mathbb{R} ) \\)`,
+			`roots \\( \\lambda \\) are going to be real distinct:`,
+			`\\[ \\lambda_1 \\ne \\lambda_2 \\]`,
+			`\\[ \\lambda_1, \\lambda_2 \\in \\mathbb{R} \\]`,
 			...this.getGeneralSolutionRealCase(nt),
 		]
 	}
@@ -76,8 +90,20 @@ LhcContent.Base = class {
 		return nt=>[
 			`solve characteristic equation for \\( \\lambda \\):`,
 			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
-			`roots \\( \\lambda \\) are going to be complex conjugate \\( ( \\lambda = \\alpha \\pm i \\beta; \\beta \\ne 0 ) \\)`,
+			`roots \\( \\lambda \\) are going to be complex conjugate:`,
+			`\\[ \\lambda = \\alpha \\pm i \\beta \\]`,
+			`\\[ \\beta \\ne 0 \\]`,
 			...this.getGeneralSolutionComplexCase(nt),
+		]
+	}
+	getContentFor_generalSolutionMethod_Imaginary() {
+		const a=i=>this.param.linear(i)
+		return nt=>[
+			`solve characteristic equation for \\( \\lambda \\):`,
+			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
+			`roots \\( \\lambda \\) are going to be complex conjugate:`,
+			`\\[ \\lambda = \\pm i \\beta = \\pm \\sqrt{\\frac{${a(0)}}{${a(2)}}} \\]`,
+			...this.getGeneralSolutionImaginaryCase(nt),
 		]
 	}
 	getContentFor_generalSolutionMethod() {
@@ -117,6 +143,9 @@ LhcContent.Scalar = class extends LhcContent.Base {
 	}
 	getComplexGeneralSolution(nt) {
 		return `${nt.x} = k_1 e^{\\alpha t} \\cos \\beta t + k_2 e^{\\alpha t} \\sin \\beta t`
+	}
+	getImaginaryGeneralSolution(nt) {
+		return `${nt.x} = k_1 \\cos \\beta t + k_2 \\sin \\beta t`
 	}
 }
 
@@ -240,6 +269,12 @@ LhcContent.ReducedSystem = class extends LhcContent.Base {
 				`+ \\: & k_2 e^{\\alpha t} (\\alpha \\sin \\beta t + \\beta \\cos \\beta t)`+
 		`\\end{aligned} \\right.`
 	}
+	getImaginaryGeneralSolution(nt) {
+		return `\\left\\{ \\begin{aligned}`+
+			`${nt.x} &= k_1 \\cos \\beta t + k_2 \\sin \\beta t \\\\`+
+			`${nt.y} &= k_2 \\beta \\cos \\beta t - k_1 \\beta \\sin \\beta t`+
+		`\\end{aligned} \\right.`
+	}
 	getContentFor_characteristicEquation() {
 		return nt=>[
 			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
@@ -301,6 +336,13 @@ LhcContent.ReducedVector = class extends LhcContent.Base {
 			`${nt.X} = \\: & k_1 e^{\\alpha t} ${nt.vec2('\\cos \\beta t','\\alpha \\cos \\beta t - \\beta \\sin \\beta t')} \\\\`+
 			        `+ \\: & k_2 e^{\\alpha t} ${nt.vec2('\\sin \\beta t','\\alpha \\sin \\beta t + \\beta \\cos \\beta t')} \\\\`+
 			        `= \\: & e^{\\alpha t} ${nt.smat2(1,0,'\\alpha','\\beta')} ${nt.smat2('\\cos \\beta t','\\sin \\beta t','- \\sin \\beta t','\\cos \\beta t')} ${nt.svec2('k_1','k_2')}`+
+		`\\end{aligned}`
+	}
+	getImaginaryGeneralSolution(nt) {
+		return `\\begin{aligned} `+
+			`${nt.X} = \\: & k_1 ${nt.vec2('\\cos \\beta t','-\\beta \\sin \\beta t')} \\\\`+
+			        `+ \\: & k_2 ${nt.vec2('\\sin \\beta t', '\\beta \\cos \\beta t')} \\\\`+
+			        `= \\: & ${nt.smat2(1,0,0,'\\beta')} ${nt.smat2('\\cos \\beta t','\\sin \\beta t','- \\sin \\beta t','\\cos \\beta t')} ${nt.svec2('k_1','k_2')}`+
 		`\\end{aligned}`
 	}
 	getContentFor_characteristicEquation() {

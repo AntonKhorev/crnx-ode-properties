@@ -46,9 +46,8 @@ const harmonicOscillatorType=(type,discriminantRelation,contentMethodName)=>({
 	traits: {
 		generalSolutionMethod: {
 			title: `General and ${ivp} solution`,
-			formType: 'scalar_o2_harmonicOscillator',
 			contents: {
-				scalar_o2_harmonicOscillator:   new LhcContent.Linear(new LhcParam.Linear('m','b','k'))[contentMethodName](),
+				linear_o2_harmonicOscillator:   new LhcContent.Linear(new LhcParam.Linear('m','b','k'))[contentMethodName](),
 				resolved_o2_harmonicOscillator: new LhcContent.Resolved(new LhcParam.Linear('m','b','k'))[contentMethodName](),
 				system_o2_harmonicOscillator:   new LhcContent.ReducedSystem(new LhcParam.Linear('m','b','k'))[contentMethodName](),
 				vector_o2_harmonicOscillator:   new LhcContent.ReducedVector(new LhcParam.Linear('m','b','k'))[contentMethodName](),
@@ -270,9 +269,8 @@ module.exports={
 			},
 			generalSolutionMethod: {
 				title: `General and ${ivp} solution`,
-				formType: 'scalar_o2_harmonicOscillator',
 				contents: {
-					scalar_o2_harmonicOscillator:   new LhcContent.Linear(new LhcParam.Linear('m','b','k')).getContentFor_generalSolutionMethod(),
+					linear_o2_harmonicOscillator:   new LhcContent.Linear(new LhcParam.Linear('m','b','k')).getContentFor_generalSolutionMethod(),
 					resolved_o2_harmonicOscillator: new LhcContent.Resolved(new LhcParam.Linear('m','b','k')).getContentFor_generalSolutionMethod(),
 					system_o2_harmonicOscillator:   new LhcContent.ReducedSystem(new LhcParam.Linear('m','b','k')).getContentFor_generalSolutionMethod(),
 					vector_o2_harmonicOscillator:   new LhcContent.ReducedVector(new LhcParam.Linear('m','b','k')).getContentFor_generalSolutionMethod(),
@@ -347,28 +345,15 @@ module.exports={
 					vector_o2_simpleHarmonicOscillator:   new LhcContent.ReducedSystem(new LhcParam.Linear('m',0,'k')).getContentFor_characteristicEquation(),
 				},
 			},
-			/*
-			characteristicEquation: lhc_characteristicEquation('m',0,'k'),
 			generalSolutionMethod: {
 				title: `General and ${ivp} solution`,
-				form: true,
-				content: [
-					{type:'derivation',content:[
-						`solve characteristic equation for \\( \\lambda \\):`,
-						`\\[ m \\lambda^2 + k = 0 \\]`,
-						`\\[ \\lambda = \\pm i \\sqrt{\\frac km} \\]`,
-						`see harmonic oscillator - general solution - <em>complex conjugate pair</em> case`,
-					]},
-					`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
-					`\\[ ${nt.x} = k_1 \\cos \\sqrt{\\frac km} t + k_2 \\sin \\sqrt{\\frac km} t \\]`,
-					`constants for ${ivp} solution:`,
-					`\\[ \\begin{aligned} `+
-						`k_1 &= ${nt.x}(0) \\\\ `+
-						`k_2 &= \\sqrt{\\frac mk} ${nt.x}'(0) `+
-					`\\end{aligned} \\]`,
-				],
+				contents: {
+					linear_o2_simpleHarmonicOscillator:   new LhcContent.Linear(new LhcParam.Linear('m',0,'k')).getContentFor_generalSolutionMethod_Imaginary(),
+					resolved_o2_simpleHarmonicOscillator: new LhcContent.Resolved(new LhcParam.Linear('m',0,'k')).getContentFor_generalSolutionMethod_Imaginary(),
+					system_o2_simpleHarmonicOscillator:   new LhcContent.ReducedSystem(new LhcParam.Linear('m',0,'k')).getContentFor_generalSolutionMethod_Imaginary(),
+					vector_o2_simpleHarmonicOscillator:   new LhcContent.ReducedVector(new LhcParam.Linear('m',0,'k')).getContentFor_generalSolutionMethod_Imaginary(),
+				},
 			},
-			*/
 		},
 	},
 	o2_vanDerPol: {
