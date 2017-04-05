@@ -2,6 +2,101 @@
 
 const eqsol=(name)=>`<a href='https://en.wikipedia.org/wiki/Equilibrium_point'>${name}</a>`
 
+const o1_linear_generalSolutionMethod_contents=isLinear=>{
+	const mvp1=isLinear?'+':'='
+	const mvp2=isLinear?'=':'+'
+	const mvp3=isLinear?'-':'+'
+	const mvpa=isLinear?'g':'a'
+	const mvpyh=nt=>(isLinear?`e^{-${nt.sint('g(t)')}}`:`e^{${nt.sint('a(t)')}}`)
+	return nt=>[
+		{type:'case',title:"method of <a href='https://en.wikipedia.org/wiki/Integrating_factor'>integrating factors</a>",content:[
+			{type:'derivation',content:[
+				...(isLinear?[]:[
+					`\\[ ${nt.dxdt} = a(t) \\cdot ${nt.x} + b(t) \\]`,
+					`introduce a new function`,
+					`\\[ g(t) = -a(t) \\]`,
+					`rewrite the equation with \\( g(t) \\)`,
+				]),
+				`\\[ ${nt.dxdt} + g(t) \\cdot ${nt.x} = b(t) \\]`,
+				`introduce the integrating factor`,
+				`\\[ \\mu(t) = e^{${nt.sint('g(t)')}} \\]`,
+				`multiply the equation by \\( \\mu(t) \\)`,
+				`\\[ \\mu(t) ${nt.dxdt} + \\mu(t) g(t) ${nt.x} = \\mu(t) b(t) \\]`,
+				`\\[ \\mu(t) ${nt.dxdt} + e^{${nt.sint('g(t)')}} g(t) ${nt.x} = \\mu(t) b(t) \\]`,
+				`\\[ \\mu(t) ${nt.dxdt} + ${nt.ddt}(e^{${nt.sint('g(t)')}}) ${nt.x} = \\mu(t) b(t) \\]`,
+				`\\[ \\mu(t) ${nt.dxdt} + ${nt.ddt}(\\mu(t)) ${nt.x} = \\mu(t) b(t) \\]`,
+				`\\[ ${nt.ddt}(\\mu(t) ${nt.x}) = \\mu(t) b(t) \\]`,
+				`integrate the equation multiplied by \\( \\mu(t) \\)`,
+				`\\[ \\mu(t) ${nt.x} = ${nt.int('\\mu(t) b(t)')} + C \\]`,
+			]},
+			(isLinear
+				?`\\[ \\mu(t) = e^{${nt.sint('g(t)')}} \\]`
+				:`\\[ \\mu(t) = e^{-${nt.sint('a(t)')}} \\]`
+			),
+			`\\[ \\mu(t) ${nt.x} = ${nt.int('\\mu(t) b(t)')} + C \\]`,
+		]},
+		{type:'case',title:"method of <a href='https://en.wikipedia.org/wiki/Variation_of_parameters'>variation of parameters</a>",content:[
+			{type:'note',content:[
+				`mathematically equivalent to the method of integrating factors`,
+			]},
+			`find the general solution \\( K ${nt.x}_h \\) of the associated homogeneous equation`,
+			`\\[ ${nt.x}_h = ${mvpyh(nt)} \\]`,
+			{type:'derivation',title:`find \\( ${nt.x} \\) as \\( ${nt.x}_h \\) multiplied by an unknown function`,content:[
+				`\\[ ${nt.x} = u(t) ${nt.x}_h \\]`,
+				`substitute \\( ${nt.x} \\) into the original equation`,
+				`\\[ ${nt.ddt}(u(t) ${nt.x}_h) ${mvp1} ${mvpa}(t) u(t) ${nt.x}_h ${mvp2} b(t) \\]`,
+				`\\[ \\begin{multline}`+
+					`${nt.dd('u(t)')} ${nt.x}_h + u(t) ${nt.dd(`${nt.x}_h`)} ${mvp1} \\\\ `+
+					`${mvp1} ${mvpa}(t) u(t) ${nt.x}_h ${mvp2} b(t) `+
+				`\\end{multline} \\]`,
+				`\\[ \\begin{multline}`+
+					`${nt.dd('u(t)')} ${nt.x}_h + u(t) ${nt.ddt}(${mvpyh(nt)}) ${mvp1} \\\\ `+
+					`${mvp1} ${mvpa}(t) u(t) ${nt.x}_h ${mvp2} b(t) `+
+				`\\end{multline} \\]`,
+				`\\[ \\begin{multline}`+
+					`${nt.dd('u(t)')} ${nt.x}_h ${mvp3} u(t) ${mvpa}(t) ${mvpyh(nt)} ${mvp1} \\\\ `+
+					`${mvp1} ${mvpa}(t) u(t) ${nt.x}_h ${mvp2} b(t) `+
+				`\\end{multline} \\]`,
+				`\\[ \\begin{multline}`+
+					`${nt.dd('u(t)')} ${nt.x}_h ${mvp3} u(t) ${mvpa}(t) ${nt.x}_h ${mvp1} \\\\ `+
+					`${mvp1} ${mvpa}(t) u(t) ${nt.x}_h ${mvp2} b(t) `+
+				`\\end{multline} \\]`,
+				`\\[ ${nt.dd('u(t)')} ${nt.x}_h = b(t) \\]`,
+				`\\[ ${nt.dd('u(t)')} = \\frac{b(t)}{${nt.x}_h} \\]`,
+				`\\[ u(t) = ${nt.int(`\\frac{b(t)}{${nt.x}_h}`)} + C \\]`,
+				`substitute \\( u(t) \\) into the expression for \\( ${nt.x} \\)`,
+			]},
+			`\\[ ${nt.x} = ${nt.x}_h \\left( ${nt.int(`\\frac{b(t)}{${nt.x}_h}`)} + C \\right) \\]`,
+		]},
+		{type:'case',title:"<a href='https://en.wikipedia.org/wiki/Method_of_undetermined_coefficients'>method of undetermined coefficients</a>",content:[
+			`find the general solution \\( K ${nt.x}_h \\) of the associated homogeneous equation`,
+			`\\[ ${nt.x}_h = ${mvpyh(nt)} \\]`,
+			{type:'derivation',title:`find a particular solution \\( ${nt.x}_p \\) of the original equation`,content:[
+				`guess the solution form with coefficients to be solved for`,
+				`solve for coefficients`,
+				{type:'example',content:[
+					...(isLinear?[]:[
+						`\\[ ${nt.dxdt} = -2 ${nt.x} + 3 e^{-t/2} \\]`,
+						`move all terms with \\( ${nt.x} \\) to one side`,
+					]),
+					`\\[ ${nt.dxdt} + 2 ${nt.x} = 3 e^{-t/2} \\]`,
+					`compare the terms and guess the particular solution form`,
+					`\\[ ${nt.x}_p = \\alpha e^{-t/2} \\]`,
+					`substitute \\( ${nt.x}_p \\) into the equation`,
+					`\\[ - \\frac{\\alpha}{2} e^{-t/2} + 2 \\alpha e^{-t/2} = 3 e^{-t/2} \\]`,
+					`divide by \\( e^{-t/2} \\)`,
+					`\\[ - \\frac{\\alpha}{2} + 2 \\alpha = 3 \\]`,
+					`solve for \\( \\alpha \\)`,
+					`\\[ \\alpha = 2 \\]`,
+					`substitute \\( \\alpha \\) into \\( ${nt.x}_p \\)`,
+					`\\[ ${nt.x}_p = 2 e^{-t/2} \\]`,
+				]},
+			]},
+			`\\[ ${nt.x} = K ${nt.x}_h + ${nt.x}_p \\]`,
+		]},
+	]
+}
+
 module.exports={
 	o1: {
 		parents: {
@@ -107,7 +202,7 @@ module.exports={
 		importance: 2,
 		forms: [
 			{
-				is: 't,x,o1_bernoulli',
+				is: 't,x,resolved_o1_bernoulli',
 				equation: nt=>`${nt.dxdt} = a(t) \\cdot ${nt.x} + b(t) \\cdot ${nt.x}^n`,
 				notes: nt=>[
 					`\\( n \\neq 1 \\)`,
@@ -147,7 +242,6 @@ module.exports={
 			},
 		},
 	},
-/*
 	o1_linear: {
 		parents: {
 			o1_bernoulli: true,
@@ -155,154 +249,99 @@ module.exports={
 		name: "first-order linear",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a>",
 		importance: 1,
-		equation: `${nt.dxdt} = a(t) \\cdot ${nt.x} + b(t)`,
+		forms: [
+			{
+				is: 't,x,linear_o1_linear',
+				equation: nt=>`${nt.dxdt} + g(t) \\cdot ${nt.x} = b(t)`,
+			},
+			{
+				is: 't,x,resolved_o1_linear',
+				equation: nt=>`${nt.dxdt} = a(t) \\cdot ${nt.x} + b(t)`,
+			},
+		],
 		traits: {
 			associatedHomogeneousEquation: {
-				form: true,
-				content: [
-					`\\[ ${nt.dxdt} = a(t) \\cdot ${nt.x} \\]`,
-				],
+				contents: {
+					linear_o1_linear: nt=>[
+						`\\[ ${nt.dxdt} + p(t) \\cdot ${nt.x} = 0 \\]`,
+					],
+					resolved_o1_linear: nt=>[
+						`\\[ ${nt.dxdt} = a(t) \\cdot ${nt.x} \\]`,
+					],
+				},
 			},
 			solutionSpaceBasis: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`If \\( ${nt.x}_p \\) is a solution`,
 					`and \\( ${nt.x}_h \\) is a nonzero solution of the associated homogeneous equation`,
 					`then \\( K ${nt.x}_h + ${nt.x}_p \\) is a general solution.`,
 				],
 			},
 			homogeneitySolutionRelation: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`If \\( ${nt.x}_0 \\) and \\( ${nt.x}_1 \\) are solutions,`,
 					`then \\( K_1 ${nt.x}_1 + (1 - K_1) ${nt.x}_0 \\) is a solution.`,
 				],
 				compare: true,
 			},
 			additivitySolutionRelation: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`If \\( ${nt.x}_0 \\), \\( ${nt.x}_1 \\) and \\( ${nt.x}_2 \\) are solutions,`,
 					`then \\( ${nt.x}_1 + ${nt.x}_2 - ${nt.x}_0 \\) is a solution.`,
 				],
 				compare: true,
 			},
 			twoLinearCombinationSolutionRelation: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`If \\( ${nt.x}_0 \\), \\( ${nt.x}_1 \\) and \\( ${nt.x}_2 \\) are solutions,`,
 					`then \\( K_1 ${nt.x}_1 + K_2 ${nt.x}_2 + (1 - K_1 - K_2) ${nt.x}_0 \\) is a solution.`,
 				],
 				compare: true,
 			},
 			nLinearCombinationSolutionRelation: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`If \\( ${nt.x}_0 \\), \\( ${nt.x}_1 \\), \\( ${nt.x}_2 \\), ..., \\( ${nt.x}_m \\) are solutions,`,
 					`then \\( \\sum\\limits_{i=1}^m K_i ${nt.x}_i + (1 - \\sum\\limits_{i=1}^m K_i) ${nt.x}_0 \\) is a solution.`,
 				],
 				compare: true,
 			},
 			twoAffineCombinationSolutionRelation: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`If \\( ${nt.x}_1 \\), \\( ${nt.x}_2 \\) are solutions`,
 					`and \\( K_1 + K_2 = 1 \\)`,
 					`then \\( K_1 ${nt.x}_1 + K_2 ${nt.x}_2 \\) is a solution.`,
 				],
 			},
 			nAffineCombinationSolutionRelation: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`If \\( ${nt.x}_1 \\), \\( ${nt.x}_2 \\), ..., \\( ${nt.x}_m \\) are solutions`,
 					`and \\( \\sum\\limits_{i=1}^m K_i = 1 \\)`,
 					`then \\( \\sum\\limits_{i=1}^m K_i ${nt.x}_i \\) is a solution.`,
 				],
 			},
 			associatedSolutionRelation: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`If \\( ${nt.x}_1 \\) and \\( ${nt.x}_2 \\) are solutions,`,
 					`then \\( ${nt.x}_1 - ${nt.x}_2 \\) is a solution of the associated homogeneous equation.`,
 				],
 			},
 			generalSolutionMethod: {
-				form: true,
-				content: [
-					{type:'case',title:"method of <a href='https://en.wikipedia.org/wiki/Integrating_factor'>integrating factors</a>",content:[
-						{type:'derivation',content:[
-							`\\[ ${nt.dxdt} = a(t) \\cdot ${nt.x} + b(t) \\]`,
-							`introduce a new function`,
-							`\\[ g(t) = -a(t) \\]`,
-							`rewrite the equation with \\( g(t) \\)`,
-							`\\[ ${nt.dxdt} + g(t) \\cdot ${nt.x} = b(t) \\]`,
-							`introduce the integrating factor`,
-							`\\[ \\mu(t) = e^{${nt.sint('g(t)')}} \\]`,
-							`multiply the equation by \\( \\mu(t) \\)`,
-							`\\[ \\mu(t) ${nt.dxdt} + \\mu(t) g(t) ${nt.x} = \\mu(t) b(t) \\]`,
-							`\\[ \\mu(t) ${nt.dxdt} + e^{${nt.sint('g(t)')}} g(t) ${nt.x} = \\mu(t) b(t) \\]`,
-							`\\[ \\mu(t) ${nt.dxdt} + ${nt.ddt}(e^{${nt.sint('g(t)')}}) ${nt.x} = \\mu(t) b(t) \\]`,
-							`\\[ \\mu(t) ${nt.dxdt} + ${nt.ddt}(\\mu(t)) ${nt.x} = \\mu(t) b(t) \\]`,
-							`\\[ ${nt.ddt}(\\mu(t) ${nt.x}) = \\mu(t) b(t) \\]`,
-							`integrate the equation multiplied by \\( \\mu(t) \\)`,
-							`\\[ \\mu(t) ${nt.x} = ${nt.int('\\mu(t) b(t)')} + C \\]`,
-						]},
-						`\\[ \\mu(t) = e^{-${nt.sint('a(t)')}} \\]`,
-						`\\[ \\mu(t) ${nt.x} = ${nt.int('\\mu(t) b(t)')} + C \\]`,
-					]},
-					{type:'case',title:"method of <a href='https://en.wikipedia.org/wiki/Variation_of_parameters'>variation of parameters</a>",content:[
-						{type:'note',content:[
-							`mathematically equivalent to the method of integrating factors`,
-						]},
-						`find the general solution \\( K ${nt.x}_h \\) of the associated homogeneous equation`,
-						`\\[ ${nt.x}_h = e^{${nt.sint('a(t)')}} \\]`,
-						{type:'derivation',title:`find \\( ${nt.x} \\) as \\( ${nt.x}_h \\) multiplied by an unknown function`,content:[
-							`\\[ ${nt.x} = u(t) ${nt.x}_h \\]`,
-							`substitute \\( ${nt.x} \\) into the original equation`,
-							`\\[ ${nt.ddt}(u(t) ${nt.x}_h) = a(t) u(t) ${nt.x}_h + b(t) \\]`,
-							`\\[ \\begin{multline}`+
-								`${nt.dd('u(t)')} ${nt.x}_h + u(t) ${nt.dd(`${nt.x}_h`)} = \\\\ `+
-								`= a(t) u(t) ${nt.x}_h + b(t) `+
-							`\\end{multline} \\]`,
-							`\\[ \\begin{multline}`+
-								`${nt.dd('u(t)')} ${nt.x}_h + u(t) ${nt.ddt}(e^{${nt.sint('a(t)')}}) = \\\\ `+
-								`= a(t) u(t) ${nt.x}_h + b(t) `+
-							`\\end{multline} \\]`,
-							`\\[ \\begin{multline}`+
-								`${nt.dd('u(t)')} ${nt.x}_h + u(t) a(t) e^{${nt.sint('a(t)')}} = \\\\ `+
-								`= a(t) u(t) ${nt.x}_h + b(t) `+
-							`\\end{multline} \\]`,
-							`\\[ \\begin{multline}`+
-								`${nt.dd('u(t)')} ${nt.x}_h + u(t) a(t) ${nt.x}_h = \\\\ `+
-								`= a(t) u(t) ${nt.x}_h + b(t) `+
-							`\\end{multline} \\]`,
-							`\\[ ${nt.dd('u(t)')} ${nt.x}_h = b(t) \\]`,
-							`\\[ ${nt.dd('u(t)')} = \\frac{b(t)}{${nt.x}_h} \\]`,
-							`\\[ u(t) = ${nt.int(`\\frac{b(t)}{${nt.x}_h}`)} + C \\]`,
-							`substitute \\( u(t) \\) into the expression for \\( ${nt.x} \\)`,
-						]},
-						`\\[ ${nt.x} = ${nt.x}_h \\left( ${nt.int(`\\frac{b(t)}{${nt.x}_h}`)} + C \\right) \\]`,
-					]},
-					{type:'case',title:"<a href='https://en.wikipedia.org/wiki/Method_of_undetermined_coefficients'>method of undetermined coefficients</a>",content:[
-						`find the general solution \\( K ${nt.x}_h \\) of the associated homogeneous equation`,
-						`\\[ ${nt.x}_h = e^{${nt.sint('a(t)')}} \\]`,
-						{type:'derivation',title:`find a particular solution \\( ${nt.x}_p \\) of the original equation`,content:[
-							`guess the solution form with coefficients to be solved for`,
-							`solve for coefficients`,
-							{type:'example',content:[
-								`\\[ ${nt.dxdt} = -2 ${nt.x} + 3 e^{-t/2} \\]`,
-								`move all terms with \\( ${nt.x} \\) to one side`,
-								`\\[ ${nt.dxdt} + 2 ${nt.x} = 3 e^{-t/2} \\]`,
-								`compare the terms and guess the particular solution form`,
-								`\\[ ${nt.x}_p = \\alpha e^{-t/2} \\]`,
-								`substitute \\( ${nt.x}_p \\) into the equation`,
-								`\\[ - \\frac{\\alpha}{2} e^{-t/2} + 2 \\alpha e^{-t/2} = 3 e^{-t/2} \\]`,
-								`divide by \\( e^{-t/2} \\)`,
-								`\\[ - \\frac{\\alpha}{2} + 2 \\alpha = 3 \\]`,
-								`solve for \\( \\alpha \\)`,
-								`\\[ \\alpha = 2 \\]`,
-								`substitute \\( \\alpha \\) into \\( ${nt.x}_p \\)`,
-								`\\[ ${nt.x}_p = 2 e^{-t/2} \\]`,
-							]},
-						]},
-						`\\[ ${nt.x} = K ${nt.x}_h + ${nt.x}_p \\]`,
-					]},
-				],
+				contents: {
+					linear_o1_linear:   o1_linear_generalSolutionMethod_contents(true),
+					resolved_o1_linear: o1_linear_generalSolutionMethod_contents(false),
+				},
 			},
 			equilibriumSolutionMethod: {
-				content: [
+				formType: 'resolved_o1_linear',
+				content: nt=>[
 					{type:'note',content:[
 						`Can't find equilibrium solution like in Bernoulli equation because \\( n = 0 \\).`,
 					]},
@@ -311,6 +350,7 @@ module.exports={
 			},
 		},
 	},
+/*
 	o1_linearHomogeneous: {
 		parents: {
 			o1_separable: true,
