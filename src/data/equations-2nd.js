@@ -339,6 +339,14 @@ module.exports={
 			},
 		],
 		traits: {
+			characteristicEquation: {
+				contents: {
+					linear_o2_simpleHarmonicOscillator:   new LhcContent.Linear(new LhcParam.Linear('m',0,'k')).getContentFor_characteristicEquation(),
+					resolved_o2_simpleHarmonicOscillator: new LhcContent.Resolved(new LhcParam.Linear('m',0,'k')).getContentFor_characteristicEquation(),
+					system_o2_simpleHarmonicOscillator:   new LhcContent.ReducedSystem(new LhcParam.Linear('m',0,'k')).getContentFor_characteristicEquation(),
+					vector_o2_simpleHarmonicOscillator:   new LhcContent.ReducedSystem(new LhcParam.Linear('m',0,'k')).getContentFor_characteristicEquation(),
+				},
+			},
 			/*
 			characteristicEquation: lhc_characteristicEquation('m',0,'k'),
 			generalSolutionMethod: {

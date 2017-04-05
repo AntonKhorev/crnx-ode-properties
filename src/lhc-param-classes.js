@@ -10,7 +10,11 @@ LhcParam.Linear = class {
 		return this.a[i]
 	}
 	resolved(i) {
-		return `-\\frac{${this.a[i]}}{${this.a[2]}}`
+		if (this.a[i]!=0) {
+			return `-\\frac{${this.a[i]}}{${this.a[2]}}`
+		} else {
+			return 0
+		}
 	}
 	system(i,j) {
 		if (i==1) {

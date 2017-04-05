@@ -1,35 +1,8 @@
 'use strict'
 
-const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
+const tex=require('./tex')
 
-const TexSum=(...terms)=>{
-	let result=''
-	let lead=''
-	let first=true
-	for (let term of terms) {
-		if (Array.isArray(term)) {
-			if (term[0][0]=='-') {
-				if (lead=='+') {
-					term[0]=term[0].slice(1)
-					lead='-'
-				} else if (lead=='-') {
-					term[0]=term[0].slice(1)
-					lead='+'
-				}
-			}
-			if (first) {
-				first=false
-			} else {
-				result+=' '
-			}
-			result+=lead+' '+term.join(' ')
-		} else {
-			lead=term
-		}
-	}
-	return result
-}
-const BlockTexSum=(...terms)=>`\\[ `+TexSum(...terms)+` \\]`
+const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
 const LhcContent={}
 
@@ -150,7 +123,7 @@ LhcContent.Scalar = class extends LhcContent.Base {
 LhcContent.Linear = class extends LhcContent.Scalar {
 	getCharacteristicEquation(nt) {
 		const a=i=>this.param.linear(i)
-		return TexSum([a(2),`\\lambda^2`],'+',[a(1),`\\lambda`],'+',[a(0)],'=',[0])
+		return tex.sum([a(2),`\\lambda^2`],'+',[a(1),`\\lambda`],'+',[a(0)],'=',[0])
 	}
 	getContentFor_characteristicEquation() {
 		const a=i=>this.param.linear(i)
@@ -192,18 +165,18 @@ LhcContent.Linear = class extends LhcContent.Scalar {
 LhcContent.Resolved = class extends LhcContent.Scalar {
 	getCharacteristicEquation(nt) {
 		const b=i=>this.param.resolved(i)
-		return TexSum([`\\lambda^2`],'-',[b(1),`\\lambda`],'-',[b(0)],'=',[0])
+		return tex.sum([`\\lambda^2`],'-',[b(1),`\\lambda`],'-',[b(0)],'=',[0])
 	}
 	getContentFor_characteristicEquation() {
 		const b=i=>this.param.resolved(i)
 		return nt=>[
 			{type:'derivation',content:[
-				BlockTexSum([nt.dd(nt.x,'t',2)],'=',[b(1),nt.dxdt],'+',[b(0),nt.x]),
+				tex.blockSum([nt.dd(nt.x,'t',2)],'=',[b(1),nt.dxdt],'+',[b(0),nt.x]),
 				`substitute \\( ${nt.x} = e^{\\lambda t} \\)`,
-				BlockTexSum([`${nt.dd('','t',2)} e^{\\lambda t}`],'=',[b(1),`${nt.ddt} e^{\\lambda t}`],'+',[b(0),`e^{\\lambda t}`]),
-				BlockTexSum([`\\lambda^2 e^{\\lambda t}`],'=',[b(1),`\\lambda e^{\\lambda t}`],'+',[b(0),`e^{\\lambda t}`]),
+				tex.blockSum([`${nt.dd('','t',2)} e^{\\lambda t}`],'=',[b(1),`${nt.ddt} e^{\\lambda t}`],'+',[b(0),`e^{\\lambda t}`]),
+				tex.blockSum([`\\lambda^2 e^{\\lambda t}`],'=',[b(1),`\\lambda e^{\\lambda t}`],'+',[b(0),`e^{\\lambda t}`]),
 				`divide by \\( e^{\\lambda t} \\)`,
-				BlockTexSum([`\\lambda^2`],'=',[b(1),`\\lambda`],'+',[b(0)]),
+				tex.blockSum([`\\lambda^2`],'=',[b(1),`\\lambda`],'+',[b(0)]),
 			]},
 			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
 		]
@@ -245,7 +218,7 @@ LhcContent.ReducedSystem = class extends LhcContent.Base {
 	getCharacteristicEquation(nt) {
 		const c=this.param.system(2,1)
 		const d=this.param.system(2,2)
-		return TexSum([`\\lambda^2`],'-',[d,`\\lambda`],'-',[c],'=',[0])
+		return tex.sum([`\\lambda^2`],'-',[d,`\\lambda`],'-',[c],'=',[0])
 	}
 	getRepeatedGeneralSolution(nt) {
 		return `\\left\\{ \\begin{aligned}`+
