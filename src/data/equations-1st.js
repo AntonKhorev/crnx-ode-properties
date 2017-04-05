@@ -97,6 +97,24 @@ const o1_linear_generalSolutionMethod_contents=isLinear=>{
 	]
 }
 
+const o1_linearHomogeneous_generalSolutionMethod_contents=isLinear=>{
+	const s=isLinear?'-':''
+	const a=isLinear?'g':'a'
+	return nt=>[
+		{type:'derivation',content:[
+			`\\[ ${nt.dxdt} = ${s}${a}(t) \\cdot ${nt.x} \\]`,
+			`\\[ \\frac{1}{${nt.x}} \\cdot ${nt.dxdt} = ${s}${a}(t) \\]`,
+			`\\[ ${nt.int(`\\frac{1}{${nt.x}} ${nt.dxdt}`)} = ${s}${nt.int(`${a}(t)`)} + C \\]`,
+			`\\[ ${nt.int(`\\frac{1}{${nt.x}}`,nt.x)} = ${s}${nt.int(`${a}(t)`)} + C \\]`,
+			`\\[ \\ln|${nt.x}| = ${s}${nt.int(`${a}(t)`)} + C \\]`,
+		]},
+		`\\[ ${nt.x} = K \\cdot e^{${s}${nt.sint(`${a}(t)`)}} \\]`,
+		{type:'note',content:[
+			`includes ${eqsol("equilibrium solution")} when \\( K = 0 \\)`,
+		]},
+	]
+}
+
 module.exports={
 	o1: {
 		parents: {
@@ -263,7 +281,7 @@ module.exports={
 			associatedHomogeneousEquation: {
 				contents: {
 					linear_o1_linear: nt=>[
-						`\\[ ${nt.dxdt} + p(t) \\cdot ${nt.x} = 0 \\]`,
+						`\\[ ${nt.dxdt} + g(t) \\cdot ${nt.x} = 0 \\]`,
 					],
 					resolved_o1_linear: nt=>[
 						`\\[ ${nt.dxdt} = a(t) \\cdot ${nt.x} \\]`,
@@ -350,7 +368,6 @@ module.exports={
 			},
 		},
 	},
-/*
 	o1_linearHomogeneous: {
 		parents: {
 			o1_separable: true,
@@ -359,49 +376,72 @@ module.exports={
 		name: "first-order linear homogeneous",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a> <a href='https://en.wikipedia.org/wiki/Homogeneous_differential_equation#Homogeneous_linear_differential_equations'>homogeneous</a>",
 		importance: 1,
-		equation: `${nt.dxdt} = a(t) \\cdot ${nt.x}`,
+		forms: [
+			{
+				is: 't,x,linear_o1_linearHomogeneous',
+				equation: nt=>`${nt.dxdt} + g(t) \\cdot ${nt.x} = 0`,
+			},
+			{
+				is: 't,x,resolved_o1_linearHomogeneous',
+				equation: nt=>`${nt.dxdt} = a(t) \\cdot ${nt.x}`,
+			},
+		],
 		traits: {
 			associatedHomogeneousEquation: {
-				content: [
-					`\\[ ${nt.dxdt} = a(t) \\cdot ${nt.x} \\]`,
-					{type:'note',content:[
-						`The equation is associated with itself.`,
-					]}
-				],
+				contents: {
+					linear_o1_linearHomogeneous: nt=>[
+						`\\[ ${nt.dxdt} + g(t) \\cdot ${nt.x} = 0 \\]`,
+						{type:'note',content:[
+							`The equation is associated with itself.`,
+						]}
+					],
+					resolved_o1_linearHomogeneous: nt=>[
+						`\\[ ${nt.dxdt} = a(t) \\cdot ${nt.x} \\]`,
+						{type:'note',content:[
+							`The equation is associated with itself.`,
+						]}
+					],
+				},
 				close: true,
 			},
 			solutionSpaceBasis: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`If \\( ${nt.x}_h \\) is a nonzero solution,`,
 					`then \\( K ${nt.x}_h \\) is a general solution.`,
 				],
 			},
 			homogeneitySolutionRelation: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`If \\( ${nt.x}_1 \\) is a solution,`,
 					`then \\( K_1 ${nt.x}_1 \\) is a solution.`,
 				],
 			},
 			additivitySolutionRelation: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`If \\( ${nt.x}_1 \\) and \\( ${nt.x}_2 \\) are solutions,`,
 					`then \\( ${nt.x}_1 + ${nt.x}_2 \\) is a solution.`,
 				],
 			},
 			twoLinearCombinationSolutionRelation: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`If \\( ${nt.x}_1 \\) and \\( ${nt.x}_2 \\) are solutions,`,
 					`then \\( K_1 ${nt.x}_1 + K_2 ${nt.x}_2 \\) is a solution.`,
 				],
 			},
 			nLinearCombinationSolutionRelation: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`If \\( ${nt.x}_1 \\), \\( ${nt.x}_2 \\), ..., \\( ${nt.x}_m \\) are solutions,`,
 					`then \\( \\sum\\limits_{i=1}^m K_i ${nt.x}_i \\) is a solution.`,
 				],
 			},
 			twoAffineCombinationSolutionRelation: {
-				content: [
+				formType: 't',
+				content: nt=>[
 					{type:'note',content:[
 						`This is a special case of a linear combination.`,
 					]},
@@ -409,7 +449,8 @@ module.exports={
 				close: true,
 			},
 			nAffineCombinationSolutionRelation: {
-				content: [
+				formType: 't',
+				content: nt=>[
 					{type:'note',content:[
 						`This is a special case of a linear combination.`,
 					]},
@@ -420,28 +461,20 @@ module.exports={
 				close: true,
 			},
 			generalSolutionMethod: {
-				form: true,
-				content: [
-					{type:'derivation',content:[
-						`\\[ ${nt.dxdt} = a(t) \\cdot ${nt.x} \\]`,
-						`\\[ \\frac{1}{${nt.x}} \\cdot ${nt.dxdt} = a(t) \\]`,
-						`\\[ ${nt.int(`\\frac{1}{${nt.x}} ${nt.dxdt}`)} = ${nt.int('a(t)')} + C \\]`,
-						`\\[ ${nt.int(`\\frac{1}{${nt.x}}`,nt.x)} = ${nt.int('a(t)')} + C \\]`,
-						`\\[ \\ln|${nt.x}| = ${nt.int('a(t)')} + C \\]`,
-					]},
-					`\\[ ${nt.x} = K \\cdot e^{${nt.sint('a(t)')}} \\]`,
-					{type:'note',content:[
-						`includes ${eqsol("equilibrium solution")} when \\( K = 0 \\)`,
-					]},
-				],
+				contents: {
+					linear_o1_linearHomogeneous:   o1_linearHomogeneous_generalSolutionMethod_contents(true),
+					resolved_o1_linearHomogeneous: o1_linearHomogeneous_generalSolutionMethod_contents(false),
+				},
 			},
 			equilibriumSolutionMethod: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`\\[ ${nt.x} = 0 \\]`,
 				],
 			},
 		},
 	},
+	/*
 	o1_separableInT: {
 		parents: {
 			o1_separable: true,

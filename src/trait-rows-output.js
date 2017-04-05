@@ -20,7 +20,7 @@ class TraitRowsOutput {
 		this.columnTraitCells=theadLayout.columns.map(()=>[])
 		const writeTraitItem=(forClassId,fromClassId,traitId,selectedForm)=>{
 			const trait=classData[fromClassId].traits[traitId]
-			//if (!trait.contents) return // impossible? TODO check if it's possible
+			if (!trait.contents) return // when trait is closed w/o contents
 			const getTitle=()=>{
 				if (trait.title!==undefined) {
 					return trait.title

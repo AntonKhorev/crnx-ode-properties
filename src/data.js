@@ -85,7 +85,7 @@ for (let classId in classes) {
 		if (traitData.formType===undefined) {
 			traitData.formType=classData.forms[0].is.split(',').pop()
 		}
-		if (traitData.contents===undefined) {
+		if (traitData.contents===undefined && traitData.content!==undefined) {
 			traitData.contents={}
 			traitData.contents[traitData.formType]=traitData.content
 			delete traitData.content
