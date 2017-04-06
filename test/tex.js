@@ -64,4 +64,16 @@ describe("tex.sum",()=>{
 		const s=tex.sum(["a"],"=",[0])
 		assert.equal(s,"a = 0")
 	})
+	it("handles one unity term",()=>{
+		const s=tex.sum([1])
+		assert.equal(s,"1")
+	})
+	it("handles product with unity 1st term",()=>{
+		const s=tex.sum([1,"a"])
+		assert.equal(s,"a")
+	})
+	it("handles product with unity 2nd term",()=>{
+		const s=tex.sum(["a",1])
+		assert.equal(s,"a")
+	})
 })

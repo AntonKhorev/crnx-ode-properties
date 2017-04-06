@@ -28,7 +28,9 @@ class Notation {
 		if (a===undefined) a=''
 		if (b===undefined) b='t'
 		if (n===undefined) n=1
-		if (n==1) {
+		if (n==0) {
+			return a
+		} else if (n==1) {
 			return `\\frac{\\mathrm{d}${a}}{\\mathrm{d}${b}}`
 		} else {
 			return `\\frac{\\mathrm{d}^{${n}}${a}}{\\mathrm{d}${b}^{${n}}}`

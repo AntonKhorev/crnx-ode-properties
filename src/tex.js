@@ -28,6 +28,8 @@ const sum=(...terms)=>{
 	let empty=true
 	for (let term of terms) {
 		if (Array.isArray(term) && term[0]!=0) {
+			term=term.filter(factor=>factor!=1)
+			if (term.length==0) term=[1]
 			if (empty) {
 				[sign,term]=mergeSign(sign,term)
 				result+=term.join(' ')

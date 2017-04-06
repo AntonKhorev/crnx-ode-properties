@@ -1,5 +1,7 @@
 'use strict'
 
+const characteristicEquationContent=require('../characteristic-equation-content')
+
 const eqsol=(name)=>`<a href='https://en.wikipedia.org/wiki/Equilibrium_point'>${name}</a>`
 
 const o1_linear_generalSolutionMethod_contents=isLinear=>{
@@ -533,7 +535,6 @@ module.exports={
 			},
 		},
 	},
-	/*
 	o1_linearHomogeneousConstant: {
 		parents: {
 			on_linearHomogeneousConstant: true,
@@ -543,24 +544,24 @@ module.exports={
 		name: "first-order linear homogeneous with constant coefficients",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Homogeneous_equations_with_constant_coefficients'>linear homogeneous with constant coefficients</a>",
 		importance: 2,
-		equation: `${nt.dxdt} = k \\cdot ${nt.x}`,
+		forms: [
+			{
+				is: 't,x,linear_o1_linearHomogeneousConstant',
+				equation: nt=>`${nt.dxdt} + c \\cdot ${nt.x} = 0`,
+			},
+			{
+				is: 't,x,resolved_o1_linearHomogeneousConstant',
+				equation: nt=>`${nt.dxdt} = k \\cdot ${nt.x}`,
+			},
+		],
 		traits: {
 			characteristicEquation: {
-				form: {
-					o1_linearHomogeneousConstant: true,
-					o1_expGrowth: true,
+				contents: {
+					linear_o1_linearHomogeneousConstant:   characteristicEquationContent([1,1],'+',[0,'c'],'=','0'),
+					resolved_o1_linearHomogeneousConstant: characteristicEquationContent([1,1],'=',[0,'k']),
 				},
-				content: [
-					{type:'derivation',content:[
-						`\\[ ${nt.dxdt} = k \\cdot ${nt.x} \\]`,
-						`substitute \\( ${nt.x} = e^{\\lambda t} \\)`,
-						`\\[ ${nt.ddt} e^{\\lambda t} = k \\cdot e^{\\lambda t} \\]`,
-						`\\[ \\lambda \\cdot e^{\\lambda t} = k \\cdot e^{\\lambda t} \\]`,
-						`divide by \\( e^{\\lambda t} \\)`,
-					]},
-					`\\[ \\lambda = k \\]`,
-				],
 			},
+			/*
 			generalSolutionMethod: {
 				form: {
 					o1_linearHomogeneousConstant: true,
@@ -588,18 +589,18 @@ module.exports={
 					`\\[ ${nt.x} = 0 \\]`
 				],
 			},
+			*/
 		},
 	},
-*/
 	o1_expGrowth: {
 		parents: {
-			// o1_linearHomogeneousConstant: true, // TODO uncomment
-			o1_autonomous: true, // TODO delete
+			o1_linearHomogeneousConstant: true,
 		},
 		name: "exponential (natural) growth",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Exponential_growth#Differential_equation'>exponential (natural) growth</a>",
 		importance: 3,
 		forms: [
+			// TODO linear form
 			{
 				is: 't,x,resolved_o1_linearHomogeneousConstant,resolved_o1_expGrowth',
 				equation: nt=>`${nt.dxdt} = k \\cdot ${nt.x}`,
