@@ -1,6 +1,7 @@
 'use strict'
 
 const tex=require('./tex')
+const characteristicEquationContent=require('./characteristic-equation-content')
 
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
@@ -156,16 +157,7 @@ LhcContent.Linear = class extends LhcContent.Scalar {
 	}
 	getContentFor_characteristicEquation() {
 		const a=i=>this.param.linear(i)
-		return nt=>[
-			{type:'derivation',content:[
-				`\\[ ${a(2)} ${nt.dd(nt.x,'t',2)} `+(a(1)?`+ ${a(1)} ${nt.dxdt} `:``)+`+ ${a(0)} ${nt.x} = 0 \\]`,
-				`substitute \\( ${nt.x} = e^{\\lambda t} \\)`,
-				`\\[ ${a(2)} ${nt.dd('','t',2)} e^{\\lambda t} `+(a(1)?`+ ${a(1)} ${nt.ddt} e^{\\lambda t} `:``)+`+ ${a(0)} e^{\\lambda t} = 0 \\]`,
-				`\\[ ${a(2)} \\lambda^2 e^{\\lambda t} `+(a(1)?`+ ${a(1)} \\lambda e^{\\lambda t} `:``)+`+ ${a(0)} e^{\\lambda t} = 0 \\]`,
-				`divide by \\( e^{\\lambda t} \\)`,
-			]},
-			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
-		]
+		return characteristicEquationContent([2,a(2)],'+',[1,a(1)],'+',[0,a(0)],'=','0')
 	}
 	getContentFor_equilibriumSolutionMethod() {
 		const a=i=>this.param.linear(i)
@@ -198,17 +190,7 @@ LhcContent.Resolved = class extends LhcContent.Scalar {
 	}
 	getContentFor_characteristicEquation() {
 		const b=i=>this.param.resolved(i)
-		return nt=>[
-			{type:'derivation',content:[
-				tex.blockSum([nt.dd(nt.x,'t',2)],'=',[b(1),nt.dxdt],'+',[b(0),nt.x]),
-				`substitute \\( ${nt.x} = e^{\\lambda t} \\)`,
-				tex.blockSum([`${nt.dd('','t',2)} e^{\\lambda t}`],'=',[b(1),`${nt.ddt} e^{\\lambda t}`],'+',[b(0),`e^{\\lambda t}`]),
-				tex.blockSum([`\\lambda^2 e^{\\lambda t}`],'=',[b(1),`\\lambda e^{\\lambda t}`],'+',[b(0),`e^{\\lambda t}`]),
-				`divide by \\( e^{\\lambda t} \\)`,
-				tex.blockSum([`\\lambda^2`],'=',[b(1),`\\lambda`],'+',[b(0)]),
-			]},
-			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
-		]
+		return characteristicEquationContent([2,1],'=',[1,b(1)],'+',[0,b(0)])
 	}
 	getContentFor_equilibriumSolutionMethod() {
 		const b=i=>this.param.resolved(i)

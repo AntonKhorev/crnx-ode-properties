@@ -1,5 +1,7 @@
 'use strict'
 
+const characteristicEquationContent=require('../characteristic-equation-content')
+
 module.exports={
 	on: {
 		parents: {
@@ -77,27 +79,8 @@ module.exports={
 		traits: {
 			characteristicEquation: {
 				contents: {
-					linear_on_linearHomogeneousConstant: nt=>[
-						{type:'derivation',content:[
-							`\\[ \\sum_{i=0}^n a_i ${nt.dd(nt.x,'t','i')} = 0 \\]`,
-							`substitute \\( ${nt.x} = e^{\\lambda t} \\)`,
-							`\\[ \\sum_{i=0}^n a_i ${nt.dd('','t','i')} e^{\\lambda t} = 0 \\]`,
-							`\\[ \\sum_{i=0}^n a_i \\lambda^i e^{\\lambda t} = 0 \\]`,
-							`divide by \\( e^{\\lambda t} \\)`,
-						]},
-						`\\[ \\sum_{i=0}^n a_i \\lambda^i = 0 \\]`,
-					],
-					resolved_on_linearHomogeneousConstant: nt=>[
-						{type:'derivation',content:[
-							`\\[ ${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i ${nt.dd(nt.x,'t','i')} \\]`,
-							`substitute \\( ${nt.x} = e^{\\lambda t} \\)`,
-							`\\[ ${nt.dd('','t','n')} e^{\\lambda t} = \\sum_{i=0}^{n-1} b_i ${nt.dd('','t','i')} e^{\\lambda t} \\]`,
-							`\\[ \\lambda^n e^{\\lambda t} = \\sum_{i=0}^{n-1} b_i \\lambda^i e^{\\lambda t} \\]`,
-							`divide by \\( e^{\\lambda t} \\)`,
-							`\\[ \\lambda^n = \\sum_{i=0}^{n-1} b_i \\lambda^i \\]`,
-						]},
-						`\\[ \\lambda^n - \\sum_{i=0}^{n-1} b_i \\lambda^i = 0 \\]`,
-					],
+					linear_on_linearHomogeneousConstant:   characteristicEquationContent(['i','\\sum_{i=0}^n a_i'],'=','0'),
+					resolved_on_linearHomogeneousConstant: characteristicEquationContent(['n',1],'=',['i','\\sum_{i=0}^{n-1} b_i']),
 					system_on_linearHomogeneousConstant: nt=>[
 						`\\[ \\lambda^n - \\sum_{i=0}^{n-1} c_{i+1} \\lambda^i = 0 \\]`,
 					],
