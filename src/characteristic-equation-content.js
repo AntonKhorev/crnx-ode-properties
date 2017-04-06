@@ -4,16 +4,37 @@ const tex=require('./tex')
 
 // terms are one of '+', '-', '=', '0', [order,factor]
 module.exports=(...terms)=>{
+	let needToCollect=true
+	let collectedTerms=terms
+	if (terms[terms.length-2]=='=' && terms[terms.length-1]==0) {
+		needToCollect=false
+	} else {
+		collectedTerms=[]
+		let flipSign=false
+		for (let term of terms) {
+			if (Array.isArray(term)) {
+				collectedTerms.push(term)
+			} else if (term=='=') {
+				flipSign=true
+				collectedTerms.push('-')
+			} else if (term=='+') {
+				collectedTerms.push(flipSign?'-':'+')
+			} else if (term=='-') {
+				collectedTerms.push(flipSign?'+':'-')
+			}
+		}
+		collectedTerms.push('=','0')
+	}
 	const lambdaPow=order=>{
 		if (order==0) {
 			return 1
 		} else if (order==1) {
 			return `λ`
 		} else {
-			return `λ^{order}`
+			return `λ^{${order}}`
 		}
 	}
-	const mapTerms=(nt,mapper)=>tex.blockSum(...(
+	const mapTerms=(nt,terms,mapper)=>tex.blockSum(...(
 		terms.map(term=>{
 			if (Array.isArray(term)) {
 				const [order,factor]=term
@@ -29,12 +50,15 @@ module.exports=(...terms)=>{
 	const step4=(nt,order,factor)=>[factor,lambdaPow(order)]
 	return nt=>[
 		{type:'derivation',content:[
-			mapTerms(nt,step1),
+			mapTerms(nt,terms,step1),
 			`substitute \\( ${nt.x} = e^{λ t} \\)`,
-			mapTerms(nt,step2),
-			mapTerms(nt,step3),
+			mapTerms(nt,terms,step2),
+			mapTerms(nt,terms,step3),
 			`divide by \\( e^{\\lambda t} \\)`,
+			...(needToCollect?[
+				mapTerms(nt,terms,step4),
+			]:[]),
 		]},
-		mapTerms(nt,step4),
+		mapTerms(nt,collectedTerms,step4),
 	]
 }
