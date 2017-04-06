@@ -474,7 +474,6 @@ module.exports={
 			},
 		},
 	},
-	/*
 	o1_separableInT: {
 		parents: {
 			o1_separable: true,
@@ -483,32 +482,40 @@ module.exports={
 		name: "first-order separable in independent variable",
 		htmlName: "first-order <a href='https://en.wikipedia.org/wiki/Separation_of_variables#Ordinary_differential_equations_.28ODE.29'>separable</a> in \\(t\\)",
 		importance: 2,
-		equation: `${nt.dxdt} = f(t)`,
+		forms: [
+			{
+				is: 't,x,resolved_o1_separableInT',
+				equation: nt=>`${nt.dxdt} = f(t)`,
+			},
+		],
 		traits: {
 			associatedHomogeneousEquation: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`\\( ${nt.dxdt} = 0 \\)`,
 				],
 			},
 			isoclineProperty: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`isoclines are vertical`,
 				],
 			},
 			solutionSpaceBasis: { // also shiftSolutionRelation
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`If \\( ${nt.x}_p \\) is a solution`,
 					`then \\( ${nt.x}_p + C \\) is a general solution.`,
 				],
 			},
 			associatedSolutionRelation: {
-				content: [
+				formType: 'x',
+				content: nt=>[
 					`\\( ${nt.x} = C \\) is a solution of the associated homogeneous equation.`,
 				],
 			},
 			generalSolutionMethod: {
-				form: true,
-				content: [
+				content: nt=>[
 					{type:'derivation',content:[
 						`\\[ ${nt.dxdt} = f(t) \\]`,
 						`\\[ ${nt.int(nt.dxdt)} = ${nt.int('f(t)')} + C \\]`,
@@ -517,7 +524,7 @@ module.exports={
 				],
 			},
 			equilibriumSolutionMethod: {
-				content: [
+				content: nt=>[
 					{type:'note',content:[
 						`Can't find equilibrium solution like in separable equation because \\( f_2(${nt.x}) = 1 \\).`,
 					]},
@@ -526,6 +533,7 @@ module.exports={
 			},
 		},
 	},
+	/*
 	o1_linearHomogeneousConstant: {
 		parents: {
 			on_linearHomogeneousConstant: true,
