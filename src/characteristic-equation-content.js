@@ -13,46 +13,28 @@ module.exports=(...terms)=>{
 			return `λ^{order}`
 		}
 	}
-	const step1=nt=>term=>{
-		if (Array.isArray(term)) {
-			const [order,factor]=term
-			return [factor,nt.dd(nt.x,'t',order)]
-		} else {
-			return term
-		}
-	}
-	const step2=nt=>term=>{
-		if (Array.isArray(term)) {
-			const [order,factor]=term
-			return [factor,nt.dd('','t',order),'e^{λ t}']
-		} else {
-			return term
-		}
-	}
-	const step3=nt=>term=>{
-		if (Array.isArray(term)) {
-			const [order,factor]=term
-			return [factor,lambdaPow(order),'e^{λ t}']
-		} else {
-			return term
-		}
-	}
-	const step4=nt=>term=>{
-		if (Array.isArray(term)) {
-			const [order,factor]=term
-			return [factor,lambdaPow(order)]
-		} else {
-			return term
-		}
-	}
+	const mapTerms=(nt,mapper)=>tex.blockSum(...(
+		terms.map(term=>{
+			if (Array.isArray(term)) {
+				const [order,factor]=term
+				return mapper(nt,order,factor)
+			} else {
+				return term
+			}
+		})
+	))
+	const step1=(nt,order,factor)=>[factor,nt.dd(nt.x,'t',order)]
+	const step2=(nt,order,factor)=>[factor,nt.dd('','t',order),'e^{λ t}']
+	const step3=(nt,order,factor)=>[factor,lambdaPow(order),'e^{λ t}']
+	const step4=(nt,order,factor)=>[factor,lambdaPow(order)]
 	return nt=>[
 		{type:'derivation',content:[
-			tex.blockSum(...terms.map(step1(nt))),
+			mapTerms(nt,step1),
 			`substitute \\( ${nt.x} = e^{λ t} \\)`,
-			tex.blockSum(...terms.map(step2(nt))),
-			tex.blockSum(...terms.map(step3(nt))),
+			mapTerms(nt,step2),
+			mapTerms(nt,step3),
 			`divide by \\( e^{\\lambda t} \\)`,
 		]},
-		tex.blockSum(...terms.map(step4(nt))),
+		mapTerms(nt,step4),
 	]
 }
