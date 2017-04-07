@@ -707,7 +707,6 @@ module.exports={
 			},
 		},
 	},
-/*
 	o1_logisticGrowth: {
 		parents: {
 			o1_autonomous: true,
@@ -716,19 +715,22 @@ module.exports={
 		name: "logistic growth",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Logistic_function#In_ecology:_modeling_population_growth'>logistic growth</a>",
 		importance: 2,
-		equation: `${nt.dxdt} = r \\cdot ${nt.x} \\cdot \\left(1 - \\frac{${nt.x}}{k}\\right)`,
-		equationNotes: [
-			`\\( k \\) is the <a href='https://en.wikipedia.org/wiki/Carrying_capacity'>carrying capacity</a>`,
+		forms: [
+			{
+				is: 't,x,o1_logisticGrowth',
+				equation: nt=>`${nt.dxdt} = r \\cdot ${nt.x} \\cdot \\left(1 - \\frac{${nt.x}}{k}\\right)`,
+				notes: nt=>[
+					`\\( k \\) is the <a href='https://en.wikipedia.org/wiki/Carrying_capacity'>carrying capacity</a>`,
+				],
+			},
 		],
 		traits: {
 			equilibriumSolutionMethod: {
-				form: true,
-				content: [
+				content: nt=>[
 					`\\[ ${nt.x} = 0 \\]`,
 					`\\[ ${nt.x} = k \\]`,
 				],
 			},
 		},
 	},
-*/
 }
