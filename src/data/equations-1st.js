@@ -128,6 +128,23 @@ const o1_linearHomogeneous_equilibriumSolutionMethod_content=xMultiplier=>nt=>[
 	]},
 ]
 
+const o1_linearHomogeneousConstant_generalSolutionMethod_content=(xMulSign,xMulValue)=>nt=>[
+	{type:'derivation',content:[
+		`\\[ ${nt.dxdt} = ${xMulSign}${xMulValue} \\cdot ${nt.x} \\]`,
+		`\\[ \\frac{1}{${nt.x}} \\cdot ${nt.dxdt} = ${xMulSign}${xMulValue} \\]`,
+		`\\[ ${nt.int(`\\frac{1}{${nt.x}} ${nt.dxdt}`)} = ${xMulSign}${nt.int(xMulValue)} + C \\]`,
+		`\\[ ${nt.int(`\\frac{1}{${nt.x}}`,nt.x)} = ${xMulSign}${nt.int(xMulValue)} + C \\]`,
+		`\\[ \\ln|${nt.x}| = ${xMulSign}${xMulValue} t + C \\]`,
+		`\\[ ${nt.x}(t) = C_1 e^{${xMulSign}${xMulValue} t} \\]`,
+		`\\[ ${nt.x}(0) = C_1 e^0 \\]`,
+		`\\[ C_1 = ${nt.x}(0) \\]`,
+	]},
+	`\\[ ${nt.x}(t) = ${nt.x}(0) \\cdot e^{${xMulSign}${xMulValue} t} \\]`,
+	{type:'note',content:[
+		`includes ${eqsol("equilibrium solution")} when \\( ${nt.x}(0) = 0 \\)`,
+	]},
+]
+
 module.exports={
 	o1: {
 		parents: {
@@ -558,7 +575,10 @@ module.exports={
 		forms: [
 			{
 				is: 't,x,linear_o1_linearHomogeneousConstant',
-				equation: nt=>`${nt.dxdt} + c \\cdot ${nt.x} = 0`,
+				equation: nt=>`a \\cdot ${nt.dxdt} + b \\cdot ${nt.x} = 0`,
+				notes: nt=>[
+					`\\( a \\ne 0 \\)`,
+				],
 			},
 			{
 				is: 't,x,resolved_o1_linearHomogeneousConstant',
@@ -568,37 +588,19 @@ module.exports={
 		traits: {
 			characteristicEquation: {
 				contents: {
-					linear_o1_linearHomogeneousConstant:   characteristicEquationContent([1,1],'+',[0,'c'],'=','0'),
+					linear_o1_linearHomogeneousConstant:   characteristicEquationContent([1,'a'],'+',[0,'b'],'=','0'),
 					resolved_o1_linearHomogeneousConstant: characteristicEquationContent([1,1],'=',[0,'k']),
 				},
 			},
-			/*
 			generalSolutionMethod: {
-				form: {
-					o1_linearHomogeneousConstant: true,
-					o1_expGrowth: true,
+				contents: {
+					linear_o1_linearHomogeneousConstant:   o1_linearHomogeneousConstant_generalSolutionMethod_content('-','\\frac ba'),
+					resolved_o1_linearHomogeneousConstant: o1_linearHomogeneousConstant_generalSolutionMethod_content('','k'),
 				},
-				content: [
-					{type:'derivation',content:[
-						`\\[ ${nt.dxdt} = k \\cdot ${nt.x} \\]`,
-						`\\[ \\frac{1}{${nt.x}} \\cdot ${nt.dxdt} = k \\]`,
-						`\\[ ${nt.int(`\\frac{1}{${nt.x}} ${nt.dxdt}`)} = ${nt.int('k')} + C \\]`,
-						`\\[ ${nt.int(`\\frac{1}{${nt.x}}`,nt.x)} = ${nt.int('k')} + C \\]`,
-						`\\[ \\ln|${nt.x}| = k t + C \\]`,
-						`\\[ ${nt.x}(t) = C_1 e^{k t} \\]`,
-						`\\[ ${nt.x}(0) = C_1 e^0 \\]`,
-						`\\[ C_1 = ${nt.x}(0) \\]`,
-					]},
-					`\\[ ${nt.x}(t) = ${nt.x}(0) e^{kt} \\]`,
-					{type:'note',content:[
-						`includes ${eqsol("equilibrium solution")} when \\( ${nt.x}(0) = 0 \\)`,
-					]},
-				],
 			},
-			*/
 			equilibriumSolutionMethod: {
 				contents: {
-					linear_o1_linearHomogeneousConstant:   o1_linearHomogeneous_equilibriumSolutionMethod_content('c'),
+					linear_o1_linearHomogeneousConstant:   o1_linearHomogeneous_equilibriumSolutionMethod_content('b'),
 					resolved_o1_linearHomogeneousConstant: o1_linearHomogeneous_equilibriumSolutionMethod_content('k'),
 				},
 			},
