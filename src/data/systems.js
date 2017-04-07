@@ -472,45 +472,45 @@ module.exports={
 			equilibriumSolutionMethod: {
 				contents: {
 					system_s2_linearHomogeneousConstant: nt=>[
-						`this equilibrium solution always exists:`,
 						`\\[ \\left\\{ \\begin{aligned}`+
 							`${nt.x} &= 0 \\\\`+
 							`${nt.y} &= 0`+
 						`\\end{aligned} \\right. \\]`,
-						`additionally, any other`,
-						`\\[ \\left\\{ \\begin{aligned}`+
-							`${nt.x} &= k_${nt.x} \\\\`+
-							`${nt.y} &= k_${nt.y}`+
-						`\\end{aligned} \\right. \\]`,
-						`s.t.:`,
-						`\\[ \\left\\{ \\begin{aligned}`+
-							`a \\cdot k_${nt.x} + b \\cdot k_${nt.y} &= 0 \\\\`+
-							`c \\cdot k_${nt.x} + d \\cdot k_${nt.y} &= 0`+
-						`\\end{aligned} \\right. \\]`,
-						`is an equilibrium solution`,
-						`any constant multiple of an equilibrium solution is also an equilibrium solution:`,
-						`\\[ \\left\\{ \\begin{aligned}`+
-							`${nt.x} &= K \\cdot k_${nt.x} \\\\`+
-							`${nt.y} &= K \\cdot k_${nt.y}`+
-						`\\end{aligned} \\right. \\]`,
-						`this results in nonzero equilibrium solutions when \\( ad-bc \\ne 0 \\)`,
+						{type:'case',title:`additional nonzero equilibrium solutions are possible when \\( ad-bc = 0 \\)`,content:[
+							`any`,
+							`\\[ \\left\\{ \\begin{aligned}`+
+								`${nt.x} &= k_${nt.x} \\\\`+
+								`${nt.y} &= k_${nt.y}`+
+							`\\end{aligned} \\right. \\]`,
+							`s.t.:`,
+							`\\[ \\left\\{ \\begin{aligned}`+
+								`a \\cdot k_${nt.x} + b \\cdot k_${nt.y} &= 0 \\\\`+
+								`c \\cdot k_${nt.x} + d \\cdot k_${nt.y} &= 0`+
+							`\\end{aligned} \\right. \\]`,
+							`is an equilibrium solution`,
+							{type:'note',content:[
+								`this is a linearly dependent system when \\( ad-bc = 0 \\)`,
+							]},
+							`any constant multiple of an equilibrium solution is also an equilibrium solution:`,
+							`\\[ \\left\\{ \\begin{aligned}`+
+								`${nt.x} &= C \\cdot k_${nt.x} \\\\`+
+								`${nt.y} &= C \\cdot k_${nt.y}`+
+							`\\end{aligned} \\right. \\]`,
+						]},
 					],
 					vector_s2_linearHomogeneousConstant: nt=>[
-						{type:'switch',title:`\\( \\det(\\mathbf{A}) \\) is`,content:[
-							{type:'case',title:`\\( \\det(\\mathbf{A}) = 0 \\)`,content:[
-								`let \\( \\mathbf{A} = ${nt.mat2('a','b','c','d')} \\)`,
-								`then equilibrium solution is:`,
-								`\\[ ${nt.X} = K ${nt.vec2('b','-a')} \\]`,
-								{type:'proof',content:[
-									`\\[ ${nt.dd(nt.X)} = K ${nt.mat2('a','b','c','d')} ${nt.vec2('b','-a')} \\]`,
-									`\\[ ${nt.dd(nt.X)} = K ${nt.vec2('a b - b a','c b - d a')} \\]`,
-									`\\[ a d = b c \\]`,
-									`\\[ ${nt.dd(nt.X)} = ${nt.vec2(0,0)} \\]`,
-								]},
+						`\\[ ${nt.X} = \\mathbf{0} \\]`,
+						{type:'case',title:`additional nonzero equilibrium solutions are possible when \\( \\det(\\mathbf{A}) = 0 \\)`,content:[
+							`any`,
+							`\\[ ${nt.X} = \\mathbf{K} \\]`,
+							`s.t.:`,
+							`\\[ \\mathbf{A} \\mathbf{K} = \\mathbf{0} \\]`,
+							`is an equilibrium solution`,
+							{type:'note',content:[
+								`this is a linearly dependent system when \\( \\det(\\mathbf{A}) = 0 \\)`,
 							]},
-							{type:'case',title:`\\( \\det(\\mathbf{A}) \\ne 0 \\)`,content:[
-								`\\[ ${nt.X} = ${nt.vec2(0,0)} \\]`,
-							]},
+							`any constant multiple of an equilibrium solution is also an equilibrium solution:`,
+							`\\[ ${nt.X} = C \\cdot \\mathbf{K} \\]`,
 						]},
 					],
 				},
