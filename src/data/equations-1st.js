@@ -614,7 +614,13 @@ module.exports={
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Exponential_growth#Differential_equation'>exponential (natural) growth</a>",
 		importance: 3,
 		forms: [
-			// TODO linear form
+			{
+				is: 't,x,linear_o1_expGrowth',
+				equation: nt=>`${nt.dxdt} - k \\cdot ${nt.x} = 0`,
+				notes: nt=>[
+					`\\( k > 0 \\) is the growth constant`,
+				],
+			},
 			{
 				is: 't,x,resolved_o1_linearHomogeneousConstant,resolved_o1_expGrowth',
 				equation: nt=>`${nt.dxdt} = k \\cdot ${nt.x}`,
@@ -623,6 +629,26 @@ module.exports={
 				],
 			},
 		],
+		traits: {
+			characteristicEquation: {
+				contents: {
+					linear_o1_expGrowth:   characteristicEquationContent([1,1],'-',[0,'k'],'=','0'),
+					resolved_o1_expGrowth: characteristicEquationContent([1,1],'=',[0,'k']),
+				},
+			},
+			generalSolutionMethod: {
+				contents: {
+					linear_o1_expGrowth:   o1_linearHomogeneousConstant_generalSolutionMethod_content('','k'),
+					resolved_o1_expGrowth: o1_linearHomogeneousConstant_generalSolutionMethod_content('','k'),
+				},
+			},
+			equilibriumSolutionMethod: {
+				contents: {
+					linear_o1_expGrowth:   o1_linearHomogeneous_equilibriumSolutionMethod_content('k'),
+					resolved_o1_expGrowth: o1_linearHomogeneous_equilibriumSolutionMethod_content('k'),
+				},
+			},
+		},
 	},
 /*
 	o1_expDecay: {
