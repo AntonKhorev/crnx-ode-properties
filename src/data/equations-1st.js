@@ -650,7 +650,6 @@ module.exports={
 			},
 		},
 	},
-/*
 	o1_expDecay: {
 		parents: {
 			o1_linearHomogeneousConstant: true,
@@ -658,27 +657,32 @@ module.exports={
 		name: "exponential (natural) decay",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Exponential_decay'>exponential (natural) decay</a>",
 		importance: 3,
-		equation: `${nt.dxdt} = -k \\cdot ${nt.x}`,
-		equationNotes: [
-			`\\( k > 0 \\) is the decay constant`,
+		forms: [
+			{
+				is: 't,x,scalar_o1_expDecay,linear_o1_expDecay',
+				equation: nt=>`${nt.dxdt} + k \\cdot ${nt.x} = 0`,
+				notes: nt=>[
+					`\\( k > 0 \\) is the decay constant`,
+				],
+			},
+			{
+				is: 't,x,scalar_o1_expDecay,resolved_o1_expDecay',
+				equation: nt=>`${nt.dxdt} = -k \\cdot ${nt.x}`,
+				notes: nt=>[
+					`\\( k > 0 \\) is the decay constant`,
+				],
+			},
 		],
 		traits: {
 			characteristicEquation: {
-				form: true,
-				content: [
-					{type:'derivation',content:[
-						`\\[ ${nt.dxdt} = -k \\cdot ${nt.x} \\]`,
-						`substitute \\( ${nt.x} = e^{\\lambda t} \\)`,
-						`\\[ ${nt.ddt} e^{\\lambda t} = -k \\cdot e^{\\lambda t} \\]`,
-						`\\[ \\lambda \\cdot e^{\\lambda t} = -k \\cdot e^{\\lambda t} \\]`,
-						`divide by \\( e^{\\lambda t} \\)`,
-					]},
-					`\\[ \\lambda = -k \\]`,
-				],
+				contents: {
+					linear_o1_expDecay:   characteristicEquationContent([1,1],'+',[0,'k'],'=','0'),
+					resolved_o1_expDecay: characteristicEquationContent([1,1],'=',[0,'-k']),
+				},
 			},
 			halfLife: {
-				form: true,
-				content: [
+				formType: 'scalar_o1_expDecay',
+				content: nt=>[
 					{type:'derivation',content:[
 						`\\[ ${nt.x}(t_{1/2}) = \\frac 12 \\cdot ${nt.x}(0) \\]`,
 						`substitute general solution \\( ${nt.x}(t) = ${nt.x}(0) e^{-kt} \\)`,
@@ -690,26 +694,20 @@ module.exports={
 				],
 			},
 			generalSolutionMethod: {
-				form: true,
-				content: [
-					{type:'derivation',content:[
-						`\\[ ${nt.dxdt} = -k \\cdot ${nt.x} \\]`,
-						`\\[ \\frac{1}{${nt.x}} \\cdot ${nt.dxdt} = -k \\]`,
-						`\\[ ${nt.int(`\\frac{1}{${nt.x}} ${nt.dxdt}`)} = ${nt.int('-k')} + C \\]`,
-						`\\[ ${nt.int(`\\frac{1}{${nt.x}}`,nt.x)} = ${nt.int('-k')} + C \\]`,
-						`\\[ \\ln|${nt.x}| = -k t + C \\]`,
-						`\\[ ${nt.x}(t) = C_1 e^{-k t} \\]`,
-						`\\[ ${nt.x}(0) = C_1 e^0 \\]`,
-						`\\[ C_1 = ${nt.x}(0) \\]`,
-					]},
-					`\\[ ${nt.x}(t) = ${nt.x}(0) e^{-kt} \\]`,
-					{type:'note',content:[
-						`includes ${eqsol("equilibrium solution")} when \\( ${nt.x}(0) = 0 \\)`,
-					]},
-				],
+				contents: {
+					linear_o1_expDecay:   o1_linearHomogeneousConstant_generalSolutionMethod_content('-','k'),
+					resolved_o1_expDecay: o1_linearHomogeneousConstant_generalSolutionMethod_content('-','k'),
+				},
+			},
+			equilibriumSolutionMethod: {
+				contents: {
+					linear_o1_expDecay:   o1_linearHomogeneous_equilibriumSolutionMethod_content('-k'),
+					resolved_o1_expDecay: o1_linearHomogeneous_equilibriumSolutionMethod_content('-k'),
+				},
 			},
 		},
 	},
+/*
 	o1_logisticGrowth: {
 		parents: {
 			o1_autonomous: true,
