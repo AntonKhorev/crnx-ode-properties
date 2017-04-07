@@ -342,36 +342,29 @@ module.exports={
 				],
 				compare: true,
 			},
-			twoLinearCombinationSolutionRelation: {
+			linearCombinationSolutionRelation: {
 				formType: 'x',
 				content: nt=>[
 					`If \\( ${nt.x}_0 \\), \\( ${nt.x}_1 \\) and \\( ${nt.x}_2 \\) are solutions,`,
 					`then \\( K_1 ${nt.x}_1 + K_2 ${nt.x}_2 + (1 - K_1 - K_2) ${nt.x}_0 \\) is a solution.`,
+					{type:'extra',title:'generalizes to \\( m+1 \\) solutions',content:[
+						`If \\( ${nt.x}_0 \\), \\( ${nt.x}_1 \\), \\( ${nt.x}_2 \\), ..., \\( ${nt.x}_m \\) are solutions,`,
+						`then \\( \\sum\\limits_{i=1}^m K_i ${nt.x}_i + (1 - \\sum\\limits_{i=1}^m K_i) ${nt.x}_0 \\) is a solution.`,
+					]},
 				],
 				compare: true,
 			},
-			nLinearCombinationSolutionRelation: {
-				formType: 'x',
-				content: nt=>[
-					`If \\( ${nt.x}_0 \\), \\( ${nt.x}_1 \\), \\( ${nt.x}_2 \\), ..., \\( ${nt.x}_m \\) are solutions,`,
-					`then \\( \\sum\\limits_{i=1}^m K_i ${nt.x}_i + (1 - \\sum\\limits_{i=1}^m K_i) ${nt.x}_0 \\) is a solution.`,
-				],
-				compare: true,
-			},
-			twoAffineCombinationSolutionRelation: {
+			affineCombinationSolutionRelation: {
 				formType: 'x',
 				content: nt=>[
 					`If \\( ${nt.x}_1 \\), \\( ${nt.x}_2 \\) are solutions`,
 					`and \\( K_1 + K_2 = 1 \\)`,
 					`then \\( K_1 ${nt.x}_1 + K_2 ${nt.x}_2 \\) is a solution.`,
-				],
-			},
-			nAffineCombinationSolutionRelation: {
-				formType: 'x',
-				content: nt=>[
-					`If \\( ${nt.x}_1 \\), \\( ${nt.x}_2 \\), ..., \\( ${nt.x}_m \\) are solutions`,
-					`and \\( \\sum\\limits_{i=1}^m K_i = 1 \\)`,
-					`then \\( \\sum\\limits_{i=1}^m K_i ${nt.x}_i \\) is a solution.`,
+					{type:'extra',title:'generalizes to \\( m \\) solutions',content:[
+						`If \\( ${nt.x}_1 \\), \\( ${nt.x}_2 \\), ..., \\( ${nt.x}_m \\) are solutions`,
+						`and \\( \\sum\\limits_{i=1}^m K_i = 1 \\)`,
+						`then \\( \\sum\\limits_{i=1}^m K_i ${nt.x}_i \\) is a solution.`,
+					]},
 				],
 			},
 			associatedSolutionRelation: {
@@ -455,30 +448,18 @@ module.exports={
 					`then \\( ${nt.x}_1 + ${nt.x}_2 \\) is a solution.`,
 				],
 			},
-			twoLinearCombinationSolutionRelation: {
+			linearCombinationSolutionRelation: {
 				formType: 'x',
 				content: nt=>[
 					`If \\( ${nt.x}_1 \\) and \\( ${nt.x}_2 \\) are solutions,`,
 					`then \\( K_1 ${nt.x}_1 + K_2 ${nt.x}_2 \\) is a solution.`,
-				],
-			},
-			nLinearCombinationSolutionRelation: {
-				formType: 'x',
-				content: nt=>[
-					`If \\( ${nt.x}_1 \\), \\( ${nt.x}_2 \\), ..., \\( ${nt.x}_m \\) are solutions,`,
-					`then \\( \\sum\\limits_{i=1}^m K_i ${nt.x}_i \\) is a solution.`,
-				],
-			},
-			twoAffineCombinationSolutionRelation: {
-				formType: 't',
-				content: nt=>[
-					{type:'note',content:[
-						`This is a special case of a linear combination.`,
+					{type:'extra',title:'generalizes to \\( m \\) solutions',content:[
+						`If \\( ${nt.x}_1 \\), \\( ${nt.x}_2 \\), ..., \\( ${nt.x}_m \\) are solutions,`,
+						`then \\( \\sum\\limits_{i=1}^m K_i ${nt.x}_i \\) is a solution.`,
 					]},
 				],
-				close: true,
 			},
-			nAffineCombinationSolutionRelation: {
+			affineCombinationSolutionRelation: {
 				formType: 't',
 				content: nt=>[
 					{type:'note',content:[

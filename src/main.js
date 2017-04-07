@@ -24,10 +24,8 @@ const i18n=(id)=>{
 		'trait.solutionSpaceBasis': "Basis of the solution space",
 		'trait.homogeneitySolutionRelation': "Homogeneity of solutions",
 		'trait.additivitySolutionRelation': "Additivity of solutions",
-		'trait.twoLinearCombinationSolutionRelation': "<a href='https://en.wikipedia.org/wiki/Linear_combination'>Linear combination</a> property of solutions",
-		'trait.nLinearCombinationSolutionRelation': "<a href='https://en.wikipedia.org/wiki/Linear_combination'>Linear combination</a> property of solutions",
-		'trait.twoAffineCombinationSolutionRelation': "<a href='https://en.wikipedia.org/wiki/Affine_combination'>Affine combination</a> property of solutions",
-		'trait.nAffineCombinationSolutionRelation': "<a href='https://en.wikipedia.org/wiki/Affine_combination'>Affine combination</a> property of solutions",
+		'trait.linearCombinationSolutionRelation': "<a href='https://en.wikipedia.org/wiki/Linear_combination'>Linear combination</a> property of solutions",
+		'trait.affineCombinationSolutionRelation': "<a href='https://en.wikipedia.org/wiki/Affine_combination'>Affine combination</a> property of solutions",
 		'trait.associatedSolutionRelation': "Associated homogeneous equation solution",
 
 		// TODO remove

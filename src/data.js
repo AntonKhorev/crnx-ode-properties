@@ -14,10 +14,8 @@ const traits=[
 				['solutionSpaceBasis'],
 				['homogeneitySolutionRelation'],
 				['additivitySolutionRelation'],
-				['twoLinearCombinationSolutionRelation'],
-				['nLinearCombinationSolutionRelation'],
-				['twoAffineCombinationSolutionRelation'],
-				['nAffineCombinationSolutionRelation'],
+				['linearCombinationSolutionRelation'],
+				['affineCombinationSolutionRelation'],
 				['associatedSolutionRelation'],
 			]]
 		]],
