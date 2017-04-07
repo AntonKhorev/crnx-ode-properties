@@ -4,7 +4,7 @@ const characteristicEquationContent=require('../characteristic-equation-content'
 
 const eqsol=(name)=>`<a href='https://en.wikipedia.org/wiki/Equilibrium_point'>${name}</a>`
 
-const o1_linear_generalSolutionMethod_contents=isLinear=>{
+const o1_linear_generalSolutionMethod_content=isLinear=>{
 	const mvp1=isLinear?'+':'='
 	const mvp2=isLinear?'=':'+'
 	const mvp3=isLinear?'-':'+'
@@ -99,7 +99,7 @@ const o1_linear_generalSolutionMethod_contents=isLinear=>{
 	]
 }
 
-const o1_linearHomogeneous_generalSolutionMethod_contents=isLinear=>{
+const o1_linearHomogeneous_generalSolutionMethod_content=isLinear=>{
 	const s=isLinear?'-':''
 	const a=isLinear?'g':'a'
 	return nt=>[
@@ -116,6 +116,17 @@ const o1_linearHomogeneous_generalSolutionMethod_contents=isLinear=>{
 		]},
 	]
 }
+
+const o1_linearHomogeneous_equilibriumSolutionMethod_content=xMultiplier=>nt=>[
+	{type:'switch',title:`\\( ${xMultiplier} \\) is`,content:[
+		{type:'case',title:`\\( ${xMultiplier} = 0 \\)`,content:[
+			`\\[ ${nt.x} = K \\]`,
+		]},
+		{type:'case',title:`\\( ${xMultiplier} \\ne 0 \\)`,content:[
+			`\\[ ${nt.x} = 0 \\]`,
+		]},
+	]},
+]
 
 module.exports={
 	o1: {
@@ -355,8 +366,8 @@ module.exports={
 			},
 			generalSolutionMethod: {
 				contents: {
-					linear_o1_linear:   o1_linear_generalSolutionMethod_contents(true),
-					resolved_o1_linear: o1_linear_generalSolutionMethod_contents(false),
+					linear_o1_linear:   o1_linear_generalSolutionMethod_content(true),
+					resolved_o1_linear: o1_linear_generalSolutionMethod_content(false),
 				},
 			},
 			equilibriumSolutionMethod: {
@@ -464,15 +475,15 @@ module.exports={
 			},
 			generalSolutionMethod: {
 				contents: {
-					linear_o1_linearHomogeneous:   o1_linearHomogeneous_generalSolutionMethod_contents(true),
-					resolved_o1_linearHomogeneous: o1_linearHomogeneous_generalSolutionMethod_contents(false),
+					linear_o1_linearHomogeneous:   o1_linearHomogeneous_generalSolutionMethod_content(true),
+					resolved_o1_linearHomogeneous: o1_linearHomogeneous_generalSolutionMethod_content(false),
 				},
 			},
 			equilibriumSolutionMethod: {
-				formType: 'x',
-				content: nt=>[
-					`\\[ ${nt.x} = 0 \\]`,
-				],
+				contents: {
+					linear_o1_linearHomogeneous:   o1_linearHomogeneous_equilibriumSolutionMethod_content('g(t)'),
+					resolved_o1_linearHomogeneous: o1_linearHomogeneous_equilibriumSolutionMethod_content('a(t)'),
+				},
 			},
 		},
 	},
@@ -584,12 +595,13 @@ module.exports={
 					]},
 				],
 			},
-			equilibriumSolutionMethod: { // TODO could have inherited from linear homogeneous, but have to override autonomous
-				content: [
-					`\\[ ${nt.x} = 0 \\]`
-				],
-			},
 			*/
+			equilibriumSolutionMethod: {
+				contents: {
+					linear_o1_linearHomogeneousConstant:   o1_linearHomogeneous_equilibriumSolutionMethod_content('c'),
+					resolved_o1_linearHomogeneousConstant: o1_linearHomogeneous_equilibriumSolutionMethod_content('k'),
+				},
+			},
 		},
 	},
 	o1_expGrowth: {

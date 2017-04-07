@@ -48,7 +48,7 @@ module.exports={
 				is: 't,x,linear_on_linearHomogeneousConstant',
 				equation: nt=>`\\sum_{i=0}^n a_i ${nt.dd(nt.x,'t','i')} = 0`,
 				notes: nt=>[
-					`\\( a \\ne 0 \\)`,
+					`\\( a_n \\ne 0 \\)`,
 				],
 			},
 			{
@@ -88,6 +88,59 @@ module.exports={
 						`\\[ \\lambda^n - \\sum_{i=0}^{n-1} c_{i+1} \\lambda^i = 0 \\]`,
 					],
 				}
+			},
+			equilibriumSolutionMethod: {
+				contents: {
+					linear_on_linearHomogeneousConstant: nt=>[
+						{type:'switch',title:`\\( a_0 \\) is`,content:[
+							{type:'case',title:`\\( a_0 = 0 \\)`,content:[
+								`\\[ ${nt.x} = K \\]`,
+							]},
+							{type:'case',title:`\\( a_0 \\ne 0 \\)`,content:[
+								`\\[ ${nt.x} = 0 \\]`,
+							]},
+						]},
+					],
+					resolved_on_linearHomogeneousConstant: nt=>[
+						{type:'switch',title:`\\( b_0 \\) is`,content:[
+							{type:'case',title:`\\( b_0 = 0 \\)`,content:[
+								`\\[ ${nt.x} = K \\]`,
+							]},
+							{type:'case',title:`\\( b_0 \\ne 0 \\)`,content:[
+								`\\[ ${nt.x} = 0 \\]`,
+							]},
+						]},
+					],
+					system_on_linearHomogeneousConstant: nt=>[
+						{type:'switch',title:`\\( c_1 \\) is`,content:[
+							{type:'case',title:`\\( c_1 = 0 \\)`,content:[
+								`\\[ \\left\\{ \\begin{array}{rcl}`+
+									`${nt.x}_1 &=& K \\\\`+
+									`${nt.x}_2 &=& 0 \\\\`+
+									`&\\vdots \\\\`+
+									`${nt.x}_n &=& 0 \\\\`+
+								`\\end{array} \\right. \\]`,
+							]},
+							{type:'case',title:`\\( c_1 \\ne 0 \\)`,content:[
+								`\\[ \\left\\{ \\begin{array}{rcl}`+
+									`${nt.x}_1 &=& 0 \\\\`+
+									`&\\vdots \\\\`+
+									`${nt.x}_n &=& 0 \\\\`+
+								`\\end{array} \\right. \\]`,
+							]},
+						]},
+					],
+					vector_on_linearHomogeneousConstant: nt=>[
+						{type:'switch',title:`\\( c_1 \\) is`,content:[
+							{type:'case',title:`\\( c_1 = 0 \\)`,content:[
+								`\\[ ${nt.X} = \\begin{bmatrix} K \\\\ 0 \\\\ \\vdots \\\\ 0 \\end{bmatrix} \\]`,
+							]},
+							{type:'case',title:`\\( c_1 \\ne 0 \\)`,content:[
+								`\\[ ${nt.X} = \\begin{bmatrix} 0 \\\\ \\vdots \\\\ 0 \\end{bmatrix} \\]`,
+							]},
+						]},
+					],
+				},
 			},
 		},
 	},
