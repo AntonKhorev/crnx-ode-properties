@@ -413,9 +413,15 @@ module.exports={
 							`${nt.x} &= 0 \\\\`+
 							`${nt.y} &= 0`+
 						`\\end{aligned} \\right. \\]`,
+						{type:'note',content:[
+							`other equilibrium solutions may be possible, depending on the functions \\( a(t) \\), \\( b(t) \\), \\( c(t) \\) and \\( d(t) \\)`,
+						]},
 					],
 					X: nt=>[
 						`\\[ ${nt.X} = ${nt.vec2(0,0)} \\]`,
+						{type:'note',content:[
+							`other equilibrium solutions may be possible, depending on the function \\( \\mathbf{A}(t) \\)`,
+						]},
 					],
 				},
 			},
@@ -466,35 +472,28 @@ module.exports={
 			equilibriumSolutionMethod: {
 				contents: {
 					system_s2_linearHomogeneousConstant: nt=>[
-						{type:'switch',title:`\\( ad-bc \\) is`,content:[
-							{type:'case',title:`\\( ad-bc = 0 \\)`,content:[
-								`\\[ \\left\\{ \\begin{aligned}`+
-									`${nt.x} &= K b \\\\`+
-									`${nt.y} &= -K a`+
-								`\\end{aligned} \\right. \\]`,
-								{type:'proof',content:[
-									`\\[ \\left\\{ \\begin{aligned}`+
-										`${nt.dd(nt.x)} &= a (K b) + b (-K a) \\\\`+
-										`${nt.dd(nt.y)} &= c (K b) + d (-K a)`+
-									`\\end{aligned} \\right. \\]`,
-									`\\[ \\left\\{ \\begin{aligned}`+
-										`${nt.dd(nt.x)} &= K (ab-ab) \\\\`+
-										`${nt.dd(nt.y)} &= K (bc-ad)`+
-									`\\end{aligned} \\right. \\]`,
-									`\\[ a d = b c \\]`,
-									`\\[ \\left\\{ \\begin{aligned}`+
-										`${nt.dd(nt.x)} &= 0 \\\\`+
-										`${nt.dd(nt.y)} &= 0`+
-									`\\end{aligned} \\right. \\]`,
-								]},
-							]},
-							{type:'case',title:`\\( ad-bc \\ne 0 \\)`,content:[
-								`\\[ \\left\\{ \\begin{aligned}`+
-									`${nt.x} &= 0 \\\\`+
-									`${nt.y} &= 0`+
-								`\\end{aligned} \\right. \\]`,
-							]},
-						]},
+						`this equilibrium solution always exists:`,
+						`\\[ \\left\\{ \\begin{aligned}`+
+							`${nt.x} &= 0 \\\\`+
+							`${nt.y} &= 0`+
+						`\\end{aligned} \\right. \\]`,
+						`additionally, any other`,
+						`\\[ \\left\\{ \\begin{aligned}`+
+							`${nt.x} &= k_${nt.x} \\\\`+
+							`${nt.y} &= k_${nt.y}`+
+						`\\end{aligned} \\right. \\]`,
+						`s.t.:`,
+						`\\[ \\left\\{ \\begin{aligned}`+
+							`a \\cdot k_${nt.x} + b \\cdot k_${nt.y} &= 0 \\\\`+
+							`c \\cdot k_${nt.x} + d \\cdot k_${nt.y} &= 0`+
+						`\\end{aligned} \\right. \\]`,
+						`is an equilibrium solution`,
+						`any constant multiple of an equilibrium solution is also an equilibrium solution:`,
+						`\\[ \\left\\{ \\begin{aligned}`+
+							`${nt.x} &= K \\cdot k_${nt.x} \\\\`+
+							`${nt.y} &= K \\cdot k_${nt.y}`+
+						`\\end{aligned} \\right. \\]`,
+						`this results in nonzero equilibrium solutions when \\( ad-bc \\ne 0 \\)`,
 					],
 					vector_s2_linearHomogeneousConstant: nt=>[
 						{type:'switch',title:`\\( \\det(\\mathbf{A}) \\) is`,content:[
