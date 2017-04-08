@@ -2,6 +2,44 @@
 
 const characteristicEquationContent=require('../characteristic-equation-content')
 
+const on_linearHomogeneousConstant_generalSolutionMethod_content=(charEqn,isSystem,isVector)=>nt=>[
+	`solve the characteristic equation for \\( λ \\):`,
+	`\\[ ${charEqn} \\]`,
+	`\\( λ \\) are:`,
+	`\\( r \\) distinct real roots \\( λ_1, ..., λ_r \\) with multiplicities \\( p_1, ..., p_r \\)`,
+	`\\( s \\) distinct complex conjugate root pairs \\( α_1 \\pm i β_1, ..., α_s \\pm i β_s \\) with multiplicities \\( q_1, ..., q_s \\)`,
+	{type:'note',content:[
+		`sum of multiplicities is equal to order of the equation:`,
+		`\\[ \\sum_{i=1}^r p_i + 2 \\cdot \\sum_{i=1}^s q_i = n \\]`,
+	]},
+	((isSystem||isVector)?`first component of `:``)+`general solution (with arbitrary constants \\( K_{ij} \\), \\( A_{ij} \\), \\( B_{ij} \\)):`,
+	`\\[ \\begin{aligned}`+
+		`${nt.x}`+(isSystem?`_1`:``)+
+		` = \\: & \\sum_{i=1}^r \\sum_{j=1}^{p_i} K_{ij} \\, t^{j-1} \\, e^{λ_i t} + \\\\`+
+		` + \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} A_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\cos β_i t \\\\`+
+		` + \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} B_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\sin β_i t`+
+	`\\end{aligned} \\]`,
+	...(isSystem?[
+		`find other components by differentiating \\( ${nt.x}_1 \\):`,
+		`\\[ \\begin{array}{rcl}`+
+			`${nt.x}_2 &=& ${nt.dd(nt.x,'t',1)} \\\\`+
+			`${nt.x}_3 &=& ${nt.dd(nt.x,'t',2)} \\\\`+
+			`&\\vdots \\\\`+
+			`${nt.x}_n &=& ${nt.dd(nt.x,'t','n-1')}`+
+		`\\end{array} \\]`,
+	]:[]),
+	...(isVector?[
+		`find other components by differentiating \\( ${nt.x} \\):`,
+		`\\[ ${nt.X} = \\begin{bmatrix}`+
+			`${nt.x} \\\\`+
+			`${nt.dd(nt.x,'t',1)} \\\\`+
+			`${nt.dd(nt.x,'t',2)} \\\\`+
+			`\\vdots \\\\`+
+			`${nt.dd(nt.x,'t','n-1')}`+
+		`\\end{bmatrix} \\]`,
+	]:[]),
+]
+
 module.exports={
 	on: {
 		parents: {
@@ -90,23 +128,10 @@ module.exports={
 			},
 			generalSolutionMethod: {
 				contents: {
-					linear_on_linearHomogeneousConstant: nt=>[
-						`solve the characteristic equation for \\( λ \\):`,
-						`\\[ \\sum_{i=0}^n a_i λ^i = 0 \\]`,
-						`\\( λ \\) are:`,
-						`\\( r \\) distinct real roots \\( λ_1, ..., λ_r \\) with multiplicities \\( p_1, ..., p_r \\)`,
-						`\\( s \\) distinct complex conjugate root pairs \\( α_1 \\pm i β_1, ..., α_s \\pm i β_s \\) with multiplicities \\( q_1, ..., q_s \\)`,
-						{type:'note',content:[
-							`sum of multiplicities is equal to order of the equation:`,
-							`\\[ \\sum_{i=1}^r p_i + 2 \\cdot \\sum_{i=1}^s q_i = n \\]`,
-						]},
-						`general solution (with arbitrary constants \\( K_{ij} \\), \\( A_{ij} \\), \\( B_{ij} \\)):`,
-						`\\[ \\begin{aligned}`+
-							`${nt.x} = \\: & \\sum_{i=1}^r \\sum_{j=1}^{p_i} K_{ij} \\, t^{j-1} \\, e^{λ_i t} + \\\\`+
-							        `+ \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} A_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\cos β_i t \\\\`+
-							        `+ \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} B_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\sin β_i t`+
-						`\\end{aligned} \\]`,
-					],
+					linear_on_linearHomogeneousConstant:   on_linearHomogeneousConstant_generalSolutionMethod_content(`\\sum_{i=0}^n a_i λ^i = 0`),
+					resolved_on_linearHomogeneousConstant: on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} b_i λ^i = 0`),
+					system_on_linearHomogeneousConstant:   on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`,true),
+					vector_on_linearHomogeneousConstant:   on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`,false,true),
 				},
 			},
 			equilibriumSolutionMethod: {
