@@ -42,7 +42,6 @@ module.exports={
 		name: "nth-order linear homogeneous with constant coefficients",
 		htmlName: "<em>n</em>th-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Homogeneous_equations_with_constant_coefficients'>linear homogeneous with constant coefficients</a>",
 		importance: 2,
-		//equation: `y^{(n)} = - \\tfrac{a_{n-1}}{a_n} y^{(n-1)} - \\cdots - \\tfrac{a_1}{a_n} y' - \\tfrac{a_0}{a_n} y`,
 		forms: [
 			{
 				is: 't,x,linear_on_linearHomogeneousConstant',
@@ -82,12 +81,33 @@ module.exports={
 					linear_on_linearHomogeneousConstant:   characteristicEquationContent(['i','\\sum_{i=0}^n a_i'],'=','0'),
 					resolved_on_linearHomogeneousConstant: characteristicEquationContent(['n',1],'=',['i','\\sum_{i=0}^{n-1} b_i']),
 					system_on_linearHomogeneousConstant: nt=>[
-						`\\[ \\lambda^n - \\sum_{i=0}^{n-1} c_{i+1} \\lambda^i = 0 \\]`,
+						`\\[ λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0 \\]`,
 					],
 					vector_on_linearHomogeneousConstant: nt=>[
-						`\\[ \\lambda^n - \\sum_{i=0}^{n-1} c_{i+1} \\lambda^i = 0 \\]`,
+						`\\[ λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0 \\]`,
 					],
 				}
+			},
+			generalSolutionMethod: {
+				contents: {
+					linear_on_linearHomogeneousConstant: nt=>[
+						`solve the characteristic equation for \\( λ \\):`,
+						`\\[ \\sum_{i=0}^n a_i λ^i = 0 \\]`,
+						`\\( λ \\) are:`,
+						`\\( r \\) distinct real roots \\( λ_1, ..., λ_r \\) with multiplicities \\( p_1, ..., p_r \\)`,
+						`\\( s \\) distinct complex conjugate root pairs \\( α_1 \\pm i β_1, ..., α_s \\pm i β_s \\) with multiplicities \\( q_1, ..., q_s \\)`,
+						{type:'note',content:[
+							`sum of multiplicities is equal to order of the equation:`,
+							`\\[ \\sum_{i=1}^r p_i + 2 \\cdot \\sum_{i=1}^s q_i = n \\]`,
+						]},
+						`general solution (with arbitrary constants \\( K_{ij} \\), \\( A_{ij} \\), \\( B_{ij} \\)):`,
+						`\\[ \\begin{aligned}`+
+							`${nt.x} = \\: & \\sum_{i=1}^r \\sum_{j=1}^{p_i} K_{ij} \\, t^{j-1} \\, e^{λ_i t} + \\\\`+
+							        `+ \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} A_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\cos β_i t \\\\`+
+							        `+ \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} B_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\sin β_i t`+
+						`\\end{aligned} \\]`,
+					],
+				},
 			},
 			equilibriumSolutionMethod: {
 				contents: {
