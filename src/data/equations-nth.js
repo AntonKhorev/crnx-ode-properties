@@ -2,7 +2,31 @@
 
 const characteristicEquationContent=require('../characteristic-equation-content')
 
-const on_linearHomogeneousConstant_generalSolutionMethod_content=(charEqn,isSystem,isVector)=>nt=>[
+const on_linearConstant_system_equation=(isHomogeneous,isConstant)=>nt=>`\\left\\{ \\begin{array}{rcl}`+
+	`${nt.dd(`${nt.x}_1`)} &=& ${nt.x}_2 \\\\`+
+	`${nt.dd(`${nt.x}_2`)} &=& ${nt.x}_3 \\\\`+
+	`&\\vdots \\\\`+
+	`${nt.dd(`${nt.x}_{n-1}`)} &=& ${nt.x}_n \\\\`+
+	`${nt.dd(`${nt.x}_n`)} &=& \\sum_{i=1}^{n} c_i`+(isConstant?``:`(t)`)+` ${nt.x}_i`+(isHomogeneous?``:` + g(t)`)+
+`\\end{array} \\right.`
+
+const on_linearConstant_vector_equation=(isHomogeneous,isConstant)=>nt=>`${nt.dd(nt.X)} {=} `+(isHomogeneous?`\\begin{bmatrix}`:`\\! \\left[ \\begin{smallmatrix}`)+
+	(isConstant
+		?`0 & 1 & 0 & \\cdots & 0 \\\\`+
+		 `0 & 0 & 1 & \\cdots & 0 \\\\`+
+		 `\\vdots & \\vdots & \\vdots & \\ddots & \\vdots \\\\`+
+		 `0 & 0 & 0 & \\cdots & 1 \\\\`+
+		 `c_1 & c_2 & c_3 & \\cdots & c_n`
+		:`0 & 1 & \\cdots & 0 \\\\`+
+		 `\\vdots & \\vdots & \\ddots & \\vdots \\\\`+
+		 `0 & 0 & \\cdots & 1 \\\\`+
+		 `c_1\\mspace{-2mu}(t) & c_2\\mspace{-2mu}(t) & \\cdots & c_n\\mspace{-2mu}(t)`
+	)+
+(isHomogeneous?`\\end{bmatrix}`:`\\end{smallmatrix} \\right]`)+(isHomogeneous?``:` \\! ${nt.X} {+} \\! \\left[ \\begin{smallmatrix}`+
+	`0 \\\\`+(isConstant?` 0 \\\\`:``)+` \\vdots \\\\ 0 \\\\ g(t)`+
+`\\end{smallmatrix} \\right]`)
+
+const on_linearHomogeneousConstant_generalSolutionMethod_content=(charEqn,x,isSystem,isVector)=>nt=>[
 	`solve the characteristic equation for \\( λ \\):`,
 	`\\[ ${charEqn} \\]`,
 	`\\( λ \\) are:`,
@@ -14,7 +38,7 @@ const on_linearHomogeneousConstant_generalSolutionMethod_content=(charEqn,isSyst
 	]},
 	((isSystem||isVector)?`first component of `:``)+`general solution (with arbitrary constants \\( K_{ij} \\), \\( A_{ij} \\), \\( B_{ij} \\)):`,
 	`\\[ \\begin{aligned}`+
-		`${nt.x}`+(isSystem?`_1`:``)+
+		`${x}`+(isSystem?`_1`:``)+
 		` = \\: & \\sum_{i=1}^r \\sum_{j=1}^{p_i} K_{ij} \\, t^{j-1} \\, e^{λ_i t} + \\\\`+
 		` + \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} A_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\cos β_i t \\\\`+
 		` + \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} B_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\sin β_i t`+
@@ -73,9 +97,139 @@ module.exports={
 			},
 		}
 	},
-	on_linearHomogeneousConstant: {
+	on_linear: {
 		parents: {
 			on: true,
+		},
+		name: "nth-order linear",
+		htmlName: "<em>n</em>th-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a>",
+		importance: 2,
+		forms: [
+			{
+				is: 't,x,linear_on_linearConstant',
+				equation: nt=>`\\sum_{i=0}^n a_i(t) ${nt.dd(nt.x,'t','i')} = f(t)`,
+				notes: nt=>[
+					`\\( a_n(t) \\ne 0 \\) on the entire interval of interest`,
+				],
+			},
+			{
+				is: 't,x,resolved_on_linearConstant',
+				equation: nt=>`${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i(t) ${nt.dd(nt.x,'t','i')} + g(t)`,
+			},
+			{
+				is: 't,xi,system_on_linearConstant',
+				equation: on_linearConstant_system_equation(false,false),
+			},
+			{
+				is: 't,X,vector_on_linearConstant',
+				equation: on_linearConstant_vector_equation(false,false),
+			},
+		],
+		traits: {
+			associatedHomogeneousEquation: {
+				contents: {
+					linear_on_linearConstant: nt=>[
+						`\\[ \\sum_{i=0}^n a_i(t) ${nt.dd(nt.x,'t','i')} = 0 \\]`,
+					],
+					resolved_on_linearConstant: nt=>[
+						`\\[ ${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i(t) ${nt.dd(nt.x,'t','i')} \\]`,
+					],
+					system_on_linearConstant: nt=>[
+						`\\[ `+on_linearConstant_system_equation(true,false)(nt)+` \\]`,
+					],
+					vector_on_linearConstant: nt=>[
+						`\\[ `+on_linearConstant_vector_equation(true,false)(nt)+` \\]`,
+					],
+				},
+			},
+			generalSolutionMethod: {
+				contents: {
+					linear_on_linearConstant: nt=>[
+						`find the general solution \\( ${nt.x}_h \\) of the associated homogeneous equation`,
+						{type:'switch',title:`find a particular solution \\( ${nt.x}_p \\) of the original equation`,content:[
+							{type:'case',title:`using superposition when \\( f(t) = k_1 f_1(t) + k_2 f_2(t) + \\cdots \\)`,content:[
+								`for each term \\( k_i f_i(t) \\), find a particular solution \\( ${nt.x}_{p,i} \\) of:`,
+								`\\[ \\sum_{i=0}^n a_i(t) ${nt.dd(nt.x,'t','i')} = f_i(t) \\]`,
+								`particular solution of the original equation is a linear combinations of these solutions:`,
+								`\\[ ${nt.x}_p = k_1 ${nt.x}_{p,1} + k_2 ${nt.x}_{p,2} + \\cdots \\]`,
+							]},
+						]},
+						`general solution (with arbitrary constants included in \\( ${nt.x}_h \\)):`,
+						`\\[ ${nt.x} = ${nt.x}_h + ${nt.x}_p \\]`,
+					],
+				},
+			},
+		},
+	},
+	on_linearConstant: {
+		parents: {
+			on_linear: true,
+		},
+		name: "nth-order linear with constant coefficients",
+		htmlName: "<em>n</em>th-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Nonhomogeneous_equation_with_constant_coefficients'>linear with constant coefficients</a>",
+		importance: 2,
+		forms: [
+			{
+				is: 't,x,linear_on_linearConstant',
+				equation: nt=>`\\sum_{i=0}^n a_i ${nt.dd(nt.x,'t','i')} = f(t)`,
+				notes: nt=>[
+					`\\( a_n \\ne 0 \\)`,
+				],
+			},
+			{
+				is: 't,x,resolved_on_linearConstant',
+				equation: nt=>`${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i ${nt.dd(nt.x,'t','i')} + g(t)`,
+			},
+			{
+				is: 't,xi,system_on_linearConstant',
+				equation: on_linearConstant_system_equation(false,true),
+			},
+			{
+				is: 't,X,vector_on_linearConstant',
+				equation: on_linearConstant_vector_equation(false,true),
+			},
+		],
+		traits: {
+			associatedHomogeneousEquation: {
+				contents: {
+					linear_on_linearConstant: nt=>[
+						`\\[ \\sum_{i=0}^n a_i ${nt.dd(nt.x,'t','i')} = 0 \\]`,
+					],
+					resolved_on_linearConstant: nt=>[
+						`\\[ ${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i ${nt.dd(nt.x,'t','i')} \\]`,
+					],
+					system_on_linearConstant: nt=>[
+						`\\[ `+on_linearConstant_system_equation(true,true)(nt)+` \\]`,
+					],
+					vector_on_linearConstant: nt=>[
+						`\\[ `+on_linearConstant_vector_equation(true,true)(nt)+` \\]`,
+					],
+				},
+			},
+			generalSolutionMethod: {
+				contents: {
+					linear_on_linearConstant: nt=>[
+						{type:'extra',title:`find the general solution \\( ${nt.x}_h \\) of the associated homogeneous equation`,
+							content: on_linearHomogeneousConstant_generalSolutionMethod_content(`\\sum_{i=0}^n a_i λ^i = 0`,`${nt.x}_h`)(nt),
+						},
+						{type:'switch',title:`find a particular solution \\( ${nt.x}_p \\) of the original equation`,content:[
+							{type:'case',title:`using superposition when \\( f(t) = k_1 f_1(t) + k_2 f_2(t) + \\cdots \\)`,content:[
+								`for each term \\( k_i f_i(t) \\), find a particular solution \\( ${nt.x}_{p,i} \\) of:`,
+								`\\[ \\sum_{i=0}^n a_i ${nt.dd(nt.x,'t','i')} = f_i(t) \\]`,
+								`particular solution of the original equation is a linear combinations of these solutions:`,
+								`\\[ ${nt.x}_p = k_1 ${nt.x}_{p,1} + k_2 ${nt.x}_{p,2} + \\cdots \\]`,
+							]},
+						]},
+						`general solution (with arbitrary constants included in \\( ${nt.x}_h \\)):`,
+						`\\[ ${nt.x} = ${nt.x}_h + ${nt.x}_p \\]`,
+					],
+				},
+			},
+		},
+	},
+	on_linearHomogeneousConstant: {
+		parents: {
+			on_linearConstant: true,
 		},
 		name: "nth-order linear homogeneous with constant coefficients",
 		htmlName: "<em>n</em>th-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Homogeneous_equations_with_constant_coefficients'>linear homogeneous with constant coefficients</a>",
@@ -94,23 +248,11 @@ module.exports={
 			},
 			{
 				is: 't,xi,system_on_linearHomogeneousConstant',
-				equation: nt=>`\\left\\{ \\begin{array}{rcl}`+
-					`${nt.dd(`${nt.x}_1`)} &=& ${nt.x}_2 \\\\`+
-					`${nt.dd(`${nt.x}_2`)} &=& ${nt.x}_3 \\\\`+
-					`&\\vdots \\\\`+
-					`${nt.dd(`${nt.x}_{n-1}`)} &=& ${nt.x}_n \\\\`+
-					`${nt.dd(`${nt.x}_n`)} &=& \\sum_{i=1}^{n} c_i ${nt.x}_i`+
-				`\\end{array} \\right.`,
+				equation: on_linearConstant_system_equation(true,true),
 			},
 			{
 				is: 't,X,vector_on_linearHomogeneousConstant',
-				equation: nt=>`${nt.dd(nt.X)} {=} \\begin{bmatrix}`+
-					`0 & 1 & 0 & \\cdots & 0 \\\\`+
-					`0 & 0 & 1 & \\cdots & 0 \\\\`+
-					`\\vdots & \\vdots & \\vdots & \\ddots & \\vdots \\\\`+
-					`0 & 0 & 0 & \\cdots & 1 \\\\`+
-					`c_1 & c_2 & c_3 & \\cdots & c_n`+
-				`\\end{bmatrix} ${nt.X}`,
+				equation: on_linearConstant_vector_equation(true,true),
 			},
 		],
 		traits: {
@@ -128,10 +270,10 @@ module.exports={
 			},
 			generalSolutionMethod: {
 				contents: {
-					linear_on_linearHomogeneousConstant:   on_linearHomogeneousConstant_generalSolutionMethod_content(`\\sum_{i=0}^n a_i λ^i = 0`),
-					resolved_on_linearHomogeneousConstant: on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} b_i λ^i = 0`),
-					system_on_linearHomogeneousConstant:   on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`,true),
-					vector_on_linearHomogeneousConstant:   on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`,false,true),
+					linear_on_linearHomogeneousConstant:   nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(`\\sum_{i=0}^n a_i λ^i = 0`,nt.x)(nt),
+					resolved_on_linearHomogeneousConstant: nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} b_i λ^i = 0`,nt.x)(nt),
+					system_on_linearHomogeneousConstant:   nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`,nt.x,true)(nt),
+					vector_on_linearHomogeneousConstant:   nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`,nt.x,false,true)(nt),
 				},
 			},
 			equilibriumSolutionMethod: {

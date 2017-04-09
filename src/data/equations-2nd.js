@@ -117,6 +117,7 @@ module.exports={
 	o2_linearHomogeneous: {
 		parents: {
 			s2_linearHomogeneous: true,
+			on_linear: true,
 			o2: true,
 		},
 		name: "second-order linear homogeneous",

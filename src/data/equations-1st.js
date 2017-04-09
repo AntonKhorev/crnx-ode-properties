@@ -292,6 +292,7 @@ module.exports={
 	},
 	o1_linear: {
 		parents: {
+			on_linear: true,
 			o1_bernoulli: true,
 		},
 		name: "first-order linear",
