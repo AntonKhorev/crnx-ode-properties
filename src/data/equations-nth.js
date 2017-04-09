@@ -2,15 +2,20 @@
 
 const characteristicEquationContent=require('../characteristic-equation-content')
 
-const on_linearConstant_system_equation=(isHomogeneous,isConstant)=>nt=>`\\left\\{ \\begin{array}{rcl}`+
+const on_linear_linear_equation=(isHomogeneous,isConstant)=>nt=>(
+	`\\sum_{i=0}^n a_i`+(isConstant?``:`(t)`)+` ${nt.dd(nt.x,'t','i')} = `+(isHomogeneous?`0`:`f(t)`)
+)
+const on_linear_resolved_equation=(isHomogeneous,isConstant)=>nt=>(
+	`${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i`+(isConstant?``:`(t)`)+` ${nt.dd(nt.x,'t','i')}`+(isHomogeneous?``:` + g(t)`)
+)
+const on_linear_system_equation=(isHomogeneous,isConstant)=>nt=>`\\left\\{ \\begin{array}{rcl}`+
 	`${nt.dd(`${nt.x}_1`)} &=& ${nt.x}_2 \\\\`+
 	`${nt.dd(`${nt.x}_2`)} &=& ${nt.x}_3 \\\\`+
 	`&\\vdots \\\\`+
 	`${nt.dd(`${nt.x}_{n-1}`)} &=& ${nt.x}_n \\\\`+
 	`${nt.dd(`${nt.x}_n`)} &=& \\sum_{i=1}^{n} c_i`+(isConstant?``:`(t)`)+` ${nt.x}_i`+(isHomogeneous?``:` + g(t)`)+
 `\\end{array} \\right.`
-
-const on_linearConstant_vector_equation=(isHomogeneous,isConstant)=>nt=>`${nt.dd(nt.X)} {=} `+(isHomogeneous?`\\begin{bmatrix}`:`\\! \\left[ \\begin{smallmatrix}`)+
+const on_linear_vector_equation=(isHomogeneous,isConstant)=>nt=>`${nt.dd(nt.X)} {=} `+(isHomogeneous?`\\begin{bmatrix}`:`\\! \\left[ \\begin{smallmatrix}`)+
 	(isConstant
 		?`0 & 1 & 0 & \\cdots & 0 \\\\`+
 		 `0 & 0 & 1 & \\cdots & 0 \\\\`+
@@ -107,38 +112,38 @@ module.exports={
 		forms: [
 			{
 				is: 't,x,linear_on_linearConstant',
-				equation: nt=>`\\sum_{i=0}^n a_i(t) ${nt.dd(nt.x,'t','i')} = f(t)`,
+				equation: on_linear_linear_equation(false,false),
 				notes: nt=>[
 					`\\( a_n(t) \\ne 0 \\) on the entire interval of interest`,
 				],
 			},
 			{
 				is: 't,x,resolved_on_linearConstant',
-				equation: nt=>`${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i(t) ${nt.dd(nt.x,'t','i')} + g(t)`,
+				equation: on_linear_resolved_equation(false,false),
 			},
 			{
 				is: 't,xi,system_on_linearConstant',
-				equation: on_linearConstant_system_equation(false,false),
+				equation: on_linear_system_equation(false,false),
 			},
 			{
 				is: 't,X,vector_on_linearConstant',
-				equation: on_linearConstant_vector_equation(false,false),
+				equation: on_linear_vector_equation(false,false),
 			},
 		],
 		traits: {
 			associatedHomogeneousEquation: {
 				contents: {
 					linear_on_linearConstant: nt=>[
-						`\\[ \\sum_{i=0}^n a_i(t) ${nt.dd(nt.x,'t','i')} = 0 \\]`,
+						`\\[ `+on_linear_linear_equation(true,false)(nt)+` \\]`,
 					],
 					resolved_on_linearConstant: nt=>[
-						`\\[ ${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i(t) ${nt.dd(nt.x,'t','i')} \\]`,
+						`\\[ `+on_linear_resolved_equation(true,false)(nt)+` \\]`,
 					],
 					system_on_linearConstant: nt=>[
-						`\\[ `+on_linearConstant_system_equation(true,false)(nt)+` \\]`,
+						`\\[ `+on_linear_system_equation(true,false)(nt)+` \\]`,
 					],
 					vector_on_linearConstant: nt=>[
-						`\\[ `+on_linearConstant_vector_equation(true,false)(nt)+` \\]`,
+						`\\[ `+on_linear_vector_equation(true,false)(nt)+` \\]`,
 					],
 				},
 			},
@@ -171,38 +176,38 @@ module.exports={
 		forms: [
 			{
 				is: 't,x,linear_on_linearConstant',
-				equation: nt=>`\\sum_{i=0}^n a_i ${nt.dd(nt.x,'t','i')} = f(t)`,
+				equation: on_linear_linear_equation(false,true),
 				notes: nt=>[
 					`\\( a_n \\ne 0 \\)`,
 				],
 			},
 			{
 				is: 't,x,resolved_on_linearConstant',
-				equation: nt=>`${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i ${nt.dd(nt.x,'t','i')} + g(t)`,
+				equation: on_linear_resolved_equation(false,true),
 			},
 			{
 				is: 't,xi,system_on_linearConstant',
-				equation: on_linearConstant_system_equation(false,true),
+				equation: on_linear_system_equation(false,true),
 			},
 			{
 				is: 't,X,vector_on_linearConstant',
-				equation: on_linearConstant_vector_equation(false,true),
+				equation: on_linear_vector_equation(false,true),
 			},
 		],
 		traits: {
 			associatedHomogeneousEquation: {
 				contents: {
 					linear_on_linearConstant: nt=>[
-						`\\[ \\sum_{i=0}^n a_i ${nt.dd(nt.x,'t','i')} = 0 \\]`,
+						`\\[ `+on_linear_linear_equation(true,true)(nt)+` \\]`,
 					],
 					resolved_on_linearConstant: nt=>[
-						`\\[ ${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i ${nt.dd(nt.x,'t','i')} \\]`,
+						`\\[ `+on_linear_resolved_equation(true,true)(nt)+` \\]`,
 					],
 					system_on_linearConstant: nt=>[
-						`\\[ `+on_linearConstant_system_equation(true,true)(nt)+` \\]`,
+						`\\[ `+on_linear_system_equation(true,true)(nt)+` \\]`,
 					],
 					vector_on_linearConstant: nt=>[
-						`\\[ `+on_linearConstant_vector_equation(true,true)(nt)+` \\]`,
+						`\\[ `+on_linear_vector_equation(true,true)(nt)+` \\]`,
 					],
 				},
 			},
@@ -237,22 +242,22 @@ module.exports={
 		forms: [
 			{
 				is: 't,x,linear_on_linearHomogeneousConstant',
-				equation: nt=>`\\sum_{i=0}^n a_i ${nt.dd(nt.x,'t','i')} = 0`,
+				equation: on_linear_linear_equation(true,true),
 				notes: nt=>[
 					`\\( a_n \\ne 0 \\)`,
 				],
 			},
 			{
 				is: 't,x,resolved_on_linearHomogeneousConstant',
-				equation: nt=>`${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i ${nt.dd(nt.x,'t','i')}`,
+				equation: on_linear_resolved_equation(true,true),
 			},
 			{
 				is: 't,xi,system_on_linearHomogeneousConstant',
-				equation: on_linearConstant_system_equation(true,true),
+				equation: on_linear_system_equation(true,true),
 			},
 			{
 				is: 't,X,vector_on_linearHomogeneousConstant',
-				equation: on_linearConstant_vector_equation(true,true),
+				equation: on_linear_vector_equation(true,true),
 			},
 		],
 		traits: {
