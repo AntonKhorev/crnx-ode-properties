@@ -2,20 +2,20 @@
 
 const characteristicEquationContent=require('../characteristic-equation-content')
 
-const on_linear_linear_equation=(isHomogeneous,isConstant)=>nt=>(
-	`\\sum_{i=0}^n a_i`+(isConstant?``:`(t)`)+` ${nt.dd(nt.x,'t','i')} = `+(isHomogeneous?`0`:`f(t)`)
+const on_linear_linear_equation=(input,isConstant)=>nt=>(
+	`\\sum_{i=0}^n a_i`+(isConstant?``:`(t)`)+` ${nt.dd(nt.x,'t','i')} = `+(input?`${input}(t)`:`0`)
 )
-const on_linear_resolved_equation=(isHomogeneous,isConstant)=>nt=>(
-	`${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i`+(isConstant?``:`(t)`)+` ${nt.dd(nt.x,'t','i')}`+(isHomogeneous?``:` + g(t)`)
+const on_linear_resolved_equation=(input,isConstant)=>nt=>(
+	`${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i`+(isConstant?``:`(t)`)+` ${nt.dd(nt.x,'t','i')}`+(input?` + ${input}(t)`:``)
 )
-const on_linear_system_equation=(isHomogeneous,isConstant)=>nt=>`\\left\\{ \\begin{array}{rcl}`+
+const on_linear_system_equation=(input,isConstant)=>nt=>`\\left\\{ \\begin{array}{rcl}`+
 	`${nt.dd(`${nt.x}_1`)} &=& ${nt.x}_2 \\\\`+
 	`${nt.dd(`${nt.x}_2`)} &=& ${nt.x}_3 \\\\`+
 	`&\\vdots \\\\`+
 	`${nt.dd(`${nt.x}_{n-1}`)} &=& ${nt.x}_n \\\\`+
-	`${nt.dd(`${nt.x}_n`)} &=& \\sum_{i=1}^{n} c_i`+(isConstant?``:`(t)`)+` ${nt.x}_i`+(isHomogeneous?``:` + g(t)`)+
+	`${nt.dd(`${nt.x}_n`)} &=& \\sum_{i=1}^{n} c_i`+(isConstant?``:`(t)`)+` ${nt.x}_i`+(input?` + ${input}(t)`:``)+
 `\\end{array} \\right.`
-const on_linear_vector_equation=(isHomogeneous,isConstant)=>nt=>`${nt.dd(nt.X)} {=} `+(isHomogeneous?`\\begin{bmatrix}`:`\\! \\left[ \\begin{smallmatrix}`)+
+const on_linear_vector_equation=(input,isConstant)=>nt=>`${nt.dd(nt.X)} {=} `+(input?`\\! \\left[ \\begin{smallmatrix}`:`\\begin{bmatrix}`)+
 	(isConstant
 		?`0 & 1 & 0 & \\cdots & 0 \\\\`+
 		 `0 & 0 & 1 & \\cdots & 0 \\\\`+
@@ -27,9 +27,23 @@ const on_linear_vector_equation=(isHomogeneous,isConstant)=>nt=>`${nt.dd(nt.X)} 
 		 `0 & 0 & \\cdots & 1 \\\\`+
 		 `c_1\\mspace{-2mu}(t) & c_2\\mspace{-2mu}(t) & \\cdots & c_n\\mspace{-2mu}(t)`
 	)+
-(isHomogeneous?`\\end{bmatrix}`:`\\end{smallmatrix} \\right]`)+(isHomogeneous?``:` \\! ${nt.X} {+} \\! \\left[ \\begin{smallmatrix}`+
-	`0 \\\\`+(isConstant?` 0 \\\\`:``)+` \\vdots \\\\ 0 \\\\ g(t)`+
-`\\end{smallmatrix} \\right]`)
+(input?`\\end{smallmatrix} \\right]`:`\\end{bmatrix}`)+(input?` \\! ${nt.X} {+} \\! \\left[ \\begin{smallmatrix}`+
+	`0 \\\\`+(isConstant?` 0 \\\\`:``)+` \\vdots \\\\ 0 \\\\ ${input}(t)`+
+`\\end{smallmatrix} \\right]`:``)
+
+const on_linear_generalSolutionMethod_content=(f,equation)=>nt=>[
+	`find the general solution \\( ${nt.x}_h \\) of the associated homogeneous equation`,
+	{type:'switch',title:`find a particular solution \\( ${nt.x}_p \\) of the original equation`,content:[
+		{type:'case',title:`using superposition when \\( ${f}(t) = k_1 ${f}_1(t) + k_2 ${f}_2(t) + \\cdots \\)`,content:[
+			`for each term \\( k_j ${f}_j(t) \\), find a particular solution \\( ${nt.x}_{p,j} \\) of:`,
+			`\\[ ${equation(`${f}_j`,false)(nt)} \\]`,
+			`particular solution of the original equation is a linear combinations of these solutions:`,
+			`\\[ ${nt.x}_p = k_1 ${nt.x}_{p,1} + k_2 ${nt.x}_{p,2} + \\cdots \\]`,
+		]},
+	]},
+	`general solution (with arbitrary constants included in \\( ${nt.x}_h \\)):`,
+	`\\[ ${nt.x} = ${nt.x}_h + ${nt.x}_p \\]`,
+]
 
 const on_linearHomogeneousConstant_generalSolutionMethod_content=(charEqn,x,isSystem,isVector)=>nt=>[
 	`solve the characteristic equation for \\( λ \\):`,
@@ -111,57 +125,46 @@ module.exports={
 		importance: 2,
 		forms: [
 			{
-				is: 't,x,linear_on_linearConstant',
-				equation: on_linear_linear_equation(false,false),
+				is: 't,x,linear_on_linear',
+				equation: on_linear_linear_equation('f',false),
 				notes: nt=>[
 					`\\( a_n(t) \\ne 0 \\) on the entire interval of interest`,
 				],
 			},
 			{
-				is: 't,x,resolved_on_linearConstant',
-				equation: on_linear_resolved_equation(false,false),
+				is: 't,x,resolved_on_linear',
+				equation: on_linear_resolved_equation('g',false),
 			},
 			{
-				is: 't,xi,system_on_linearConstant',
-				equation: on_linear_system_equation(false,false),
+				is: 't,xi,system_on_linear',
+				equation: on_linear_system_equation('g',false),
 			},
 			{
-				is: 't,X,vector_on_linearConstant',
-				equation: on_linear_vector_equation(false,false),
+				is: 't,X,vector_on_linear',
+				equation: on_linear_vector_equation('g',false),
 			},
 		],
 		traits: {
 			associatedHomogeneousEquation: {
 				contents: {
-					linear_on_linearConstant: nt=>[
-						`\\[ `+on_linear_linear_equation(true,false)(nt)+` \\]`,
+					linear_on_linear: nt=>[
+						`\\[ `+on_linear_linear_equation(0,false)(nt)+` \\]`,
 					],
-					resolved_on_linearConstant: nt=>[
-						`\\[ `+on_linear_resolved_equation(true,false)(nt)+` \\]`,
+					resolved_on_linear: nt=>[
+						`\\[ `+on_linear_resolved_equation(0,false)(nt)+` \\]`,
 					],
-					system_on_linearConstant: nt=>[
-						`\\[ `+on_linear_system_equation(true,false)(nt)+` \\]`,
+					system_on_linear: nt=>[
+						`\\[ `+on_linear_system_equation(0,false)(nt)+` \\]`,
 					],
-					vector_on_linearConstant: nt=>[
-						`\\[ `+on_linear_vector_equation(true,false)(nt)+` \\]`,
+					vector_on_linear: nt=>[
+						`\\[ `+on_linear_vector_equation(0,false)(nt)+` \\]`,
 					],
 				},
 			},
 			generalSolutionMethod: {
 				contents: {
-					linear_on_linearConstant: nt=>[
-						`find the general solution \\( ${nt.x}_h \\) of the associated homogeneous equation`,
-						{type:'switch',title:`find a particular solution \\( ${nt.x}_p \\) of the original equation`,content:[
-							{type:'case',title:`using superposition when \\( f(t) = k_1 f_1(t) + k_2 f_2(t) + \\cdots \\)`,content:[
-								`for each term \\( k_i f_i(t) \\), find a particular solution \\( ${nt.x}_{p,i} \\) of:`,
-								`\\[ \\sum_{i=0}^n a_i(t) ${nt.dd(nt.x,'t','i')} = f_i(t) \\]`,
-								`particular solution of the original equation is a linear combinations of these solutions:`,
-								`\\[ ${nt.x}_p = k_1 ${nt.x}_{p,1} + k_2 ${nt.x}_{p,2} + \\cdots \\]`,
-							]},
-						]},
-						`general solution (with arbitrary constants included in \\( ${nt.x}_h \\)):`,
-						`\\[ ${nt.x} = ${nt.x}_h + ${nt.x}_p \\]`,
-					],
+					linear_on_linear: on_linear_generalSolutionMethod_content('f',on_linear_linear_equation),
+					resolved_on_linear: on_linear_generalSolutionMethod_content('g',on_linear_resolved_equation),
 				},
 			},
 		},
@@ -176,38 +179,38 @@ module.exports={
 		forms: [
 			{
 				is: 't,x,linear_on_linearConstant',
-				equation: on_linear_linear_equation(false,true),
+				equation: on_linear_linear_equation('f',true),
 				notes: nt=>[
 					`\\( a_n \\ne 0 \\)`,
 				],
 			},
 			{
 				is: 't,x,resolved_on_linearConstant',
-				equation: on_linear_resolved_equation(false,true),
+				equation: on_linear_resolved_equation('g',true),
 			},
 			{
 				is: 't,xi,system_on_linearConstant',
-				equation: on_linear_system_equation(false,true),
+				equation: on_linear_system_equation('g',true),
 			},
 			{
 				is: 't,X,vector_on_linearConstant',
-				equation: on_linear_vector_equation(false,true),
+				equation: on_linear_vector_equation('g',true),
 			},
 		],
 		traits: {
 			associatedHomogeneousEquation: {
 				contents: {
 					linear_on_linearConstant: nt=>[
-						`\\[ `+on_linear_linear_equation(true,true)(nt)+` \\]`,
+						`\\[ `+on_linear_linear_equation(0,true)(nt)+` \\]`,
 					],
 					resolved_on_linearConstant: nt=>[
-						`\\[ `+on_linear_resolved_equation(true,true)(nt)+` \\]`,
+						`\\[ `+on_linear_resolved_equation(0,true)(nt)+` \\]`,
 					],
 					system_on_linearConstant: nt=>[
-						`\\[ `+on_linear_system_equation(true,true)(nt)+` \\]`,
+						`\\[ `+on_linear_system_equation(0,true)(nt)+` \\]`,
 					],
 					vector_on_linearConstant: nt=>[
-						`\\[ `+on_linear_vector_equation(true,true)(nt)+` \\]`,
+						`\\[ `+on_linear_vector_equation(0,true)(nt)+` \\]`,
 					],
 				},
 			},
@@ -219,8 +222,8 @@ module.exports={
 						},
 						{type:'switch',title:`find a particular solution \\( ${nt.x}_p \\) of the original equation`,content:[
 							{type:'case',title:`using superposition when \\( f(t) = k_1 f_1(t) + k_2 f_2(t) + \\cdots \\)`,content:[
-								`for each term \\( k_i f_i(t) \\), find a particular solution \\( ${nt.x}_{p,i} \\) of:`,
-								`\\[ \\sum_{i=0}^n a_i ${nt.dd(nt.x,'t','i')} = f_i(t) \\]`,
+								`for each term \\( k_j f_j(t) \\), find a particular solution \\( ${nt.x}_{p,j} \\) of:`,
+								`\\[ \\sum_{i=0}^n a_i ${nt.dd(nt.x,'t','i')} = f_j(t) \\]`,
 								`particular solution of the original equation is a linear combinations of these solutions:`,
 								`\\[ ${nt.x}_p = k_1 ${nt.x}_{p,1} + k_2 ${nt.x}_{p,2} + \\cdots \\]`,
 							]},
@@ -242,22 +245,22 @@ module.exports={
 		forms: [
 			{
 				is: 't,x,linear_on_linearHomogeneousConstant',
-				equation: on_linear_linear_equation(true,true),
+				equation: on_linear_linear_equation(0,true),
 				notes: nt=>[
 					`\\( a_n \\ne 0 \\)`,
 				],
 			},
 			{
 				is: 't,x,resolved_on_linearHomogeneousConstant',
-				equation: on_linear_resolved_equation(true,true),
+				equation: on_linear_resolved_equation(0,true),
 			},
 			{
 				is: 't,xi,system_on_linearHomogeneousConstant',
-				equation: on_linear_system_equation(true,true),
+				equation: on_linear_system_equation(0,true),
 			},
 			{
 				is: 't,X,vector_on_linearHomogeneousConstant',
-				equation: on_linear_vector_equation(true,true),
+				equation: on_linear_vector_equation(0,true),
 			},
 		],
 		traits: {
