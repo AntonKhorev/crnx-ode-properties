@@ -2,10 +2,16 @@
 
 // TODO include in notation.js
 
-class TexSymbol {
+const TexDepvar=require('./tex-depvar')
+
+class TexScalarDepvar extends TexDepvar {
 	constructor(x,subscripts=[]) {
+		super()
 		this.x=x
 		this.subscripts=subscripts
+	}
+	_(...ii) {
+		return new TexScalarDepvar(this.x,[...this.subscripts,...ii])
 	}
 	toString() {
 		if (this.subscripts.length>0) {
@@ -14,12 +20,9 @@ class TexSymbol {
 			return this.x
 		}
 	}
-	_(...ii) {
-		return new TexSymbol(this.x,[...this.subscripts,...ii])
-	}
-	c(i) { // "component" TODO handle vector components w/ lowercasing
-		return new TexSymbol(this.x,[i,...this.subscripts])
+	parallelAssignment(template) {
+		return `\\[ ${this} = ${template(this)} \\]`
 	}
 }
 
-module.exports=TexSymbol
+module.exports=TexScalarDepvar

@@ -1,6 +1,8 @@
 'use strict'
 
-const TexSymbol=require('../tex-symbol')
+const TexScalarDepvar=require('../tex-scalar-depvar')
+const TexSystemDepvar=require('../tex-system-depvar')
+const TexVectorDepvar=require('../tex-vector-depvar')
 const characteristicEquationContent=require('../characteristic-equation-content')
 
 const on_linear_linear_equation=(input,isConstant)=>nt=>(
@@ -32,39 +34,23 @@ const on_linear_vector_equation=(input,isConstant)=>nt=>`${nt.dd(nt.X)} {=} `+(i
 	`0 \\\\`+(isConstant?` 0 \\\\`:``)+` \\vdots \\\\ 0 \\\\ ${input}(t)`+
 `\\end{smallmatrix} \\right]`:``)
 
-const scalarInlineWriter=template=>nt=>`\\( `+template(new TexSymbol(nt.x)).replace(/&/g,'')+` \\)`
-const systemInlineWriter=template=>nt=>`\\( {\\scriptstyle \\left\\{ \\begin{array}{c} `+
-	template(new TexSymbol(nt.x).c(1))+` \\\\[-1em]`+
-	`\\cdots \\\\[-1em]`+
-	template(new TexSymbol(nt.x).c('n'))+
-` \\end{array} \\right.} \\)`
-const vectorInlineWriter=template=>nt=>`\\( `+template(new TexSymbol(nt.X)).replace(/&/g,'')+` \\)`
-
-const scalarBlockWriter=template=>nt=>`\\[ `+template(new TexSymbol(nt.x)).replace(/&/g,'')+` \\]`
-const systemBlockWriter=template=>nt=>`\\[ \\left\\{ \\begin{aligned} `+
-	template(new TexSymbol(nt.x).c(1))+` \\\\`+
-	`\\vdots \\\\`+
-	template(new TexSymbol(nt.x).c('n'))+
-`\\end{aligned} \\right. \\]`
-const vectorBlockWriter=template=>nt=>`\\[ `+template(new TexSymbol(nt.X)).replace(/&/g,'')+` \\]`
-
 const extraSection=(title,content)=>(content!==undefined
 	? {type:'extra',title,content}
 	: title
 )
 
-const on_linear_generalSolutionMethod_content=(f,equation,inlineWriter,blockWriter,generalSolution)=>nt=>[
-	extraSection(`find the general solution `+inlineWriter(x=>`${x._('h')}`)(nt)+` of the associated homogeneous equation`,generalSolution),
-	{type:'switch',title:`find a particular solution `+inlineWriter(x=>`${x._('p')}`)(nt)+` of the original equation`,content:[
+const on_linear_generalSolutionMethod_content=(x,f,equation,generalSolution)=>nt=>[
+	extraSection(`find the general solution \\( ${x._('h')} \\) of the associated homogeneous equation`,generalSolution),
+	{type:'switch',title:`find a particular solution \\( ${x._('p')} \\) of the original equation`,content:[
 		{type:'case',title:`using superposition when \\( ${f}(t) = k_1 ${f}_1(t) + k_2 ${f}_2(t) + \\cdots \\)`,content:[
-			`for each term \\( k_j ${f}_j(t) \\), find a particular solution `+inlineWriter(x=>`${x._('p','j')}`)(nt)+` of:`,
+			`for each term \\( k_j ${f}_j(t) \\), find a particular solution \\( ${x._('p','j')} \\) of:`,
 			`\\[ ${equation(`${f}_j`,false)(nt)} \\]`,
 			`particular solution of the original equation is a linear combinations of these solutions:`,
-			blockWriter(x=>`${x._('p')} &= k_1 ${x._('p',1)} + k_2 ${x._('p',2)} + \\cdots`)(nt),
+			x._('p').parallelAssignment(xp=>`k_1 ${xp._(1)} + k_2 ${xp._(2)} + \\cdots`),
 		]},
 	]},
-	`general solution (with arbitrary constants included in `+inlineWriter(x=>`${x._('h')}`)(nt)+`):`,
-	blockWriter(x=>`${x} &= ${x._('h')} + ${x._('p')}`)(nt),
+	`general solution (with arbitrary constants included in \\( ${x._('h')}) \\):`,
+	x.parallelAssignment(x=>`${x._('h')} + ${x._('p')}`)
 ]
 
 const on_linearHomogeneousConstant_generalSolutionMethod_content=(charEqn,x,isSystem,isVector)=>nt=>[
@@ -185,10 +171,10 @@ module.exports={
 			},
 			generalSolutionMethod: {
 				contents: {
-					linear_on_linear:   on_linear_generalSolutionMethod_content('f',on_linear_linear_equation  ,scalarInlineWriter,scalarBlockWriter),
-					resolved_on_linear: on_linear_generalSolutionMethod_content('g',on_linear_resolved_equation,scalarInlineWriter,scalarBlockWriter),
-					system_on_linear:   on_linear_generalSolutionMethod_content('g',on_linear_system_equation  ,systemInlineWriter,systemBlockWriter),
-					vector_on_linear:   on_linear_generalSolutionMethod_content('g',on_linear_vector_equation  ,vectorInlineWriter,vectorBlockWriter),
+					linear_on_linear:   nt=>on_linear_generalSolutionMethod_content(new TexScalarDepvar(nt.x),'f',on_linear_linear_equation)(nt),
+					resolved_on_linear: nt=>on_linear_generalSolutionMethod_content(new TexScalarDepvar(nt.x),'g',on_linear_resolved_equation)(nt),
+					system_on_linear:   nt=>on_linear_generalSolutionMethod_content(new TexSystemDepvar(nt.x),'g',on_linear_system_equation)(nt),
+					vector_on_linear:   nt=>on_linear_generalSolutionMethod_content(new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation)(nt),
 				},
 			},
 		},
@@ -241,19 +227,19 @@ module.exports={
 			generalSolutionMethod: {
 				contents: {
 					linear_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
-						'f',on_linear_linear_equation,scalarInlineWriter,scalarBlockWriter,
+						new TexScalarDepvar(nt.x),'f',on_linear_linear_equation,
 						on_linearHomogeneousConstant_generalSolutionMethod_content(`\\sum_{i=0}^n a_i λ^i = 0`,`${nt.x}_h`)(nt)
 					)(nt),
 					resolved_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
-						'g',on_linear_resolved_equation,scalarInlineWriter,scalarBlockWriter,
+						new TexScalarDepvar(nt.x),'g',on_linear_resolved_equation,
 						on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} b_i λ^i = 0`,`${nt.x}_h`)(nt)
 					)(nt),
 					system_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
-						'g',on_linear_system_equation,systemInlineWriter,systemBlockWriter,
+						new TexSystemDepvar(nt.x),'g',on_linear_system_equation,
 						on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`,nt.x,true)(nt)
 					)(nt),
 					vector_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
-						'g',on_linear_vector_equation,vectorInlineWriter,vectorBlockWriter,
+						new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation,
 						on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`,`${nt.x}_h`,false,true)(nt)
 					)(nt),
 				},
