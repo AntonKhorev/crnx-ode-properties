@@ -53,7 +53,7 @@ const on_linear_generalSolutionMethod_content=(x,f,equation,generalSolution)=>nt
 	x.parallelAssignment(x=>`${x._('h')} + ${x._('p')}`)
 ]
 
-const on_linearHomogeneousConstant_generalSolutionMethod_content=(charEqn,x,isSystem,isVector)=>nt=>[
+const on_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt=>[
 	`solve the characteristic equation for \\( λ \\):`,
 	`\\[ ${charEqn} \\]`,
 	`\\( λ \\) are:`,
@@ -63,32 +63,15 @@ const on_linearHomogeneousConstant_generalSolutionMethod_content=(charEqn,x,isSy
 		`sum of multiplicities is equal to order of the equation:`,
 		`\\[ \\sum_{i=1}^r p_i + 2 \\cdot \\sum_{i=1}^s q_i = n \\]`,
 	]},
-	((isSystem||isVector)?`first component of `:``)+`general solution (with arbitrary constants \\( K_{ij} \\), \\( A_{ij} \\), \\( B_{ij} \\)):`,
-	`\\[ \\begin{aligned}`+
-		`${x}`+(isSystem?`_1`:``)+
-		` = \\: & \\sum_{i=1}^r \\sum_{j=1}^{p_i} K_{ij} \\, t^{j-1} \\, e^{λ_i t} + \\\\`+
-		` + \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} A_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\cos β_i t \\\\`+
-		` + \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} B_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\sin β_i t`+
-	`\\end{aligned} \\]`,
-	...(isSystem?[
-		`find other components by differentiating \\( ${nt.x}_1 \\):`,
-		`\\[ \\begin{array}{rcl}`+
-			`${nt.x}_2 &=& ${nt.dd(nt.x,'t',1)} \\\\`+
-			`${nt.x}_3 &=& ${nt.dd(nt.x,'t',2)} \\\\`+
-			`&\\vdots \\\\`+
-			`${nt.x}_n &=& ${nt.dd(nt.x,'t','n-1')}`+
-		`\\end{array} \\]`,
-	]:[]),
-	...(isVector?[
-		`find other components by differentiating \\( ${x} \\):`,
-		`\\[ ${nt.X} = \\begin{bmatrix}`+ // TODO pass subscript instead of ${x}
-			`${x} \\\\`+
-			`${nt.dd(x,'t',1)} \\\\`+
-			`${nt.dd(x,'t',2)} \\\\`+
-			`\\vdots \\\\`+
-			`${nt.dd(x,'t','n-1')}`+
-		`\\end{bmatrix} \\]`,
-	]:[]),
+	...x.firstRestDiff(
+		x=>`general solution (with arbitrary constants \\( K_{ij} \\), \\( A_{ij} \\), \\( B_{ij} \\)):`,
+		x1=>`\\[ \\begin{aligned}`+
+			`${x1}`+
+			` = \\: & \\sum_{i=1}^r \\sum_{j=1}^{p_i} K_{ij} \\, t^{j-1} \\, e^{λ_i t} + \\\\`+
+			` + \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} A_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\cos β_i t \\\\`+
+			` + \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} B_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\sin β_i t`+
+		`\\end{aligned} \\]`
+	)(nt),
 ]
 
 module.exports={
@@ -228,19 +211,31 @@ module.exports={
 				contents: {
 					linear_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
 						new TexScalarDepvar(nt.x),'f',on_linear_linear_equation,
-						on_linearHomogeneousConstant_generalSolutionMethod_content(`\\sum_{i=0}^n a_i λ^i = 0`,`${nt.x}_h`)(nt)
+						on_linearHomogeneousConstant_generalSolutionMethod_content(
+							new TexScalarDepvar(nt.x)._('h'),
+							`\\sum_{i=0}^n a_i λ^i = 0`
+						)(nt)
 					)(nt),
 					resolved_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
 						new TexScalarDepvar(nt.x),'g',on_linear_resolved_equation,
-						on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} b_i λ^i = 0`,`${nt.x}_h`)(nt)
+						on_linearHomogeneousConstant_generalSolutionMethod_content(
+							new TexScalarDepvar(nt.x)._('h'),
+							`λ^n - \\sum_{i=0}^{n-1} b_i λ^i = 0`
+						)(nt)
 					)(nt),
 					system_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
 						new TexSystemDepvar(nt.x),'g',on_linear_system_equation,
-						on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`,nt.x,true)(nt)
+						on_linearHomogeneousConstant_generalSolutionMethod_content(
+							new TexSystemDepvar(nt.x)._('h'),
+							`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`
+						)(nt)
 					)(nt),
 					vector_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
 						new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation,
-						on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`,`${nt.x}_h`,false,true)(nt)
+						on_linearHomogeneousConstant_generalSolutionMethod_content(
+							new TexVectorDepvar(nt.X,nt.x)._('h'),
+							`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`
+						)(nt)
 					)(nt),
 				},
 			},
@@ -277,7 +272,7 @@ module.exports={
 		traits: {
 			characteristicEquation: {
 				contents: {
-					linear_on_linearHomogeneousConstant:   characteristicEquationContent(['i','\\sum_{i=0}^n a_i'],'=','0'),
+					linear_on_linearHomogeneousConstant: characteristicEquationContent(['i','\\sum_{i=0}^n a_i'],'=','0'),
 					resolved_on_linearHomogeneousConstant: characteristicEquationContent(['n',1],'=',['i','\\sum_{i=0}^{n-1} b_i']),
 					system_on_linearHomogeneousConstant: nt=>[
 						`\\[ λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0 \\]`,
@@ -289,10 +284,22 @@ module.exports={
 			},
 			generalSolutionMethod: {
 				contents: {
-					linear_on_linearHomogeneousConstant:   nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(`\\sum_{i=0}^n a_i λ^i = 0`,nt.x)(nt),
-					resolved_on_linearHomogeneousConstant: nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} b_i λ^i = 0`,nt.x)(nt),
-					system_on_linearHomogeneousConstant:   nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`,nt.x,true)(nt),
-					vector_on_linearHomogeneousConstant:   nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`,nt.x,false,true)(nt),
+					linear_on_linearHomogeneousConstant: nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(
+						new TexScalarDepvar(nt.x),
+						`\\sum_{i=0}^n a_i λ^i = 0`
+					)(nt),
+					resolved_on_linearHomogeneousConstant: nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(
+						new TexScalarDepvar(nt.x),
+						`λ^n - \\sum_{i=0}^{n-1} b_i λ^i = 0`
+					)(nt),
+					system_on_linearHomogeneousConstant: nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(
+						new TexSystemDepvar(nt.x),
+						`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`
+					)(nt),
+					vector_on_linearHomogeneousConstant: nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(
+						new TexVectorDepvar(nt.X,nt.x),
+						`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`
+					)(nt),
 				},
 			},
 			equilibriumSolutionMethod: {

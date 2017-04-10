@@ -3,12 +3,13 @@
 // TODO include in notation.js
 
 const TexDepvar=require('./tex-depvar')
+const TexScalarDepvar=require('./tex-scalar-depvar')
 
 class TexVectorDepvar extends TexDepvar {
 	constructor(X,x,subscripts=[]) {
 		super()
 		this.X=X
-		this.x=x // TODO use in this.component
+		this.x=x
 		this.subscripts=subscripts
 	}
 	_(...ii) {
@@ -23,6 +24,21 @@ class TexVectorDepvar extends TexDepvar {
 	}
 	parallelAssignment(template) {
 		return `\\[ ${this} = ${template(this)} \\]`
+	}
+	firstRestDiff(preambleTemplate,firstComponentTemplate) {
+		const x=new TexScalarDepvar(this.x,this.subscripts)
+		return nt=>[
+			`first component of `+preambleTemplate(this),
+			firstComponentTemplate(x),
+			`find other components by differentiating \\( ${x} \\):`,
+			`\\[ ${this} = \\begin{bmatrix}`+
+				`${x} \\\\`+
+				`${nt.dd(x,'t',1)} \\\\`+
+				`${nt.dd(x,'t',2)} \\\\`+
+				`\\vdots \\\\`+
+				`${nt.dd(x,'t','n-1')}`+
+			`\\end{bmatrix} \\]`,
+		]
 	}
 }
 

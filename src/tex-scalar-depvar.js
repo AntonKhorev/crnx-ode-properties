@@ -23,6 +23,12 @@ class TexScalarDepvar extends TexDepvar {
 	parallelAssignment(template) {
 		return `\\[ ${this} = ${template(this)} \\]`
 	}
+	firstRestDiff(preambleTemplate,firstComponentTemplate) {
+		return nt=>[
+			preambleTemplate(this),
+			firstComponentTemplate(this),
+		]
+	}
 }
 
 module.exports=TexScalarDepvar
