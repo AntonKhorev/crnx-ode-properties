@@ -31,34 +31,34 @@ const on_linear_vector_equation=(input,isConstant)=>nt=>`${nt.dd(nt.X)} {=} `+(i
 	`0 \\\\`+(isConstant?` 0 \\\\`:``)+` \\vdots \\\\ 0 \\\\ ${input}(t)`+
 `\\end{smallmatrix} \\right]`:``)
 
-const inlineSystem=template=>`{\\scriptstyle \\left\\{ \\begin{array}{c} `+
-	template(1)+` \\\\`+
-	`\\vdots \\\\`+
-	template('n')+
-` \\end{array} \\right.}`
-const blockSystem=template=>`\\left\\{ \\begin{aligned} `+
-	template(1)+` \\\\`+
-	`\\vdots \\\\`+
-	template('n')+
-`\\end{aligned} \\right.`
+const inlineSystem=(isSystem,template)=>`\\( `+(isSystem
+	? `{\\scriptstyle \\left\\{ \\begin{array}{c} `+
+		template(`1,`)+` \\\\[-1em]`+
+		`\\cdots \\\\[-1em]`+
+		template(`n,`)+
+	` \\end{array} \\right.}`
+	: template(``)
+)+` \\)`
+const blockSystem=(isSystem,template)=>`\\[ `+(isSystem
+	? `\\left\\{ \\begin{aligned} `+
+		template(`1,`)+` \\\\`+
+		`\\vdots \\\\`+
+		template(`n,`)+
+	`\\end{aligned} \\right.`
+	: template(``).replace(/&/g,'')
+)+` \\]`
 const on_linear_generalSolutionMethod_content=(f,equation,isSystem)=>nt=>[
-	`find the general solution \\( `+(isSystem?inlineSystem(i=>`${nt.x}_{${i},h}`):`${nt.x}_h`)+` \\) of the associated homogeneous equation`,
-	{type:'switch',title:`find a particular solution \\( `+(isSystem?inlineSystem(i=>`${nt.x}_{${i},p}`):`${nt.x}_p`)+` \\) of the original equation`,content:[
+	`find the general solution `+inlineSystem(isSystem,i=>`${nt.x}_{${i}h}`)+` of the associated homogeneous equation`,
+	{type:'switch',title:`find a particular solution `+inlineSystem(isSystem,i=>`${nt.x}_{${i}p}`)+` of the original equation`,content:[
 		{type:'case',title:`using superposition when \\( ${f}(t) = k_1 ${f}_1(t) + k_2 ${f}_2(t) + \\cdots \\)`,content:[
-			`for each term \\( k_j ${f}_j(t) \\), find a particular solution \\( `+(isSystem?inlineSystem(i=>`${nt.x}_{${i},p,j}`):`${nt.x}_{p,j}`)+` \\) of:`,
+			`for each term \\( k_j ${f}_j(t) \\), find a particular solution `+inlineSystem(isSystem,i=>`${nt.x}_{${i}p,j}`)+` of:`,
 			`\\[ ${equation(`${f}_j`,false)(nt)} \\]`,
 			`particular solution of the original equation is a linear combinations of these solutions:`,
-			`\\[ `+(isSystem
-				? blockSystem(i=>`${nt.x}_{${i},p} &= k_1 ${nt.x}_{${i},p,1} + k_2 ${nt.x}_{${i},p,2} + \\cdots`)
-				: `${nt.x}_p = k_1 ${nt.x}_{p,1} + k_2 ${nt.x}_{p,2} + \\cdots`
-			)+` \\]`,
+			blockSystem(isSystem,i=>`${nt.x}_{${i}p} &= k_1 ${nt.x}_{${i}p,1} + k_2 ${nt.x}_{${i}p,2} + \\cdots`),
 		]},
 	]},
 	`general solution (with arbitrary constants included in \\( ${nt.x}_h \\)):`,
-	`\\[ `+(isSystem
-		? blockSystem(i=>`${nt.x}_{${i}} &= ${nt.x}_{${i},h} + ${nt.x}_{${i},p}`)
-		: `${nt.x} = ${nt.x}_h + ${nt.x}_p`
-	)+` \\]`,
+	blockSystem(isSystem,i=>`${nt.x}_{${i}} &= ${nt.x}_{${i}h} + ${nt.x}_{${i}p}`),
 ]
 
 const on_linearHomogeneousConstant_generalSolutionMethod_content=(charEqn,x,isSystem,isVector)=>nt=>[
