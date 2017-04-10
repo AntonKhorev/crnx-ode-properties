@@ -33,19 +33,19 @@ const on_linear_vector_equation=(input,isConstant)=>nt=>`${nt.dd(nt.X)} {=} `+(i
 
 const inlineSystem=(isSystem,template)=>`\\( `+(isSystem
 	? `{\\scriptstyle \\left\\{ \\begin{array}{c} `+
-		template(`1,`)+` \\\\[-1em]`+
+		template(`1,`,`1`)+` \\\\[-1em]`+
 		`\\cdots \\\\[-1em]`+
-		template(`n,`)+
+		template(`n,`,`n`)+
 	` \\end{array} \\right.}`
-	: template(``)
+	: template(``,``)
 )+` \\)`
 const blockSystem=(isSystem,template)=>`\\[ `+(isSystem
 	? `\\left\\{ \\begin{aligned} `+
-		template(`1,`)+` \\\\`+
+		template(`1,`,`1`)+` \\\\`+
 		`\\vdots \\\\`+
-		template(`n,`)+
+		template(`n,`,`n`)+
 	`\\end{aligned} \\right.`
-	: template(``).replace(/&/g,'')
+	: template(``,``).replace(/&/g,'')
 )+` \\]`
 const on_linear_generalSolutionMethod_content=(f,equation,isSystem)=>nt=>[
 	`find the general solution `+inlineSystem(isSystem,i=>`${nt.x}_{${i}h}`)+` of the associated homogeneous equation`,
@@ -58,7 +58,7 @@ const on_linear_generalSolutionMethod_content=(f,equation,isSystem)=>nt=>[
 		]},
 	]},
 	`general solution (with arbitrary constants included in \\( ${nt.x}_h \\)):`,
-	blockSystem(isSystem,i=>`${nt.x}_{${i}} &= ${nt.x}_{${i}h} + ${nt.x}_{${i}p}`),
+	blockSystem(isSystem,(i,inc)=>`${nt.x}_{${inc}} &= ${nt.x}_{${i}h} + ${nt.x}_{${i}p}`),
 ]
 
 const on_linearHomogeneousConstant_generalSolutionMethod_content=(charEqn,x,isSystem,isVector)=>nt=>[
