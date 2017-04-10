@@ -31,34 +31,34 @@ const on_linear_vector_equation=(input,isConstant)=>nt=>`${nt.dd(nt.X)} {=} `+(i
 	`0 \\\\`+(isConstant?` 0 \\\\`:``)+` \\vdots \\\\ 0 \\\\ ${input}(t)`+
 `\\end{smallmatrix} \\right]`:``)
 
-const inlineSystem=(isSystem,template)=>`\\( `+(isSystem
-	? `{\\scriptstyle \\left\\{ \\begin{array}{c} `+
-		template(`1,`,`1`)+` \\\\[-1em]`+
-		`\\cdots \\\\[-1em]`+
-		template(`n,`,`n`)+
-	` \\end{array} \\right.}`
-	: template(``,``)
-)+` \\)`
-const blockSystem=(isSystem,template)=>`\\[ `+(isSystem
-	? `\\left\\{ \\begin{aligned} `+
-		template(`1,`,`1`)+` \\\\`+
-		`\\vdots \\\\`+
-		template(`n,`,`n`)+
-	`\\end{aligned} \\right.`
-	: template(``,``).replace(/&/g,'')
-)+` \\]`
-const on_linear_generalSolutionMethod_content=(f,equation,isSystem)=>nt=>[
-	`find the general solution `+inlineSystem(isSystem,i=>`${nt.x}_{${i}h}`)+` of the associated homogeneous equation`,
-	{type:'switch',title:`find a particular solution `+inlineSystem(isSystem,i=>`${nt.x}_{${i}p}`)+` of the original equation`,content:[
+const scalarInlineWriter=template=>nt=>`\\( `+template(nt.x,``,``).replace(/&/g,'')+` \\)`
+const systemInlineWriter=template=>nt=>`\\( {\\scriptstyle \\left\\{ \\begin{array}{c} `+
+	template(nt.x,`1,`,`1`)+` \\\\[-1em]`+
+	`\\cdots \\\\[-1em]`+
+	template(nt.x,`n,`,`n`)+
+` \\end{array} \\right.} \\)`
+const vectorInlineWriter=template=>nt=>`\\( `+template(nt.X,``,``).replace(/&/g,'')+` \\)`
+
+const scalarBlockWriter=template=>nt=>`\\[ `+template(nt.x,``,``).replace(/&/g,'')+` \\]`
+const systemBlockWriter=template=>nt=>`\\[ \\left\\{ \\begin{aligned} `+
+	template(nt.x,`1,`,`1`)+` \\\\`+
+	`\\vdots \\\\`+
+	template(nt.x,`n,`,`n`)+
+`\\end{aligned} \\right. \\]`
+const vectorBlockWriter=template=>nt=>`\\[ `+template(nt.X,``,``).replace(/&/g,'')+` \\]`
+
+const on_linear_generalSolutionMethod_content=(f,equation,inlineWriter,blockWriter)=>nt=>[
+	`find the general solution `+inlineWriter((x,i)=>`${x}_{${i}h}`)(nt)+` of the associated homogeneous equation`,
+	{type:'switch',title:`find a particular solution `+inlineWriter((x,i)=>`${x}_{${i}p}`)(nt)+` of the original equation`,content:[
 		{type:'case',title:`using superposition when \\( ${f}(t) = k_1 ${f}_1(t) + k_2 ${f}_2(t) + \\cdots \\)`,content:[
-			`for each term \\( k_j ${f}_j(t) \\), find a particular solution `+inlineSystem(isSystem,i=>`${nt.x}_{${i}p,j}`)+` of:`,
+			`for each term \\( k_j ${f}_j(t) \\), find a particular solution `+inlineWriter((x,i)=>`${x}_{${i}p,j}`)(nt)+` of:`,
 			`\\[ ${equation(`${f}_j`,false)(nt)} \\]`,
 			`particular solution of the original equation is a linear combinations of these solutions:`,
-			blockSystem(isSystem,i=>`${nt.x}_{${i}p} &= k_1 ${nt.x}_{${i}p,1} + k_2 ${nt.x}_{${i}p,2} + \\cdots`),
+			blockWriter((x,i)=>`${x}_{${i}p} &= k_1 ${x}_{${i}p,1} + k_2 ${x}_{${i}p,2} + \\cdots`)(nt),
 		]},
 	]},
 	`general solution (with arbitrary constants included in \\( ${nt.x}_h \\)):`,
-	blockSystem(isSystem,(i,inc)=>`${nt.x}_{${inc}} &= ${nt.x}_{${i}h} + ${nt.x}_{${i}p}`),
+	blockWriter((x,i,inc)=>`${x}_{${inc}} &= ${x}_{${i}h} + ${x}_{${i}p}`)(nt),
 ]
 
 const on_linearHomogeneousConstant_generalSolutionMethod_content=(charEqn,x,isSystem,isVector)=>nt=>[
@@ -179,9 +179,10 @@ module.exports={
 			},
 			generalSolutionMethod: {
 				contents: {
-					linear_on_linear:   on_linear_generalSolutionMethod_content('f',on_linear_linear_equation),
-					resolved_on_linear: on_linear_generalSolutionMethod_content('g',on_linear_resolved_equation),
-					system_on_linear:   on_linear_generalSolutionMethod_content('g',on_linear_system_equation,true),
+					linear_on_linear:   on_linear_generalSolutionMethod_content('f',on_linear_linear_equation  ,scalarInlineWriter,scalarBlockWriter),
+					resolved_on_linear: on_linear_generalSolutionMethod_content('g',on_linear_resolved_equation,scalarInlineWriter,scalarBlockWriter),
+					system_on_linear:   on_linear_generalSolutionMethod_content('g',on_linear_system_equation  ,systemInlineWriter,systemBlockWriter),
+					vector_on_linear:   on_linear_generalSolutionMethod_content('g',on_linear_vector_equation  ,vectorInlineWriter,vectorBlockWriter),
 				},
 			},
 		},
