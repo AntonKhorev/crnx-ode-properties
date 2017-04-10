@@ -47,8 +47,13 @@ const systemBlockWriter=template=>nt=>`\\[ \\left\\{ \\begin{aligned} `+
 `\\end{aligned} \\right. \\]`
 const vectorBlockWriter=template=>nt=>`\\[ `+template(nt.X,``,``).replace(/&/g,'')+` \\]`
 
-const on_linear_generalSolutionMethod_content=(f,equation,inlineWriter,blockWriter)=>nt=>[
-	`find the general solution `+inlineWriter((x,i)=>`${x}_{${i}h}`)(nt)+` of the associated homogeneous equation`,
+const extraSection=(title,content)=>(content!==undefined
+	? {type:'extra',title,content}
+	: title
+)
+
+const on_linear_generalSolutionMethod_content=(f,equation,inlineWriter,blockWriter,generalSolution)=>nt=>[
+	extraSection(`find the general solution `+inlineWriter((x,i)=>`${x}_{${i}h}`)(nt)+` of the associated homogeneous equation`,generalSolution),
 	{type:'switch',title:`find a particular solution `+inlineWriter((x,i)=>`${x}_{${i}p}`)(nt)+` of the original equation`,content:[
 		{type:'case',title:`using superposition when \\( ${f}(t) = k_1 ${f}_1(t) + k_2 ${f}_2(t) + \\cdots \\)`,content:[
 			`for each term \\( k_j ${f}_j(t) \\), find a particular solution `+inlineWriter((x,i)=>`${x}_{${i}p,j}`)(nt)+` of:`,
@@ -57,7 +62,7 @@ const on_linear_generalSolutionMethod_content=(f,equation,inlineWriter,blockWrit
 			blockWriter((x,i)=>`${x}_{${i}p} &= k_1 ${x}_{${i}p,1} + k_2 ${x}_{${i}p,2} + \\cdots`)(nt),
 		]},
 	]},
-	`general solution (with arbitrary constants included in \\( ${nt.x}_h \\)):`,
+	`general solution (with arbitrary constants included in `+inlineWriter((x,i)=>`${x}_{${i}h}`)(nt)+`):`,
 	blockWriter((x,i,inc)=>`${x}_{${inc}} &= ${x}_{${i}h} + ${x}_{${i}p}`)(nt),
 ]
 
@@ -88,13 +93,13 @@ const on_linearHomogeneousConstant_generalSolutionMethod_content=(charEqn,x,isSy
 		`\\end{array} \\]`,
 	]:[]),
 	...(isVector?[
-		`find other components by differentiating \\( ${nt.x} \\):`,
-		`\\[ ${nt.X} = \\begin{bmatrix}`+
-			`${nt.x} \\\\`+
-			`${nt.dd(nt.x,'t',1)} \\\\`+
-			`${nt.dd(nt.x,'t',2)} \\\\`+
+		`find other components by differentiating \\( ${x} \\):`,
+		`\\[ ${nt.X} = \\begin{bmatrix}`+ // TODO pass subscript instead of ${x}
+			`${x} \\\\`+
+			`${nt.dd(x,'t',1)} \\\\`+
+			`${nt.dd(x,'t',2)} \\\\`+
 			`\\vdots \\\\`+
-			`${nt.dd(nt.x,'t','n-1')}`+
+			`${nt.dd(x,'t','n-1')}`+
 		`\\end{bmatrix} \\]`,
 	]:[]),
 ]
@@ -234,21 +239,22 @@ module.exports={
 			},
 			generalSolutionMethod: {
 				contents: {
-					linear_on_linearConstant: nt=>[
-						{type:'extra',title:`find the general solution \\( ${nt.x}_h \\) of the associated homogeneous equation`,
-							content: on_linearHomogeneousConstant_generalSolutionMethod_content(`\\sum_{i=0}^n a_i λ^i = 0`,`${nt.x}_h`)(nt),
-						},
-						{type:'switch',title:`find a particular solution \\( ${nt.x}_p \\) of the original equation`,content:[
-							{type:'case',title:`using superposition when \\( f(t) = k_1 f_1(t) + k_2 f_2(t) + \\cdots \\)`,content:[
-								`for each term \\( k_j f_j(t) \\), find a particular solution \\( ${nt.x}_{p,j} \\) of:`,
-								`\\[ \\sum_{i=0}^n a_i ${nt.dd(nt.x,'t','i')} = f_j(t) \\]`,
-								`particular solution of the original equation is a linear combinations of these solutions:`,
-								`\\[ ${nt.x}_p = k_1 ${nt.x}_{p,1} + k_2 ${nt.x}_{p,2} + \\cdots \\]`,
-							]},
-						]},
-						`general solution (with arbitrary constants included in \\( ${nt.x}_h \\)):`,
-						`\\[ ${nt.x} = ${nt.x}_h + ${nt.x}_p \\]`,
-					],
+					linear_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
+						'f',on_linear_linear_equation,scalarInlineWriter,scalarBlockWriter,
+						on_linearHomogeneousConstant_generalSolutionMethod_content(`\\sum_{i=0}^n a_i λ^i = 0`,`${nt.x}_h`)(nt)
+					)(nt),
+					resolved_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
+						'g',on_linear_resolved_equation,scalarInlineWriter,scalarBlockWriter,
+						on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} b_i λ^i = 0`,`${nt.x}_h`)(nt)
+					)(nt),
+					system_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
+						'g',on_linear_system_equation,systemInlineWriter,systemBlockWriter,
+						on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`,nt.x,true)(nt)
+					)(nt),
+					vector_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
+						'g',on_linear_vector_equation,vectorInlineWriter,vectorBlockWriter,
+						on_linearHomogeneousConstant_generalSolutionMethod_content(`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`,`${nt.x}_h`,false,true)(nt)
+					)(nt),
 				},
 			},
 		},
