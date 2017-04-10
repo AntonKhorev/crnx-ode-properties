@@ -1,5 +1,6 @@
 'use strict'
 
+const TexSymbol=require('../tex-symbol')
 const characteristicEquationContent=require('../characteristic-equation-content')
 
 const on_linear_linear_equation=(input,isConstant)=>nt=>(
@@ -31,21 +32,21 @@ const on_linear_vector_equation=(input,isConstant)=>nt=>`${nt.dd(nt.X)} {=} `+(i
 	`0 \\\\`+(isConstant?` 0 \\\\`:``)+` \\vdots \\\\ 0 \\\\ ${input}(t)`+
 `\\end{smallmatrix} \\right]`:``)
 
-const scalarInlineWriter=template=>nt=>`\\( `+template(nt.x,``,``).replace(/&/g,'')+` \\)`
+const scalarInlineWriter=template=>nt=>`\\( `+template(new TexSymbol(nt.x)).replace(/&/g,'')+` \\)`
 const systemInlineWriter=template=>nt=>`\\( {\\scriptstyle \\left\\{ \\begin{array}{c} `+
-	template(nt.x,`1,`,`1`)+` \\\\[-1em]`+
+	template(new TexSymbol(nt.x).c(1))+` \\\\[-1em]`+
 	`\\cdots \\\\[-1em]`+
-	template(nt.x,`n,`,`n`)+
+	template(new TexSymbol(nt.x).c('n'))+
 ` \\end{array} \\right.} \\)`
-const vectorInlineWriter=template=>nt=>`\\( `+template(nt.X,``,``).replace(/&/g,'')+` \\)`
+const vectorInlineWriter=template=>nt=>`\\( `+template(new TexSymbol(nt.X)).replace(/&/g,'')+` \\)`
 
-const scalarBlockWriter=template=>nt=>`\\[ `+template(nt.x,``,``).replace(/&/g,'')+` \\]`
+const scalarBlockWriter=template=>nt=>`\\[ `+template(new TexSymbol(nt.x)).replace(/&/g,'')+` \\]`
 const systemBlockWriter=template=>nt=>`\\[ \\left\\{ \\begin{aligned} `+
-	template(nt.x,`1,`,`1`)+` \\\\`+
+	template(new TexSymbol(nt.x).c(1))+` \\\\`+
 	`\\vdots \\\\`+
-	template(nt.x,`n,`,`n`)+
+	template(new TexSymbol(nt.x).c('n'))+
 `\\end{aligned} \\right. \\]`
-const vectorBlockWriter=template=>nt=>`\\[ `+template(nt.X,``,``).replace(/&/g,'')+` \\]`
+const vectorBlockWriter=template=>nt=>`\\[ `+template(new TexSymbol(nt.X)).replace(/&/g,'')+` \\]`
 
 const extraSection=(title,content)=>(content!==undefined
 	? {type:'extra',title,content}
@@ -53,17 +54,17 @@ const extraSection=(title,content)=>(content!==undefined
 )
 
 const on_linear_generalSolutionMethod_content=(f,equation,inlineWriter,blockWriter,generalSolution)=>nt=>[
-	extraSection(`find the general solution `+inlineWriter((x,i)=>`${x}_{${i}h}`)(nt)+` of the associated homogeneous equation`,generalSolution),
-	{type:'switch',title:`find a particular solution `+inlineWriter((x,i)=>`${x}_{${i}p}`)(nt)+` of the original equation`,content:[
+	extraSection(`find the general solution `+inlineWriter(x=>`${x._('h')}`)(nt)+` of the associated homogeneous equation`,generalSolution),
+	{type:'switch',title:`find a particular solution `+inlineWriter(x=>`${x._('p')}`)(nt)+` of the original equation`,content:[
 		{type:'case',title:`using superposition when \\( ${f}(t) = k_1 ${f}_1(t) + k_2 ${f}_2(t) + \\cdots \\)`,content:[
-			`for each term \\( k_j ${f}_j(t) \\), find a particular solution `+inlineWriter((x,i)=>`${x}_{${i}p,j}`)(nt)+` of:`,
+			`for each term \\( k_j ${f}_j(t) \\), find a particular solution `+inlineWriter(x=>`${x._('p','j')}`)(nt)+` of:`,
 			`\\[ ${equation(`${f}_j`,false)(nt)} \\]`,
 			`particular solution of the original equation is a linear combinations of these solutions:`,
-			blockWriter((x,i)=>`${x}_{${i}p} &= k_1 ${x}_{${i}p,1} + k_2 ${x}_{${i}p,2} + \\cdots`)(nt),
+			blockWriter(x=>`${x._('p')} &= k_1 ${x._('p',1)} + k_2 ${x._('p',2)} + \\cdots`)(nt),
 		]},
 	]},
-	`general solution (with arbitrary constants included in `+inlineWriter((x,i)=>`${x}_{${i}h}`)(nt)+`):`,
-	blockWriter((x,i,inc)=>`${x}_{${inc}} &= ${x}_{${i}h} + ${x}_{${i}p}`)(nt),
+	`general solution (with arbitrary constants included in `+inlineWriter(x=>`${x._('h')}`)(nt)+`):`,
+	blockWriter(x=>`${x} &= ${x._('h')} + ${x._('p')}`)(nt),
 ]
 
 const on_linearHomogeneousConstant_generalSolutionMethod_content=(charEqn,x,isSystem,isVector)=>nt=>[
