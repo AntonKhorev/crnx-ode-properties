@@ -21,7 +21,7 @@ class TexScalarDepvar extends TexDepvar {
 		}
 	}
 	parallelAssignment(template) {
-		return `\\[ ${this} = ${template(this)} \\]`
+		return `\\[ ${template(this).replace(/&/g,'')} \\]`
 	}
 	firstRestDiff(preambleTemplate,firstComponentTemplate) {
 		return nt=>[

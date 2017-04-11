@@ -23,7 +23,7 @@ class TexVectorDepvar extends TexDepvar {
 		}
 	}
 	parallelAssignment(template) {
-		return `\\[ ${this} = ${template(this)} \\]`
+		return `\\[ ${template(this).replace(/&/g,'')} \\]`
 	}
 	firstRestDiff(preambleTemplate,firstComponentTemplate) {
 		const x=new TexScalarDepvar(this.x,this.subscripts)

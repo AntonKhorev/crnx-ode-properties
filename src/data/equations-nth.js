@@ -55,7 +55,7 @@ class LinearEquation {
 				content:this.particularSolutionCases()(nt)
 			},
 			`general solution (with arbitrary constants included in \\( ${x._('h')}) \\):`,
-			x.parallelAssignment(x=>`${x._('h')} + ${x._('p')}`)
+			x.parallelAssignment(x=>`${x} &= ${x._('h')} + ${x._('p')}`)
 		]
 	}
 	particularSolutionCases() {
@@ -66,7 +66,7 @@ class LinearEquation {
 				`for each term \\( k_j ${f}_j(t) \\), find a particular solution \\( ${x._('p','j')} \\) of:`,
 				`\\[ ${this.equation(`${f}_j`,false)(nt)} \\]`,
 				`particular solution of the original equation is a linear combinations of these solutions:`,
-				x._('p').parallelAssignment(xp=>`k_1 ${xp._(1)} + k_2 ${xp._(2)} + \\cdots`),
+				x._('p').parallelAssignment(xp=>`${xp} &= k_1 ${xp._(1)} + k_2 ${xp._(2)} + \\cdots`),
 			]},
 		]
 	}
@@ -82,7 +82,7 @@ class LinearConstantEquation extends LinearEquation {
 				`find a particular solution \\( ${x._('p',1)} \\) of:`,
 				`\\[ ${this.equation(`${f}_1`,false)(nt)} \\]`,
 				`particular solution of the original equation is:`,
-				x._('p').parallelAssignment(xp=>`${xp._(1)}(t+t_1)`),
+				x._('p').parallelAssignment(xp=>`${xp}(t) &= ${xp._(1)}(t+t_1)`),
 			]},
 		]
 	}

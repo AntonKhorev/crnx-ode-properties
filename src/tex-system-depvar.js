@@ -26,9 +26,9 @@ class TexSystemDepvar extends TexDepvar {
 	}
 	parallelAssignment(template) {
 		return `\\[ \\left\\{ \\begin{aligned} `+
-			`${this.component(1)} &= ${template(this.component(1))} \\\\ `+
+			`${template(this.component(1))} \\\\ `+
 			`\\vdots \\\\ `+
-			`${this.component('n')} &= ${template(this.component('n'))} `+
+			`${template(this.component('n'))} `+
 		`\\end{aligned} \\right. \\]`
 	}
 	firstRestDiff(preambleTemplate,firstComponentTemplate) {
