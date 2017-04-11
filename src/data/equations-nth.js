@@ -43,6 +43,28 @@ const on_linear_vector_equation=isConstant=>input=>nt=>(
 	`\\end{smallmatrix} \\right]`:``)
 )
 
+const on_linear_forms=(classId,isConstant,isHomogeneous)=>[
+	{
+		is: `t,x,linear_${classId}`,
+		equation: on_linear_linear_equation(isConstant)(isHomogeneous?0:'f'),
+		notes: nt=>[
+			`\\( a_n`+(isConstant?``:`(t)`)+` \\ne 0 \\)`+(isConstant?``:` on the entire interval of interest`),
+		],
+	},
+	{
+		is: `t,x,resolved_${classId}`,
+		equation: on_linear_resolved_equation(isConstant)(isHomogeneous?0:'g'),
+	},
+	{
+		is: `t,xi,system_${classId}`,
+		equation: on_linear_system_equation(isConstant)(isHomogeneous?0:'g'),
+	},
+	{
+		is: `t,X,vector_${classId}`,
+		equation: on_linear_vector_equation(isConstant)(isHomogeneous?0:'g'),
+	},
+]
+
 const on_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt=>[
 	`solve the characteristic equation for \\( λ \\):`,
 	`\\[ ${charEqn} \\]`,
@@ -194,27 +216,7 @@ module.exports={
 		name: "nth-order linear",
 		htmlName: "<em>n</em>th-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a>",
 		importance: 2,
-		forms: [
-			{
-				is: 't,x,linear_on_linear',
-				equation: on_linear_linear_equation(false)('f'),
-				notes: nt=>[
-					`\\( a_n(t) \\ne 0 \\) on the entire interval of interest`,
-				],
-			},
-			{
-				is: 't,x,resolved_on_linear',
-				equation: on_linear_resolved_equation(false)('g'),
-			},
-			{
-				is: 't,xi,system_on_linear',
-				equation: on_linear_system_equation(false)('g'),
-			},
-			{
-				is: 't,X,vector_on_linear',
-				equation: on_linear_vector_equation(false)('g'),
-			},
-		],
+		forms: on_linear_forms('on_linear',false,false),
 		traits: {
 			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linear',false,false),
 			generalSolutionMethod: {
@@ -234,27 +236,7 @@ module.exports={
 		name: "nth-order linear homogeneous",
 		htmlName: "<em>n</em>th-order <a href='https://en.wikipedia.org/wiki/Homogeneous_differential_equation#Homogeneous_linear_differential_equations'>linear homogeneous</a>",
 		importance: 2,
-		forms: [
-			{
-				is: 't,x,linear_on_linearHomogeneous',
-				equation: on_linear_linear_equation(false)(0),
-				notes: nt=>[
-					`\\( a_n(t) \\ne 0 \\) on the entire interval of interest`,
-				],
-			},
-			{
-				is: 't,x,resolved_on_linearHomogeneous',
-				equation: on_linear_resolved_equation(false)(0),
-			},
-			{
-				is: 't,xi,system_on_linearHomogeneous',
-				equation: on_linear_system_equation(false)(0),
-			},
-			{
-				is: 't,X,vector_on_linearHomogeneous',
-				equation: on_linear_vector_equation(false)(0),
-			},
-		],
+		forms: on_linear_forms('on_linearHomogeneous',false,true),
 		traits: {
 			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linearHomogeneous',false,true),
 			realitySolutionRelation: {
@@ -296,27 +278,7 @@ module.exports={
 		name: "nth-order linear with constant coefficients",
 		htmlName: "<em>n</em>th-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Nonhomogeneous_equation_with_constant_coefficients'>linear with constant coefficients</a>",
 		importance: 2,
-		forms: [
-			{
-				is: 't,x,linear_on_linearConstant',
-				equation: on_linear_linear_equation(true)('f'),
-				notes: nt=>[
-					`\\( a_n \\ne 0 \\)`,
-				],
-			},
-			{
-				is: 't,x,resolved_on_linearConstant',
-				equation: on_linear_resolved_equation(true)('g'),
-			},
-			{
-				is: 't,xi,system_on_linearConstant',
-				equation: on_linear_system_equation(true)('g'),
-			},
-			{
-				is: 't,X,vector_on_linearConstant',
-				equation: on_linear_vector_equation(true)('g'),
-			},
-		],
+		forms: on_linear_forms('on_linearConstant',true,false),
 		traits: {
 			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linearConstant',true,false),
 			generalSolutionMethod: {
@@ -365,27 +327,7 @@ module.exports={
 		name: "nth-order linear homogeneous with constant coefficients",
 		htmlName: "<em>n</em>th-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Homogeneous_equations_with_constant_coefficients'>linear homogeneous with constant coefficients</a>",
 		importance: 2,
-		forms: [
-			{
-				is: 't,x,linear_on_linearHomogeneousConstant',
-				equation: on_linear_linear_equation(true)(0),
-				notes: nt=>[
-					`\\( a_n \\ne 0 \\)`,
-				],
-			},
-			{
-				is: 't,x,resolved_on_linearHomogeneousConstant',
-				equation: on_linear_resolved_equation(true)(0),
-			},
-			{
-				is: 't,xi,system_on_linearHomogeneousConstant',
-				equation: on_linear_system_equation(true)(0),
-			},
-			{
-				is: 't,X,vector_on_linearHomogeneousConstant',
-				equation: on_linear_vector_equation(true)(0),
-			},
-		],
+		forms: on_linear_forms('on_linearHomogeneousConstant',true,true),
 		traits: {
 			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linearHomogeneousConstant',true,true),
 			characteristicEquation: {
