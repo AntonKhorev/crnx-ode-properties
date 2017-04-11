@@ -37,24 +37,56 @@ const on_linear_vector_equation=(input,isConstant)=>nt=>`${nt.dd(nt.X)} {=} `+
 	`0 \\\\`+(isConstant?` 0 \\\\`:``)+` \\vdots \\\\ 0 \\\\ ${input}(t)`+
 `\\end{smallmatrix} \\right]`:``)
 
-const extraSection=(title,content)=>(content!==undefined
-	? {type:'extra',title,content}
-	: title
-)
+class LinearEquation {
+	constructor(x,f,equation) {
+		this.x=x
+		this.f=f
+		this.equation=equation
+	}
+	getContentFor_generalSolutionMethod(homogeneousGeneralSolution) {
+		const x=this.x
+		const extraSection=(title,content)=>(content!==undefined
+			? {type:'extra',title,content}
+			: title
+		)
+		return nt=>[
+			extraSection(`find the general solution \\( ${x._('h')} \\) of the associated homogeneous equation`,homogeneousGeneralSolution),
+			{type:'switch',title:`find a particular solution \\( ${x._('p')} \\) of the original equation`,
+				content:this.particularSolutionCases()(nt)
+			},
+			`general solution (with arbitrary constants included in \\( ${x._('h')}) \\):`,
+			x.parallelAssignment(x=>`${x._('h')} + ${x._('p')}`)
+		]
+	}
+	particularSolutionCases() {
+		const x=this.x
+		const f=this.f
+		return nt=>[
+			{type:'case',title:`using superposition when \\( ${f}(t) = k_1 ${f}_1(t) + k_2 ${f}_2(t) + \\cdots \\)`,content:[
+				`for each term \\( k_j ${f}_j(t) \\), find a particular solution \\( ${x._('p','j')} \\) of:`,
+				`\\[ ${this.equation(`${f}_j`,false)(nt)} \\]`,
+				`particular solution of the original equation is a linear combinations of these solutions:`,
+				x._('p').parallelAssignment(xp=>`k_1 ${xp._(1)} + k_2 ${xp._(2)} + \\cdots`),
+			]},
+		]
+	}
+}
 
-const on_linear_generalSolutionMethod_content=(x,f,equation,generalSolution)=>nt=>[
-	extraSection(`find the general solution \\( ${x._('h')} \\) of the associated homogeneous equation`,generalSolution),
-	{type:'switch',title:`find a particular solution \\( ${x._('p')} \\) of the original equation`,content:[
-		{type:'case',title:`using superposition when \\( ${f}(t) = k_1 ${f}_1(t) + k_2 ${f}_2(t) + \\cdots \\)`,content:[
-			`for each term \\( k_j ${f}_j(t) \\), find a particular solution \\( ${x._('p','j')} \\) of:`,
-			`\\[ ${equation(`${f}_j`,false)(nt)} \\]`,
-			`particular solution of the original equation is a linear combinations of these solutions:`,
-			x._('p').parallelAssignment(xp=>`k_1 ${xp._(1)} + k_2 ${xp._(2)} + \\cdots`),
-		]},
-	]},
-	`general solution (with arbitrary constants included in \\( ${x._('h')}) \\):`,
-	x.parallelAssignment(x=>`${x._('h')} + ${x._('p')}`)
-]
+class LinearConstantEquation extends LinearEquation {
+	particularSolutionCases() {
+		const x=this.x
+		const f=this.f
+		return nt=>[
+			...super.particularSolutionCases()(nt),
+			{type:'case',title:`using time invariance when \\( ${f}(t) = ${f}_1(t+t_1) \\)`,content:[
+				`find a particular solution \\( ${x._('p',1)} \\) of:`,
+				`\\[ ${this.equation(`${f}_1`,false)(nt)} \\]`,
+				`particular solution of the original equation is:`,
+				x._('p').parallelAssignment(xp=>`${xp._(1)}(t+t_1)`),
+			]},
+		]
+	}
+}
 
 const on_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt=>[
 	`solve the characteristic equation for \\( λ \\):`,
@@ -231,10 +263,10 @@ module.exports={
 			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linear',false,false),
 			generalSolutionMethod: {
 				contents: {
-					linear_on_linear:   nt=>on_linear_generalSolutionMethod_content(new TexScalarDepvar(nt.x),'f',on_linear_linear_equation)(nt),
-					resolved_on_linear: nt=>on_linear_generalSolutionMethod_content(new TexScalarDepvar(nt.x),'g',on_linear_resolved_equation)(nt),
-					system_on_linear:   nt=>on_linear_generalSolutionMethod_content(new TexSystemDepvar(nt.x),'g',on_linear_system_equation)(nt),
-					vector_on_linear:   nt=>on_linear_generalSolutionMethod_content(new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation)(nt),
+					linear_on_linear:   nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'f',on_linear_linear_equation  ).getContentFor_generalSolutionMethod()(nt),
+					resolved_on_linear: nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'g',on_linear_resolved_equation).getContentFor_generalSolutionMethod()(nt),
+					system_on_linear:   nt=>new LinearEquation(new TexSystemDepvar(nt.x)     ,'g',on_linear_system_equation  ).getContentFor_generalSolutionMethod()(nt),
+					vector_on_linear:   nt=>new LinearEquation(new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation  ).getContentFor_generalSolutionMethod()(nt),
 				},
 			},
 		},
@@ -333,29 +365,33 @@ module.exports={
 			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linearConstant',true,false),
 			generalSolutionMethod: {
 				contents: {
-					linear_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
-						new TexScalarDepvar(nt.x),'f',on_linear_linear_equation,
+					linear_on_linearConstant: nt=>new LinearConstantEquation(
+						new TexScalarDepvar(nt.x),'f',on_linear_linear_equation
+					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
 							new TexScalarDepvar(nt.x)._('h'),
 							`\\sum_{i=0}^n a_i λ^i = 0`
 						)(nt)
 					)(nt),
-					resolved_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
-						new TexScalarDepvar(nt.x),'g',on_linear_resolved_equation,
+					resolved_on_linearConstant: nt=>new LinearConstantEquation(
+						new TexScalarDepvar(nt.x),'g',on_linear_resolved_equation
+					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
 							new TexScalarDepvar(nt.x)._('h'),
 							`λ^n - \\sum_{i=0}^{n-1} b_i λ^i = 0`
 						)(nt)
 					)(nt),
-					system_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
-						new TexSystemDepvar(nt.x),'g',on_linear_system_equation,
+					system_on_linearConstant: nt=>new LinearConstantEquation(
+						new TexSystemDepvar(nt.x),'g',on_linear_system_equation
+					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
 							new TexSystemDepvar(nt.x)._('h'),
 							`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`
 						)(nt)
 					)(nt),
-					vector_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
-						new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation,
+					vector_on_linearConstant: nt=>new LinearConstantEquation(
+						new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation
+					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
 							new TexVectorDepvar(nt.X,nt.x)._('h'),
 							`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`
