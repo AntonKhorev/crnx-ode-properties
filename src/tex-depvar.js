@@ -6,8 +6,9 @@ class TexDepvar {
 	//abstract:
 	// _(...ii)
 	// toString()
-	// parallelAssignment(template)
-	// firstRestDiff(preambleTemplate,firstComponentTemplate)(nt) // TODO remove nt
+	// parallelExpression(template)
+	// firstComponentExpression(preambleTemplate,firstComponentTemplate)(nt) // TODO remove nt
+	// restDiffComponentExpression()(nt)
 }
 
 module.exports=TexDepvar

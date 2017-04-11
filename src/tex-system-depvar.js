@@ -24,17 +24,21 @@ class TexSystemDepvar extends TexDepvar {
 			`${this.component('n')} `+
 		`\\end{array} \\right.}`
 	}
-	parallelAssignment(template) {
+	parallelExpression(template) {
 		return `\\[ \\left\\{ \\begin{aligned} `+
 			`${template(this.component(1))} \\\\ `+
 			`\\vdots \\\\ `+
 			`${template(this.component('n'))} `+
 		`\\end{aligned} \\right. \\]`
 	}
-	firstRestDiff(preambleTemplate,firstComponentTemplate) {
+	firstComponentExpression(preambleTemplate,firstComponentTemplate) {
 		return nt=>[
 			`first component of `+preambleTemplate(this),
 			firstComponentTemplate(this.component(1)),
+		]
+	}
+	restDiffComponentExpression() {
+		return nt=>[
 			`find other components by differentiating \\( ${this.component(1)} \\):`,
 			`\\[ \\begin{array}{rcl}`+
 				`${this.component(2)} &=& ${nt.dd(this.component(1),'t',1)} \\\\`+

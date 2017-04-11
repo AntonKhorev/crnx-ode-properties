@@ -55,7 +55,7 @@ class LinearEquation {
 				content:this.particularSolutionCases()(nt)
 			},
 			`general solution (with arbitrary constants included in \\( ${x._('h')}) \\):`,
-			x.parallelAssignment(x=>`${x} &= ${x._('h')} + ${x._('p')}`)
+			x.parallelExpression(x=>`${x} &= ${x._('h')} + ${x._('p')}`)
 		]
 	}
 	particularSolutionCases() {
@@ -66,7 +66,7 @@ class LinearEquation {
 				`for each term \\( k_j ${f}_j(t) \\), find a particular solution \\( ${x._('p','j')} \\) of:`,
 				`\\[ ${this.equation(`${f}_j`,false)(nt)} \\]`,
 				`particular solution of the original equation is a linear combinations of these solutions:`,
-				x._('p').parallelAssignment(xp=>`${xp} &= k_1 ${xp._(1)} + k_2 ${xp._(2)} + \\cdots`),
+				x._('p').parallelExpression(xp=>`${xp} &= k_1 ${xp._(1)} + k_2 ${xp._(2)} + \\cdots`),
 			]},
 		]
 	}
@@ -82,7 +82,14 @@ class LinearConstantEquation extends LinearEquation {
 				`find a particular solution \\( ${x._('p',1)} \\) of:`,
 				`\\[ ${this.equation(`${f}_1`,false)(nt)} \\]`,
 				`particular solution of the original equation is:`,
-				x._('p').parallelAssignment(xp=>`${xp}(t) &= ${xp._(1)}(t+t_1)`),
+				x._('p').parallelExpression(xp=>`${xp}(t) &= ${xp._(1)}(t+t_1)`),
+			]},
+			{type:'case',title:`using exponential response formula when \\( ${f}(t) = e^{r t} \\)`,content:[
+				// TODO define P(λ)
+				...x.firstComponentExpression(
+					x=>`the equation can be written as`,
+					x1=>`\\[ P\\left(${nt.ddt}\\right) ${x1} = e^{r t} \\]`
+				)(nt),
 			]},
 		]
 	}
@@ -98,7 +105,7 @@ const on_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt
 		`sum of multiplicities is equal to order of the equation:`,
 		`\\[ \\sum_{i=1}^r p_i + 2 \\cdot \\sum_{i=1}^s q_i = n \\]`,
 	]},
-	...x.firstRestDiff(
+	...x.firstComponentExpression(
 		x=>`general solution (with arbitrary constants \\( K_{ij} \\), \\( A_{ij} \\), \\( B_{ij} \\)):`,
 		x1=>`\\[ \\begin{aligned}`+
 			`${x1}`+
@@ -107,6 +114,7 @@ const on_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt
 			` + \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} B_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\sin β_i t`+
 		`\\end{aligned} \\]`
 	)(nt),
+	...x.restDiffComponentExpression()(nt),
 ]
 
 const on_linear_associatedHomogeneousEquation_trait=(classId,isConstant,isClosed)=>{
