@@ -3,6 +3,10 @@
 const LinearEquation=require('./linear-equation')
 
 class LinearConstantEquation extends LinearEquation {
+	constructor(x,f,equation,charPoly) {
+		super(x,f,equation)
+		this.charPoly=charPoly
+	}
 	particularSolutionCases() {
 		const x=this.x
 		const f=this.f
@@ -15,12 +19,13 @@ class LinearConstantEquation extends LinearEquation {
 				x._('p').parallelExpression(xp=>`${xp}(t) &= ${xp._(1)}(t+t_1)`),
 			]},
 			{type:'case',title:`using exponential response formula when \\( ${f}(t) = e^{r t} \\)`,content:[
-				// TODO define P(λ)
 				...x.firstComponentExpression(
 					c=>`${c}the equation can be written as`,
 					x1=>`\\[ P\\left(${nt.ddt}\\right) ${x1} = e^{r t} \\]`
 				)(nt),
-				`if`,
+				`with characteristic polynomial \\( P \\) defined as`,
+				`\\[ P(λ) = ${this.charPoly} \\]`,
+				`If`,
 				`\\[ P(r) {=} P'(r) {=} \\cdots {=} P^{(m-1)}(r) {=} 0 \\]`,
 				`and`,
 				`\\[ P^{(m)} \\ne 0 \\]`,

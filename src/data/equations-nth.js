@@ -284,7 +284,8 @@ module.exports={
 			generalSolutionMethod: {
 				contents: {
 					linear_on_linearConstant: nt=>new LinearConstantEquation(
-						new TexScalarDepvar(nt.x),'f',on_linear_linear_equation(true)
+						new TexScalarDepvar(nt.x),'f',on_linear_linear_equation(true),
+						`\\sum_{i=0}^n a_i λ^i`
 					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
 							new TexScalarDepvar(nt.x)._('h'),
@@ -292,7 +293,8 @@ module.exports={
 						)(nt)
 					)(nt),
 					resolved_on_linearConstant: nt=>new LinearConstantEquation(
-						new TexScalarDepvar(nt.x),'g',on_linear_resolved_equation(true)
+						new TexScalarDepvar(nt.x),'g',on_linear_resolved_equation(true),
+						`λ^n - \\sum_{i=0}^{n-1} b_i λ^i`
 					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
 							new TexScalarDepvar(nt.x)._('h'),
@@ -300,7 +302,8 @@ module.exports={
 						)(nt)
 					)(nt),
 					system_on_linearConstant: nt=>new LinearConstantEquation(
-						new TexSystemDepvar(nt.x),'g',on_linear_system_equation(true)
+						new TexSystemDepvar(nt.x),'g',on_linear_system_equation(true),
+						`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i`
 					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
 							new TexSystemDepvar(nt.x)._('h'),
@@ -308,7 +311,8 @@ module.exports={
 						)(nt)
 					)(nt),
 					vector_on_linearConstant: nt=>new LinearConstantEquation(
-						new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation(true)
+						new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation(true),
+						`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i`
 					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
 							new TexVectorDepvar(nt.X,nt.x)._('h'),
