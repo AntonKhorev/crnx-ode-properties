@@ -269,6 +269,32 @@ module.exports={
 		],
 		traits: {
 			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linearHomogeneous',false,true),
+			realitySolutionRelation: {
+				contents: {
+					linear_on_linearHomogeneous: nt=>[
+						`If \\( ${nt.x}_1 + i ${nt.x}_2 \\) is a (complex-valued) solution,`,
+						`then \\( ${nt.x}_1 \\) and \\( ${nt.x}_2 \\) are solutions.`,
+						{type:'proof',content:[
+							`substitute \\( ${nt.x} = ${nt.x}_1 + i ${nt.x}_2 \\) into the equation`,
+							`\\[ \\sum_{j=0}^n a_j(t) ${nt.dd('','t','j')}(${nt.x}_1 + i ${nt.x}_2) = 0 \\]`,
+							`\\[ \\begin{aligned} `+
+								       `&\\sum_{j=0}^n a_j(t) ${nt.dd(`${nt.x}_1`,'t','j')} + {} \\\\ `+
+								`{} + i &\\sum_{j=0}^n a_j(t) ${nt.dd(`${nt.x}_2`,'t','j')} = 0 `+
+							`\\end{aligned} \\]`,
+							`\\[ \\left\\{ \\begin{aligned} `+
+								`\\operatorname{Re}\\Biggl( &\\sum_{j=0}^n a_j(t) ${nt.dd(`${nt.x}_1`,'t','j')} + {} \\\\ `+
+								                    `{} + i &\\sum_{j=0}^n a_j(t) ${nt.dd(`${nt.x}_2`,'t','j')} \\Biggr) = 0 \\\\ `+
+								`\\operatorname{Im}\\Biggl( &\\sum_{j=0}^n a_j(t) ${nt.dd(`${nt.x}_1`,'t','j')} + {} \\\\ `+
+								                    `{} + i &\\sum_{j=0}^n a_j(t) ${nt.dd(`${nt.x}_2`,'t','j')} \\Biggr) = 0 `+
+							`\\end{aligned} \\right. \\]`,
+							`\\[ \\left\\{ \\begin{aligned} `+
+								`\\sum_{j=0}^n a_j(t) ${nt.dd(`${nt.x}_1`,'t','j')} = 0 \\\\ `+
+								`\\sum_{j=0}^n a_j(t) ${nt.dd(`${nt.x}_2`,'t','j')} = 0 `+
+							`\\end{aligned} \\right. \\]`,
+						]},
+					],
+				},
+			},
 			generalSolutionMethod: {
 				close: true,
 			},
