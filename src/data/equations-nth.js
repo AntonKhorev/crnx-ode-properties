@@ -7,37 +7,41 @@ const characteristicEquationContent=require('../characteristic-equation-content'
 const LinearEquation=require('../linear-equation')
 const LinearConstantEquation=require('../linear-constant-equation')
 
-const on_linear_linear_equation=(input,isConstant)=>nt=>(
+const on_linear_linear_equation=isConstant=>input=>nt=>(
 	`\\sum_{i=0}^n a_i`+(isConstant?``:`(t)`)+` ${nt.dd(nt.x,'t','i')} = `+(input?`${input}(t)`:`0`)
 )
-const on_linear_resolved_equation=(input,isConstant)=>nt=>(
+const on_linear_resolved_equation=isConstant=>input=>nt=>(
 	`${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i`+(isConstant?``:`(t)`)+` ${nt.dd(nt.x,'t','i')}`+(input?` + ${input}(t)`:``)
 )
-const on_linear_system_equation=(input,isConstant)=>nt=>`\\left\\{ \\begin{array}{rcl}`+
-	`${nt.dd(`${nt.x}_1`)} &=& ${nt.x}_2 \\\\`+
-	`${nt.dd(`${nt.x}_2`)} &=& ${nt.x}_3 \\\\`+
-	`&\\vdots \\\\`+
-	`${nt.dd(`${nt.x}_{n-1}`)} &=& ${nt.x}_n \\\\`+
-	`${nt.dd(`${nt.x}_n`)} &=& \\sum_{i=1}^{n} c_i`+(isConstant?``:`(t)`)+` ${nt.x}_i`+(input?` + ${input}(t)`:``)+
-`\\end{array} \\right.`
-const on_linear_vector_equation=(input,isConstant)=>nt=>`${nt.dd(nt.X)} {=} `+
-((input||!isConstant)?`\\! \\left[ \\begin{smallmatrix}`:`\\begin{bmatrix}`)+
-	(isConstant
-		?`0 & 1 & 0 & \\cdots & 0 \\\\`+
-		 `0 & 0 & 1 & \\cdots & 0 \\\\`+
-		 `\\vdots & \\vdots & \\vdots & \\ddots & \\vdots \\\\`+
-		 `0 & 0 & 0 & \\cdots & 1 \\\\`+
-		 `c_1 & c_2 & c_3 & \\cdots & c_n`
-		:`0 & 1 & \\cdots & 0 \\\\`+
-		 `\\vdots & \\vdots & \\ddots & \\vdots \\\\`+
-		 `0 & 0 & \\cdots & 1 \\\\`+
-		 `c_1\\mspace{-2mu}(t) & c_2\\mspace{-2mu}(t) & \\cdots & c_n\\mspace{-2mu}(t)`
-	)+
-((input||!isConstant)?`\\end{smallmatrix} \\right] \\!`:`\\end{bmatrix}`)+
-` ${nt.X}`+
-(input?` {+} \\! \\left[ \\begin{smallmatrix}`+
-	`0 \\\\`+(isConstant?` 0 \\\\`:``)+` \\vdots \\\\ 0 \\\\ ${input}(t)`+
-`\\end{smallmatrix} \\right]`:``)
+const on_linear_system_equation=isConstant=>input=>nt=>(
+	`\\left\\{ \\begin{array}{rcl}`+
+		`${nt.dd(`${nt.x}_1`)} &=& ${nt.x}_2 \\\\`+
+		`${nt.dd(`${nt.x}_2`)} &=& ${nt.x}_3 \\\\`+
+		`&\\vdots \\\\`+
+		`${nt.dd(`${nt.x}_{n-1}`)} &=& ${nt.x}_n \\\\`+
+		`${nt.dd(`${nt.x}_n`)} &=& \\sum_{i=1}^{n} c_i`+(isConstant?``:`(t)`)+` ${nt.x}_i`+(input?` + ${input}(t)`:``)+
+	`\\end{array} \\right.`
+)
+const on_linear_vector_equation=isConstant=>input=>nt=>(
+	`${nt.dd(nt.X)} {=} `+
+	((input||!isConstant)?`\\! \\left[ \\begin{smallmatrix}`:`\\begin{bmatrix}`)+
+		(isConstant
+			?`0 & 1 & 0 & \\cdots & 0 \\\\`+
+			 `0 & 0 & 1 & \\cdots & 0 \\\\`+
+			 `\\vdots & \\vdots & \\vdots & \\ddots & \\vdots \\\\`+
+			 `0 & 0 & 0 & \\cdots & 1 \\\\`+
+			 `c_1 & c_2 & c_3 & \\cdots & c_n`
+			:`0 & 1 & \\cdots & 0 \\\\`+
+			 `\\vdots & \\vdots & \\ddots & \\vdots \\\\`+
+			 `0 & 0 & \\cdots & 1 \\\\`+
+			 `c_1\\mspace{-2mu}(t) & c_2\\mspace{-2mu}(t) & \\cdots & c_n\\mspace{-2mu}(t)`
+		)+
+	((input||!isConstant)?`\\end{smallmatrix} \\right] \\!`:`\\end{bmatrix}`)+
+	` ${nt.X}`+
+	(input?` {+} \\! \\left[ \\begin{smallmatrix}`+
+		`0 \\\\`+(isConstant?` 0 \\\\`:``)+` \\vdots \\\\ 0 \\\\ ${input}(t)`+
+	`\\end{smallmatrix} \\right]`:``)
+)
 
 const on_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt=>[
 	`solve the characteristic equation for \\( λ \\):`,
@@ -70,19 +74,19 @@ const on_linear_associatedHomogeneousEquation_trait=(classId,isConstant,isClosed
 	const trait={
 		contents: {
 			[`linear_${classId}`]: nt=>[
-				`\\[ `+on_linear_linear_equation(0,isConstant)(nt)+` \\]`,
+				`\\[ `+on_linear_linear_equation(isConstant)(0)(nt)+` \\]`,
 				...note,
 			],
 			[`resolved_${classId}`]: nt=>[
-				`\\[ `+on_linear_resolved_equation(0,isConstant)(nt)+` \\]`,
+				`\\[ `+on_linear_resolved_equation(isConstant)(0)(nt)+` \\]`,
 				...note,
 			],
 			[`system_${classId}`]: nt=>[
-				`\\[ `+on_linear_system_equation(0,isConstant)(nt)+` \\]`,
+				`\\[ `+on_linear_system_equation(isConstant)(0)(nt)+` \\]`,
 				...note,
 			],
 			[`vector_${classId}`]: nt=>[
-				`\\[ `+on_linear_vector_equation(0,isConstant)(nt)+` \\]`,
+				`\\[ `+on_linear_vector_equation(isConstant)(0)(nt)+` \\]`,
 				...note,
 			],
 		},
@@ -193,32 +197,32 @@ module.exports={
 		forms: [
 			{
 				is: 't,x,linear_on_linear',
-				equation: on_linear_linear_equation('f',false),
+				equation: on_linear_linear_equation(false)('f'),
 				notes: nt=>[
 					`\\( a_n(t) \\ne 0 \\) on the entire interval of interest`,
 				],
 			},
 			{
 				is: 't,x,resolved_on_linear',
-				equation: on_linear_resolved_equation('g',false),
+				equation: on_linear_resolved_equation(false)('g'),
 			},
 			{
 				is: 't,xi,system_on_linear',
-				equation: on_linear_system_equation('g',false),
+				equation: on_linear_system_equation(false)('g'),
 			},
 			{
 				is: 't,X,vector_on_linear',
-				equation: on_linear_vector_equation('g',false),
+				equation: on_linear_vector_equation(false)('g'),
 			},
 		],
 		traits: {
 			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linear',false,false),
 			generalSolutionMethod: {
 				contents: {
-					linear_on_linear:   nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'f',on_linear_linear_equation  ).getContentFor_generalSolutionMethod()(nt),
-					resolved_on_linear: nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'g',on_linear_resolved_equation).getContentFor_generalSolutionMethod()(nt),
-					system_on_linear:   nt=>new LinearEquation(new TexSystemDepvar(nt.x)     ,'g',on_linear_system_equation  ).getContentFor_generalSolutionMethod()(nt),
-					vector_on_linear:   nt=>new LinearEquation(new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation  ).getContentFor_generalSolutionMethod()(nt),
+					linear_on_linear:   nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'f',on_linear_linear_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
+					resolved_on_linear: nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'g',on_linear_resolved_equation(false)).getContentFor_generalSolutionMethod()(nt),
+					system_on_linear:   nt=>new LinearEquation(new TexSystemDepvar(nt.x)     ,'g',on_linear_system_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
+					vector_on_linear:   nt=>new LinearEquation(new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
 				},
 			},
 		},
@@ -233,22 +237,22 @@ module.exports={
 		forms: [
 			{
 				is: 't,x,linear_on_linearHomogeneous',
-				equation: on_linear_linear_equation(0,false),
+				equation: on_linear_linear_equation(false)(0),
 				notes: nt=>[
 					`\\( a_n(t) \\ne 0 \\) on the entire interval of interest`,
 				],
 			},
 			{
 				is: 't,x,resolved_on_linearHomogeneous',
-				equation: on_linear_resolved_equation(0,false),
+				equation: on_linear_resolved_equation(false)(0),
 			},
 			{
 				is: 't,xi,system_on_linearHomogeneous',
-				equation: on_linear_system_equation(0,false),
+				equation: on_linear_system_equation(false)(0),
 			},
 			{
 				is: 't,X,vector_on_linearHomogeneous',
-				equation: on_linear_vector_equation(0,false),
+				equation: on_linear_vector_equation(false)(0),
 			},
 		],
 		traits: {
@@ -295,22 +299,22 @@ module.exports={
 		forms: [
 			{
 				is: 't,x,linear_on_linearConstant',
-				equation: on_linear_linear_equation('f',true),
+				equation: on_linear_linear_equation(true)('f'),
 				notes: nt=>[
 					`\\( a_n \\ne 0 \\)`,
 				],
 			},
 			{
 				is: 't,x,resolved_on_linearConstant',
-				equation: on_linear_resolved_equation('g',true),
+				equation: on_linear_resolved_equation(true)('g'),
 			},
 			{
 				is: 't,xi,system_on_linearConstant',
-				equation: on_linear_system_equation('g',true),
+				equation: on_linear_system_equation(true)('g'),
 			},
 			{
 				is: 't,X,vector_on_linearConstant',
-				equation: on_linear_vector_equation('g',true),
+				equation: on_linear_vector_equation(true)('g'),
 			},
 		],
 		traits: {
@@ -318,7 +322,7 @@ module.exports={
 			generalSolutionMethod: {
 				contents: {
 					linear_on_linearConstant: nt=>new LinearConstantEquation(
-						new TexScalarDepvar(nt.x),'f',on_linear_linear_equation
+						new TexScalarDepvar(nt.x),'f',on_linear_linear_equation(true)
 					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
 							new TexScalarDepvar(nt.x)._('h'),
@@ -326,7 +330,7 @@ module.exports={
 						)(nt)
 					)(nt),
 					resolved_on_linearConstant: nt=>new LinearConstantEquation(
-						new TexScalarDepvar(nt.x),'g',on_linear_resolved_equation
+						new TexScalarDepvar(nt.x),'g',on_linear_resolved_equation(true)
 					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
 							new TexScalarDepvar(nt.x)._('h'),
@@ -334,7 +338,7 @@ module.exports={
 						)(nt)
 					)(nt),
 					system_on_linearConstant: nt=>new LinearConstantEquation(
-						new TexSystemDepvar(nt.x),'g',on_linear_system_equation
+						new TexSystemDepvar(nt.x),'g',on_linear_system_equation(true)
 					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
 							new TexSystemDepvar(nt.x)._('h'),
@@ -342,7 +346,7 @@ module.exports={
 						)(nt)
 					)(nt),
 					vector_on_linearConstant: nt=>new LinearConstantEquation(
-						new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation
+						new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation(true)
 					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
 							new TexVectorDepvar(nt.X,nt.x)._('h'),
@@ -364,22 +368,22 @@ module.exports={
 		forms: [
 			{
 				is: 't,x,linear_on_linearHomogeneousConstant',
-				equation: on_linear_linear_equation(0,true),
+				equation: on_linear_linear_equation(true)(0),
 				notes: nt=>[
 					`\\( a_n \\ne 0 \\)`,
 				],
 			},
 			{
 				is: 't,x,resolved_on_linearHomogeneousConstant',
-				equation: on_linear_resolved_equation(0,true),
+				equation: on_linear_resolved_equation(true)(0),
 			},
 			{
 				is: 't,xi,system_on_linearHomogeneousConstant',
-				equation: on_linear_system_equation(0,true),
+				equation: on_linear_system_equation(true)(0),
 			},
 			{
 				is: 't,X,vector_on_linearHomogeneousConstant',
-				equation: on_linear_vector_equation(0,true),
+				equation: on_linear_vector_equation(true)(0),
 			},
 		],
 		traits: {
