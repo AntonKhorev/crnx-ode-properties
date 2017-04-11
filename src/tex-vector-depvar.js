@@ -28,11 +28,12 @@ class TexVectorDepvar extends TexDepvar {
 	firstComponentExpression(preambleTemplate,firstComponentTemplate) {
 		const x=new TexScalarDepvar(this.x,this.subscripts)
 		return nt=>[
-			`first component of `+preambleTemplate(this),
+			preambleTemplate(`first component of `),
 			firstComponentTemplate(x),
 		]
 	}
 	restDiffComponentExpression() {
+		const x=new TexScalarDepvar(this.x,this.subscripts)
 		return nt=>[
 			`find other components by differentiating \\( ${x} \\):`,
 			`\\[ ${this} = \\begin{bmatrix}`+

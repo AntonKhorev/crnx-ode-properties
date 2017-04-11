@@ -33,7 +33,7 @@ class TexSystemDepvar extends TexDepvar {
 	}
 	firstComponentExpression(preambleTemplate,firstComponentTemplate) {
 		return nt=>[
-			`first component of `+preambleTemplate(this),
+			preambleTemplate(`first component of `),
 			firstComponentTemplate(this.component(1)),
 		]
 	}

@@ -25,7 +25,7 @@ class TexScalarDepvar extends TexDepvar {
 	}
 	firstComponentExpression(preambleTemplate,firstComponentTemplate) {
 		return nt=>[
-			preambleTemplate(this),
+			preambleTemplate(``),
 			firstComponentTemplate(this),
 		]
 	}

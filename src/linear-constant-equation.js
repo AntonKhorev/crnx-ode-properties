@@ -17,9 +17,23 @@ class LinearConstantEquation extends LinearEquation {
 			{type:'case',title:`using exponential response formula when \\( ${f}(t) = e^{r t} \\)`,content:[
 				// TODO define P(λ)
 				...x.firstComponentExpression(
-					x=>`the equation can be written as`,
+					c=>`${c}the equation can be written as`,
 					x1=>`\\[ P\\left(${nt.ddt}\\right) ${x1} = e^{r t} \\]`
 				)(nt),
+				`if`,
+				`\\[ P(r) {=} P'(r) {=} \\cdots {=} P^{(m-1)}(r) {=} 0 \\]`,
+				`and`,
+				`\\[ P^{(m)} \\ne 0 \\]`,
+				{type:'note',content:[
+					`this is equivalent to:`,
+					`if \\( r \\) is a root of \\( P \\) with multiplicity \\( m \\)`,
+					`where \\( m = 0 \\) means \\( r \\) is not a root of \\( P \\)`,
+				]},
+				...x._('p').firstComponentExpression(
+					c=>`then ${c}a particular solution is`,
+					x1=>`\\[ ${x1} = \\frac{t^m}{P^{(m)}(r)} e^{r t} \\]`
+				)(nt),
+				...x._('p').restDiffComponentExpression()(nt),
 			]},
 		]
 	}

@@ -50,7 +50,7 @@ const on_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt
 		`\\[ \\sum_{i=1}^r p_i + 2 \\cdot \\sum_{i=1}^s q_i = n \\]`,
 	]},
 	...x.firstComponentExpression(
-		x=>`general solution (with arbitrary constants \\( K_{ij} \\), \\( A_{ij} \\), \\( B_{ij} \\)):`,
+		c=>`${c}general solution (with arbitrary constants \\( K_{ij} \\), \\( A_{ij} \\), \\( B_{ij} \\)):`,
 		x1=>`\\[ \\begin{aligned}`+
 			`${x1}`+
 			` = \\: & \\sum_{i=1}^r \\sum_{j=1}^{p_i} K_{ij} \\, t^{j-1} \\, e^{λ_i t} + \\\\`+
