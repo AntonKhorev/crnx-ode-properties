@@ -394,6 +394,7 @@ module.exports={
 	},
 	o1_linearHomogeneous: {
 		parents: {
+			on_linearHomogeneous: true,
 			o1_separable: true,
 			o1_linear: true,
 		},

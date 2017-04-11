@@ -16,6 +16,7 @@ const traits=[
 				['additivitySolutionRelation'],
 				['linearCombinationSolutionRelation'],
 				['affineCombinationSolutionRelation'],
+				['realitySolutionRelation'],
 				['associatedSolutionRelation'],
 			]]
 		]],

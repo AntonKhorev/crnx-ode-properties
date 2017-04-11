@@ -18,7 +18,8 @@ const on_linear_system_equation=(input,isConstant)=>nt=>`\\left\\{ \\begin{array
 	`${nt.dd(`${nt.x}_{n-1}`)} &=& ${nt.x}_n \\\\`+
 	`${nt.dd(`${nt.x}_n`)} &=& \\sum_{i=1}^{n} c_i`+(isConstant?``:`(t)`)+` ${nt.x}_i`+(input?` + ${input}(t)`:``)+
 `\\end{array} \\right.`
-const on_linear_vector_equation=(input,isConstant)=>nt=>`${nt.dd(nt.X)} {=} `+(input?`\\! \\left[ \\begin{smallmatrix}`:`\\begin{bmatrix}`)+
+const on_linear_vector_equation=(input,isConstant)=>nt=>`${nt.dd(nt.X)} {=} `+
+((input||!isConstant)?`\\! \\left[ \\begin{smallmatrix}`:`\\begin{bmatrix}`)+
 	(isConstant
 		?`0 & 1 & 0 & \\cdots & 0 \\\\`+
 		 `0 & 0 & 1 & \\cdots & 0 \\\\`+
@@ -30,7 +31,9 @@ const on_linear_vector_equation=(input,isConstant)=>nt=>`${nt.dd(nt.X)} {=} `+(i
 		 `0 & 0 & \\cdots & 1 \\\\`+
 		 `c_1\\mspace{-2mu}(t) & c_2\\mspace{-2mu}(t) & \\cdots & c_n\\mspace{-2mu}(t)`
 	)+
-(input?`\\end{smallmatrix} \\right]`:`\\end{bmatrix}`)+(input?` \\! ${nt.X} {+} \\! \\left[ \\begin{smallmatrix}`+
+((input||!isConstant)?`\\end{smallmatrix} \\right] \\!`:`\\end{bmatrix}`)+
+` ${nt.X}`+
+(input?` {+} \\! \\left[ \\begin{smallmatrix}`+
 	`0 \\\\`+(isConstant?` 0 \\\\`:``)+` \\vdots \\\\ 0 \\\\ ${input}(t)`+
 `\\end{smallmatrix} \\right]`:``)
 
@@ -73,6 +76,95 @@ const on_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt
 		`\\end{aligned} \\]`
 	)(nt),
 ]
+
+const on_linear_associatedHomogeneousEquation_trait=(classId,isConstant,isClosed)=>{
+	const note=isClosed?[
+		{type:'note',content:[
+			`the equation is associated with itself`,
+		]},
+	]:[]
+	const trait={
+		contents: {
+			[`linear_${classId}`]: nt=>[
+				`\\[ `+on_linear_linear_equation(0,isConstant)(nt)+` \\]`,
+				...note,
+			],
+			[`resolved_${classId}`]: nt=>[
+				`\\[ `+on_linear_resolved_equation(0,isConstant)(nt)+` \\]`,
+				...note,
+			],
+			[`system_${classId}`]: nt=>[
+				`\\[ `+on_linear_system_equation(0,isConstant)(nt)+` \\]`,
+				...note,
+			],
+			[`vector_${classId}`]: nt=>[
+				`\\[ `+on_linear_vector_equation(0,isConstant)(nt)+` \\]`,
+				...note,
+			],
+		},
+	}
+	if (isClosed) {
+		trait.close=true
+	}
+	return trait
+}
+
+const on_linearHomogeneous_equilibriumSolutionMethod_trait=(classId,isConstant)=>{
+	const t=isConstant?'':'(t)'
+	return {
+		contents: {
+			[`linear_${classId}`]: nt=>[
+				{type:'switch',title:`\\( a_0${t} \\) is`,content:[
+					{type:'case',title:`\\( a_0${t} = 0 \\)`,content:[
+						`\\[ ${nt.x} = K \\]`,
+					]},
+					{type:'case',title:`\\( a_0${t} \\ne 0 \\)`,content:[
+						`\\[ ${nt.x} = 0 \\]`,
+					]},
+				]},
+			],
+			[`resolved_${classId}`]: nt=>[
+				{type:'switch',title:`\\( b_0${t} \\) is`,content:[
+					{type:'case',title:`\\( b_0${t} = 0 \\)`,content:[
+						`\\[ ${nt.x} = K \\]`,
+					]},
+					{type:'case',title:`\\( b_0${t} \\ne 0 \\)`,content:[
+						`\\[ ${nt.x} = 0 \\]`,
+					]},
+				]},
+			],
+			[`system_${classId}`]: nt=>[
+				{type:'switch',title:`\\( c_1${t} \\) is`,content:[
+					{type:'case',title:`\\( c_1${t} = 0 \\)`,content:[
+						`\\[ \\left\\{ \\begin{array}{rcl}`+
+							`${nt.x}_1 &=& K \\\\`+
+							`${nt.x}_2 &=& 0 \\\\`+
+							`&\\vdots \\\\`+
+							`${nt.x}_n &=& 0 \\\\`+
+						`\\end{array} \\right. \\]`,
+					]},
+					{type:'case',title:`\\( c_1${t} \\ne 0 \\)`,content:[
+						`\\[ \\left\\{ \\begin{array}{rcl}`+
+							`${nt.x}_1 &=& 0 \\\\`+
+							`&\\vdots \\\\`+
+							`${nt.x}_n &=& 0 \\\\`+
+						`\\end{array} \\right. \\]`,
+					]},
+				]},
+			],
+			[`vector_${classId}`]: nt=>[
+				{type:'switch',title:`\\( c_1${t} \\) is`,content:[
+					{type:'case',title:`\\( c_1${t} = 0 \\)`,content:[
+						`\\[ ${nt.X} = \\begin{bmatrix} K \\\\ 0 \\\\ \\vdots \\\\ 0 \\end{bmatrix} \\]`,
+					]},
+					{type:'case',title:`\\( c_1${t} \\ne 0 \\)`,content:[
+						`\\[ ${nt.X} = \\begin{bmatrix} 0 \\\\ \\vdots \\\\ 0 \\end{bmatrix} \\]`,
+					]},
+				]},
+			],
+		},
+	}
+}
 
 module.exports={
 	on: {
@@ -136,22 +228,7 @@ module.exports={
 			},
 		],
 		traits: {
-			associatedHomogeneousEquation: {
-				contents: {
-					linear_on_linear: nt=>[
-						`\\[ `+on_linear_linear_equation(0,false)(nt)+` \\]`,
-					],
-					resolved_on_linear: nt=>[
-						`\\[ `+on_linear_resolved_equation(0,false)(nt)+` \\]`,
-					],
-					system_on_linear: nt=>[
-						`\\[ `+on_linear_system_equation(0,false)(nt)+` \\]`,
-					],
-					vector_on_linear: nt=>[
-						`\\[ `+on_linear_vector_equation(0,false)(nt)+` \\]`,
-					],
-				},
-			},
+			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linear',false,false),
 			generalSolutionMethod: {
 				contents: {
 					linear_on_linear:   nt=>on_linear_generalSolutionMethod_content(new TexScalarDepvar(nt.x),'f',on_linear_linear_equation)(nt),
@@ -160,6 +237,42 @@ module.exports={
 					vector_on_linear:   nt=>on_linear_generalSolutionMethod_content(new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation)(nt),
 				},
 			},
+		},
+	},
+	on_linearHomogeneous: {
+		parents: {
+			on_linear: true,
+		},
+		name: "nth-order linear homogeneous",
+		htmlName: "<em>n</em>th-order <a href='https://en.wikipedia.org/wiki/Homogeneous_differential_equation#Homogeneous_linear_differential_equations'>linear homogeneous</a>",
+		importance: 2,
+		forms: [
+			{
+				is: 't,x,linear_on_linearHomogeneous',
+				equation: on_linear_linear_equation(0,false),
+				notes: nt=>[
+					`\\( a_n(t) \\ne 0 \\) on the entire interval of interest`,
+				],
+			},
+			{
+				is: 't,x,resolved_on_linearHomogeneous',
+				equation: on_linear_resolved_equation(0,false),
+			},
+			{
+				is: 't,xi,system_on_linearHomogeneous',
+				equation: on_linear_system_equation(0,false),
+			},
+			{
+				is: 't,X,vector_on_linearHomogeneous',
+				equation: on_linear_vector_equation(0,false),
+			},
+		],
+		traits: {
+			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linearHomogeneous',false,true),
+			generalSolutionMethod: {
+				close: true,
+			},
+			equilibriumSolutionMethod: on_linearHomogeneous_equilibriumSolutionMethod_trait('on_linearHomogeneous',false),
 		},
 	},
 	on_linearConstant: {
@@ -191,22 +304,7 @@ module.exports={
 			},
 		],
 		traits: {
-			associatedHomogeneousEquation: {
-				contents: {
-					linear_on_linearConstant: nt=>[
-						`\\[ `+on_linear_linear_equation(0,true)(nt)+` \\]`,
-					],
-					resolved_on_linearConstant: nt=>[
-						`\\[ `+on_linear_resolved_equation(0,true)(nt)+` \\]`,
-					],
-					system_on_linearConstant: nt=>[
-						`\\[ `+on_linear_system_equation(0,true)(nt)+` \\]`,
-					],
-					vector_on_linearConstant: nt=>[
-						`\\[ `+on_linear_vector_equation(0,true)(nt)+` \\]`,
-					],
-				},
-			},
+			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linearConstant',true,false),
 			generalSolutionMethod: {
 				contents: {
 					linear_on_linearConstant: nt=>on_linear_generalSolutionMethod_content(
@@ -243,6 +341,7 @@ module.exports={
 	},
 	on_linearHomogeneousConstant: {
 		parents: {
+			on_linearHomogeneous: true,
 			on_linearConstant: true,
 		},
 		name: "nth-order linear homogeneous with constant coefficients",
@@ -270,6 +369,7 @@ module.exports={
 			},
 		],
 		traits: {
+			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linearHomogeneousConstant',true,true),
 			characteristicEquation: {
 				contents: {
 					linear_on_linearHomogeneousConstant: characteristicEquationContent(['i','\\sum_{i=0}^n a_i'],'=','0'),
@@ -302,59 +402,7 @@ module.exports={
 					)(nt),
 				},
 			},
-			equilibriumSolutionMethod: {
-				contents: {
-					linear_on_linearHomogeneousConstant: nt=>[
-						{type:'switch',title:`\\( a_0 \\) is`,content:[
-							{type:'case',title:`\\( a_0 = 0 \\)`,content:[
-								`\\[ ${nt.x} = K \\]`,
-							]},
-							{type:'case',title:`\\( a_0 \\ne 0 \\)`,content:[
-								`\\[ ${nt.x} = 0 \\]`,
-							]},
-						]},
-					],
-					resolved_on_linearHomogeneousConstant: nt=>[
-						{type:'switch',title:`\\( b_0 \\) is`,content:[
-							{type:'case',title:`\\( b_0 = 0 \\)`,content:[
-								`\\[ ${nt.x} = K \\]`,
-							]},
-							{type:'case',title:`\\( b_0 \\ne 0 \\)`,content:[
-								`\\[ ${nt.x} = 0 \\]`,
-							]},
-						]},
-					],
-					system_on_linearHomogeneousConstant: nt=>[
-						{type:'switch',title:`\\( c_1 \\) is`,content:[
-							{type:'case',title:`\\( c_1 = 0 \\)`,content:[
-								`\\[ \\left\\{ \\begin{array}{rcl}`+
-									`${nt.x}_1 &=& K \\\\`+
-									`${nt.x}_2 &=& 0 \\\\`+
-									`&\\vdots \\\\`+
-									`${nt.x}_n &=& 0 \\\\`+
-								`\\end{array} \\right. \\]`,
-							]},
-							{type:'case',title:`\\( c_1 \\ne 0 \\)`,content:[
-								`\\[ \\left\\{ \\begin{array}{rcl}`+
-									`${nt.x}_1 &=& 0 \\\\`+
-									`&\\vdots \\\\`+
-									`${nt.x}_n &=& 0 \\\\`+
-								`\\end{array} \\right. \\]`,
-							]},
-						]},
-					],
-					vector_on_linearHomogeneousConstant: nt=>[
-						{type:'switch',title:`\\( c_1 \\) is`,content:[
-							{type:'case',title:`\\( c_1 = 0 \\)`,content:[
-								`\\[ ${nt.X} = \\begin{bmatrix} K \\\\ 0 \\\\ \\vdots \\\\ 0 \\end{bmatrix} \\]`,
-							]},
-							{type:'case',title:`\\( c_1 \\ne 0 \\)`,content:[
-								`\\[ ${nt.X} = \\begin{bmatrix} 0 \\\\ \\vdots \\\\ 0 \\end{bmatrix} \\]`,
-							]},
-						]},
-					],
-				},
-			},
+			equilibriumSolutionMethod: on_linearHomogeneous_equilibriumSolutionMethod_trait('on_linearHomogeneousConstant',true),
 		},
 	},
 }

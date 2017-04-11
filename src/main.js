@@ -26,6 +26,7 @@ const i18n=(id)=>{
 		'trait.additivitySolutionRelation': "Additivity of solutions",
 		'trait.linearCombinationSolutionRelation': "<a href='https://en.wikipedia.org/wiki/Linear_combination'>Linear combination</a> property of solutions",
 		'trait.affineCombinationSolutionRelation': "<a href='https://en.wikipedia.org/wiki/Affine_combination'>Affine combination</a> property of solutions",
+		'trait.realitySolutionRelation': "Reality principle", // https://ocw.mit.edu/courses/mathematics/18-03-differential-equations-spring-2010/readings/supp_notes/MIT18_03S10_chapter_6.pdf
 		'trait.associatedSolutionRelation': "Associated homogeneous equation solution",
 
 		// TODO remove
