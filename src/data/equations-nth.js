@@ -4,6 +4,8 @@ const TexScalarDepvar=require('../tex-scalar-depvar')
 const TexSystemDepvar=require('../tex-system-depvar')
 const TexVectorDepvar=require('../tex-vector-depvar')
 const characteristicEquationContent=require('../characteristic-equation-content')
+const LinearEquation=require('../linear-equation')
+const LinearConstantEquation=require('../linear-constant-equation')
 
 const on_linear_linear_equation=(input,isConstant)=>nt=>(
 	`\\sum_{i=0}^n a_i`+(isConstant?``:`(t)`)+` ${nt.dd(nt.x,'t','i')} = `+(input?`${input}(t)`:`0`)
@@ -36,64 +38,6 @@ const on_linear_vector_equation=(input,isConstant)=>nt=>`${nt.dd(nt.X)} {=} `+
 (input?` {+} \\! \\left[ \\begin{smallmatrix}`+
 	`0 \\\\`+(isConstant?` 0 \\\\`:``)+` \\vdots \\\\ 0 \\\\ ${input}(t)`+
 `\\end{smallmatrix} \\right]`:``)
-
-class LinearEquation {
-	constructor(x,f,equation) {
-		this.x=x
-		this.f=f
-		this.equation=equation
-	}
-	getContentFor_generalSolutionMethod(homogeneousGeneralSolution) {
-		const x=this.x
-		const extraSection=(title,content)=>(content!==undefined
-			? {type:'extra',title,content}
-			: title
-		)
-		return nt=>[
-			extraSection(`find the general solution \\( ${x._('h')} \\) of the associated homogeneous equation`,homogeneousGeneralSolution),
-			{type:'switch',title:`find a particular solution \\( ${x._('p')} \\) of the original equation`,
-				content:this.particularSolutionCases()(nt)
-			},
-			`general solution (with arbitrary constants included in \\( ${x._('h')}) \\):`,
-			x.parallelExpression(x=>`${x} &= ${x._('h')} + ${x._('p')}`)
-		]
-	}
-	particularSolutionCases() {
-		const x=this.x
-		const f=this.f
-		return nt=>[
-			{type:'case',title:`using superposition when \\( ${f}(t) = k_1 ${f}_1(t) + k_2 ${f}_2(t) + \\cdots \\)`,content:[
-				`for each term \\( k_j ${f}_j(t) \\), find a particular solution \\( ${x._('p','j')} \\) of:`,
-				`\\[ ${this.equation(`${f}_j`,false)(nt)} \\]`,
-				`particular solution of the original equation is a linear combinations of these solutions:`,
-				x._('p').parallelExpression(xp=>`${xp} &= k_1 ${xp._(1)} + k_2 ${xp._(2)} + \\cdots`),
-			]},
-		]
-	}
-}
-
-class LinearConstantEquation extends LinearEquation {
-	particularSolutionCases() {
-		const x=this.x
-		const f=this.f
-		return nt=>[
-			...super.particularSolutionCases()(nt),
-			{type:'case',title:`using time invariance when \\( ${f}(t) = ${f}_1(t+t_1) \\)`,content:[
-				`find a particular solution \\( ${x._('p',1)} \\) of:`,
-				`\\[ ${this.equation(`${f}_1`,false)(nt)} \\]`,
-				`particular solution of the original equation is:`,
-				x._('p').parallelExpression(xp=>`${xp}(t) &= ${xp._(1)}(t+t_1)`),
-			]},
-			{type:'case',title:`using exponential response formula when \\( ${f}(t) = e^{r t} \\)`,content:[
-				// TODO define P(λ)
-				...x.firstComponentExpression(
-					x=>`the equation can be written as`,
-					x1=>`\\[ P\\left(${nt.ddt}\\right) ${x1} = e^{r t} \\]`
-				)(nt),
-			]},
-		]
-	}
-}
 
 const on_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt=>[
 	`solve the characteristic equation for \\( λ \\):`,
