@@ -23,13 +23,13 @@ class TexScalarDepvar extends TexDepvar {
 	parallelExpression(template) {
 		return `\\[ ${template(this).replace(/&/g,'')} \\]`
 	}
-	firstComponentExpression(preambleTemplate,firstComponentTemplate) {
-		return nt=>[
-			preambleTemplate(``),
-			firstComponentTemplate(this),
-		]
+	firstComponentExpressionPreamble(template) {
+		return template(``,this)
 	}
-	restDiffComponentExpression() {
+	firstComponentExpression(template) {
+		return `\\[ ${template(this)} \\]`
+	}
+	restDiffComponentExpressionContent() {
 		return nt=>[]
 	}
 }

@@ -7,8 +7,9 @@ class TexDepvar {
 	// _(...ii)
 	// toString()
 	// parallelExpression(template)
-	// firstComponentExpression(preambleTemplate,firstComponentTemplate)(nt) // TODO remove nt
-	// restDiffComponentExpression()(nt)
+	// firstComponentExpressionPreamble(template)
+	// firstComponentExpression(template)
+	// restDiffComponentExpressionContent()(nt) // TODO remove nt
 }
 
 module.exports=TexDepvar

@@ -75,16 +75,18 @@ const on_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt
 		`sum of multiplicities is equal to order of the equation:`,
 		`\\[ \\sum_{i=1}^r p_i + 2 \\cdot \\sum_{i=1}^s q_i = n \\]`,
 	]},
-	...x.firstComponentExpression(
-		c=>`${c}general solution (with arbitrary constants \\( K_{ij} \\), \\( A_{ij} \\), \\( B_{ij} \\)):`,
-		x1=>`\\[ \\begin{aligned}`+
+	x.firstComponentExpressionPreamble(
+		c=>`${c}general solution (with arbitrary constants \\( K_{ij} \\), \\( A_{ij} \\), \\( B_{ij} \\)):`
+	),
+	x.firstComponentExpression(
+		x1=>`\\begin{aligned}`+
 			`${x1}`+
 			` = \\: & \\sum_{i=1}^r \\sum_{j=1}^{p_i} K_{ij} \\, t^{j-1} \\, e^{λ_i t} + \\\\`+
 			` + \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} A_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\cos β_i t \\\\`+
 			` + \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} B_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\sin β_i t`+
-		`\\end{aligned} \\]`
-	)(nt),
-	...x.restDiffComponentExpression()(nt),
+		`\\end{aligned}`
+	),
+	...x.restDiffComponentExpressionContent()(nt),
 ]
 
 const on_linear_associatedHomogeneousEquation_trait=(classId,isConstant,isClosed)=>{

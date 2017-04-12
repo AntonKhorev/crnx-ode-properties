@@ -319,21 +319,6 @@
 						background: #FFF;
 						transition: none;
 					}
-					details {
-						background: #FFD;
-						margin: 1em -2px;
-						&:last-child {
-							margin-bottom: -2px;
-						}
-						padding: 1px;
-						summary {
-							margin: -1px;
-							padding: 1px;
-						}
-						details {
-							background: #EDF;
-						}
-					}
 					div.switch {
 						&:last-child {
 							margin-bottom: 0;
@@ -349,6 +334,30 @@
 					div.cases {
 						margin-left: -2px;
 						padding-left: 1px;
+					}
+					details {
+						background: #FFD;
+						margin: 1em -2px;
+						&:last-child {
+							margin-bottom: -2px;
+						}
+						padding: 1px;
+						summary {
+							margin: -1px;
+							padding: 1px;
+						}
+						div.condition {
+							background: linear-gradient(to top, #EDF, transparent);
+						}
+						details {
+							background: #EDF;
+							div.condition {
+								background: linear-gradient(to top, #BBE, transparent);
+							}
+							details {
+								background: #BBE;
+							}
+						}
 					}
 				}
 			}

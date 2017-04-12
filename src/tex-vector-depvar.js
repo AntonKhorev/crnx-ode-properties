@@ -25,14 +25,15 @@ class TexVectorDepvar extends TexDepvar {
 	parallelExpression(template) {
 		return `\\[ ${template(this).replace(/&/g,'')} \\]`
 	}
-	firstComponentExpression(preambleTemplate,firstComponentTemplate) {
+	firstComponentExpressionPreamble(template) {
 		const x=new TexScalarDepvar(this.x,this.subscripts)
-		return nt=>[
-			preambleTemplate(`first component of `),
-			firstComponentTemplate(x),
-		]
+		return template(`first component of `,x)
 	}
-	restDiffComponentExpression() {
+	firstComponentExpression(template) {
+		const x=new TexScalarDepvar(this.x,this.subscripts)
+		return `\\[ ${template(x)} \\]`
+	}
+	restDiffComponentExpressionContent() {
 		const x=new TexScalarDepvar(this.x,this.subscripts)
 		return nt=>[
 			`find other components by differentiating \\( ${x} \\):`,

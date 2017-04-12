@@ -31,13 +31,13 @@ class TexSystemDepvar extends TexDepvar {
 			`${template(this.component('n'))} `+
 		`\\end{aligned} \\right. \\]`
 	}
-	firstComponentExpression(preambleTemplate,firstComponentTemplate) {
-		return nt=>[
-			preambleTemplate(`first component of `),
-			firstComponentTemplate(this.component(1)),
-		]
+	firstComponentExpressionPreamble(template) {
+		return template(`first component of `,this.component(1))
 	}
-	restDiffComponentExpression() {
+	firstComponentExpression(template) {
+		return `\\[ ${template(this.component(1))} \\]`
+	}
+	restDiffComponentExpressionContent() {
 		return nt=>[
 			`find other components by differentiating \\( ${this.component(1)} \\):`,
 			`\\[ \\begin{array}{rcl}`+
