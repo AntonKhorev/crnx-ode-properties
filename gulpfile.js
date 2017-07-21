@@ -7,6 +7,6 @@ gulpTasks(
 	gulp,
 	"ODE properties",
 	[],
-	["'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML'"], // have to quote it manually b/c contains =
+	["'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML'"], // have to quote it manually b/c contains =
 	[require.resolve('crnx-base')]
 )
