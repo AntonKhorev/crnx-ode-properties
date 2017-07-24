@@ -5,6 +5,50 @@ const LhcContent=require('../lhc-content-classes')
 
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
+// { paste with changes from on_*
+const o2_linear_linear_equation=isConstant=>input=>nt=>{
+	const t=(isConstant?``:`(t)`)
+	return `a_2${t} ${nt.dd(nt.x,'t',2)} + a_1${t} ${nt.dxdt} + a_0${t} ${nt.x} = `+(input?`${input}(t)`:`0`)
+}
+const o2_linear_resolved_equation=isConstant=>input=>nt=>{
+	const t=(isConstant?``:`(t)`)
+	return `${nt.dd(nt.x,'t','2')} = b_1${t} ${nt.dxdt} + b_0${t} ${nt.x}`+(input?` + ${input}(t)`:``)
+}
+const o2_linear_system_equation=isConstant=>input=>nt=>{
+	const t=(isConstant?``:`(t)`)
+	return nt.sys2(
+		`${nt.dd(nt.x)} &= ${nt.y}`,
+		`${nt.dd(nt.y)} &= b_0${t} ${nt.x} + b_1${t} ${nt.y}`+(input?` + ${input}(t)`:``)
+	)
+}
+const o2_linear_vector_equation=isConstant=>input=>nt=>{
+	const t=(isConstant?``:`(t)`)
+	return `${nt.dd(nt.X)} = `+nt.mat2(0,1,`b_0${t}`,`b_1${t}`)+(input?` + `+nt.vec2(0,`${input}(t)`):``)
+}
+
+const o2_linear_forms=(classId,isConstant,isHomogeneous)=>[
+	{
+		is: `t,x,linear_${classId}`,
+		equation: o2_linear_linear_equation(isConstant)(isHomogeneous?0:'f'),
+		notes: nt=>[
+			`\\( a_2`+(isConstant?``:`(t)`)+` \\ne 0 \\)`+(isConstant?``:` on the entire interval of interest`),
+		],
+	},
+	{
+		is: `t,x,resolved_${classId}`,
+		equation: o2_linear_resolved_equation(isConstant)(isHomogeneous?0:'g'),
+	},
+	{
+		is: `t,xy,system_${classId}`,
+		equation: o2_linear_system_equation(isConstant)(isHomogeneous?0:'g'),
+	},
+	{
+		is: `t,X,vector_${classId}`,
+		equation: o2_linear_vector_equation(isConstant)(isHomogeneous?0:'g'),
+	},
+]
+// }
+
 const harmonicOscillatorType=(type,discriminantRelation,contentMethodName)=>({
 	parents: {
 		o2_harmonicOscillator: true,
@@ -114,11 +158,34 @@ module.exports={
 			},
 		],
 	},
+	o2_linear: {
+		parents: {
+			on_linear: true,
+			o2: true,
+		},
+		name: "second-order linear",
+		htmlName: "second-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a>",
+		importance: 2,
+		forms: o2_linear_forms('o2_linear',false,false),
+		traits: {
+			/*
+			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linear',false,false),
+			generalSolutionMethod: {
+				contents: {
+					linear_on_linear:   nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'f',on_linear_linear_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
+					resolved_on_linear: nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'g',on_linear_resolved_equation(false)).getContentFor_generalSolutionMethod()(nt),
+					system_on_linear:   nt=>new LinearEquation(new TexSystemDepvar(nt.x)     ,'g',on_linear_system_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
+					vector_on_linear:   nt=>new LinearEquation(new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
+				},
+			},
+			*/
+		},
+	},
 	o2_linearHomogeneous: {
 		parents: {
 			s2_linearHomogeneous: true,
 			on_linearHomogeneous: true,
-			o2: true,
+			o2_linear: true,
 		},
 		name: "second-order linear homogeneous",
 		htmlName: "second-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a> <a href='https://en.wikipedia.org/wiki/Homogeneous_differential_equation#Homogeneous_linear_differential_equations'>homogeneous</a>",
@@ -158,12 +225,32 @@ module.exports={
 			},
 		},
 	},
+	o2_linearConstant: {
+		parents: {
+			on_linearConstant: true,
+			o2_linear: true,
+		},
+		name: "second-order linear with constant coefficients",
+		importance: 2,
+		forms: [
+			{
+				is: 't,x,linear_o2_linearConstant',
+				equation: nt=>`a_2 ${nt.dd(nt.x,'t',2)} + a_1 ${nt.dxdt} + a_0 ${nt.x} = f(t)`,
+				notes: nt=>[
+					`\\( a_2 \\ne 0 \\)`,
+				],
+			},
+		],
+		traits: {
+		},
+	},
 	o2_linearHomogeneousConstant: {
 		parents: {
 			s2_linearHomogeneousConstant: true,
 			on_linearHomogeneousConstant: true,
 			o2_autonomous: true,
 			o2_linearHomogeneous: true,
+			o2_linearConstant: true,
 		},
 		name: "second-order linear homogeneous with constant coefficients",
 		htmlName: "second-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Homogeneous_equations_with_constant_coefficients'>linear homogeneous with constant coefficients</a>",
