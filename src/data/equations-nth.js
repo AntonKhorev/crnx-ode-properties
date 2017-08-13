@@ -4,16 +4,11 @@ const TexScalarDepvar=require('../tex-scalar-depvar')
 const TexSystemDepvar=require('../tex-system-depvar')
 const TexVectorDepvar=require('../tex-vector-depvar')
 const characteristicEquationContent=require('../characteristic-equation-content')
+const LinearEquationFormSuite=require('../linear-equation-form-suite')
 const LinearEquation=require('../linear-equation')
 const LinearConstantEquation=require('../linear-constant-equation')
 
-class on_FormSuite /*extends LinearEquationFormSuite*/ {
-	makeForm(equationFn) {
-		return {
-			equation: equationFn,
-			// TODO characteristic eqn
-		}
-	}
+class on_FormSuite extends LinearEquationFormSuite {
 	get linear() {
 		return this.makeForm(isConstant=>input=>nt=>(
 			`\\sum_{i=0}^n a_i`+(isConstant?``:`(t)`)+` ${nt.dd(nt.x,'t','i')} = `+(input?`${input}(t)`:`0`)

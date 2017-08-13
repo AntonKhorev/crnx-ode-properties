@@ -3,56 +3,69 @@
 const TexScalarDepvar=require('../tex-scalar-depvar')
 const TexSystem2Depvar=require('../tex-system2-depvar')
 const TexVectorDepvar=require('../tex-vector-depvar')
+const LinearEquationFormSuite=require('../linear-equation-form-suite')
 const LinearEquation=require('../linear-equation')
 const LhcParam=require('../lhc-param-classes')
 const LhcContent=require('../lhc-content-classes')
 
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
-// { paste with changes from on_*
-const o2_linear_linear_equation=isConstant=>input=>nt=>{
-	const t=(isConstant?``:`(t)`)
-	const pl=(isConstant?`+`:`{+}`)
-	const eq=(isConstant?`=`:`{=}`)
-	return `a_2${t} ${nt.dd(nt.x,'t',2)} ${pl} a_1${t} ${nt.dxdt} ${pl} a_0${t} ${nt.x} ${eq} `+(input?`${input}(t)`:`0`)
-}
-const o2_linear_resolved_equation=isConstant=>input=>nt=>{
-	const t=(isConstant?``:`(t)`)
-	return `${nt.dd(nt.x,'t','2')} = b_1${t} ${nt.dxdt} + b_0${t} ${nt.x}`+(input?` + ${input}(t)`:``)
-}
-const o2_linear_system_equation=isConstant=>input=>nt=>{
-	const t=(isConstant?``:`(t)`)
-	return nt.sys2(
-		`${nt.dd(nt.x)} &= ${nt.y}`,
-		`${nt.dd(nt.y)} &= b_0${t} ${nt.x} + b_1${t} ${nt.y}`+(input?` + ${input}(t)`:``)
-	)
-}
-const o2_linear_vector_equation=isConstant=>input=>nt=>{
-	const t=(isConstant?``:`(t)`)
-	const pl=(isConstant||!input?`+`:`{+}`)
-	const eq=(isConstant||!input?`=`:`{=}`)
-	return `${nt.dd(nt.X)} ${eq} `+nt.mat2(0,1,`b_0${t}`,`b_1${t}`)+` ${nt.X} `+(input?` ${pl} `+nt.vec2(0,`${input}(t)`):``)
+class o2_FormSuite extends LinearEquationFormSuite {
+	get linear() {
+		return this.makeForm(isConstant=>input=>nt=>{
+			const t=(isConstant?``:`(t)`)
+			const pl=(isConstant?`+`:`{+}`)
+			const eq=(isConstant?`=`:`{=}`)
+			return `a_2${t} ${nt.dd(nt.x,'t',2)} ${pl} a_1${t} ${nt.dxdt} ${pl} a_0${t} ${nt.x} ${eq} `+(input?`${input}(t)`:`0`)
+		})
+	}
+	get resolved() {
+		return this.makeForm(isConstant=>input=>nt=>{
+			const t=(isConstant?``:`(t)`)
+			return `${nt.dd(nt.x,'t','2')} = b_1${t} ${nt.dxdt} + b_0${t} ${nt.x}`+(input?` + ${input}(t)`:``)
+		})
+	}
+	get system() {
+		return this.makeForm(isConstant=>input=>nt=>{
+			const t=(isConstant?``:`(t)`)
+			return nt.sys2(
+				`${nt.dd(nt.x)} &= ${nt.y}`,
+				`${nt.dd(nt.y)} &= b_0${t} ${nt.x} + b_1${t} ${nt.y}`+(input?` + ${input}(t)`:``)
+			)
+		})
+	}
+	get vector() {
+		return this.makeForm(isConstant=>input=>nt=>{
+			const t=(isConstant?``:`(t)`)
+			const pl=(isConstant||!input?`+`:`{+}`)
+			const eq=(isConstant||!input?`=`:`{=}`)
+			return `${nt.dd(nt.X)} ${eq} `+nt.mat2(0,1,`b_0${t}`,`b_1${t}`)+` ${nt.X} `+(input?` ${pl} `+nt.vec2(0,`${input}(t)`):``)
+		})
+	}
 }
 
+const o2_formSuite=new o2_FormSuite
+
+// { paste with changes from on_*
 const o2_linear_forms=(classId,isConstant,isHomogeneous)=>[
 	{
 		is: `t,x,linear_${classId}`,
-		equation: o2_linear_linear_equation(isConstant)(isHomogeneous?0:'f'),
+		equation: o2_formSuite.linear.equation(isConstant)(isHomogeneous?0:'f'),
 		notes: nt=>[
 			`\\( a_2`+(isConstant?``:`(t)`)+` \\ne 0 \\)`+(isConstant?``:` on the entire interval of interest`),
 		],
 	},
 	{
 		is: `t,x,resolved_${classId}`,
-		equation: o2_linear_resolved_equation(isConstant)(isHomogeneous?0:'g'),
+		equation: o2_formSuite.resolved.equation(isConstant)(isHomogeneous?0:'g'),
 	},
 	{
 		is: `t,xy,system_${classId}`,
-		equation: o2_linear_system_equation(isConstant)(isHomogeneous?0:'g'),
+		equation: o2_formSuite.system.equation(isConstant)(isHomogeneous?0:'g'),
 	},
 	{
 		is: `t,X,vector_${classId}`,
-		equation: o2_linear_vector_equation(isConstant)(isHomogeneous?0:'g'),
+		equation: o2_formSuite.vector.equation(isConstant)(isHomogeneous?0:'g'),
 	},
 ]
 
@@ -67,19 +80,19 @@ const o2_linear_associatedHomogeneousEquation_trait=(classId,isConstant,isClosed
 	const trait={
 		contents: {
 			[`linear_${classId}`]: nt=>[
-				`\\[ `+o2_linear_linear_equation(isConstant)(0)(nt)+` \\]`,
+				`\\[ `+o2_formSuite.linear.equation(isConstant)(0)(nt)+` \\]`,
 				...note,
 			],
 			[`resolved_${classId}`]: nt=>[
-				`\\[ `+o2_linear_resolved_equation(isConstant)(0)(nt)+` \\]`,
+				`\\[ `+o2_formSuite.resolved.equation(isConstant)(0)(nt)+` \\]`,
 				...note,
 			],
 			[`system_${classId}`]: nt=>[
-				`\\[ `+o2_linear_system_equation(isConstant)(0)(nt)+` \\]`,
+				`\\[ `+o2_formSuite.system.equation(isConstant)(0)(nt)+` \\]`,
 				...note,
 			],
 			[`vector_${classId}`]: nt=>[
-				`\\[ `+o2_linear_vector_equation(isConstant)(0)(nt)+` \\]`,
+				`\\[ `+o2_formSuite.vector.equation(isConstant)(0)(nt)+` \\]`,
 				...note,
 			],
 		},
@@ -268,10 +281,10 @@ module.exports={
 			associatedHomogeneousEquation: o2_linear_associatedHomogeneousEquation_trait('o2_linear',false,false),
 			generalSolutionMethod: {
 				contents: {
-					linear_o2_linear:   nt=>new LinearEquation(new TexScalarDepvar(nt.x)      ,'f',o2_linear_linear_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
-					resolved_o2_linear: nt=>new LinearEquation(new TexScalarDepvar(nt.x)      ,'g',o2_linear_resolved_equation(false)).getContentFor_generalSolutionMethod()(nt),
-					system_o2_linear:   nt=>new LinearEquation(new TexSystem2Depvar(nt.x,nt.y),'g',o2_linear_system_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
-					vector_o2_linear:   nt=>new LinearEquation(new TexVectorDepvar(nt.X,nt.x) ,'g',o2_linear_vector_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
+					linear_o2_linear:   nt=>new LinearEquation(new TexScalarDepvar(nt.x)      ,'f',o2_formSuite.linear.equation(false)  ).getContentFor_generalSolutionMethod()(nt),
+					resolved_o2_linear: nt=>new LinearEquation(new TexScalarDepvar(nt.x)      ,'g',o2_formSuite.resolved.equation(false)).getContentFor_generalSolutionMethod()(nt),
+					system_o2_linear:   nt=>new LinearEquation(new TexSystem2Depvar(nt.x,nt.y),'g',o2_formSuite.system.equation(false)  ).getContentFor_generalSolutionMethod()(nt),
+					vector_o2_linear:   nt=>new LinearEquation(new TexVectorDepvar(nt.X,nt.x) ,'g',o2_formSuite.vector.equation(false)  ).getContentFor_generalSolutionMethod()(nt),
 				},
 			},
 		},
