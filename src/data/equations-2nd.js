@@ -1,5 +1,9 @@
 'use strict'
 
+const TexScalarDepvar=require('../tex-scalar-depvar')
+const TexSystem2Depvar=require('../tex-system2-depvar')
+const TexVectorDepvar=require('../tex-vector-depvar')
+const LinearEquation=require('../linear-equation')
 const LhcParam=require('../lhc-param-classes')
 const LhcContent=require('../lhc-content-classes')
 
@@ -206,16 +210,14 @@ module.exports={
 		forms: o2_linear_forms('o2_linear',false,false),
 		traits: {
 			associatedHomogeneousEquation: o2_linear_associatedHomogeneousEquation_trait('o2_linear',false,false),
-			/*
 			generalSolutionMethod: {
 				contents: {
-					linear_on_linear:   nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'f',on_linear_linear_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
-					resolved_on_linear: nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'g',on_linear_resolved_equation(false)).getContentFor_generalSolutionMethod()(nt),
-					system_on_linear:   nt=>new LinearEquation(new TexSystemDepvar(nt.x)     ,'g',on_linear_system_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
-					vector_on_linear:   nt=>new LinearEquation(new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
+					linear_o2_linear:   nt=>new LinearEquation(new TexScalarDepvar(nt.x)      ,'f',o2_linear_linear_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
+					resolved_o2_linear: nt=>new LinearEquation(new TexScalarDepvar(nt.x)      ,'g',o2_linear_resolved_equation(false)).getContentFor_generalSolutionMethod()(nt),
+					system_o2_linear:   nt=>new LinearEquation(new TexSystem2Depvar(nt.x,nt.y),'g',o2_linear_system_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
+					vector_o2_linear:   nt=>new LinearEquation(new TexVectorDepvar(nt.X,nt.x) ,'g',o2_linear_vector_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
 				},
 			},
-			*/
 		},
 	},
 	o2_linearHomogeneous: {
