@@ -27,7 +27,7 @@ const o2_linear_system_equation=isConstant=>input=>nt=>{
 }
 const o2_linear_vector_equation=isConstant=>input=>nt=>{
 	const t=(isConstant?``:`(t)`)
-	return `${nt.dd(nt.X)} = `+nt.mat2(0,1,`b_0${t}`,`b_1${t}`)+(input?` + `+nt.vec2(0,`${input}(t)`):``)
+	return `${nt.dd(nt.X)} {=} `+nt.mat2(0,1,`b_0${t}`,`b_1${t}`)+` ${nt.X} `+(input?` {+} `+nt.vec2(0,`${input}(t)`):``)
 }
 
 const o2_linear_forms=(classId,isConstant,isHomogeneous)=>[
@@ -86,7 +86,59 @@ const o2_linear_associatedHomogeneousEquation_trait=(classId,isConstant,isClosed
 	return trait
 }
 
-// TODO const o2_linearHomogeneous_equilibriumSolutionMethod_trait=(classId,isConstant)=>{
+const o2_linearHomogeneous_equilibriumSolutionMethod_trait=(classId,isConstant)=>{
+	const t=isConstant?'':'(t)'
+	return {
+		contents: {
+			[`linear_${classId}`]: nt=>[
+				{type:'switch',title:`\\( a_0${t} \\) is`,content:[
+					{type:'case',title:`\\( a_0${t} = 0 \\)`,content:[
+						`\\[ ${nt.x} = K \\]`,
+					]},
+					{type:'case',title:`\\( a_0${t} \\ne 0 \\)`,content:[
+						`\\[ ${nt.x} = 0 \\]`,
+					]},
+				]},
+			],
+			[`resolved_${classId}`]: nt=>[
+				{type:'switch',title:`\\( b_0${t} \\) is`,content:[
+					{type:'case',title:`\\( b_0${t} = 0 \\)`,content:[
+						`\\[ ${nt.x} = K \\]`,
+					]},
+					{type:'case',title:`\\( b_0${t} \\ne 0 \\)`,content:[
+						`\\[ ${nt.x} = 0 \\]`,
+					]},
+				]},
+			],
+			[`system_${classId}`]: nt=>[
+				{type:'switch',title:`\\( b_0${t} \\) is`,content:[ // 'c_1' -> 'b_0'
+					{type:'case',title:`\\( b_0${t} = 0 \\)`,content:[
+						`\\[ \\left\\{ \\begin{array}{rcl}`+
+							`${nt.x} &=& K \\\\`+
+							`${nt.y} &=& 0 \\\\`+
+						`\\end{array} \\right. \\]`,
+					]},
+					{type:'case',title:`\\( b_0${t} \\ne 0 \\)`,content:[
+						`\\[ \\left\\{ \\begin{array}{rcl}`+
+							`${nt.x} &=& 0 \\\\`+
+							`${nt.y} &=& 0 \\\\`+
+						`\\end{array} \\right. \\]`,
+					]},
+				]},
+			],
+			[`vector_${classId}`]: nt=>[
+				{type:'switch',title:`\\( b_0${t} \\) is`,content:[ // 'c_1' -> 'b_0'
+					{type:'case',title:`\\( b_0${t} = 0 \\)`,content:[
+						`\\[ ${nt.X} = \\begin{bmatrix} K \\\\ 0 \\end{bmatrix} \\]`,
+					]},
+					{type:'case',title:`\\( b_0${t} \\ne 0 \\)`,content:[
+						`\\[ ${nt.X} = \\begin{bmatrix} 0 \\\\ 0 \\end{bmatrix} \\]`,
+					]},
+				]},
+			],
+		},
+	}
+}
 
 // }
 
@@ -229,39 +281,14 @@ module.exports={
 		name: "second-order linear homogeneous",
 		htmlName: "second-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a> <a href='https://en.wikipedia.org/wiki/Homogeneous_differential_equation#Homogeneous_linear_differential_equations'>homogeneous</a>",
 		importance: 2,
-		forms: [
-			{
-				is: 't,x,linear_o2_linearHomogeneous',
-				equation: nt=>`${nt.dd(nt.x,'t',2)} + p(t) \\cdot ${nt.dxdt} + q(t) \\cdot ${nt.x} = 0`,
-			},
-			{
-				is: 't,x,resolved_o2_linearHomogeneous',
-				equation: nt=>`${nt.dd(nt.x,'t',2)} = a(t) \\cdot ${nt.dxdt} + b(t) \\cdot ${nt.x}`,
-			},
-			{
-				is: 't,xy,system_o2_linearHomogeneous',
-				equation: nt=>`\\left\\{ \\begin{aligned} `+
-					`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
-					`${nt.dd(nt.y)} &= c(t) \\cdot ${nt.x} + d(t) \\cdot ${nt.y} `+
-				`\\end{aligned} \\right.`,
-			},
-			{
-				is: 't,X,vector_o2_linearHomogeneous',
-				equation: nt=>`${nt.dd(nt.X)} = \\begin{bmatrix}`+
-					`0 & 1 \\\\`+
-					`c(t) & d(t)`+
-				`\\end{bmatrix} ${nt.X}`,
-			},
-		],
+		forms: o2_linear_forms('o2_linearHomogeneous',false,true),
 		traits: {
-			equilibriumSolutionMethod: {
-				contents: {
-					linear_o2_linearHomogeneous:   new LhcContent.Linear(new LhcParam.Linear(1,'p(t)','q(t)')).getContentFor_equilibriumSolutionMethod(),
-					resolved_o2_linearHomogeneous: new LhcContent.Resolved(new LhcParam.Resolved('a(t)','b(t)')).getContentFor_equilibriumSolutionMethod(),
-					system_o2_linearHomogeneous:   new LhcContent.ReducedSystem(new LhcParam.ReducedSystem('c(t)','d(t)')).getContentFor_equilibriumSolutionMethod(),
-					vector_o2_linearHomogeneous:   new LhcContent.ReducedVector(new LhcParam.ReducedSystem('c(t)','d(t)')).getContentFor_equilibriumSolutionMethod(),
-				},
+			associatedHomogeneousEquation: o2_linear_associatedHomogeneousEquation_trait('o2_linearHomogeneous',false,true),
+			// TODO realitySolutionRelation, maybe not worth it
+			generalSolutionMethod: {
+				close: true, // because parent doesn't specify how to solve associated eqn
 			},
+			equilibriumSolutionMethod: o2_linearHomogeneous_equilibriumSolutionMethod_trait('o2_linearHomogeneous',false),
 		},
 	},
 	o2_linearConstant: {

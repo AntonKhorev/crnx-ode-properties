@@ -268,7 +268,7 @@ module.exports={
 				},
 			},
 			generalSolutionMethod: {
-				close: true,
+				close: true, // because parent doesn't specify how to solve associated eqn
 			},
 			equilibriumSolutionMethod: on_linearHomogeneous_equilibriumSolutionMethod_trait('on_linearHomogeneous',false),
 		},
