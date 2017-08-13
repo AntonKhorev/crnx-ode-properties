@@ -327,6 +327,7 @@ module.exports={
 		importance: 2,
 		forms: o2_linear_forms('o2_linearHomogeneousConstant',true,true),
 		traits: {
+			associatedHomogeneousEquation: o2_linear_associatedHomogeneousEquation_trait('o2_linearHomogeneousConstant',true,true),
 			characteristicEquation: {
 				contents: {
 					linear_o2_linearHomogeneousConstant:   new LhcContent.Linear(new LhcParam.Linear('a_2','a_1','a_0')).getContentFor_characteristicEquation(),

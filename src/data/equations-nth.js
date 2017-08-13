@@ -7,61 +7,79 @@ const characteristicEquationContent=require('../characteristic-equation-content'
 const LinearEquation=require('../linear-equation')
 const LinearConstantEquation=require('../linear-constant-equation')
 
-const on_linear_linear_equation=isConstant=>input=>nt=>(
-	`\\sum_{i=0}^n a_i`+(isConstant?``:`(t)`)+` ${nt.dd(nt.x,'t','i')} = `+(input?`${input}(t)`:`0`)
-)
-const on_linear_resolved_equation=isConstant=>input=>nt=>(
-	`${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i`+(isConstant?``:`(t)`)+` ${nt.dd(nt.x,'t','i')}`+(input?` + ${input}(t)`:``)
-)
-const on_linear_system_equation=isConstant=>input=>nt=>(
-	`\\left\\{ \\begin{array}{rcl}`+
-		`${nt.dd(`${nt.x}_1`)} &=& ${nt.x}_2 \\\\`+
-		`${nt.dd(`${nt.x}_2`)} &=& ${nt.x}_3 \\\\`+
-		`&\\vdots \\\\`+
-		`${nt.dd(`${nt.x}_{n-1}`)} &=& ${nt.x}_n \\\\`+
-		`${nt.dd(`${nt.x}_n`)} &=& \\sum_{i=1}^{n} c_i`+(isConstant?``:`(t)`)+` ${nt.x}_i`+(input?` + ${input}(t)`:``)+
-	`\\end{array} \\right.`
-)
-const on_linear_vector_equation=isConstant=>input=>nt=>(
-	`${nt.dd(nt.X)} {=} `+
-	((input||!isConstant)?`\\! \\left[ \\begin{smallmatrix}`:`\\begin{bmatrix}`)+
-		(isConstant
-			?`0 & 1 & 0 & \\cdots & 0 \\\\`+
-			 `0 & 0 & 1 & \\cdots & 0 \\\\`+
-			 `\\vdots & \\vdots & \\vdots & \\ddots & \\vdots \\\\`+
-			 `0 & 0 & 0 & \\cdots & 1 \\\\`+
-			 `c_1 & c_2 & c_3 & \\cdots & c_n`
-			:`0 & 1 & \\cdots & 0 \\\\`+
-			 `\\vdots & \\vdots & \\ddots & \\vdots \\\\`+
-			 `0 & 0 & \\cdots & 1 \\\\`+
-			 `c_1\\mspace{-2mu}(t) & c_2\\mspace{-2mu}(t) & \\cdots & c_n\\mspace{-2mu}(t)`
-		)+
-	((input||!isConstant)?`\\end{smallmatrix} \\right] \\!`:`\\end{bmatrix}`)+
-	` ${nt.X}`+
-	(input?` {+} \\! \\left[ \\begin{smallmatrix}`+
-		`0 \\\\`+(isConstant?` 0 \\\\`:``)+` \\vdots \\\\ 0 \\\\ ${input}(t)`+
-	`\\end{smallmatrix} \\right]`:``)
-)
+class on_FormSuite /*extends LinearEquationFormSuite*/ {
+	makeForm(equationFn) {
+		return {
+			equation: equationFn,
+			// TODO characteristic eqn
+		}
+	}
+	get linear() {
+		return this.makeForm(isConstant=>input=>nt=>(
+			`\\sum_{i=0}^n a_i`+(isConstant?``:`(t)`)+` ${nt.dd(nt.x,'t','i')} = `+(input?`${input}(t)`:`0`)
+		))
+	}
+	get resolved() {
+		return this.makeForm(isConstant=>input=>nt=>(
+			`${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i`+(isConstant?``:`(t)`)+` ${nt.dd(nt.x,'t','i')}`+(input?` + ${input}(t)`:``)
+		))
+	}
+	get system() {
+		return this.makeForm(isConstant=>input=>nt=>(
+			`\\left\\{ \\begin{array}{rcl}`+
+				`${nt.dd(`${nt.x}_1`)} &=& ${nt.x}_2 \\\\`+
+				`${nt.dd(`${nt.x}_2`)} &=& ${nt.x}_3 \\\\`+
+				`&\\vdots \\\\`+
+				`${nt.dd(`${nt.x}_{n-1}`)} &=& ${nt.x}_n \\\\`+
+				`${nt.dd(`${nt.x}_n`)} &=& \\sum_{i=1}^{n} c_i`+(isConstant?``:`(t)`)+` ${nt.x}_i`+(input?` + ${input}(t)`:``)+
+			`\\end{array} \\right.`
+		))
+	}
+	get vector() {
+		return this.makeForm(isConstant=>input=>nt=>(
+			`${nt.dd(nt.X)} {=} `+
+			((input||!isConstant)?`\\! \\left[ \\begin{smallmatrix}`:`\\begin{bmatrix}`)+
+				(isConstant
+					?`0 & 1 & 0 & \\cdots & 0 \\\\`+
+					 `0 & 0 & 1 & \\cdots & 0 \\\\`+
+					 `\\vdots & \\vdots & \\vdots & \\ddots & \\vdots \\\\`+
+					 `0 & 0 & 0 & \\cdots & 1 \\\\`+
+					 `c_1 & c_2 & c_3 & \\cdots & c_n`
+					:`0 & 1 & \\cdots & 0 \\\\`+
+					 `\\vdots & \\vdots & \\ddots & \\vdots \\\\`+
+					 `0 & 0 & \\cdots & 1 \\\\`+
+					 `c_1\\mspace{-2mu}(t) & c_2\\mspace{-2mu}(t) & \\cdots & c_n\\mspace{-2mu}(t)`
+				)+
+			((input||!isConstant)?`\\end{smallmatrix} \\right] \\!`:`\\end{bmatrix}`)+
+			` ${nt.X}`+
+			(input?` {+} \\! \\left[ \\begin{smallmatrix}`+
+				`0 \\\\`+(isConstant?` 0 \\\\`:``)+` \\vdots \\\\ 0 \\\\ ${input}(t)`+
+			`\\end{smallmatrix} \\right]`:``)
+		))
+	}
+}
+
+const on_formSuite=new on_FormSuite
 
 const on_linear_forms=(classId,isConstant,isHomogeneous)=>[
 	{
 		is: `t,x,linear_${classId}`,
-		equation: on_linear_linear_equation(isConstant)(isHomogeneous?0:'f'),
+		equation: on_formSuite.linear.equation(isConstant)(isHomogeneous?0:'f'),
 		notes: nt=>[
 			`\\( a_n`+(isConstant?``:`(t)`)+` \\ne 0 \\)`+(isConstant?``:` on the entire interval of interest`),
 		],
 	},
 	{
 		is: `t,x,resolved_${classId}`,
-		equation: on_linear_resolved_equation(isConstant)(isHomogeneous?0:'g'),
+		equation: on_formSuite.resolved.equation(isConstant)(isHomogeneous?0:'g'),
 	},
 	{
 		is: `t,xi,system_${classId}`,
-		equation: on_linear_system_equation(isConstant)(isHomogeneous?0:'g'),
+		equation: on_formSuite.system.equation(isConstant)(isHomogeneous?0:'g'),
 	},
 	{
 		is: `t,X,vector_${classId}`,
-		equation: on_linear_vector_equation(isConstant)(isHomogeneous?0:'g'),
+		equation: on_formSuite.vector.equation(isConstant)(isHomogeneous?0:'g'),
 	},
 ]
 
@@ -98,19 +116,19 @@ const on_linear_associatedHomogeneousEquation_trait=(classId,isConstant,isClosed
 	const trait={
 		contents: {
 			[`linear_${classId}`]: nt=>[
-				`\\[ `+on_linear_linear_equation(isConstant)(0)(nt)+` \\]`,
+				`\\[ `+on_formSuite.linear.equation(isConstant)(0)(nt)+` \\]`,
 				...note,
 			],
 			[`resolved_${classId}`]: nt=>[
-				`\\[ `+on_linear_resolved_equation(isConstant)(0)(nt)+` \\]`,
+				`\\[ `+on_formSuite.resolved.equation(isConstant)(0)(nt)+` \\]`,
 				...note,
 			],
 			[`system_${classId}`]: nt=>[
-				`\\[ `+on_linear_system_equation(isConstant)(0)(nt)+` \\]`,
+				`\\[ `+on_formSuite.system.equation(isConstant)(0)(nt)+` \\]`,
 				...note,
 			],
 			[`vector_${classId}`]: nt=>[
-				`\\[ `+on_linear_vector_equation(isConstant)(0)(nt)+` \\]`,
+				`\\[ `+on_formSuite.vector.equation(isConstant)(0)(nt)+` \\]`,
 				...note,
 			],
 		},
@@ -223,10 +241,10 @@ module.exports={
 			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linear',false,false),
 			generalSolutionMethod: {
 				contents: {
-					linear_on_linear:   nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'f',on_linear_linear_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
-					resolved_on_linear: nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'g',on_linear_resolved_equation(false)).getContentFor_generalSolutionMethod()(nt),
-					system_on_linear:   nt=>new LinearEquation(new TexSystemDepvar(nt.x)     ,'g',on_linear_system_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
-					vector_on_linear:   nt=>new LinearEquation(new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
+					linear_on_linear:   nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'f',on_formSuite.linear.equation(false)  ).getContentFor_generalSolutionMethod()(nt),
+					resolved_on_linear: nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'g',on_formSuite.resolved.equation(false)).getContentFor_generalSolutionMethod()(nt),
+					system_on_linear:   nt=>new LinearEquation(new TexSystemDepvar(nt.x)     ,'g',on_formSuite.system.equation(false)  ).getContentFor_generalSolutionMethod()(nt),
+					vector_on_linear:   nt=>new LinearEquation(new TexVectorDepvar(nt.X,nt.x),'g',on_formSuite.vector.equation(false)  ).getContentFor_generalSolutionMethod()(nt),
 				},
 			},
 		},
@@ -286,7 +304,7 @@ module.exports={
 			generalSolutionMethod: {
 				contents: {
 					linear_on_linearConstant: nt=>new LinearConstantEquation(
-						new TexScalarDepvar(nt.x),'f',on_linear_linear_equation(true),
+						new TexScalarDepvar(nt.x),'f',on_formSuite.linear.equation(true),
 						`\\sum_{i=0}^n a_i λ^i`
 					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
@@ -295,7 +313,7 @@ module.exports={
 						)(nt)
 					)(nt),
 					resolved_on_linearConstant: nt=>new LinearConstantEquation(
-						new TexScalarDepvar(nt.x),'g',on_linear_resolved_equation(true),
+						new TexScalarDepvar(nt.x),'g',on_formSuite.resolved.equation(true),
 						`λ^n - \\sum_{i=0}^{n-1} b_i λ^i`
 					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
@@ -304,7 +322,7 @@ module.exports={
 						)(nt)
 					)(nt),
 					system_on_linearConstant: nt=>new LinearConstantEquation(
-						new TexSystemDepvar(nt.x),'g',on_linear_system_equation(true),
+						new TexSystemDepvar(nt.x),'g',on_formSuite.system.equation(true),
 						`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i`
 					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
@@ -313,7 +331,7 @@ module.exports={
 						)(nt)
 					)(nt),
 					vector_on_linearConstant: nt=>new LinearConstantEquation(
-						new TexVectorDepvar(nt.X,nt.x),'g',on_linear_vector_equation(true),
+						new TexVectorDepvar(nt.X,nt.x),'g',on_formSuite.vector.equation(true),
 						`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i`
 					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(

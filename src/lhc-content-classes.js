@@ -98,7 +98,7 @@ LhcContent.Base = class {
 		]
 	}
 	getContentFor_generalSolutionMethod_Imaginary() {
-		const a=i=>this.param.linear(i)
+		const a=i=>this.param.linear(i) // TODO param.getNaturalFrequency
 		return nt=>[
 			`solve characteristic equation for \\( \\lambda \\):`,
 			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,

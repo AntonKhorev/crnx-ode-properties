@@ -1,5 +1,7 @@
 'use strict'
 
+// TODO incorporate into FormSuite
+
 const LhcParam={}
 
 LhcParam.Linear = class {

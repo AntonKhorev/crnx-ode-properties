@@ -14,7 +14,7 @@ class LinearConstantEquation extends LinearEquation {
 			...super.particularSolutionCases()(nt),
 			{type:'case',title:`using time invariance when \\( ${f}(t) = ${f}_1(t+t_1) \\)`,content:[
 				`find a particular solution \\( ${x._('p',1)} \\) of:`,
-				`\\[ ${this.equation(`${f}_1`,false)(nt)} \\]`,
+				`\\[ ${this.equation(`${f}_1`)(nt)} \\]`,
 				`particular solution of the original equation is:`,
 				x._('p').parallelExpression(xp=>`${xp}(t) &= ${xp._(1)}(t+t_1)`),
 			]},
@@ -37,7 +37,7 @@ class LinearConstantEquation extends LinearEquation {
 					),
 					x.firstComponentExpression(
 						x1=>`\\begin{aligned} `+
-										  `P\\left(${nt.ddt}\\right) ${x1} &= e^{r t} \\\\ `+
+							                          `P\\left(${nt.ddt}\\right) ${x1} &= e^{r t} \\\\ `+
 							`\\operatorname{Re}\\left( P\\left(${nt.ddt}\\right) ${x1} \\right) &= \\operatorname{Re}(e^{r t}) \\\\ `+
 							`\\operatorname{Im}\\left( P\\left(${nt.ddt}\\right) ${x1} \\right) &= \\operatorname{Im}(e^{r t}) `+
 						`\\end{aligned}`

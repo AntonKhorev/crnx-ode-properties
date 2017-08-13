@@ -28,7 +28,7 @@ class LinearEquation {
 			// TODO guess coefficients - needs example
 			{type:'case',title:`using superposition when \\( ${f}(t) = k_1 ${f}_1(t) + k_2 ${f}_2(t) + \\cdots \\)`,content:[
 				`for each term \\( k_j ${f}_j(t) \\), find a particular solution \\( ${x._('p','j')} \\) of:`,
-				`\\[ ${this.equation(`${f}_j`,false)(nt)} \\]`,
+				`\\[ ${this.equation(`${f}_j`)(nt)} \\]`,
 				`particular solution of the original equation is a linear combinations of these solutions:`,
 				x._('p').parallelExpression(xp=>`${xp} &= k_1 ${xp._(1)} + k_2 ${xp._(2)} + \\cdots`),
 			]},
