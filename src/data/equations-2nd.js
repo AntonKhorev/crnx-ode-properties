@@ -12,7 +12,9 @@ const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial
 // { paste with changes from on_*
 const o2_linear_linear_equation=isConstant=>input=>nt=>{
 	const t=(isConstant?``:`(t)`)
-	return `a_2${t} ${nt.dd(nt.x,'t',2)} {+} a_1${t} ${nt.dxdt} {+} a_0${t} ${nt.x} {=} `+(input?`${input}(t)`:`0`)
+	const pl=(isConstant?`+`:`{+}`)
+	const eq=(isConstant?`=`:`{=}`)
+	return `a_2${t} ${nt.dd(nt.x,'t',2)} ${pl} a_1${t} ${nt.dxdt} ${pl} a_0${t} ${nt.x} ${eq} `+(input?`${input}(t)`:`0`)
 }
 const o2_linear_resolved_equation=isConstant=>input=>nt=>{
 	const t=(isConstant?``:`(t)`)
@@ -27,7 +29,9 @@ const o2_linear_system_equation=isConstant=>input=>nt=>{
 }
 const o2_linear_vector_equation=isConstant=>input=>nt=>{
 	const t=(isConstant?``:`(t)`)
-	return `${nt.dd(nt.X)} {=} `+nt.mat2(0,1,`b_0${t}`,`b_1${t}`)+` ${nt.X} `+(input?` {+} `+nt.vec2(0,`${input}(t)`):``)
+	const pl=(isConstant||!input?`+`:`{+}`)
+	const eq=(isConstant||!input?`=`:`{=}`)
+	return `${nt.dd(nt.X)} ${eq} `+nt.mat2(0,1,`b_0${t}`,`b_1${t}`)+` ${nt.X} `+(input?` ${pl} `+nt.vec2(0,`${input}(t)`):``)
 }
 
 const o2_linear_forms=(classId,isConstant,isHomogeneous)=>[
@@ -291,7 +295,7 @@ module.exports={
 			equilibriumSolutionMethod: o2_linearHomogeneous_equilibriumSolutionMethod_trait('o2_linearHomogeneous',false),
 		},
 	},
-	o2_linearConstant: {
+	o2_linearConstant: { // TODO after o2_linearHomogeneousConstant
 		parents: {
 			on_linearConstant: true,
 			o2_linear: true,
@@ -321,40 +325,14 @@ module.exports={
 		name: "second-order linear homogeneous with constant coefficients",
 		htmlName: "second-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Homogeneous_equations_with_constant_coefficients'>linear homogeneous with constant coefficients</a>",
 		importance: 2,
-		forms: [
-			{
-				is: 't,x,linear_o2_linearHomogeneousConstant',
-				equation: nt=>`a_2 \\cdot ${nt.dd(nt.x,'t',2)} + a_1 \\cdot ${nt.dxdt} + a_0 \\cdot ${nt.x} = 0`,
-				notes: nt=>[
-					`\\( a_2 \\ne 0 \\)`,
-				],
-			},
-			{
-				is: 't,x,resolved_o2_linearHomogeneousConstant',
-				equation: nt=>`${nt.dd(nt.x,'t',2)} = b_1 \\cdot ${nt.dxdt} + b_0 \\cdot ${nt.x}`,
-			},
-			{
-				is: 't,xy,system_o2_linearHomogeneousConstant',
-				equation: nt=>`\\left\\{ \\begin{aligned} `+
-					`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
-					`${nt.dd(nt.y)} &= c \\cdot ${nt.x} + d \\cdot ${nt.y} `+
-				`\\end{aligned} \\right.`,
-			},
-			{
-				is: 't,X,vector_o2_linearHomogeneousConstant',
-				equation: nt=>`${nt.dd(nt.X)} = \\begin{bmatrix}`+
-					`0 & 1 \\\\`+
-					`c & d`+
-				`\\end{bmatrix} ${nt.X}`,
-			},
-		],
+		forms: o2_linear_forms('o2_linearHomogeneousConstant',true,true),
 		traits: {
 			characteristicEquation: {
 				contents: {
 					linear_o2_linearHomogeneousConstant:   new LhcContent.Linear(new LhcParam.Linear('a_2','a_1','a_0')).getContentFor_characteristicEquation(),
 					resolved_o2_linearHomogeneousConstant: new LhcContent.Resolved(new LhcParam.Resolved('b_1','b_0')).getContentFor_characteristicEquation(),
-					system_o2_linearHomogeneousConstant:   new LhcContent.ReducedSystem(new LhcParam.ReducedSystem('c','d')).getContentFor_characteristicEquation(),
-					vector_o2_linearHomogeneousConstant:   new LhcContent.ReducedVector(new LhcParam.ReducedSystem('c','d')).getContentFor_characteristicEquation(),
+					system_o2_linearHomogeneousConstant:   new LhcContent.ReducedSystem(new LhcParam.ReducedSystem('b_0','b_1')).getContentFor_characteristicEquation(),
+					vector_o2_linearHomogeneousConstant:   new LhcContent.ReducedVector(new LhcParam.ReducedSystem('b_0','b_1')).getContentFor_characteristicEquation(),
 				},
 			},
 			generalSolutionMethod: {
@@ -362,16 +340,16 @@ module.exports={
 				contents: {
 					linear_o2_linearHomogeneousConstant:   new LhcContent.Linear(new LhcParam.Linear('a_2','a_1','a_0')).getContentFor_generalSolutionMethod(),
 					resolved_o2_linearHomogeneousConstant: new LhcContent.Resolved(new LhcParam.Resolved('b_1','b_0')).getContentFor_generalSolutionMethod(),
-					system_o2_linearHomogeneousConstant:   new LhcContent.ReducedSystem(new LhcParam.ReducedSystem('c','d')).getContentFor_generalSolutionMethod(),
-					vector_o2_linearHomogeneousConstant:   new LhcContent.ReducedVector(new LhcParam.ReducedSystem('c','d')).getContentFor_generalSolutionMethod(),
+					system_o2_linearHomogeneousConstant:   new LhcContent.ReducedSystem(new LhcParam.ReducedSystem('b_0','b_1')).getContentFor_generalSolutionMethod(),
+					vector_o2_linearHomogeneousConstant:   new LhcContent.ReducedVector(new LhcParam.ReducedSystem('b_0','b_1')).getContentFor_generalSolutionMethod(),
 				},
 			},
 			equilibriumSolutionMethod: {
 				contents: {
 					linear_o2_linearHomogeneousConstant:   new LhcContent.Linear(new LhcParam.Linear('a_2','a_1','a_0')).getContentFor_equilibriumSolutionMethod(),
 					resolved_o2_linearHomogeneousConstant: new LhcContent.Resolved(new LhcParam.Resolved('b_1','b_0')).getContentFor_equilibriumSolutionMethod(),
-					system_o2_linearHomogeneousConstant:   new LhcContent.ReducedSystem(new LhcParam.ReducedSystem('c','d')).getContentFor_equilibriumSolutionMethod(),
-					vector_o2_linearHomogeneousConstant:   new LhcContent.ReducedVector(new LhcParam.ReducedSystem('c','d')).getContentFor_equilibriumSolutionMethod(),
+					system_o2_linearHomogeneousConstant:   new LhcContent.ReducedSystem(new LhcParam.ReducedSystem('b_0','b_1')).getContentFor_equilibriumSolutionMethod(),
+					vector_o2_linearHomogeneousConstant:   new LhcContent.ReducedVector(new LhcParam.ReducedSystem('b_0','b_1')).getContentFor_equilibriumSolutionMethod(),
 				},
 			},
 		},
