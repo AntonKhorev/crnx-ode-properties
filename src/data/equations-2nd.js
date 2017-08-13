@@ -47,6 +47,43 @@ const o2_linear_forms=(classId,isConstant,isHomogeneous)=>[
 		equation: o2_linear_vector_equation(isConstant)(isHomogeneous?0:'g'),
 	},
 ]
+
+// TODO const o2_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt=>[
+
+const o2_linear_associatedHomogeneousEquation_trait=(classId,isConstant,isClosed)=>{ // TODO identical to 'on' except for 'on' -> 'o2'
+	const note=isClosed?[
+		{type:'note',content:[
+			`the equation is associated with itself`,
+		]},
+	]:[]
+	const trait={
+		contents: {
+			[`linear_${classId}`]: nt=>[
+				`\\[ `+o2_linear_linear_equation(isConstant)(0)(nt)+` \\]`,
+				...note,
+			],
+			[`resolved_${classId}`]: nt=>[
+				`\\[ `+o2_linear_resolved_equation(isConstant)(0)(nt)+` \\]`,
+				...note,
+			],
+			[`system_${classId}`]: nt=>[
+				`\\[ `+o2_linear_system_equation(isConstant)(0)(nt)+` \\]`,
+				...note,
+			],
+			[`vector_${classId}`]: nt=>[
+				`\\[ `+o2_linear_vector_equation(isConstant)(0)(nt)+` \\]`,
+				...note,
+			],
+		},
+	}
+	if (isClosed) {
+		trait.close=true
+	}
+	return trait
+}
+
+// TODO const o2_linearHomogeneous_equilibriumSolutionMethod_trait=(classId,isConstant)=>{
+
 // }
 
 const harmonicOscillatorType=(type,discriminantRelation,contentMethodName)=>({
@@ -168,8 +205,8 @@ module.exports={
 		importance: 2,
 		forms: o2_linear_forms('o2_linear',false,false),
 		traits: {
+			associatedHomogeneousEquation: o2_linear_associatedHomogeneousEquation_trait('o2_linear',false,false),
 			/*
-			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linear',false,false),
 			generalSolutionMethod: {
 				contents: {
 					linear_on_linear:   nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'f',on_linear_linear_equation(false)  ).getContentFor_generalSolutionMethod()(nt),
