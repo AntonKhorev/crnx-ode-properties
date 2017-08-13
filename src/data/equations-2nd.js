@@ -8,7 +8,7 @@ const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial
 // { paste with changes from on_*
 const o2_linear_linear_equation=isConstant=>input=>nt=>{
 	const t=(isConstant?``:`(t)`)
-	return `a_2${t} ${nt.dd(nt.x,'t',2)} + a_1${t} ${nt.dxdt} + a_0${t} ${nt.x} = `+(input?`${input}(t)`:`0`)
+	return `a_2${t} ${nt.dd(nt.x,'t',2)} {+} a_1${t} ${nt.dxdt} {+} a_0${t} ${nt.x} {=} `+(input?`${input}(t)`:`0`)
 }
 const o2_linear_resolved_equation=isConstant=>input=>nt=>{
 	const t=(isConstant?``:`(t)`)
