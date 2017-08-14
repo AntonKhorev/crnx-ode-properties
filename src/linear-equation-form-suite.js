@@ -7,9 +7,13 @@ class LinearEquationFormSuite {
 			// TODO characteristic eqn
 		}
 	}
+	// abstract get classIdPrefix
 	// abstract get highestOrderCoefficient()
 	// abstract get systemFormType()
-	getForms(classId,isConstant,isHomogeneous) {
+	getForms(isConstant,isHomogeneous) {
+		let classId=this.classIdPrefix+'_linear'
+		if (isHomogeneous) classId+='Homogeneous'
+		if (isConstant) classId+='Constant'
 		return [
 			{
 				is: `t,x,linear_${classId}`,

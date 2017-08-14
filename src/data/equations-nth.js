@@ -52,6 +52,9 @@ class on_FormSuite extends LinearEquationFormSuite {
 			`\\end{smallmatrix} \\right]`:``)
 		))
 	}
+	get classIdPrefix() {
+		return 'on'
+	}
 	get highestOrderCoefficient() {
 		return 'a_n'
 	}
@@ -215,7 +218,7 @@ module.exports={
 		name: "nth-order linear",
 		htmlName: "<em>n</em>th-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a>",
 		importance: 2,
-		forms: on_formSuite.getForms('on_linear',false,false),
+		forms: on_formSuite.getForms(false,false),
 		traits: {
 			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linear',false,false),
 			generalSolutionMethod: {
@@ -235,7 +238,7 @@ module.exports={
 		name: "nth-order linear homogeneous",
 		htmlName: "<em>n</em>th-order <a href='https://en.wikipedia.org/wiki/Homogeneous_differential_equation#Homogeneous_linear_differential_equations'>linear homogeneous</a>",
 		importance: 2,
-		forms: on_formSuite.getForms('on_linearHomogeneous',false,true),
+		forms: on_formSuite.getForms(false,true),
 		traits: {
 			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linearHomogeneous',false,true),
 			realitySolutionRelation: {
@@ -277,7 +280,7 @@ module.exports={
 		name: "nth-order linear with constant coefficients",
 		htmlName: "<em>n</em>th-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Nonhomogeneous_equation_with_constant_coefficients'>linear with constant coefficients</a>",
 		importance: 2,
-		forms: on_formSuite.getForms('on_linearConstant',true,false),
+		forms: on_formSuite.getForms(true,false),
 		traits: {
 			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linearConstant',true,false),
 			generalSolutionMethod: {
@@ -330,7 +333,7 @@ module.exports={
 		name: "nth-order linear homogeneous with constant coefficients",
 		htmlName: "<em>n</em>th-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Homogeneous_equations_with_constant_coefficients'>linear homogeneous with constant coefficients</a>",
 		importance: 2,
-		forms: on_formSuite.getForms('on_linearHomogeneousConstant',true,true),
+		forms: on_formSuite.getForms(true,true),
 		traits: {
 			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linearHomogeneousConstant',true,true),
 			characteristicEquation: {
