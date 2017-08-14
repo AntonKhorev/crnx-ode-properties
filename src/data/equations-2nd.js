@@ -42,32 +42,17 @@ class o2_FormSuite extends LinearEquationFormSuite {
 			return `${nt.dd(nt.X)} ${eq} `+nt.mat2(0,1,`b_0${t}`,`b_1${t}`)+` ${nt.X} `+(input?` ${pl} `+nt.vec2(0,`${input}(t)`):``)
 		})
 	}
+	get highestOrderCoefficient() {
+		return 'a_2'
+	}
+	get systemFormType() {
+		return 'xy'
+	}
 }
 
 const o2_formSuite=new o2_FormSuite
 
 // { paste with changes from on_*
-const o2_linear_forms=(classId,isConstant,isHomogeneous)=>[
-	{
-		is: `t,x,linear_${classId}`,
-		equation: o2_formSuite.linear.equation(isConstant)(isHomogeneous?0:'f'),
-		notes: nt=>[
-			`\\( a_2`+(isConstant?``:`(t)`)+` \\ne 0 \\)`+(isConstant?``:` on the entire interval of interest`),
-		],
-	},
-	{
-		is: `t,x,resolved_${classId}`,
-		equation: o2_formSuite.resolved.equation(isConstant)(isHomogeneous?0:'g'),
-	},
-	{
-		is: `t,xy,system_${classId}`,
-		equation: o2_formSuite.system.equation(isConstant)(isHomogeneous?0:'g'),
-	},
-	{
-		is: `t,X,vector_${classId}`,
-		equation: o2_formSuite.vector.equation(isConstant)(isHomogeneous?0:'g'),
-	},
-]
 
 // TODO const o2_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt=>[
 
@@ -276,7 +261,7 @@ module.exports={
 		name: "second-order linear",
 		htmlName: "second-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a>",
 		importance: 2,
-		forms: o2_linear_forms('o2_linear',false,false),
+		forms: o2_formSuite.getForms('o2_linear',false,false),
 		traits: {
 			associatedHomogeneousEquation: o2_linear_associatedHomogeneousEquation_trait('o2_linear',false,false),
 			generalSolutionMethod: {
@@ -298,7 +283,7 @@ module.exports={
 		name: "second-order linear homogeneous",
 		htmlName: "second-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation'>linear</a> <a href='https://en.wikipedia.org/wiki/Homogeneous_differential_equation#Homogeneous_linear_differential_equations'>homogeneous</a>",
 		importance: 2,
-		forms: o2_linear_forms('o2_linearHomogeneous',false,true),
+		forms: o2_formSuite.getForms('o2_linearHomogeneous',false,true),
 		traits: {
 			associatedHomogeneousEquation: o2_linear_associatedHomogeneousEquation_trait('o2_linearHomogeneous',false,true),
 			// TODO realitySolutionRelation, maybe not worth it
@@ -308,7 +293,7 @@ module.exports={
 			equilibriumSolutionMethod: o2_linearHomogeneous_equilibriumSolutionMethod_trait('o2_linearHomogeneous',false),
 		},
 	},
-	o2_linearConstant: { // TODO after o2_linearHomogeneousConstant
+	o2_linearConstant: { // TODO complete after o2_linearHomogeneousConstant is done
 		parents: {
 			on_linearConstant: true,
 			o2_linear: true,
@@ -338,7 +323,7 @@ module.exports={
 		name: "second-order linear homogeneous with constant coefficients",
 		htmlName: "second-order <a href='https://en.wikipedia.org/wiki/Linear_differential_equation#Homogeneous_equations_with_constant_coefficients'>linear homogeneous with constant coefficients</a>",
 		importance: 2,
-		forms: o2_linear_forms('o2_linearHomogeneousConstant',true,true),
+		forms: o2_formSuite.getForms('o2_linearHomogeneousConstant',true,true),
 		traits: {
 			associatedHomogeneousEquation: o2_linear_associatedHomogeneousEquation_trait('o2_linearHomogeneousConstant',true,true),
 			characteristicEquation: {
