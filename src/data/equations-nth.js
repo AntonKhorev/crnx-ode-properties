@@ -89,38 +89,6 @@ const on_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt
 	...x.restDiffComponentExpressionContent()(nt),
 ]
 
-const on_linear_associatedHomogeneousEquation_trait=(classId,isConstant,isClosed)=>{
-	const note=isClosed?[
-		{type:'note',content:[
-			`the equation is associated with itself`,
-		]},
-	]:[]
-	const trait={
-		contents: {
-			[`linear_${classId}`]: nt=>[
-				`\\[ `+on_formSuite.linear.equation(isConstant)(0)(nt)+` \\]`,
-				...note,
-			],
-			[`resolved_${classId}`]: nt=>[
-				`\\[ `+on_formSuite.resolved.equation(isConstant)(0)(nt)+` \\]`,
-				...note,
-			],
-			[`system_${classId}`]: nt=>[
-				`\\[ `+on_formSuite.system.equation(isConstant)(0)(nt)+` \\]`,
-				...note,
-			],
-			[`vector_${classId}`]: nt=>[
-				`\\[ `+on_formSuite.vector.equation(isConstant)(0)(nt)+` \\]`,
-				...note,
-			],
-		},
-	}
-	if (isClosed) {
-		trait.close=true
-	}
-	return trait
-}
-
 const on_linearHomogeneous_equilibriumSolutionMethod_trait=(classId,isConstant)=>{
 	const t=isConstant?'':'(t)'
 	return {
@@ -220,7 +188,7 @@ module.exports={
 		importance: 2,
 		forms: on_formSuite.getForms(false,false),
 		traits: {
-			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linear',false,false),
+			associatedHomogeneousEquation: on_formSuite.getAssociatedHomogeneousEquationTrait(false,false),
 			generalSolutionMethod: {
 				contents: {
 					linear_on_linear:   nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'f',on_formSuite.linear.equation(false)  ).getContentFor_generalSolutionMethod()(nt),
@@ -240,7 +208,7 @@ module.exports={
 		importance: 2,
 		forms: on_formSuite.getForms(false,true),
 		traits: {
-			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linearHomogeneous',false,true),
+			associatedHomogeneousEquation: on_formSuite.getAssociatedHomogeneousEquationTrait(false,true),
 			realitySolutionRelation: {
 				contents: {
 					linear_on_linearHomogeneous: nt=>[
@@ -282,7 +250,7 @@ module.exports={
 		importance: 2,
 		forms: on_formSuite.getForms(true,false),
 		traits: {
-			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linearConstant',true,false),
+			associatedHomogeneousEquation: on_formSuite.getAssociatedHomogeneousEquationTrait(true,false),
 			generalSolutionMethod: {
 				contents: {
 					linear_on_linearConstant: nt=>new LinearConstantEquation(
@@ -335,7 +303,7 @@ module.exports={
 		importance: 2,
 		forms: on_formSuite.getForms(true,true),
 		traits: {
-			associatedHomogeneousEquation: on_linear_associatedHomogeneousEquation_trait('on_linearHomogeneousConstant',true,true),
+			associatedHomogeneousEquation: on_formSuite.getAssociatedHomogeneousEquationTrait(true,true),
 			characteristicEquation: {
 				contents: {
 					linear_on_linearHomogeneousConstant: characteristicEquationContent(['i','\\sum_{i=0}^n a_i'],'=','0'),

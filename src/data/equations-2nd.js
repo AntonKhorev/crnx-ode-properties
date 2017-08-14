@@ -59,38 +59,6 @@ const o2_formSuite=new o2_FormSuite
 
 // TODO const o2_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt=>[
 
-const o2_linear_associatedHomogeneousEquation_trait=(classId,isConstant,isClosed)=>{ // TODO identical to 'on' except for 'on' -> 'o2'
-	const note=isClosed?[
-		{type:'note',content:[
-			`the equation is associated with itself`,
-		]},
-	]:[]
-	const trait={
-		contents: {
-			[`linear_${classId}`]: nt=>[
-				`\\[ `+o2_formSuite.linear.equation(isConstant)(0)(nt)+` \\]`,
-				...note,
-			],
-			[`resolved_${classId}`]: nt=>[
-				`\\[ `+o2_formSuite.resolved.equation(isConstant)(0)(nt)+` \\]`,
-				...note,
-			],
-			[`system_${classId}`]: nt=>[
-				`\\[ `+o2_formSuite.system.equation(isConstant)(0)(nt)+` \\]`,
-				...note,
-			],
-			[`vector_${classId}`]: nt=>[
-				`\\[ `+o2_formSuite.vector.equation(isConstant)(0)(nt)+` \\]`,
-				...note,
-			],
-		},
-	}
-	if (isClosed) {
-		trait.close=true
-	}
-	return trait
-}
-
 const o2_linearHomogeneous_equilibriumSolutionMethod_trait=(classId,isConstant)=>{
 	const t=isConstant?'':'(t)'
 	return {
@@ -266,7 +234,7 @@ module.exports={
 		importance: 2,
 		forms: o2_formSuite.getForms(false,false),
 		traits: {
-			associatedHomogeneousEquation: o2_linear_associatedHomogeneousEquation_trait('o2_linear',false,false),
+			associatedHomogeneousEquation: o2_formSuite.getAssociatedHomogeneousEquationTrait(false,false),
 			generalSolutionMethod: {
 				contents: {
 					linear_o2_linear:   nt=>new LinearEquation(new TexScalarDepvar(nt.x)      ,'f',o2_formSuite.linear.equation(false)  ).getContentFor_generalSolutionMethod()(nt),
@@ -288,7 +256,7 @@ module.exports={
 		importance: 2,
 		forms: o2_formSuite.getForms(false,true),
 		traits: {
-			associatedHomogeneousEquation: o2_linear_associatedHomogeneousEquation_trait('o2_linearHomogeneous',false,true),
+			associatedHomogeneousEquation: o2_formSuite.getAssociatedHomogeneousEquationTrait(false,true),
 			// TODO realitySolutionRelation, maybe not worth it
 			generalSolutionMethod: {
 				close: true, // because parent doesn't specify how to solve associated eqn
@@ -305,7 +273,8 @@ module.exports={
 		importance: 2,
 		forms: o2_formSuite.getForms(true,false),
 		traits: {
-			 // TODO complete after o2_linearHomogeneousConstant is done
+			associatedHomogeneousEquation: o2_formSuite.getAssociatedHomogeneousEquationTrait(true,false),
+			// TODO generalSolutionMethod
 		},
 	},
 	o2_linearHomogeneousConstant: {
@@ -321,7 +290,7 @@ module.exports={
 		importance: 2,
 		forms: o2_formSuite.getForms(true,true),
 		traits: {
-			associatedHomogeneousEquation: o2_linear_associatedHomogeneousEquation_trait('o2_linearHomogeneousConstant',true,true),
+			associatedHomogeneousEquation: o2_formSuite.getAssociatedHomogeneousEquationTrait(true,true),
 			characteristicEquation: {
 				contents: {
 					linear_o2_linearHomogeneousConstant:   new LhcContent.Linear(new LhcParam.Linear('a_2','a_1','a_0')).getContentFor_characteristicEquation(),
