@@ -12,23 +12,25 @@ const LhcContent=require('../lhc-content-classes')
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
 class o2_FormSuite extends LinearEquationFormSuite {
-	/* TODO ctor(a0,a1,a2,b0,b1)
-		if (b0===undefined) {
-			b0=`-frac` /// logic from LhcParam
-		}
-	*/
+	constructor(a0,a1,a2,b0,b1) {
+		super()
+		if (b0===undefined) b0=`-\\frac{${a0}}{${a2}}`
+		if (b1===undefined) b1=`-\\frac{${a1}}{${a2}}`
+		this.a0=a0; this.a1=a1; this.a2=a2
+		this.b0=b0; this.b1=b1
+	}
 	get linear() {
 		return this.makeForm(isConstant=>input=>nt=>{
 			const t=(isConstant?``:`(t)`)
 			const pl=(isConstant?`+`:`{+}`)
 			const eq=(isConstant?`=`:`{=}`)
-			return tex.sum([`a_2${t}`,nt.dd(nt.x,'t',2)],pl,[`a_1${t}`,nt.dxdt],pl,[`a_0${t}`,nt.x],eq,[input?`${input}(t)`:0])
+			return tex.sum([this.a2+t,nt.dd(nt.x,'t',2)],pl,[this.a1+t,nt.dxdt],pl,[this.a0+t,nt.x],eq,[input?`${input}(t)`:0])
 		})
 	}
 	get resolved() {
 		return this.makeForm(isConstant=>input=>nt=>{
 			const t=(isConstant?``:`(t)`)
-			return tex.sum([nt.dd(nt.x,'t','2')],'=',[`b_1${t}`,nt.dxdt],'+',[`b_0${t}`,nt.x],'+',[input?`${input}(t)`:0])
+			return tex.sum([nt.dd(nt.x,'t','2')],'=',[this.b1+t,nt.dxdt],'+',[this.b0+t,nt.x],'+',[input?`${input}(t)`:0])
 		})
 	}
 	get system() {
@@ -36,7 +38,7 @@ class o2_FormSuite extends LinearEquationFormSuite {
 			const t=(isConstant?``:`(t)`)
 			return nt.sys2(
 				`${nt.dd(nt.x)} &= ${nt.y}`,
-				`${nt.dd(nt.y)} &= `+tex.sum([`b_0${t}`,nt.x],'+',[`b_1${t}`,nt.y],'+',[input?`${input}(t)`:0])
+				`${nt.dd(nt.y)} &= `+tex.sum([this.b0+t,nt.x],'+',[this.b1+t,nt.y],'+',[input?`${input}(t)`:0])
 			)
 		})
 	}
@@ -45,21 +47,59 @@ class o2_FormSuite extends LinearEquationFormSuite {
 			const t=(isConstant?``:`(t)`)
 			const pl=(isConstant||!input?`+`:`{+}`)
 			const eq=(isConstant||!input?`=`:`{=}`)
-			return `${nt.dd(nt.X)} ${eq} `+nt.mat2(0,1,`b_0${t}`,`b_1${t}`)+` ${nt.X} `+(input?` ${pl} `+nt.vec2(0,`${input}(t)`):``)
+			return `${nt.dd(nt.X)} ${eq} `+nt.mat2(0,1,this.b0+t,this.b1+t)+` ${nt.X} `+(input?` ${pl} `+nt.vec2(0,`${input}(t)`):``)
 		})
 	}
 	get classIdPrefix() {
 		return 'o2'
 	}
 	get highestOrderCoefficient() {
-		return 'a_2'
+		return this.a2
 	}
 	get systemFormType() {
 		return 'xy'
 	}
 }
 
-const o2_formSuite=new o2_FormSuite
+class o2_OscillatorFormSuite extends o2_FormSuite {
+	getClassId(isConstant,isHomogeneous) {
+		return 'o2_harmonicOscillator' // TODO forced/unforced
+	}
+	getFormNotes(isConstant,isHomogeneous) {
+		return nt=>[ // TODO all-forms notes
+			`\\( ${this.a2} > 0 \\) is the mass`,
+			`\\( ${this.a1} \\ge 0 \\) is the viscous damping coefficient`,
+			`\\( ${this.a0} > 0 \\) is the spring constant`,
+		]
+	}
+	getForms(isConstant,isHomogeneous) {
+		const classId=this.getClassId(isConstant,isHomogeneous)
+		const simpleClassId='o2_simpleHarmonicOscillator'
+		return [
+			{
+				is: `t,x,scalar_${simpleClassId},scalar_${classId},linear_${classId}`,
+				equation: this.linear(isConstant)(isHomogeneous?0:'f'),
+				notes: this.getFormNotes(isConstant,isHomogeneous),
+			},
+			{
+				is: `t,x,scalar_${simpleClassId},scalar_${classId},resolved_${classId}`,
+				equation: this.resolved(isConstant)(isHomogeneous?0:'g'),
+			},
+			{
+				is: `t,${this.systemFormType},system_${simpleClassId},system_${classId}`,
+				equation: this.system(isConstant)(isHomogeneous?0:'g'),
+			},
+			{
+				is: `t,X,vector_${classId}`,
+				is: `t,X,vector_${simpleClassId},vector_${classId}`,
+				equation: this.vector(isConstant)(isHomogeneous?0:'g'),
+			},
+		]
+	}
+}
+
+const o2_formSuite=new o2_FormSuite('a_0','a_1','a_2','b_0','b_1')
+const osc_formSuite=new o2_OscillatorFormSuite('k','b','m')
 
 // { paste with changes from on_*
 
@@ -331,35 +371,7 @@ module.exports={
 		name: "harmonic oscillator",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator'>harmonic oscillator</a>",
 		importance: 3,
-		forms: [
-			{
-				is: 't,x,scalar_o2_simpleHarmonicOscillator,scalar_o2_harmonicOscillator,linear_o2_harmonicOscillator',
-				equation: nt=>`m \\cdot ${nt.dd(nt.x,'t',2)} + b \\cdot ${nt.dxdt} + k \\cdot ${nt.x} = 0`,
-				notes: nt=>[ // TODO all-forms notes
-					`\\( m > 0 \\) is the mass`,
-					`\\( b \\ge 0 \\) is the viscous damping coefficient`,
-					`\\( k > 0 \\) is the spring constant`,
-				],
-			},
-			{
-				is: 't,x,scalar_o2_simpleHarmonicOscillator,scalar_o2_harmonicOscillator,resolved_o2_harmonicOscillator',
-				equation: nt=>`${nt.dd(nt.x,'t',2)} = - \\frac bm \\cdot ${nt.dxdt} - \\frac km \\cdot ${nt.x}`,
-			},
-			{
-				is: 't,xy,system_o2_simpleHarmonicOscillator,system_o2_harmonicOscillator',
-				equation: nt=>`\\left\\{ \\begin{aligned} `+
-					`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
-					`${nt.dd(nt.y)} &= - \\frac km \\cdot ${nt.x} - \\frac bm \\cdot ${nt.y} `+
-				`\\end{aligned} \\right.`,
-			},
-			{
-				is: 't,X,vector_o2_simpleHarmonicOscillator,vector_o2_harmonicOscillator',
-				equation: nt=>`${nt.dd(nt.X)} = \\begin{bmatrix}`+
-					`0 & 1 \\\\`+
-					`- \\frac km & - \\frac bm`+
-				`\\end{bmatrix} ${nt.X}`,
-			},
-		],
+		forms: osc_formSuite.getForms(true,true),
 		traits: {
 			characteristicEquation: {
 				contents: {
