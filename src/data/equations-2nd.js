@@ -14,10 +14,13 @@ const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial
 class o2_FormSuite extends LinearEquationFormSuite {
 	constructor(a0,a1,a2,b0,b1) {
 		super()
-		if (b0===undefined) b0=`-\\frac{${a0}}{${a2}}`
-		if (b1===undefined) b1=`-\\frac{${a1}}{${a2}}`
+		const initBi=(bi,ai)=>{
+			if (bi!==undefined) return bi
+			if (ai==0) return 0
+			return `-\\frac{${ai}}{${a2}}`
+		}
 		this.a0=a0; this.a1=a1; this.a2=a2
-		this.b0=b0; this.b1=b1
+		this.b0=initBi(b0,a0); this.b1=initBi(b1,a1)
 	}
 	get linear() {
 		return this.makeForm(isConstant=>input=>nt=>{
@@ -62,36 +65,41 @@ class o2_FormSuite extends LinearEquationFormSuite {
 }
 
 class o2_OscillatorFormSuite extends o2_FormSuite {
-	getClassId(isConstant,isHomogeneous) {
-		return 'o2_harmonicOscillator' // TODO forced/unforced
+	getClassId(isConstant,isHomogeneous) { // TODO forced/unforced
+		if (this.a1!=0) {
+			return 'o2_harmonicOscillator'
+		} else {
+			return 'o2_simpleHarmonicOscillator'
+		}
 	}
 	getForms(isConstant,isHomogeneous,discriminantRelation) {
 		const classId=this.getClassId(isConstant,isHomogeneous)
 		const simpleClassId='o2_simpleHarmonicOscillator'
 		return [
 			{
-				is: `t,x,scalar_${simpleClassId},scalar_${classId},linear_${classId}`,
+				is: `t,x,`+(classId!=simpleClassId?`scalar_${simpleClassId},`:``)+`scalar_${classId},linear_${classId}`,
 				equation: this.linear(isConstant)(isHomogeneous?0:'f'),
 				notes: nt=>[ // TODO all-forms notes
 					...(discriminantRelation!==undefined?[
 						`\\[ ${this.a1}^2 ${discriminantRelation} 4 ${this.a2} ${this.a0} \\]`
 					]:[]),
 					`\\( ${this.a2} > 0 \\) is the mass`,
-					`\\( ${this.a1} \\ge 0 \\) is the viscous damping coefficient`,
+					...(this.a1!=0?[
+						`\\( ${this.a1} \\ge 0 \\) is the viscous damping coefficient`,
+					]:[]),
 					`\\( ${this.a0} > 0 \\) is the spring constant`,
 				],
 			},
 			{
-				is: `t,x,scalar_${simpleClassId},scalar_${classId},resolved_${classId}`,
+				is: `t,x,`+(classId!=simpleClassId?`scalar_${simpleClassId},`:``)+`scalar_${classId},resolved_${classId}`,
 				equation: this.resolved(isConstant)(isHomogeneous?0:'g'),
 			},
 			{
-				is: `t,${this.systemFormType},system_${simpleClassId},system_${classId}`,
+				is: `t,${this.systemFormType},`+(classId!=simpleClassId?`system_${simpleClassId},`:``)+`system_${classId}`,
 				equation: this.system(isConstant)(isHomogeneous?0:'g'),
 			},
 			{
-				is: `t,X,vector_${classId}`,
-				is: `t,X,vector_${simpleClassId},vector_${classId}`,
+				is: `t,X,`+(classId!=simpleClassId?`vector_${simpleClassId},`:``)+`vector_${classId}`,
 				equation: this.vector(isConstant)(isHomogeneous?0:'g'),
 			},
 		]
@@ -100,6 +108,7 @@ class o2_OscillatorFormSuite extends o2_FormSuite {
 
 const o2_formSuite=new o2_FormSuite('a_0','a_1','a_2','b_0','b_1')
 const osc_formSuite=new o2_OscillatorFormSuite('k','b','m')
+const osc0_formSuite=new o2_OscillatorFormSuite('k',0,'m')
 
 // { paste with changes from on_*
 
@@ -392,34 +401,7 @@ module.exports={
 		name: "simple (undamped) harmonic oscillator",
 		htmlName: "<a href='https://en.wikipedia.org/wiki/Harmonic_oscillator#Simple_harmonic_oscillator'>simple (undamped) harmonic oscillator</a>",
 		importance: 3,
-		forms: [
-			{
-				is: 't,x,scalar_o2_simpleHarmonicOscillator,linear_o2_simpleHarmonicOscillator',
-				equation: nt=>`m \\cdot ${nt.dd(nt.x,'t',2)} + k \\cdot ${nt.x} = 0`,
-				notes: nt=>[
-					`\\( m > 0 \\) is the mass`,
-					`\\( k > 0 \\) is the spring constant`,
-				],
-			},
-			{
-				is: 't,x,scalar_o2_simpleHarmonicOscillator,resolved_o2_simpleHarmonicOscillator',
-				equation: nt=>`${nt.dd(nt.x,'t',2)} = - \\frac km \\cdot ${nt.x}`,
-			},
-			{
-				is: 't,xy,system_o2_simpleHarmonicOscillator',
-				equation: nt=>`\\left\\{ \\begin{aligned} `+
-					`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
-					`${nt.dd(nt.y)} &= - \\frac km \\cdot ${nt.x} `+
-				`\\end{aligned} \\right.`,
-			},
-			{
-				is: 't,X,vector_o2_simpleHarmonicOscillator',
-				equation: nt=>`${nt.dd(nt.X)} = \\begin{bmatrix}`+
-					`0 & 1 \\\\`+
-					`- \\frac km & 0`+
-				`\\end{bmatrix} ${nt.X}`,
-			},
-		],
+		forms: osc0_formSuite.getForms(true,true),
 		traits: {
 			characteristicEquation: {
 				contents: {
