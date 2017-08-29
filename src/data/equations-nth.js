@@ -12,12 +12,12 @@ class on_FormSuite extends LinearEquationFormSuite {
 	get linear() {
 		return this.makeForm(isConstant=>input=>nt=>(
 			`\\sum_{i=0}^n a_i`+(isConstant?``:`(t)`)+` ${nt.dd(nt.x,'t','i')} = `+(input?`${input}(t)`:`0`)
-		))
+		),nt=>`\\sum_{i=0}^n a_i λ^i`)
 	}
 	get resolved() {
 		return this.makeForm(isConstant=>input=>nt=>(
 			`${nt.dd(nt.x,'t','n')} = \\sum_{i=0}^{n-1} b_i`+(isConstant?``:`(t)`)+` ${nt.dd(nt.x,'t','i')}`+(input?` + ${input}(t)`:``)
-		))
+		),nt=>`λ^n - \\sum_{i=0}^{n-1} b_i λ^i`)
 	}
 	get system() {
 		return this.makeForm(isConstant=>input=>nt=>(
@@ -28,7 +28,7 @@ class on_FormSuite extends LinearEquationFormSuite {
 				`${nt.dd(`${nt.x}_{n-1}`)} &=& ${nt.x}_n \\\\`+
 				`${nt.dd(`${nt.x}_n`)} &=& \\sum_{i=1}^{n} c_i`+(isConstant?``:`(t)`)+` ${nt.x}_i`+(input?` + ${input}(t)`:``)+
 			`\\end{array} \\right.`
-		))
+		),nt=>`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i`)
 	}
 	get vector() {
 		return this.makeForm(isConstant=>input=>nt=>(
@@ -50,7 +50,7 @@ class on_FormSuite extends LinearEquationFormSuite {
 			(input?` {+} \\! \\left[ \\begin{smallmatrix}`+
 				`0 \\\\`+(isConstant?` 0 \\\\`:``)+` \\vdots \\\\ 0 \\\\ ${input}(t)`+
 			`\\end{smallmatrix} \\right]`:``)
-		))
+		),nt=>`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i`)
 	}
 	get classIdPrefix() {
 		return 'on'
@@ -65,9 +65,9 @@ class on_FormSuite extends LinearEquationFormSuite {
 
 const on_formSuite=new on_FormSuite
 
-const on_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt=>[
+const on_linearHomogeneousConstant_generalSolutionMethod_content=(x,form)=>nt=>[
 	`solve the characteristic equation for \\( λ \\):`,
-	`\\[ ${charEqn} \\]`,
+	`\\[ ${form.characteristicEquation(nt)} \\]`,
 	`\\( λ \\) are:`,
 	`\\( r \\) distinct real roots \\( λ_1, ..., λ_r \\) with multiplicities \\( p_1, ..., p_r \\)`,
 	`\\( s \\) distinct complex conjugate root pairs \\( α_1 \\pm i β_1, ..., α_s \\pm i β_s \\) with multiplicities \\( q_1, ..., q_s \\)`,
@@ -191,10 +191,10 @@ module.exports={
 			associatedHomogeneousEquation: on_formSuite.getAssociatedHomogeneousEquationTrait(false,false),
 			generalSolutionMethod: {
 				contents: {
-					linear_on_linear:   nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'f',on_formSuite.linear.equation(false)  ).getContentFor_generalSolutionMethod()(nt),
-					resolved_on_linear: nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'g',on_formSuite.resolved.equation(false)).getContentFor_generalSolutionMethod()(nt),
-					system_on_linear:   nt=>new LinearEquation(new TexSystemDepvar(nt.x)     ,'g',on_formSuite.system.equation(false)  ).getContentFor_generalSolutionMethod()(nt),
-					vector_on_linear:   nt=>new LinearEquation(new TexVectorDepvar(nt.X,nt.x),'g',on_formSuite.vector.equation(false)  ).getContentFor_generalSolutionMethod()(nt),
+					linear_on_linear:   nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'f',on_formSuite.linear(false)  ).getContentFor_generalSolutionMethod()(nt),
+					resolved_on_linear: nt=>new LinearEquation(new TexScalarDepvar(nt.x)     ,'g',on_formSuite.resolved(false)).getContentFor_generalSolutionMethod()(nt),
+					system_on_linear:   nt=>new LinearEquation(new TexSystemDepvar(nt.x)     ,'g',on_formSuite.system(false)  ).getContentFor_generalSolutionMethod()(nt),
+					vector_on_linear:   nt=>new LinearEquation(new TexVectorDepvar(nt.X,nt.x),'g',on_formSuite.vector(false)  ).getContentFor_generalSolutionMethod()(nt),
 				},
 			},
 		},
@@ -254,39 +254,35 @@ module.exports={
 			generalSolutionMethod: {
 				contents: {
 					linear_on_linearConstant: nt=>new LinearConstantEquation(
-						new TexScalarDepvar(nt.x),'f',on_formSuite.linear.equation(true),
-						`\\sum_{i=0}^n a_i λ^i`
+						new TexScalarDepvar(nt.x),'f',on_formSuite.linear(true)
 					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
 							new TexScalarDepvar(nt.x)._('h'),
-							`\\sum_{i=0}^n a_i λ^i = 0`
+							on_formSuite.linear(true)
 						)(nt)
 					)(nt),
 					resolved_on_linearConstant: nt=>new LinearConstantEquation(
-						new TexScalarDepvar(nt.x),'g',on_formSuite.resolved.equation(true),
-						`λ^n - \\sum_{i=0}^{n-1} b_i λ^i`
+						new TexScalarDepvar(nt.x),'g',on_formSuite.resolved(true)
 					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
 							new TexScalarDepvar(nt.x)._('h'),
-							`λ^n - \\sum_{i=0}^{n-1} b_i λ^i = 0`
+							on_formSuite.resolved(true)
 						)(nt)
 					)(nt),
 					system_on_linearConstant: nt=>new LinearConstantEquation(
-						new TexSystemDepvar(nt.x),'g',on_formSuite.system.equation(true),
-						`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i`
+						new TexSystemDepvar(nt.x),'g',on_formSuite.system(true)
 					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
 							new TexSystemDepvar(nt.x)._('h'),
-							`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`
+							on_formSuite.system(true)
 						)(nt)
 					)(nt),
 					vector_on_linearConstant: nt=>new LinearConstantEquation(
-						new TexVectorDepvar(nt.X,nt.x),'g',on_formSuite.vector.equation(true),
-						`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i`
+						new TexVectorDepvar(nt.X,nt.x),'g',on_formSuite.vector(true)
 					).getContentFor_generalSolutionMethod(
 						on_linearHomogeneousConstant_generalSolutionMethod_content(
 							new TexVectorDepvar(nt.X,nt.x)._('h'),
-							`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`
+							on_formSuite.vector(true)
 						)(nt)
 					)(nt),
 				},
@@ -320,19 +316,19 @@ module.exports={
 				contents: {
 					linear_on_linearHomogeneousConstant: nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(
 						new TexScalarDepvar(nt.x),
-						`\\sum_{i=0}^n a_i λ^i = 0`
+						on_formSuite.linear(true)
 					)(nt),
 					resolved_on_linearHomogeneousConstant: nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(
 						new TexScalarDepvar(nt.x),
-						`λ^n - \\sum_{i=0}^{n-1} b_i λ^i = 0`
+						on_formSuite.resolved(true)
 					)(nt),
 					system_on_linearHomogeneousConstant: nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(
 						new TexSystemDepvar(nt.x),
-						`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`
+						on_formSuite.system(true)
 					)(nt),
 					vector_on_linearHomogeneousConstant: nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(
 						new TexVectorDepvar(nt.X,nt.x),
-						`λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0`
+						on_formSuite.vector(true)
 					)(nt),
 				},
 			},

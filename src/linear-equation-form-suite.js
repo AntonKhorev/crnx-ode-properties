@@ -1,10 +1,18 @@
 'use strict'
 
+// const characteristicEquationContent=require('./characteristic-equation-content')
+
 class LinearEquationFormSuite {
-	makeForm(equationFn) {
-		return {
-			equation: equationFn,
-			// TODO characteristic eqn
+	makeForm(equationFn,characteristicPolynomialFn) {
+		return isConstant=>{
+			if (isConstant) {
+				const form1=input=>equationFn(true)(input)
+				form1.characteristicPolynomial=characteristicPolynomialFn
+				form1.characteristicEquation=nt=>characteristicPolynomialFn(nt)+` = 0`
+				return form1
+			} else {
+				return equationFn(false)
+			}
 		}
 	}
 	// abstract get classIdPrefix
@@ -21,22 +29,22 @@ class LinearEquationFormSuite {
 		return [
 			{
 				is: `t,x,linear_${classId}`,
-				equation: this.linear.equation(isConstant)(isHomogeneous?0:'f'),
+				equation: this.linear(isConstant)(isHomogeneous?0:'f'),
 				notes: nt=>[
 					`\\( `+this.highestOrderCoefficient+(isConstant?``:`(t)`)+` \\ne 0 \\)`+(isConstant?``:` on the entire interval of interest`),
 				],
 			},
 			{
 				is: `t,x,resolved_${classId}`,
-				equation: this.resolved.equation(isConstant)(isHomogeneous?0:'g'),
+				equation: this.resolved(isConstant)(isHomogeneous?0:'g'),
 			},
 			{
 				is: `t,${this.systemFormType},system_${classId}`,
-				equation: this.system.equation(isConstant)(isHomogeneous?0:'g'),
+				equation: this.system(isConstant)(isHomogeneous?0:'g'),
 			},
 			{
 				is: `t,X,vector_${classId}`,
-				equation: this.vector.equation(isConstant)(isHomogeneous?0:'g'),
+				equation: this.vector(isConstant)(isHomogeneous?0:'g'),
 			},
 		]
 	}
@@ -50,19 +58,19 @@ class LinearEquationFormSuite {
 		const trait={
 			contents: {
 				[`linear_${classId}`]: nt=>[
-					`\\[ `+this.linear.equation(isConstant)(0)(nt)+` \\]`,
+					`\\[ `+this.linear(isConstant)(0)(nt)+` \\]`,
 					...note,
 				],
 				[`resolved_${classId}`]: nt=>[
-					`\\[ `+this.resolved.equation(isConstant)(0)(nt)+` \\]`,
+					`\\[ `+this.resolved(isConstant)(0)(nt)+` \\]`,
 					...note,
 				],
 				[`system_${classId}`]: nt=>[
-					`\\[ `+this.system.equation(isConstant)(0)(nt)+` \\]`,
+					`\\[ `+this.system(isConstant)(0)(nt)+` \\]`,
 					...note,
 				],
 				[`vector_${classId}`]: nt=>[
-					`\\[ `+this.vector.equation(isConstant)(0)(nt)+` \\]`,
+					`\\[ `+this.vector(isConstant)(0)(nt)+` \\]`,
 					...note,
 				],
 			},

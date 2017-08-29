@@ -3,10 +3,6 @@
 const LinearEquation=require('./linear-equation')
 
 class LinearConstantEquation extends LinearEquation {
-	constructor(x,f,equation,charPoly) {
-		super(x,f,equation)
-		this.charPoly=charPoly
-	}
 	particularSolutionCases() {
 		const x=this.x
 		const f=this.f
@@ -20,7 +16,7 @@ class LinearConstantEquation extends LinearEquation {
 			]},
 			{type:'case',title:`using exponential response formula when \\( ${f}(t) = e^{α t} \\), \\( \\cos(ω t) \\), \\( \\sin(ω t) \\), \\( e^{α t} \\cos(ω t) \\) or \\( e^{α t} \\sin(ω t) \\)`,content:[
 				`define characteristic polynomial \\( P \\) as`,
-				`\\[ P(λ) = ${this.charPoly} \\]`,
+				`\\[ P(λ) = ${this.equation.characteristicPolynomial(nt)} \\]`,
 				`get \\( r \\in \\mathbb{C} \\) by equating \\( ${f}(t) \\) to \\( e^{r t} \\), \\( \\operatorname{Re}(e^{r t}) \\) or \\( \\operatorname{Im}(e^{r t}) \\)`,
 				`\\[ \\begin{array}{cc} `+
 					`${f}(t) & r \\\\[1em] `+

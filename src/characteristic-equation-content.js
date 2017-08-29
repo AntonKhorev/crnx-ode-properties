@@ -2,6 +2,8 @@
 
 const tex=require('./tex')
 
+// TODO incorporate into linear-equation-form-suite.js
+
 // terms are one of '+', '-', '=', '0', [order,factor]
 module.exports=(...terms)=>{
 	let needToCollect=true
