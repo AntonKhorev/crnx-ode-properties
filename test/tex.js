@@ -76,4 +76,33 @@ describe("tex.sum",()=>{
 		const s=tex.sum(["a",1])
 		assert.equal(s,"a")
 	})
+
+	it("handles {sum} of terms",()=>{
+		const s=tex.sum(["a"],"{+}",["b"])
+		assert.equal(s,"a {+} b")
+	})
+	it("handles {sum} of terms with negative 1st term",()=>{
+		const s=tex.sum(["-a"],"{+}",["b"])
+		assert.equal(s,"-a {+} b")
+	})
+	it("handles {sum} of terms with negative 2nd term",()=>{
+		const s=tex.sum(["a"],"{+}",["-b"])
+		assert.equal(s,"a {-} b")
+	})
+	it("handles {difference} of terms",()=>{
+		const s=tex.sum(["a"],"{-}",["b"])
+		assert.equal(s,"a {-} b")
+	})
+	it("handles {difference} of terms with negative 1st term",()=>{
+		const s=tex.sum(["-a"],"{-}",["b"])
+		assert.equal(s,"-a {-} b")
+	})
+	it("handles {difference} of terms with negative 2nd term",()=>{
+		const s=tex.sum(["a"],"{-}",["-b"])
+		assert.equal(s,"a {+} b")
+	})
+	it("handles {equality} of terms",()=>{
+		const s=tex.sum(["a"],"{=}",["b"])
+		assert.equal(s,"a {=} b")
+	})
 })

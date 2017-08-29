@@ -1,5 +1,6 @@
 'use strict'
 
+const tex=require('../tex')
 const TexScalarDepvar=require('../tex-scalar-depvar')
 const TexSystem2Depvar=require('../tex-system2-depvar')
 const TexVectorDepvar=require('../tex-vector-depvar')
@@ -11,18 +12,23 @@ const LhcContent=require('../lhc-content-classes')
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
 class o2_FormSuite extends LinearEquationFormSuite {
+	/* TODO ctor(a0,a1,a2,b0,b1)
+		if (b0===undefined) {
+			b0=`-frac` /// logic from LhcParam
+		}
+	*/
 	get linear() {
 		return this.makeForm(isConstant=>input=>nt=>{
 			const t=(isConstant?``:`(t)`)
 			const pl=(isConstant?`+`:`{+}`)
 			const eq=(isConstant?`=`:`{=}`)
-			return `a_2${t} ${nt.dd(nt.x,'t',2)} ${pl} a_1${t} ${nt.dxdt} ${pl} a_0${t} ${nt.x} ${eq} `+(input?`${input}(t)`:`0`)
+			return tex.sum([`a_2${t}`,nt.dd(nt.x,'t',2)],pl,[`a_1${t}`,nt.dxdt],pl,[`a_0${t}`,nt.x],eq,[input?`${input}(t)`:0])
 		})
 	}
 	get resolved() {
 		return this.makeForm(isConstant=>input=>nt=>{
 			const t=(isConstant?``:`(t)`)
-			return `${nt.dd(nt.x,'t','2')} = b_1${t} ${nt.dxdt} + b_0${t} ${nt.x}`+(input?` + ${input}(t)`:``)
+			return tex.sum([nt.dd(nt.x,'t','2')],'=',[`b_1${t}`,nt.dxdt],'+',[`b_0${t}`,nt.x],'+',[input?`${input}(t)`:0])
 		})
 	}
 	get system() {
@@ -30,7 +36,7 @@ class o2_FormSuite extends LinearEquationFormSuite {
 			const t=(isConstant?``:`(t)`)
 			return nt.sys2(
 				`${nt.dd(nt.x)} &= ${nt.y}`,
-				`${nt.dd(nt.y)} &= b_0${t} ${nt.x} + b_1${t} ${nt.y}`+(input?` + ${input}(t)`:``)
+				`${nt.dd(nt.y)} &= `+tex.sum([`b_0${t}`,nt.x],'+',[`b_1${t}`,nt.y],'+',[input?`${input}(t)`:0])
 			)
 		})
 	}

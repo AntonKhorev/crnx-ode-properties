@@ -25,6 +25,7 @@ const sum=(...terms)=>{
 	}
 	let result=''
 	let sign=''
+	let bracedSign=false
 	let empty=true
 	for (let term of terms) {
 		if (Array.isArray(term) && term[0]!=0) {
@@ -36,15 +37,22 @@ const sum=(...terms)=>{
 				empty=false
 			} else {
 				[sign,term]=alterSign(sign,term)
-				result+=' '+sign+' '+term.join(' ')
+				result+=' '+(bracedSign?'{':'')+sign+(bracedSign?'}':'')+' '+term.join(' ')
 			}
 		} else {
+			if (term[0]=='{') {
+				term=term[1]
+				bracedSign=true
+			} else {
+				bracedSign=false
+			}
 			if (term=='=') {
 				if (empty) {
 					result+='0'
 				}
-				result+=' = '
+				result+=bracedSign?' {=} ':' = '
 				sign=''
+				bracedSign=false
 				empty=true
 			} else {
 				sign=term
