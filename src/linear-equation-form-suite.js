@@ -23,11 +23,6 @@ class LinearEquationFormSuite {
 		return classId
 	}
 	// abstract get highestOrderCoefficient()
-	getFormNotes(isConstant,isHomogeneous) {
-		return nt=>[
-			`\\( `+this.highestOrderCoefficient+(isConstant?``:`(t)`)+` \\ne 0 \\)`+(isConstant?``:` on the entire interval of interest`),
-		]
-	}
 	// abstract get systemFormType()
 	getForms(isConstant,isHomogeneous) {
 		const classId=this.getClassId(isConstant,isHomogeneous)
@@ -35,7 +30,9 @@ class LinearEquationFormSuite {
 			{
 				is: `t,x,linear_${classId}`,
 				equation: this.linear(isConstant)(isHomogeneous?0:'f'),
-				notes: this.getFormNotes(isConstant,isHomogeneous),
+				notes: nt=>[
+					`\\( `+this.highestOrderCoefficient+(isConstant?``:`(t)`)+` \\ne 0 \\)`+(isConstant?``:` on the entire interval of interest`),
+				],
 			},
 			{
 				is: `t,x,resolved_${classId}`,

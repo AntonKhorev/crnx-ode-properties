@@ -65,21 +65,21 @@ class o2_OscillatorFormSuite extends o2_FormSuite {
 	getClassId(isConstant,isHomogeneous) {
 		return 'o2_harmonicOscillator' // TODO forced/unforced
 	}
-	getFormNotes(isConstant,isHomogeneous) {
-		return nt=>[ // TODO all-forms notes
-			`\\( ${this.a2} > 0 \\) is the mass`,
-			`\\( ${this.a1} \\ge 0 \\) is the viscous damping coefficient`,
-			`\\( ${this.a0} > 0 \\) is the spring constant`,
-		]
-	}
-	getForms(isConstant,isHomogeneous) {
+	getForms(isConstant,isHomogeneous,discriminantRelation) {
 		const classId=this.getClassId(isConstant,isHomogeneous)
 		const simpleClassId='o2_simpleHarmonicOscillator'
 		return [
 			{
 				is: `t,x,scalar_${simpleClassId},scalar_${classId},linear_${classId}`,
 				equation: this.linear(isConstant)(isHomogeneous?0:'f'),
-				notes: this.getFormNotes(isConstant,isHomogeneous),
+				notes: nt=>[ // TODO all-forms notes
+					...(discriminantRelation!==undefined?[
+						`\\[ ${this.a1}^2 ${discriminantRelation} 4 ${this.a2} ${this.a0} \\]`
+					]:[]),
+					`\\( ${this.a2} > 0 \\) is the mass`,
+					`\\( ${this.a1} \\ge 0 \\) is the viscous damping coefficient`,
+					`\\( ${this.a0} > 0 \\) is the spring constant`,
+				],
 			},
 			{
 				is: `t,x,scalar_${simpleClassId},scalar_${classId},resolved_${classId}`,
@@ -168,37 +168,7 @@ const harmonicOscillatorType=(type,discriminantRelation,contentMethodName)=>({
 	name: `${type} harmonic oscillator`,
 	htmlName: `${type} <a href='https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator'>harmonic oscillator</a>`,
 	importance: 4,
-	forms: [
-		{
-			is: 't,x,scalar_o2_simpleHarmonicOscillator,scalar_o2_harmonicOscillator,linear_o2_harmonicOscillator',
-			equation: nt=>`m \\cdot ${nt.dd(nt.x,'t',2)} + b \\cdot ${nt.dxdt} + k \\cdot ${nt.x} = 0`,
-			notes: nt=>[
-				`\\[ b^2 - 4 m k ${discriminantRelation} 0 \\]`,
-				`\\( m > 0 \\) is the mass`,
-				`\\( b \\ge 0 \\) is the viscous damping coefficient`,
-				`\\( k > 0 \\) is the spring constant`,
-			],
-		},
-		// copypasted from harmonic oscillator
-		{
-			is: 't,x,scalar_o2_simpleHarmonicOscillator,scalar_o2_harmonicOscillator,resolved_o2_harmonicOscillator',
-			equation: nt=>`${nt.dd(nt.x,'t',2)} = - \\frac bm \\cdot ${nt.dxdt} - \\frac km \\cdot ${nt.x}`,
-		},
-		{
-			is: 't,xy,system_o2_simpleHarmonicOscillator,system_o2_harmonicOscillator',
-			equation: nt=>`\\left\\{ \\begin{aligned} `+
-				`${nt.dd(nt.x)} &= ${nt.y} \\\\ `+
-				`${nt.dd(nt.y)} &= - \\frac km \\cdot ${nt.x} - \\frac bm \\cdot ${nt.y} `+
-			`\\end{aligned} \\right.`,
-		},
-		{
-			is: 't,X,vector_o2_simpleHarmonicOscillator,vector_o2_harmonicOscillator',
-			equation: nt=>`${nt.dd(nt.X)} = \\begin{bmatrix}`+
-				`0 & 1 \\\\`+
-				`- \\frac km & - \\frac bm`+
-			`\\end{bmatrix} ${nt.X}`,
-		},
-	],
+	forms: osc_formSuite.getForms(true,true,discriminantRelation),
 	traits: {
 		generalSolutionMethod: {
 			title: `General and ${ivp} solution`,
