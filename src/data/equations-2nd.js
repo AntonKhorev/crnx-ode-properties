@@ -1,114 +1,19 @@
 'use strict'
 
-const tex=require('../tex')
 const TexScalarDepvar=require('../tex-scalar-depvar')
 const TexSystem2Depvar=require('../tex-system2-depvar')
 const TexVectorDepvar=require('../tex-vector-depvar')
-const LinearEquationFormSuite=require('../linear-equation-form-suite')
+const O2LinearEquationFormSuite=require('../o2-linear-equation-form-suite')
+const OscillatorLinearEquationFormSuite=require('../oscillator-linear-equation-form-suite')
 const LinearEquation=require('../linear-equation')
 const LhcParam=require('../lhc-param-classes')
 const LhcContent=require('../lhc-content-classes')
 
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
-class o2_FormSuite extends LinearEquationFormSuite {
-	constructor(a0,a1,a2,b0,b1) {
-		super()
-		const initBi=(bi,ai)=>{
-			if (bi!==undefined) return bi
-			if (ai==0) return 0
-			return `-\\frac{${ai}}{${a2}}`
-		}
-		this.a0=a0; this.a1=a1; this.a2=a2
-		this.b0=initBi(b0,a0); this.b1=initBi(b1,a1)
-	}
-	get linear() {
-		return this.makeForm(isConstant=>input=>nt=>{
-			const t=(isConstant?``:`(t)`)
-			const pl=(isConstant?`+`:`{+}`)
-			const eq=(isConstant?`=`:`{=}`)
-			return tex.sum([this.a2+t,nt.dd(nt.x,'t',2)],pl,[this.a1+t,nt.dxdt],pl,[this.a0+t,nt.x],eq,[input?`${input}(t)`:0])
-		})
-	}
-	get resolved() {
-		return this.makeForm(isConstant=>input=>nt=>{
-			const t=(isConstant?``:`(t)`)
-			return tex.sum([nt.dd(nt.x,'t','2')],'=',[this.b1+t,nt.dxdt],'+',[this.b0+t,nt.x],'+',[input?`${input}(t)`:0])
-		})
-	}
-	get system() {
-		return this.makeForm(isConstant=>input=>nt=>{
-			const t=(isConstant?``:`(t)`)
-			return nt.sys2(
-				`${nt.dd(nt.x)} &= ${nt.y}`,
-				`${nt.dd(nt.y)} &= `+tex.sum([this.b0+t,nt.x],'+',[this.b1+t,nt.y],'+',[input?`${input}(t)`:0])
-			)
-		})
-	}
-	get vector() {
-		return this.makeForm(isConstant=>input=>nt=>{
-			const t=(isConstant?``:`(t)`)
-			const pl=(isConstant||!input?`+`:`{+}`)
-			const eq=(isConstant||!input?`=`:`{=}`)
-			return `${nt.dd(nt.X)} ${eq} `+nt.mat2(0,1,this.b0+t,this.b1+t)+` ${nt.X} `+(input?` ${pl} `+nt.vec2(0,`${input}(t)`):``)
-		})
-	}
-	get classIdPrefix() {
-		return 'o2'
-	}
-	get highestOrderCoefficient() {
-		return this.a2
-	}
-	get systemFormType() {
-		return 'xy'
-	}
-}
-
-class o2_OscillatorFormSuite extends o2_FormSuite {
-	getClassId(isConstant,isHomogeneous) { // TODO forced/unforced
-		if (this.a1!=0) {
-			return 'o2_harmonicOscillator'
-		} else {
-			return 'o2_simpleHarmonicOscillator'
-		}
-	}
-	getForms(isConstant,isHomogeneous,discriminantRelation) {
-		const classId=this.getClassId(isConstant,isHomogeneous)
-		const simpleClassId='o2_simpleHarmonicOscillator'
-		return [
-			{
-				is: `t,x,`+(classId!=simpleClassId?`scalar_${simpleClassId},`:``)+`scalar_${classId},linear_${classId}`,
-				equation: this.linear(isConstant)(isHomogeneous?0:'f'),
-				notes: nt=>[ // TODO all-forms notes
-					...(discriminantRelation!==undefined?[
-						`\\[ ${this.a1}^2 ${discriminantRelation} 4 ${this.a2} ${this.a0} \\]`
-					]:[]),
-					`\\( ${this.a2} > 0 \\) is the mass`,
-					...(this.a1!=0?[
-						`\\( ${this.a1} \\ge 0 \\) is the viscous damping coefficient`,
-					]:[]),
-					`\\( ${this.a0} > 0 \\) is the spring constant`,
-				],
-			},
-			{
-				is: `t,x,`+(classId!=simpleClassId?`scalar_${simpleClassId},`:``)+`scalar_${classId},resolved_${classId}`,
-				equation: this.resolved(isConstant)(isHomogeneous?0:'g'),
-			},
-			{
-				is: `t,${this.systemFormType},`+(classId!=simpleClassId?`system_${simpleClassId},`:``)+`system_${classId}`,
-				equation: this.system(isConstant)(isHomogeneous?0:'g'),
-			},
-			{
-				is: `t,X,`+(classId!=simpleClassId?`vector_${simpleClassId},`:``)+`vector_${classId}`,
-				equation: this.vector(isConstant)(isHomogeneous?0:'g'),
-			},
-		]
-	}
-}
-
-const o2_formSuite=new o2_FormSuite('a_0','a_1','a_2','b_0','b_1')
-const osc_formSuite=new o2_OscillatorFormSuite('k','b','m')
-const osc0_formSuite=new o2_OscillatorFormSuite('k',0,'m')
+const o2_formSuite=new O2LinearEquationFormSuite('a_0','a_1','a_2','b_0','b_1')
+const osc_formSuite=new OscillatorLinearEquationFormSuite('k','b','m')
+const osc0_formSuite=new OscillatorLinearEquationFormSuite('k',0,'m')
 
 // { paste with changes from on_*
 
