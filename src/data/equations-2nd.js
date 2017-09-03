@@ -203,15 +203,8 @@ module.exports={
 					vector_o2_harmonicOscillator:   new LhcContent.ReducedVector(new LhcParam.Linear('m','b','k')).getContentFor_generalSolutionMethod(),
 				},
 			},
-			equilibriumSolutionMethod: {
-				formType: 'scalar_o2_simpleHarmonicOscillator',
-				contents: {
-					scalar_o2_simpleHarmonicOscillator: new LhcContent.Linear(new LhcParam.Linear('m','b','k')).getContentFor_equilibriumSolutionMethod0(),
-					system_o2_simpleHarmonicOscillator: new LhcContent.ReducedSystem(new LhcParam.Linear('m','b','k')).getContentFor_equilibriumSolutionMethod0(),
-					vector_o2_simpleHarmonicOscillator: new LhcContent.ReducedVector(new LhcParam.Linear('m','b','k')).getContentFor_equilibriumSolutionMethod0(),
-				},
-			},
 			*/
+			equilibriumSolutionMethod: osc_formSuite.getEquilibriumSolutionMethodTrait(true),
 		},
 	},
 	o2_underdampedHarmonicOscillator: harmonicOscillatorType(

@@ -1,7 +1,5 @@
 'use strict'
 
-const tex=require('./tex')
-
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
 const LhcContent={}
@@ -148,29 +146,9 @@ LhcContent.Scalar = class extends LhcContent.Base {
 	}
 }
 
-LhcContent.Linear = class extends LhcContent.Scalar {
-	getContentFor_equilibriumSolutionMethod0() {
-		const a=i=>this.param.linear(i)
-		return nt=>[
-			`\\[ ${nt.x} = 0 \\]`,
-			{type:'note',content:[
-				`no other equilibrium solution is possible because \\( ${a(0)} \\ne 0 \\)`,
-			]},
-		]
-	}
-}
+LhcContent.Linear = class extends LhcContent.Scalar {}
 
-LhcContent.Resolved = class extends LhcContent.Scalar {
-	getContentFor_equilibriumSolutionMethod0() {
-		const b=i=>this.param.resolved(i)
-		return nt=>[
-			`\\[ ${nt.x} = 0 \\]`,
-			{type:'note',content:[
-				`no other equilibrium solution is possible because \\( ${b(0)} \\ne 0 \\)`,
-			]},
-		]
-	}
-}
+LhcContent.Resolved = class extends LhcContent.Scalar {}
 
 LhcContent.ReducedSystem = class extends LhcContent.Base {
 	getX0(nt) {
@@ -207,15 +185,6 @@ LhcContent.ReducedSystem = class extends LhcContent.Base {
 			`${nt.x} &= k_1 \\cos \\beta t + k_2 \\sin \\beta t \\\\`+
 			`${nt.y} &= k_2 \\beta \\cos \\beta t - k_1 \\beta \\sin \\beta t`+
 		`\\end{aligned} \\right.`
-	}
-	getContentFor_equilibriumSolutionMethod0() {
-		const c=this.param.system(2,1)
-		return nt=>[
-			`\\[ ${nt.sys2(`${nt.x} &= 0`,`${nt.y} &= 0`)} \\]`,
-			{type:'note',content:[
-				`no other equilibrium solution is possible because \\( ${c} \\ne 0 \\)`,
-			]},
-		]
 	}
 }
 
@@ -254,15 +223,6 @@ LhcContent.ReducedVector = class extends LhcContent.Base {
 			        `+ \\: & k_2 ${nt.vec2('\\sin \\beta t', '\\beta \\cos \\beta t')} \\\\`+
 			        `= \\: & ${nt.smat2(1,0,0,'\\beta')} ${nt.smat2('\\cos \\beta t','\\sin \\beta t','- \\sin \\beta t','\\cos \\beta t')} ${nt.svec2('k_1','k_2')}`+
 		`\\end{aligned}`
-	}
-	getContentFor_equilibriumSolutionMethod0() {
-		const c=this.param.system(2,1)
-		return nt=>[
-			`\\[ ${nt.X} = \\mathbf{0} \\]`,
-			{type:'note',content:[
-				`no other equilibrium solution is possible because \\( ${c} \\ne 0 \\)`,
-			]},
-		]
 	}
 }
 

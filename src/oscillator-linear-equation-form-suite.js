@@ -20,7 +20,7 @@ class OscillatorLinearEquationFormSuite extends O2LinearEquationFormSuite {
 		const simpleClassId='o2_simpleHarmonicOscillator'
 		return [
 			{
-				is: `t,x,`+(classId!=simpleClassId?`scalar_${simpleClassId},`:``)+`scalar_${classId},linear_${classId}`,
+				is: `t,x,`+(classId!=simpleClassId?`linear_${simpleClassId},`:``)+`,linear_${classId}`,
 				equation: this.linear(isConstant)(isHomogeneous?0:'f'),
 				notes: nt=>[ // TODO all-forms notes
 					...(discriminantRelation!==undefined?[
@@ -34,7 +34,7 @@ class OscillatorLinearEquationFormSuite extends O2LinearEquationFormSuite {
 				],
 			},
 			{
-				is: `t,x,`+(classId!=simpleClassId?`scalar_${simpleClassId},`:``)+`scalar_${classId},resolved_${classId}`,
+				is: `t,x,`+(classId!=simpleClassId?`resolved_${simpleClassId},`:``)+`,resolved_${classId}`,
 				equation: this.resolved(isConstant)(isHomogeneous?0:'g'),
 			},
 			{
@@ -46,6 +46,38 @@ class OscillatorLinearEquationFormSuite extends O2LinearEquationFormSuite {
 				equation: this.vector(isConstant)(isHomogeneous?0:'g'),
 			},
 		]
+	}
+	getEquilibriumSolutionMethodTrait(isConstant) {
+		const simpleClassId='o2_simpleHarmonicOscillator'
+		const t=isConstant?'':'(t)'
+		return {
+			contents: {
+				[`linear_${simpleClassId}`]: nt=>[
+					`\\[ ${nt.x} = 0 \\]`,
+					{type:'note',content:[
+						`no other equilibrium solution is possible because \\( ${this.a0}${t} \\ne 0 \\)`,
+					]},
+				],
+				[`resolved_${simpleClassId}`]: nt=>[
+					`\\[ ${nt.x} = 0 \\]`,
+					{type:'note',content:[
+						`no other equilibrium solution is possible because \\( ${this.b0}${t} \\ne 0 \\)`,
+					]},
+				],
+				[`system_${simpleClassId}`]: nt=>[
+					`\\[ ${nt.sys2(`${nt.x} &= 0`,`${nt.y} &= 0`)} \\]`,
+					{type:'note',content:[
+						`no other equilibrium solution is possible because \\( ${this.b0}${t} \\ne 0 \\)`,
+					]},
+				],
+				[`vector_${simpleClassId}`]: nt=>[
+					`\\[ ${nt.X} = \\mathbf{0} \\]`,
+					{type:'note',content:[
+						`no other equilibrium solution is possible because \\( ${this.b0}${t} \\ne 0 \\)`,
+					]},
+				],
+			},
+		}
 	}
 }
 
