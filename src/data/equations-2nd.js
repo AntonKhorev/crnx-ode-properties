@@ -6,7 +6,6 @@ const TexVectorDepvar=require('../tex-vector-depvar')
 const O2LinearEquationFormSuite=require('../o2-linear-equation-form-suite')
 const OscillatorLinearEquationFormSuite=require('../oscillator-linear-equation-form-suite')
 const LinearEquation=require('../linear-equation')
-const LhcParam=require('../lhc-param-classes')
 const LhcContent=require('../lhc-content-classes')
 
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
@@ -19,60 +18,6 @@ const osc0_formSuite=new OscillatorLinearEquationFormSuite('k',0,'m')
 
 // TODO const o2_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt=>[
 
-const o2_linearHomogeneous_equilibriumSolutionMethod_trait=(classId,isConstant)=>{
-	const t=isConstant?'':'(t)'
-	return {
-		contents: {
-			[`linear_${classId}`]: nt=>[
-				{type:'switch',title:`\\( a_0${t} \\) is`,content:[
-					{type:'case',title:`\\( a_0${t} = 0 \\)`,content:[
-						`\\[ ${nt.x} = K \\]`,
-					]},
-					{type:'case',title:`\\( a_0${t} \\ne 0 \\)`,content:[
-						`\\[ ${nt.x} = 0 \\]`,
-					]},
-				]},
-			],
-			[`resolved_${classId}`]: nt=>[
-				{type:'switch',title:`\\( b_0${t} \\) is`,content:[
-					{type:'case',title:`\\( b_0${t} = 0 \\)`,content:[
-						`\\[ ${nt.x} = K \\]`,
-					]},
-					{type:'case',title:`\\( b_0${t} \\ne 0 \\)`,content:[
-						`\\[ ${nt.x} = 0 \\]`,
-					]},
-				]},
-			],
-			[`system_${classId}`]: nt=>[
-				{type:'switch',title:`\\( b_0${t} \\) is`,content:[ // 'c_1' -> 'b_0'
-					{type:'case',title:`\\( b_0${t} = 0 \\)`,content:[
-						`\\[ \\left\\{ \\begin{array}{rcl}`+
-							`${nt.x} &=& K \\\\`+
-							`${nt.y} &=& 0 \\\\`+
-						`\\end{array} \\right. \\]`,
-					]},
-					{type:'case',title:`\\( b_0${t} \\ne 0 \\)`,content:[
-						`\\[ \\left\\{ \\begin{array}{rcl}`+
-							`${nt.x} &=& 0 \\\\`+
-							`${nt.y} &=& 0 \\\\`+
-						`\\end{array} \\right. \\]`,
-					]},
-				]},
-			],
-			[`vector_${classId}`]: nt=>[
-				{type:'switch',title:`\\( b_0${t} \\) is`,content:[ // 'c_1' -> 'b_0'
-					{type:'case',title:`\\( b_0${t} = 0 \\)`,content:[
-						`\\[ ${nt.X} = \\begin{bmatrix} K \\\\ 0 \\end{bmatrix} \\]`,
-					]},
-					{type:'case',title:`\\( b_0${t} \\ne 0 \\)`,content:[
-						`\\[ ${nt.X} = \\begin{bmatrix} 0 \\\\ 0 \\end{bmatrix} \\]`,
-					]},
-				]},
-			],
-		},
-	}
-}
-
 // }
 
 const harmonicOscillatorType=(type,discriminantRelation,contentMethodName)=>({
@@ -84,6 +29,7 @@ const harmonicOscillatorType=(type,discriminantRelation,contentMethodName)=>({
 	importance: 4,
 	forms: osc_formSuite.getForms(true,true,discriminantRelation),
 	traits: {
+		/*
 		generalSolutionMethod: {
 			title: `General and ${ivp} solution`,
 			contents: {
@@ -93,6 +39,7 @@ const harmonicOscillatorType=(type,discriminantRelation,contentMethodName)=>({
 				vector_o2_harmonicOscillator:   new LhcContent.ReducedVector(new LhcParam.Linear('m','b','k'))[contentMethodName](),
 			},
 		},
+		*/
 	},
 })
 
@@ -191,7 +138,7 @@ module.exports={
 			generalSolutionMethod: {
 				close: true, // because parent doesn't specify how to solve associated eqn
 			},
-			equilibriumSolutionMethod: o2_linearHomogeneous_equilibriumSolutionMethod_trait('o2_linearHomogeneous',false),
+			equilibriumSolutionMethod: o2_formSuite.getEquilibriumSolutionMethodTrait(false),
 		},
 	},
 	o2_linearConstant: {
@@ -221,14 +168,8 @@ module.exports={
 		forms: o2_formSuite.getForms(true,true),
 		traits: {
 			associatedHomogeneousEquation: o2_formSuite.getAssociatedHomogeneousEquationTrait(true,true),
-			characteristicEquation: {
-				contents: {
-					linear_o2_linearHomogeneousConstant:   new LhcContent.Linear(new LhcParam.Linear('a_2','a_1','a_0')).getContentFor_characteristicEquation(),
-					resolved_o2_linearHomogeneousConstant: new LhcContent.Resolved(new LhcParam.Resolved('b_1','b_0')).getContentFor_characteristicEquation(),
-					system_o2_linearHomogeneousConstant:   new LhcContent.ReducedSystem(new LhcParam.ReducedSystem('b_0','b_1')).getContentFor_characteristicEquation(),
-					vector_o2_linearHomogeneousConstant:   new LhcContent.ReducedVector(new LhcParam.ReducedSystem('b_0','b_1')).getContentFor_characteristicEquation(),
-				},
-			},
+			characteristicEquation: o2_formSuite.getCharacteristicEquationTrait(),
+			/*
 			generalSolutionMethod: {
 				title: `General and ${ivp} solution`,
 				contents: {
@@ -238,14 +179,8 @@ module.exports={
 					vector_o2_linearHomogeneousConstant:   new LhcContent.ReducedVector(new LhcParam.ReducedSystem('b_0','b_1')).getContentFor_generalSolutionMethod(),
 				},
 			},
-			equilibriumSolutionMethod: {
-				contents: {
-					linear_o2_linearHomogeneousConstant:   new LhcContent.Linear(new LhcParam.Linear('a_2','a_1','a_0')).getContentFor_equilibriumSolutionMethod(),
-					resolved_o2_linearHomogeneousConstant: new LhcContent.Resolved(new LhcParam.Resolved('b_1','b_0')).getContentFor_equilibriumSolutionMethod(),
-					system_o2_linearHomogeneousConstant:   new LhcContent.ReducedSystem(new LhcParam.ReducedSystem('b_0','b_1')).getContentFor_equilibriumSolutionMethod(),
-					vector_o2_linearHomogeneousConstant:   new LhcContent.ReducedVector(new LhcParam.ReducedSystem('b_0','b_1')).getContentFor_equilibriumSolutionMethod(),
-				},
-			},
+			*/
+			equilibriumSolutionMethod: o2_formSuite.getEquilibriumSolutionMethodTrait(true),
 		},
 	},
 	o2_harmonicOscillator: {
@@ -257,14 +192,8 @@ module.exports={
 		importance: 3,
 		forms: osc_formSuite.getForms(true,true),
 		traits: {
-			characteristicEquation: {
-				contents: {
-					linear_o2_harmonicOscillator:   new LhcContent.Linear(new LhcParam.Linear('m','b','k')).getContentFor_characteristicEquation(),
-					resolved_o2_harmonicOscillator: new LhcContent.Resolved(new LhcParam.Linear('m','b','k')).getContentFor_characteristicEquation(),
-					system_o2_harmonicOscillator:   new LhcContent.ReducedSystem(new LhcParam.Linear('m','b','k')).getContentFor_characteristicEquation(),
-					vector_o2_harmonicOscillator:   new LhcContent.ReducedSystem(new LhcParam.Linear('m','b','k')).getContentFor_characteristicEquation(),
-				},
-			},
+			characteristicEquation: osc_formSuite.getCharacteristicEquationTrait(),
+			/*
 			generalSolutionMethod: {
 				title: `General and ${ivp} solution`,
 				contents: {
@@ -282,6 +211,7 @@ module.exports={
 					vector_o2_simpleHarmonicOscillator: new LhcContent.ReducedVector(new LhcParam.Linear('m','b','k')).getContentFor_equilibriumSolutionMethod0(),
 				},
 			},
+			*/
 		},
 	},
 	o2_underdampedHarmonicOscillator: harmonicOscillatorType(
@@ -308,14 +238,8 @@ module.exports={
 		importance: 3,
 		forms: osc0_formSuite.getForms(true,true),
 		traits: {
-			characteristicEquation: {
-				contents: {
-					linear_o2_simpleHarmonicOscillator:   new LhcContent.Linear(new LhcParam.Linear('m',0,'k')).getContentFor_characteristicEquation(),
-					resolved_o2_simpleHarmonicOscillator: new LhcContent.Resolved(new LhcParam.Linear('m',0,'k')).getContentFor_characteristicEquation(),
-					system_o2_simpleHarmonicOscillator:   new LhcContent.ReducedSystem(new LhcParam.Linear('m',0,'k')).getContentFor_characteristicEquation(),
-					vector_o2_simpleHarmonicOscillator:   new LhcContent.ReducedSystem(new LhcParam.Linear('m',0,'k')).getContentFor_characteristicEquation(),
-				},
-			},
+			characteristicEquation: osc0_formSuite.getCharacteristicEquationTrait(),
+			/*
 			generalSolutionMethod: {
 				title: `General and ${ivp} solution`,
 				contents: {
@@ -325,6 +249,7 @@ module.exports={
 					vector_o2_simpleHarmonicOscillator:   new LhcContent.ReducedVector(new LhcParam.Linear('m',0,'k')).getContentFor_generalSolutionMethod_Imaginary(),
 				},
 			},
+			*/
 		},
 	},
 	o2_vanDerPol: {

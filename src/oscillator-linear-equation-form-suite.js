@@ -3,6 +3,11 @@
 const O2LinearEquationFormSuite=require('./o2-linear-equation-form-suite')
 
 class OscillatorLinearEquationFormSuite extends O2LinearEquationFormSuite {
+	makeConstantForm(equationFn,characteristicPolynomialFn) {
+		const form1=super.makeConstantForm(equationFn,characteristicPolynomialFn)
+		form1.naturalFrequency=`\\sqrt{\\frac{${this.a0}}{${this.a2}}}`
+		return form1
+	}
 	getClassId(isConstant,isHomogeneous) { // TODO forced/unforced
 		if (this.a1!=0) {
 			return 'o2_harmonicOscillator'

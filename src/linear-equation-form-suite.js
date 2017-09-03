@@ -3,13 +3,16 @@
 // const characteristicEquationContent=require('./characteristic-equation-content')
 
 class LinearEquationFormSuite {
+	makeConstantForm(equationFn,characteristicPolynomialFn) {
+		const form1=input=>equationFn(true)(input)
+		form1.characteristicPolynomial=characteristicPolynomialFn
+		form1.characteristicEquation=nt=>characteristicPolynomialFn(nt)+` = 0`
+		return form1
+	}
 	makeForm(equationFn,characteristicPolynomialFn) {
 		return isConstant=>{
 			if (isConstant) {
-				const form1=input=>equationFn(true)(input)
-				form1.characteristicPolynomial=characteristicPolynomialFn
-				form1.characteristicEquation=nt=>characteristicPolynomialFn(nt)+` = 0`
-				return form1
+				return this.makeConstantForm(equationFn,characteristicPolynomialFn)
 			} else {
 				return equationFn(false)
 			}
@@ -80,6 +83,7 @@ class LinearEquationFormSuite {
 		}
 		return trait
 	}
+	// abstract getEquilibriumSolutionMethodTrait(isConstant) // assumed to be homogeneous
 }
 
 module.exports=LinearEquationFormSuite

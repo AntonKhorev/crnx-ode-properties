@@ -1,15 +1,14 @@
 'use strict'
 
 const tex=require('./tex')
-const characteristicEquationContent=require('./characteristic-equation-content')
 
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
 
 const LhcContent={}
 
 LhcContent.Base = class {
-	constructor(param) {
-		this.param=param
+	constructor(form) {
+		this.form=form
 	}
 	getGeneralSolutionConstantsEquation(nt,eigx1,eigx2,eigy1,eigy2) {
 		return `${nt.mat2(eigx1,eigx2,eigy1,eigy2)} ${nt.vec2('k_1','k_2')} = ${this.getX0(nt)}`
@@ -71,7 +70,7 @@ LhcContent.Base = class {
 	getContentFor_generalSolutionMethod_Repeated() {
 		return nt=>[
 			`solve characteristic equation for \\( \\lambda \\):`,
-			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
+			`\\[ ${this.form.characteristicEquation(nt)} \\]`,
 			`roots \\( \\lambda \\) are going to be repeated:`,
 			`\\[ \\lambda_1 = \\lambda_2 = \\lambda \\]`,
 			...this.getGeneralSolutionRepeatedCase(nt),
@@ -80,7 +79,7 @@ LhcContent.Base = class {
 	getContentFor_generalSolutionMethod_Real() {
 		return nt=>[
 			`solve characteristic equation for \\( \\lambda \\):`,
-			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
+			`\\[ ${this.form.characteristicEquation(nt)} \\]`,
 			`roots \\( \\lambda \\) are going to be real distinct:`,
 			`\\[ \\lambda_1 \\ne \\lambda_2 \\]`,
 			`\\[ \\lambda_1, \\lambda_2 \\in \\mathbb{R} \\]`,
@@ -90,7 +89,7 @@ LhcContent.Base = class {
 	getContentFor_generalSolutionMethod_Complex() {
 		return nt=>[
 			`solve characteristic equation for \\( \\lambda \\):`,
-			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
+			`\\[ ${this.form.characteristicEquation(nt)} \\]`,
 			`roots \\( \\lambda \\) are going to be complex conjugate:`,
 			`\\[ \\lambda = \\alpha \\pm i \\beta \\]`,
 			`\\[ \\beta \\ne 0 \\]`,
@@ -98,19 +97,18 @@ LhcContent.Base = class {
 		]
 	}
 	getContentFor_generalSolutionMethod_Imaginary() {
-		const a=i=>this.param.linear(i) // TODO param.getNaturalFrequency
 		return nt=>[
 			`solve characteristic equation for \\( \\lambda \\):`,
-			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
+			`\\[ ${this.form.characteristicEquation(nt)} \\]`,
 			`roots \\( \\lambda \\) are going to be complex conjugate:`,
-			`\\[ \\lambda = \\pm i \\beta = \\pm \\sqrt{\\frac{${a(0)}}{${a(2)}}} \\]`,
+			`\\[ \\lambda = \\pm i \\beta = \\pm ${this.form.naturalFrequency} \\]`,
 			...this.getGeneralSolutionImaginaryCase(nt),
 		]
 	}
 	getContentFor_generalSolutionMethod() {
 		return nt=>[
 			`solve characteristic equation for \\( \\lambda \\):`,
-			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
+			`\\[ ${this.form.characteristicEquation(nt)} \\]`,
 			{type:'switch',title:`roots \\( \\lambda \\) are`,content:[
 				{type:'case',title:`repeated \\( ( \\lambda_1 = \\lambda_2 = \\lambda ) \\)`,
 					content:this.getGeneralSolutionRepeatedCase(nt)
@@ -151,27 +149,6 @@ LhcContent.Scalar = class extends LhcContent.Base {
 }
 
 LhcContent.Linear = class extends LhcContent.Scalar {
-	getCharacteristicEquation(nt) {
-		const a=i=>this.param.linear(i)
-		return tex.sum([a(2),`\\lambda^2`],'+',[a(1),`\\lambda`],'+',[a(0)],'=',[0])
-	}
-	getContentFor_characteristicEquation() {
-		const a=i=>this.param.linear(i)
-		return characteristicEquationContent([2,a(2)],'+',[1,a(1)],'+',[0,a(0)],'=','0')
-	}
-	getContentFor_equilibriumSolutionMethod() {
-		const a=i=>this.param.linear(i)
-		return nt=>[
-			{type:'switch',title:`\\( ${a(0)} \\) is`,content:[
-				{type:'case',title:`\\( ${a(0)} = 0 \\)`,content:[
-					`\\[ ${nt.x} = K \\]`,
-				]},
-				{type:'case',title:`\\( ${a(0)} \\ne 0 \\)`,content:[
-					`\\[ ${nt.x} = 0 \\]`,
-				]},
-			]},
-		]
-	}
 	getContentFor_equilibriumSolutionMethod0() {
 		const a=i=>this.param.linear(i)
 		return nt=>[
@@ -184,27 +161,6 @@ LhcContent.Linear = class extends LhcContent.Scalar {
 }
 
 LhcContent.Resolved = class extends LhcContent.Scalar {
-	getCharacteristicEquation(nt) {
-		const b=i=>this.param.resolved(i)
-		return tex.sum([`\\lambda^2`],'-',[b(1),`\\lambda`],'-',[b(0)],'=',[0])
-	}
-	getContentFor_characteristicEquation() {
-		const b=i=>this.param.resolved(i)
-		return characteristicEquationContent([2,1],'=',[1,b(1)],'+',[0,b(0)])
-	}
-	getContentFor_equilibriumSolutionMethod() {
-		const b=i=>this.param.resolved(i)
-		return nt=>[
-			{type:'switch',title:`\\( ${b(0)} \\) is`,content:[
-				{type:'case',title:`\\( ${b(0)} = 0 \\)`,content:[
-					`\\[ ${nt.x} = K \\]`,
-				]},
-				{type:'case',title:`\\( ${b(0)} \\ne 0 \\)`,content:[
-					`\\[ ${nt.x} = 0 \\]`,
-				]},
-			]},
-		]
-	}
 	getContentFor_equilibriumSolutionMethod0() {
 		const b=i=>this.param.resolved(i)
 		return nt=>[
@@ -225,11 +181,6 @@ LhcContent.ReducedSystem = class extends LhcContent.Base {
 	}
 	gety0(nt) {
 		return `${nt.y}(0)`
-	}
-	getCharacteristicEquation(nt) {
-		const c=this.param.system(2,1)
-		const d=this.param.system(2,2)
-		return tex.sum([`\\lambda^2`],'-',[d,`\\lambda`],'-',[c],'=',[0])
 	}
 	getRepeatedGeneralSolution(nt) {
 		return `\\left\\{ \\begin{aligned}`+
@@ -257,24 +208,6 @@ LhcContent.ReducedSystem = class extends LhcContent.Base {
 			`${nt.y} &= k_2 \\beta \\cos \\beta t - k_1 \\beta \\sin \\beta t`+
 		`\\end{aligned} \\right.`
 	}
-	getContentFor_characteristicEquation() {
-		return nt=>[
-			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
-		]
-	}
-	getContentFor_equilibriumSolutionMethod() {
-		const c=this.param.system(2,1)
-		return nt=>[
-			{type:'switch',title:`\\( ${c} \\) is`,content:[
-				{type:'case',title:`\\( ${c} = 0 \\)`,content:[
-					`\\[ `+nt.sys2(`${nt.x} &= K`,`${nt.y} &= 0`)+` \\]`,
-				]},
-				{type:'case',title:`\\( ${c} \\ne 0 \\)`,content:[
-					`\\[ `+nt.sys2(`${nt.x} &= 0`,`${nt.y} &= 0`)+` \\]`,
-				]},
-			]},
-		]
-	}
 	getContentFor_equilibriumSolutionMethod0() {
 		const c=this.param.system(2,1)
 		return nt=>[
@@ -295,11 +228,6 @@ LhcContent.ReducedVector = class extends LhcContent.Base {
 	}
 	gety0(nt) {
 		return `${nt.X}_2(0)`
-	}
-	getCharacteristicEquation(nt) {
-		const c=this.param.system(2,1)
-		const d=this.param.system(2,2)
-		return `\\det\\left(${nt.mat2('-\\lambda',1,c,`${d}-\\lambda`)}\\right) = 0`
 	}
 	getRepeatedGeneralSolution(nt) {
 		return `\\begin{aligned} `+
@@ -326,24 +254,6 @@ LhcContent.ReducedVector = class extends LhcContent.Base {
 			        `+ \\: & k_2 ${nt.vec2('\\sin \\beta t', '\\beta \\cos \\beta t')} \\\\`+
 			        `= \\: & ${nt.smat2(1,0,0,'\\beta')} ${nt.smat2('\\cos \\beta t','\\sin \\beta t','- \\sin \\beta t','\\cos \\beta t')} ${nt.svec2('k_1','k_2')}`+
 		`\\end{aligned}`
-	}
-	getContentFor_characteristicEquation() {
-		return nt=>[
-			`\\[ ${this.getCharacteristicEquation(nt)} \\]`,
-		]
-	}
-	getContentFor_equilibriumSolutionMethod() {
-		const c=this.param.system(2,1)
-		return nt=>[
-			{type:'switch',title:`\\( ${c} \\) is`,content:[
-				{type:'case',title:`\\( ${c} = 0 \\)`,content:[
-					`\\[ ${nt.X} = ${nt.vec2('K',0)} \\]`,
-				]},
-				{type:'case',title:`\\( ${c} \\ne 0 \\)`,content:[
-					`\\[ ${nt.X} = \\mathbf{0} \\]`,
-				]},
-			]},
-		]
 	}
 	getContentFor_equilibriumSolutionMethod0() {
 		const c=this.param.system(2,1)

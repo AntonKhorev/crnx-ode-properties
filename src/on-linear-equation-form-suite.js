@@ -55,6 +55,63 @@ class OnLinearEquationFormSuite extends LinearEquationFormSuite {
 	get systemFormType() {
 		return 'xi'
 	}
+	getEquilibriumSolutionMethodTrait(isConstant) {
+		const classId=this.getClassId(isConstant,true)
+		const t=isConstant?'':'(t)'
+		return {
+			contents: {
+				[`linear_${classId}`]: nt=>[
+					{type:'switch',title:`\\( a_0${t} \\) is`,content:[
+						{type:'case',title:`\\( a_0${t} = 0 \\)`,content:[
+							`\\[ ${nt.x} = K \\]`,
+						]},
+						{type:'case',title:`\\( a_0${t} \\ne 0 \\)`,content:[
+							`\\[ ${nt.x} = 0 \\]`,
+						]},
+					]},
+				],
+				[`resolved_${classId}`]: nt=>[
+					{type:'switch',title:`\\( b_0${t} \\) is`,content:[
+						{type:'case',title:`\\( b_0${t} = 0 \\)`,content:[
+							`\\[ ${nt.x} = K \\]`,
+						]},
+						{type:'case',title:`\\( b_0${t} \\ne 0 \\)`,content:[
+							`\\[ ${nt.x} = 0 \\]`,
+						]},
+					]},
+				],
+				[`system_${classId}`]: nt=>[
+					{type:'switch',title:`\\( c_1${t} \\) is`,content:[
+						{type:'case',title:`\\( c_1${t} = 0 \\)`,content:[
+							`\\[ \\left\\{ \\begin{array}{rcl}`+
+								`${nt.x}_1 &=& K \\\\`+
+								`${nt.x}_2 &=& 0 \\\\`+
+								`&\\vdots \\\\`+
+								`${nt.x}_n &=& 0 \\\\`+
+							`\\end{array} \\right. \\]`,
+						]},
+						{type:'case',title:`\\( c_1${t} \\ne 0 \\)`,content:[
+							`\\[ \\left\\{ \\begin{array}{rcl}`+
+								`${nt.x}_1 &=& 0 \\\\`+
+								`&\\vdots \\\\`+
+								`${nt.x}_n &=& 0 \\\\`+
+							`\\end{array} \\right. \\]`,
+						]},
+					]},
+				],
+				[`vector_${classId}`]: nt=>[
+					{type:'switch',title:`\\( c_1${t} \\) is`,content:[
+						{type:'case',title:`\\( c_1${t} = 0 \\)`,content:[
+							`\\[ ${nt.X} = \\begin{bmatrix} K \\\\ 0 \\\\ \\vdots \\\\ 0 \\end{bmatrix} \\]`,
+						]},
+						{type:'case',title:`\\( c_1${t} \\ne 0 \\)`,content:[
+							`\\[ ${nt.X} = \\begin{bmatrix} 0 \\\\ \\vdots \\\\ 0 \\end{bmatrix} \\]`,
+						]},
+					]},
+				],
+			},
+		}
+	}
 }
 
 module.exports=OnLinearEquationFormSuite
