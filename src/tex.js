@@ -9,7 +9,6 @@ const makeTerms=(items)=>{
 			terms[terms.length-1][1].push(''+item)
 		}
 	}
-	console.log(items,'=>',terms) ///
 	return terms.map(([isPositive,factors])=>{ // merge signs
 		factors=factors.map(factor=>{
 			if (factor[0]=='-') {
@@ -23,9 +22,7 @@ const makeTerms=(items)=>{
 	}).filter(([isPositive,factors])=>{ // remove zero terms
 		return !(factors.length==0 || factors.indexOf('0')>=0)
 	}).map(([isPositive,factors])=>{ // remove 1 factors
-		factors=factors.filter(factor=>factor!='1')
-		if (factors.length==0) factors=[1]
-		return [isPositive,factors]
+		return [isPositive,factors.filter(factor=>factor!='1')]
 	})
 }
 
@@ -44,7 +41,11 @@ const renderTerms=(terms,wrapOp=o=>' '+o+' ')=>{
 				sign='-'
 			}
 		}
-		return sign+factors.join(' ')
+		if (factors.length==0) {
+			return sign+'1'
+		} else {
+			return sign+factors.join(' ')
+		}
 	}).join('')
 }
 
@@ -72,17 +73,25 @@ const blockSum=(...args)=>`\\[ `+sum(...args)+` \\]`
 const isOne=(terms)=>{
 	if (terms.length!=1) return false
 	const [isPositive,factors]=terms[0]
-	return isPositive && factors.length==1 && factors[0]=='1'
+	return isPositive && factors.length==0
 }
 
 const frac=(numer,denom)=>{
 	let numerTerms=makeTerms(numer)
 	let denomTerms=makeTerms(denom)
-	/*
 	if (denomTerms.length==1) {
-		for
+		denomTerms[0][1]=denomTerms[0][1].filter(denomFactor=>{
+			const canSimplify=numerTerms.every(([isPositive,factors])=>factors.indexOf(denomFactor)>=0)
+			if (!canSimplify) return true
+			numerTerms=numerTerms.map(([isPositive,factors])=>{
+				const i=factors.indexOf(denomFactor)
+				const newFactors=[...factors]
+				newFactors.splice(i,1)
+				return [isPositive,newFactors]
+			})
+			return false
+		})
 	}
-	*/
 	if (isOne(denomTerms)) {
 		return renderTerms(numerTerms)
 	} else {

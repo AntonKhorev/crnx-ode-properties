@@ -95,4 +95,8 @@ describe("tex.frac",()=>{
 		const r=tex.frac(["a","b"],["a"])
 		assert.equal(r,"b")
 	})
+	it("handles division with simplification of sum",()=>{
+		const r=tex.frac(["a","b","+","a"],["a"])
+		assert.equal(r,"b + 1")
+	})
 })

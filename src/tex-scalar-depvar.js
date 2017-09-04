@@ -36,21 +36,11 @@ class TexScalarDepvar extends TexDepvar {
 	ICLinearSystemSolution([a,b,c,d],[k1,k2]) {
 		const x=`${this}(0)`
 		const y=`${this}'(0)`
-		const det=tex.sum([a,d,'-',b,c])
-		const v1=tex.sum([d,x,'-',b,y])
-		const v2=tex.sum([a,y,'-',c,x])
-		const solution=(v,det)=>{
-			if (det=='1') {
-				return v
-			} else {
-				return `\\frac{${v}}{${det}}`
-			}
-		}
 		return nt=>[
 			`\\[ ${nt.mat2(a,b,c,d)} ${nt.vec2(k1,k2)} = ${nt.vec2(x,y)} \\]`,
 			`\\begin{aligned} `+
-				`${k1} &= ${solution(v1,det)} \\\\ `+
-				`${k2} &= ${solution(v2,det)} \\\\ `+
+				`${k1} &= ${tex.frac([d,x,'-',b,y],[a,d,'-',b,c])} \\\\ `+
+				`${k2} &= ${tex.frac([a,y,'-',c,x],[a,d,'-',b,c])} \\\\ `+
 			`\\end{aligned}`,
 		]
 	}
