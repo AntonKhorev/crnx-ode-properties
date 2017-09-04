@@ -5,14 +5,15 @@ const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial
 const LhcContent={}
 
 LhcContent.Base = class {
-	constructor(form) {
+	constructor(x,form) {
+		this.x=x
 		this.form=form
 	}
 	getGeneralSolutionConstantsEquation(nt,eigx1,eigx2,eigy1,eigy2) {
 		return `${nt.mat2(eigx1,eigx2,eigy1,eigy2)} ${nt.vec2('k_1','k_2')} = ${this.getX0(nt)}`
 	}
 	getGeneralSolutionConstantsSolution(nt,kmatlead,kx1,ky1,kx2,ky2,eqn1,eqn2) {
-		if (!(this instanceof LhcContent.ReducedVector)) {
+		if (!(this instanceof LhcContent.Vector)) { // TODO check x type instead
 			return `\\begin{aligned} `+
 				`k_1 &= ${eqn1} \\\\ `+
 				`k_2 &= ${eqn2} `+
@@ -146,7 +147,7 @@ LhcContent.Scalar = class extends LhcContent.Base {
 	}
 }
 
-LhcContent.ReducedSystem = class extends LhcContent.Base {
+LhcContent.System = class extends LhcContent.Base {
 	getX0(nt) {
 		return nt.vec2(`${nt.x}(0)`,`${nt.y}(0)`)
 	}
@@ -184,7 +185,7 @@ LhcContent.ReducedSystem = class extends LhcContent.Base {
 	}
 }
 
-LhcContent.ReducedVector = class extends LhcContent.Base {
+LhcContent.Vector = class extends LhcContent.Base {
 	getX0(nt) {
 		return `${nt.X}(0)`
 	}
