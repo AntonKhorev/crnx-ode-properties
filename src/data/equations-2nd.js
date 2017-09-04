@@ -14,12 +14,6 @@ const o2_formSuite=new O2LinearEquationFormSuite('a_0','a_1','a_2','b_0','b_1')
 const osc_formSuite=new OscillatorLinearEquationFormSuite('k','b','m')
 const osc0_formSuite=new OscillatorLinearEquationFormSuite('k',0,'m')
 
-// { paste with changes from on_*
-
-// TODO const o2_linearHomogeneousConstant_generalSolutionMethod_content=(x,charEqn)=>nt=>[
-
-// }
-
 const harmonicOscillatorType=(type,discriminantRelation,contentMethodName)=>({
 	parents: {
 		o2_harmonicOscillator: true,
@@ -32,8 +26,8 @@ const harmonicOscillatorType=(type,discriminantRelation,contentMethodName)=>({
 		generalSolutionMethod: {
 			title: `General and ${ivp} solution`,
 			contents: {
-				linear_o2_harmonicOscillator:   new LhcContent.Linear(osc_formSuite.linear(true))[contentMethodName](),
-				resolved_o2_harmonicOscillator: new LhcContent.Resolved(osc_formSuite.resolved(true))[contentMethodName](),
+				linear_o2_harmonicOscillator:   new LhcContent.Scalar(osc_formSuite.linear(true))[contentMethodName](),
+				resolved_o2_harmonicOscillator: new LhcContent.Scalar(osc_formSuite.resolved(true))[contentMethodName](),
 				system_o2_harmonicOscillator:   new LhcContent.ReducedSystem(osc_formSuite.system(true))[contentMethodName](),
 				vector_o2_harmonicOscillator:   new LhcContent.ReducedVector(osc_formSuite.vector(true))[contentMethodName](),
 			},
@@ -170,8 +164,8 @@ module.exports={
 			generalSolutionMethod: {
 				title: `General and ${ivp} solution`,
 				contents: {
-					linear_o2_linearHomogeneousConstant:   new LhcContent.Linear(o2_formSuite.linear(true)).getContentFor_generalSolutionMethod(),
-					resolved_o2_linearHomogeneousConstant: new LhcContent.Resolved(o2_formSuite.resolved(true)).getContentFor_generalSolutionMethod(),
+					linear_o2_linearHomogeneousConstant:   new LhcContent.Scalar(o2_formSuite.linear(true)).getContentFor_generalSolutionMethod(),
+					resolved_o2_linearHomogeneousConstant: new LhcContent.Scalar(o2_formSuite.resolved(true)).getContentFor_generalSolutionMethod(),
 					system_o2_linearHomogeneousConstant:   new LhcContent.ReducedSystem(o2_formSuite.system(true)).getContentFor_generalSolutionMethod(),
 					vector_o2_linearHomogeneousConstant:   new LhcContent.ReducedVector(o2_formSuite.vector(true)).getContentFor_generalSolutionMethod(),
 				},
@@ -192,8 +186,8 @@ module.exports={
 			generalSolutionMethod: {
 				title: `General and ${ivp} solution`,
 				contents: {
-					linear_o2_harmonicOscillator:   new LhcContent.Linear(osc_formSuite.linear(true)).getContentFor_generalSolutionMethod(),
-					resolved_o2_harmonicOscillator: new LhcContent.Resolved(osc_formSuite.resolved(true)).getContentFor_generalSolutionMethod(),
+					linear_o2_harmonicOscillator:   new LhcContent.Scalar(osc_formSuite.linear(true)).getContentFor_generalSolutionMethod(),
+					resolved_o2_harmonicOscillator: new LhcContent.Scalar(osc_formSuite.resolved(true)).getContentFor_generalSolutionMethod(),
 					system_o2_harmonicOscillator:   new LhcContent.ReducedSystem(osc_formSuite.system(true)).getContentFor_generalSolutionMethod(),
 					vector_o2_harmonicOscillator:   new LhcContent.ReducedVector(osc_formSuite.vector(true)).getContentFor_generalSolutionMethod(),
 				},
@@ -229,8 +223,8 @@ module.exports={
 			generalSolutionMethod: {
 				title: `General and ${ivp} solution`,
 				contents: {
-					linear_o2_simpleHarmonicOscillator:   new LhcContent.Linear(osc0_formSuite.linear(true)).getContentFor_generalSolutionMethod_Imaginary(),
-					resolved_o2_simpleHarmonicOscillator: new LhcContent.Resolved(osc0_formSuite.resolved(true)).getContentFor_generalSolutionMethod_Imaginary(),
+					linear_o2_simpleHarmonicOscillator:   new LhcContent.Scalar(osc0_formSuite.linear(true)).getContentFor_generalSolutionMethod_Imaginary(),
+					resolved_o2_simpleHarmonicOscillator: new LhcContent.Scalar(osc0_formSuite.resolved(true)).getContentFor_generalSolutionMethod_Imaginary(),
 					system_o2_simpleHarmonicOscillator:   new LhcContent.ReducedSystem(osc0_formSuite.system(true)).getContentFor_generalSolutionMethod_Imaginary(),
 					vector_o2_simpleHarmonicOscillator:   new LhcContent.ReducedVector(osc0_formSuite.vector(true)).getContentFor_generalSolutionMethod_Imaginary(),
 				},

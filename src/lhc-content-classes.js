@@ -146,10 +146,6 @@ LhcContent.Scalar = class extends LhcContent.Base {
 	}
 }
 
-LhcContent.Linear = class extends LhcContent.Scalar {}
-
-LhcContent.Resolved = class extends LhcContent.Scalar {}
-
 LhcContent.ReducedSystem = class extends LhcContent.Base {
 	getX0(nt) {
 		return nt.vec2(`${nt.x}(0)`,`${nt.y}(0)`)
