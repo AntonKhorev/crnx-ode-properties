@@ -2,6 +2,7 @@
 
 // TODO include in notation.js
 
+const tex=require('./tex')
 const TexDepvar=require('./tex-depvar')
 const TexScalarDepvar=require('./tex-scalar-depvar')
 
@@ -46,8 +47,14 @@ class TexSystem2Depvar extends TexDepvar {
 		]
 	}
 	ICLinearSystemSolution([a,b,c,d],[k1,k2]) {
-		return nt=>[
-			`TODO`,
+		const x=`${this.componentX()}(0)`
+		const y=`${this.componentY()}(0)`
+		return nt=>[ // copypaste from tex-scalar-depvar.js
+			`\\[ ${nt.mat2(a,b,c,d)} ${nt.vec2(k1,k2)} = ${nt.vec2(x,y)} \\]`,
+			`\\begin{aligned} `+
+				`${k1} &= ${tex.frac([d,x,'-',b,y],[a,d,'-',b,c])} \\\\ `+
+				`${k2} &= ${tex.frac([a,y,'-',c,x],[a,d,'-',b,c])} \\\\ `+
+			`\\end{aligned}`,
 		]
 	}
 }

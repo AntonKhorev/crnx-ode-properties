@@ -10,70 +10,36 @@ LhcContent.Base = class {
 		this.x=x
 		this.form=form
 	}
-	getGeneralSolutionConstantsEquation(nt,eigx1,eigx2,eigy1,eigy2) {
-		return `${nt.mat2(eigx1,eigx2,eigy1,eigy2)} ${nt.vec2('k_1','k_2')} = ${this.getX0(nt)}`
-	}
-	getGeneralSolutionConstantsSolution(nt,kmatlead,kx1,ky1,kx2,ky2,eqn1,eqn2) {
-		if (!(this instanceof LhcContent.Vector)) { // TODO check x type instead
-			return `\\begin{aligned} `+
-				`k_1 &= ${eqn1} \\\\ `+
-				`k_2 &= ${eqn2} `+
-			`\\end{aligned}`
-		} else {
-			return `${nt.vec2('k_1','k_2')} = ${kmatlead} ${nt.mat2(kx1,ky1,kx2,ky2)} ${this.getX0(nt)}`
-		}
-	}
 	getGeneralSolutionRepeatedCase(nt) {
-		const x0=this.getx0(nt)
-		const y0=this.gety0(nt)
 		return [
 			`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
 			`\\[ ${this.getRepeatedGeneralSolution(nt)} \\]`,
 			`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-			/*
-			`\\[ ${this.getGeneralSolutionConstantsEquation(nt,1,0,'λ',1)} \\]`,
-			`\\[ ${this.getGeneralSolutionConstantsSolution(nt,'',1,0,'-λ',1,x0,`${y0} - λ \\cdot ${x0}`)} \\]`,
-			*/
 			...this.x.ICLinearSystemSolution([1,0,'λ',1],['k_1','k_2'])(nt),
 		]
 	}
 	getGeneralSolutionRealCase(nt) {
-		const x0=this.getx0(nt)
-		const y0=this.gety0(nt)
 		return [
 			`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
 			`\\[ ${this.getRealGeneralSolution(nt)} \\]`,
 			`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-			/*
-			`\\[ ${this.getGeneralSolutionConstantsEquation(nt,1,1,'λ_1','λ_2')} \\]`,
-			`\\[ ${this.getGeneralSolutionConstantsSolution(nt,'\\frac1{λ_2{-}λ_1}','λ_2',-1,'-λ_1',1,`\\frac{λ_2 \\cdot ${x0} - ${y0}}{λ_2 - λ_1}`,`\\frac{λ_1 \\cdot ${x0} - ${y0}}{λ_1 - λ_2}`)} \\]`,
-			*/
 			...this.x.ICLinearSystemSolution([1,1,'λ_1','λ_2'],['k_1','k_2'])(nt),
 		]
 	}
 	getGeneralSolutionComplexCase(nt) {
-		const x0=this.getx0(nt)
-		const y0=this.gety0(nt)
 		return [
 			`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
 			`\\[ ${this.getComplexGeneralSolution(nt)} \\]`,
 			`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-			/*
-			`\\[ ${this.getGeneralSolutionConstantsEquation(nt,1,0,'α','β')} \\]`,
-			`\\[ ${this.getGeneralSolutionConstantsSolution(nt,'\\frac1{β}','β',0,'-α',1,x0,`\\frac{${y0} - α \\cdot ${x0}}{β}`)} \\]`,
-			*/
 			...this.x.ICLinearSystemSolution([1,0,'α','β'],['k_1','k_2'])(nt),
 		]
 	}
 	getGeneralSolutionImaginaryCase(nt) {
-		const x0=this.getx0(nt)
-		const y0=this.gety0(nt)
 		return [
 			`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
 			`\\[ ${this.getImaginaryGeneralSolution(nt)} \\]`,
 			`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
-			`\\[ ${this.getGeneralSolutionConstantsEquation(nt,1,0,0,'β')} \\]`,
-			`\\[ ${this.getGeneralSolutionConstantsSolution(nt,'',1,0,0,'β^{-1}',x0,`\\frac{${y0}}{β}`)} \\]`,
+			...this.x.ICLinearSystemSolution([1,0,0,'β'],['k_1','k_2'])(nt),
 		]
 	}
 	getContentFor_generalSolutionMethod_Repeated() {
@@ -134,15 +100,6 @@ LhcContent.Base = class {
 }
 
 LhcContent.Scalar = class extends LhcContent.Base {
-	getX0(nt) {
-		return nt.vec2(`${nt.x}(0)`,`${nt.x}'(0)`)
-	}
-	getx0(nt) {
-		return `${nt.x}(0)`
-	}
-	gety0(nt) {
-		return `${nt.x}'(0)`
-	}
 	getRepeatedGeneralSolution(nt) {
 		return `${nt.x} = k_1 e^{λ t} + k_2 t e^{λ t}`
 	}
@@ -158,15 +115,6 @@ LhcContent.Scalar = class extends LhcContent.Base {
 }
 
 LhcContent.System = class extends LhcContent.Base {
-	getX0(nt) {
-		return nt.vec2(`${nt.x}(0)`,`${nt.y}(0)`)
-	}
-	getx0(nt) {
-		return `${nt.x}(0)`
-	}
-	gety0(nt) {
-		return `${nt.y}(0)`
-	}
 	getRepeatedGeneralSolution(nt) {
 		return `\\left\\{ \\begin{aligned}`+
 			`${nt.x} &= k_1 e^{λ t} + k_2 t e^{λ t} \\\\`+
@@ -196,15 +144,6 @@ LhcContent.System = class extends LhcContent.Base {
 }
 
 LhcContent.Vector = class extends LhcContent.Base {
-	getX0(nt) {
-		return `${nt.X}(0)`
-	}
-	getx0(nt) {
-		return `${nt.X}_1(0)`
-	}
-	gety0(nt) {
-		return `${nt.X}_2(0)`
-	}
 	getRepeatedGeneralSolution(nt) {
 		return `\\begin{aligned} `+
 			`${nt.X} &= k_1 ${nt.vec2(1,'λ')} e^{λt} + k_2 ${nt.vec2('t','1{+}λt')} e^{λt} \\\\`+
