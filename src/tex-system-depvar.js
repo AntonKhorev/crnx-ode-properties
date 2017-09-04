@@ -48,6 +48,7 @@ class TexSystemDepvar extends TexDepvar {
 			`\\end{array} \\]`,
 		]
 	}
+	// ICLinearSystemSolution([a,b,c,d],[k1,k2]) only for 2d systems
 }
 
 module.exports=TexSystemDepvar

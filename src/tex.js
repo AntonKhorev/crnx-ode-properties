@@ -1,70 +1,93 @@
 'use strict'
 
-const sum=(...terms)=>{
-	const mergeSign=(sign,term)=>{
-		if (sign=='-') {
-			sign='+'
-			if (term[0][0]=='-') {
-				term=[term[0].slice(1),...term.slice(1)]
-			} else {
-				term=['-'+term[0],...term.slice(1)]
-			}
+const makeTerms=(items)=>{
+	const terms=[[true,[]]]
+	for (let item of items) {
+		if (item=='+' || item=='-') {
+			terms.push([item=='+',[]])
+		} else {
+			terms[terms.length-1][1].push(''+item)
 		}
-		return [sign,term]
 	}
-	const alterSign=(sign,term)=>{
-		if (term[0][0]=='-') {
-			term=[term[0].slice(1),...term.slice(1)]
-			if (sign=='+') {
-				sign='-'
-			} else if (sign=='-') {
-				sign='+'
-			}
-		}
-		return [sign,term]
-	}
-	let result=''
-	let sign=''
-	let bracedSign=false
-	let empty=true
-	for (let term of terms) {
-		if (Array.isArray(term) && term[0]!=0) {
-			term=term.filter(factor=>factor!=1)
-			if (term.length==0) term=[1]
-			if (empty) {
-				[sign,term]=mergeSign(sign,term)
-				result+=term.join(' ')
-				empty=false
+	console.log(items,'=>',terms) ///
+	return terms.map(([isPositive,factors])=>{ // merge signs
+		factors=factors.map(factor=>{
+			if (factor[0]=='-') {
+				isPositive=!isPositive
+				return factor.slice(1)
 			} else {
-				[sign,term]=alterSign(sign,term)
-				result+=' '+(bracedSign?'{':'')+sign+(bracedSign?'}':'')+' '+term.join(' ')
+				return factor
+			}
+		})
+		return [isPositive,factors]
+	}).filter(([isPositive,factors])=>{ // remove zero terms
+		return !(factors.length==0 || factors.indexOf('0')>=0)
+	}).map(([isPositive,factors])=>{ // remove 1 factors
+		factors=factors.filter(factor=>factor!='1')
+		if (factors.length==0) factors=[1]
+		return [isPositive,factors]
+	})
+}
+
+const renderTerms=(terms,wrapOp=o=>' '+o+' ')=>{
+	if (terms.length==0) return '0'
+	return terms.map(([isPositive,factors],i)=>{
+		let sign=''
+		if (isPositive) {
+			if (i>0) {
+				sign=wrapOp('+')
 			}
 		} else {
-			if (term[0]=='{') {
-				term=term[1]
-				bracedSign=true
+			if (i>0) {
+				sign=wrapOp('-')
 			} else {
-				bracedSign=false
-			}
-			if (term=='=') {
-				if (empty) {
-					result+='0'
-				}
-				result+=bracedSign?' {=} ':' = '
-				sign=''
-				bracedSign=false
-				empty=true
-			} else {
-				sign=term
+				sign='-'
 			}
 		}
+		return sign+factors.join(' ')
+	}).join('')
+}
+
+const sum=(items,wrapOp=o=>' '+o+' ')=>{
+	let result=''
+	let sumSide=[]
+	const doSumSide=()=>{
+		const r=renderTerms(makeTerms(sumSide),wrapOp)
+		sumSide=[]
+		return r
 	}
-	if (empty) {
-		result+='0'
+	for (let item of items) {
+		if (item!='=') {
+			sumSide.push(item)
+		} else {
+			result+=doSumSide()+wrapOp('=')
+		}
 	}
+	result+=doSumSide()
 	return result
 }
 
-const blockSum=(...terms)=>`\\[ `+sum(...terms)+` \\]`
+const blockSum=(...args)=>`\\[ `+sum(...args)+` \\]`
 
-module.exports={sum,blockSum}
+const isOne=(terms)=>{
+	if (terms.length!=1) return false
+	const [isPositive,factors]=terms[0]
+	return isPositive && factors.length==1 && factors[0]=='1'
+}
+
+const frac=(numer,denom)=>{
+	let numerTerms=makeTerms(numer)
+	let denomTerms=makeTerms(denom)
+	/*
+	if (denomTerms.length==1) {
+		for
+	}
+	*/
+	if (isOne(denomTerms)) {
+		return renderTerms(numerTerms)
+	} else {
+		return `\\frac{${renderTerms(numerTerms)}}{${renderTerms(denomTerms)}}`
+	}
+}
+
+module.exports={sum,blockSum,frac}

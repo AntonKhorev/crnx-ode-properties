@@ -46,6 +46,11 @@ class TexVectorDepvar extends TexDepvar {
 			`\\end{bmatrix} \\]`,
 		]
 	}
+	ICLinearSystemSolution([a,b,c,d],[k1,k2]) {
+		return nt=>[
+			`TODO`,
+		]
+	}
 }
 
 module.exports=TexVectorDepvar

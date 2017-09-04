@@ -36,13 +36,13 @@ module.exports=(...terms)=>{
 			return `λ^{${order}}`
 		}
 	}
-	const mapTerms=(nt,terms,mapper)=>tex.blockSum(...(
+	const mapTerms=(nt,terms,mapper)=>tex.blockSum([].concat(
 		terms.map(term=>{
 			if (Array.isArray(term)) {
 				const [order,factor]=term
 				return mapper(nt,order,factor)
 			} else {
-				return term
+				return [term]
 			}
 		})
 	))

@@ -45,6 +45,11 @@ class TexSystem2Depvar extends TexDepvar {
 			`\\[ ${this.componentY()} = ${nt.dd(this.componentX(),'t',1)} \\]`,
 		]
 	}
+	ICLinearSystemSolution([a,b,c,d],[k1,k2]) {
+		return nt=>[
+			`TODO`,
+		]
+	}
 }
 
 module.exports=TexSystem2Depvar

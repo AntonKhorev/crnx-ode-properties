@@ -4,6 +4,7 @@ const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial
 
 const LhcContent={}
 
+// TODO get general solution w/o ivp solution
 LhcContent.Base = class {
 	constructor(x,form) {
 		this.x=x
@@ -29,8 +30,11 @@ LhcContent.Base = class {
 			`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
 			`\\[ ${this.getRepeatedGeneralSolution(nt)} \\]`,
 			`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+			/*
 			`\\[ ${this.getGeneralSolutionConstantsEquation(nt,1,0,'λ',1)} \\]`,
 			`\\[ ${this.getGeneralSolutionConstantsSolution(nt,'',1,0,'-λ',1,x0,`${y0} - λ \\cdot ${x0}`)} \\]`,
+			*/
+			...this.x.ICLinearSystemSolution([1,0,'λ',1],['k_1','k_2'])(nt),
 		]
 	}
 	getGeneralSolutionRealCase(nt) {
@@ -40,8 +44,11 @@ LhcContent.Base = class {
 			`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
 			`\\[ ${this.getRealGeneralSolution(nt)} \\]`,
 			`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+			/*
 			`\\[ ${this.getGeneralSolutionConstantsEquation(nt,1,1,'λ_1','λ_2')} \\]`,
 			`\\[ ${this.getGeneralSolutionConstantsSolution(nt,'\\frac1{λ_2{-}λ_1}','λ_2',-1,'-λ_1',1,`\\frac{λ_2 \\cdot ${x0} - ${y0}}{λ_2 - λ_1}`,`\\frac{λ_1 \\cdot ${x0} - ${y0}}{λ_1 - λ_2}`)} \\]`,
+			*/
+			...this.x.ICLinearSystemSolution([1,1,'λ_1','λ_2'],['k_1','k_2'])(nt),
 		]
 	}
 	getGeneralSolutionComplexCase(nt) {
@@ -51,8 +58,11 @@ LhcContent.Base = class {
 			`general solution (with arbitrary constants \\( k_1 \\), \\( k_2 \\)):`,
 			`\\[ ${this.getComplexGeneralSolution(nt)} \\]`,
 			`get constants \\( k_1 \\), \\( k_2 \\) for ${ivp} solution by solving:`,
+			/*
 			`\\[ ${this.getGeneralSolutionConstantsEquation(nt,1,0,'α','β')} \\]`,
 			`\\[ ${this.getGeneralSolutionConstantsSolution(nt,'\\frac1{β}','β',0,'-α',1,x0,`\\frac{${y0} - α \\cdot ${x0}}{β}`)} \\]`,
+			*/
+			...this.x.ICLinearSystemSolution([1,0,'α','β'],['k_1','k_2'])(nt),
 		]
 	}
 	getGeneralSolutionImaginaryCase(nt) {
