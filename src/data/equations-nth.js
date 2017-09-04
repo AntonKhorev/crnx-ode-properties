@@ -3,7 +3,6 @@
 const TexScalarDepvar=require('../tex-scalar-depvar')
 const TexSystemDepvar=require('../tex-system-depvar')
 const TexVectorDepvar=require('../tex-vector-depvar')
-const characteristicEquationContent=require('../characteristic-equation-content')
 const OnLinearEquationFormSuite=require('../on-linear-equation-form-suite')
 const LinearEquation=require('../linear-equation')
 const LinearConstantEquation=require('../linear-constant-equation')
@@ -188,18 +187,7 @@ module.exports={
 		forms: on_formSuite.getForms(true,true),
 		traits: {
 			associatedHomogeneousEquation: on_formSuite.getAssociatedHomogeneousEquationTrait(true,true),
-			characteristicEquation: {
-				contents: {
-					linear_on_linearHomogeneousConstant: characteristicEquationContent(['i','\\sum_{i=0}^n a_i'],'=','0'),
-					resolved_on_linearHomogeneousConstant: characteristicEquationContent(['n',1],'=',['i','\\sum_{i=0}^{n-1} b_i']),
-					system_on_linearHomogeneousConstant: nt=>[
-						`\\[ λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0 \\]`,
-					],
-					vector_on_linearHomogeneousConstant: nt=>[
-						`\\[ λ^n - \\sum_{i=0}^{n-1} c_{i+1} λ^i = 0 \\]`,
-					],
-				}
-			},
+			characteristicEquation: on_formSuite.getCharacteristicEquationTrait(),
 			generalSolutionMethod: {
 				contents: {
 					linear_on_linearHomogeneousConstant: nt=>on_linearHomogeneousConstant_generalSolutionMethod_content(

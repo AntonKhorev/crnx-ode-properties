@@ -1,5 +1,6 @@
 'use strict'
 
+const characteristicEquationContent=require('./characteristic-equation-content')
 const LinearEquationFormSuite=require('./linear-equation-form-suite')
 
 class OnLinearEquationFormSuite extends LinearEquationFormSuite {
@@ -54,6 +55,17 @@ class OnLinearEquationFormSuite extends LinearEquationFormSuite {
 	}
 	get systemFormType() {
 		return 'xi'
+	}
+	getCharacteristicEquationTrait() {
+		const classId=this.getClassId(true,true)
+		return {
+			contents: {
+				[`linear_${classId}`]: characteristicEquationContent(['i','\\sum_{i=0}^n a_i'],'=','0'),
+				[`resolved_${classId}`]: characteristicEquationContent(['n',1],'=',['i','\\sum_{i=0}^{n-1} b_i']),
+				[`system_${classId}`]: nt=>[`\\[ ${this.system(true).characteristicEquation(nt)} \\]`],
+				[`vector_${classId}`]: nt=>[`\\[ ${this.vector(true).characteristicEquation(nt)} \\]`],
+			},
+		}
 	}
 	getEquilibriumSolutionMethodTrait(isConstant) {
 		const classId=this.getClassId(isConstant,true)
