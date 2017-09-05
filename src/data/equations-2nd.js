@@ -26,10 +26,10 @@ const harmonicOscillatorType=(type,discriminantRelation,contentMethodName)=>({
 		generalSolutionMethod: {
 			title: `General and ${ivp} solution`,
 			contents: {
-				linear_o2_harmonicOscillator:   nt=>new LhcContent.Scalar(new TexScalarDepvar(nt.x),      osc_formSuite.linear(true)  )[contentMethodName]()(nt),
-				resolved_o2_harmonicOscillator: nt=>new LhcContent.Scalar(new TexScalarDepvar(nt.x),      osc_formSuite.resolved(true))[contentMethodName]()(nt),
-				system_o2_harmonicOscillator:   nt=>new LhcContent.System(new TexSystem2Depvar(nt.x,nt.y),osc_formSuite.system(true)  )[contentMethodName]()(nt),
-				vector_o2_harmonicOscillator:   nt=>new LhcContent.Vector(new TexVectorDepvar(nt.X,nt.x), osc_formSuite.vector(true)  )[contentMethodName]()(nt),
+				linear_o2_harmonicOscillator:   nt=>new LhcContent(new TexScalarDepvar(nt.x),      osc_formSuite.linear(true)  )[contentMethodName]()(nt),
+				resolved_o2_harmonicOscillator: nt=>new LhcContent(new TexScalarDepvar(nt.x),      osc_formSuite.resolved(true))[contentMethodName]()(nt),
+				system_o2_harmonicOscillator:   nt=>new LhcContent(new TexSystem2Depvar(nt.x,nt.y),osc_formSuite.system(true)  )[contentMethodName]()(nt),
+				vector_o2_harmonicOscillator:   nt=>new LhcContent(new TexVectorDepvar(nt.X,nt.x), osc_formSuite.vector(true)  )[contentMethodName]()(nt),
 			},
 		},
 	},
@@ -164,10 +164,10 @@ module.exports={
 			generalSolutionMethod: {
 				title: `General and ${ivp} solution`,
 				contents: {
-					linear_o2_linearHomogeneousConstant:   nt=>new LhcContent.Scalar(new TexScalarDepvar(nt.x),      o2_formSuite.linear(true)  ).getContentFor_generalSolutionMethod()(nt),
-					resolved_o2_linearHomogeneousConstant: nt=>new LhcContent.Scalar(new TexScalarDepvar(nt.x),      o2_formSuite.resolved(true)).getContentFor_generalSolutionMethod()(nt),
-					system_o2_linearHomogeneousConstant:   nt=>new LhcContent.System(new TexSystem2Depvar(nt.x,nt.y),o2_formSuite.system(true)  ).getContentFor_generalSolutionMethod()(nt),
-					vector_o2_linearHomogeneousConstant:   nt=>new LhcContent.Vector(new TexVectorDepvar(nt.X,nt.x), o2_formSuite.vector(true)  ).getContentFor_generalSolutionMethod()(nt),
+					linear_o2_linearHomogeneousConstant:   nt=>new LhcContent(new TexScalarDepvar(nt.x),      o2_formSuite.linear(true)  ).getContentFor_generalSolutionMethod()(nt),
+					resolved_o2_linearHomogeneousConstant: nt=>new LhcContent(new TexScalarDepvar(nt.x),      o2_formSuite.resolved(true)).getContentFor_generalSolutionMethod()(nt),
+					system_o2_linearHomogeneousConstant:   nt=>new LhcContent(new TexSystem2Depvar(nt.x,nt.y),o2_formSuite.system(true)  ).getContentFor_generalSolutionMethod()(nt),
+					vector_o2_linearHomogeneousConstant:   nt=>new LhcContent(new TexVectorDepvar(nt.X,nt.x), o2_formSuite.vector(true)  ).getContentFor_generalSolutionMethod()(nt),
 				},
 			},
 			equilibriumSolutionMethod: o2_formSuite.getEquilibriumSolutionMethodTrait(true),
@@ -186,10 +186,10 @@ module.exports={
 			generalSolutionMethod: {
 				title: `General and ${ivp} solution`,
 				contents: {
-					linear_o2_harmonicOscillator:   nt=>new LhcContent.Scalar(new TexScalarDepvar(nt.x),      osc_formSuite.linear(true)  ).getContentFor_generalSolutionMethod()(nt),
-					resolved_o2_harmonicOscillator: nt=>new LhcContent.Scalar(new TexScalarDepvar(nt.x),      osc_formSuite.resolved(true)).getContentFor_generalSolutionMethod()(nt),
-					system_o2_harmonicOscillator:   nt=>new LhcContent.System(new TexSystem2Depvar(nt.x,nt.y),osc_formSuite.system(true)  ).getContentFor_generalSolutionMethod()(nt),
-					vector_o2_harmonicOscillator:   nt=>new LhcContent.Vector(new TexVectorDepvar(nt.X,nt.x), osc_formSuite.vector(true)  ).getContentFor_generalSolutionMethod()(nt),
+					linear_o2_harmonicOscillator:   nt=>new LhcContent(new TexScalarDepvar(nt.x),      osc_formSuite.linear(true)  ).getContentFor_generalSolutionMethod()(nt),
+					resolved_o2_harmonicOscillator: nt=>new LhcContent(new TexScalarDepvar(nt.x),      osc_formSuite.resolved(true)).getContentFor_generalSolutionMethod()(nt),
+					system_o2_harmonicOscillator:   nt=>new LhcContent(new TexSystem2Depvar(nt.x,nt.y),osc_formSuite.system(true)  ).getContentFor_generalSolutionMethod()(nt),
+					vector_o2_harmonicOscillator:   nt=>new LhcContent(new TexVectorDepvar(nt.X,nt.x), osc_formSuite.vector(true)  ).getContentFor_generalSolutionMethod()(nt),
 				},
 			},
 			equilibriumSolutionMethod: osc_formSuite.getEquilibriumSolutionMethodTrait(true),
@@ -223,10 +223,10 @@ module.exports={
 			generalSolutionMethod: {
 				title: `General and ${ivp} solution`,
 				contents: {
-					linear_o2_simpleHarmonicOscillator:   nt=>new LhcContent.Scalar(new TexScalarDepvar(nt.x),      osc0_formSuite.linear(true)  ).getContentFor_generalSolutionMethod_Imaginary()(nt),
-					resolved_o2_simpleHarmonicOscillator: nt=>new LhcContent.Scalar(new TexScalarDepvar(nt.x),      osc0_formSuite.resolved(true)).getContentFor_generalSolutionMethod_Imaginary()(nt),
-					system_o2_simpleHarmonicOscillator:   nt=>new LhcContent.System(new TexSystem2Depvar(nt.x,nt.y),osc0_formSuite.system(true)  ).getContentFor_generalSolutionMethod_Imaginary()(nt),
-					vector_o2_simpleHarmonicOscillator:   nt=>new LhcContent.Vector(new TexVectorDepvar(nt.X,nt.x), osc0_formSuite.vector(true)  ).getContentFor_generalSolutionMethod_Imaginary()(nt),
+					linear_o2_simpleHarmonicOscillator:   nt=>new LhcContent(new TexScalarDepvar(nt.x),      osc0_formSuite.linear(true)  ).getContentFor_generalSolutionMethod_Imaginary()(nt),
+					resolved_o2_simpleHarmonicOscillator: nt=>new LhcContent(new TexScalarDepvar(nt.x),      osc0_formSuite.resolved(true)).getContentFor_generalSolutionMethod_Imaginary()(nt),
+					system_o2_simpleHarmonicOscillator:   nt=>new LhcContent(new TexSystem2Depvar(nt.x,nt.y),osc0_formSuite.system(true)  ).getContentFor_generalSolutionMethod_Imaginary()(nt),
+					vector_o2_simpleHarmonicOscillator:   nt=>new LhcContent(new TexVectorDepvar(nt.X,nt.x), osc0_formSuite.vector(true)  ).getContentFor_generalSolutionMethod_Imaginary()(nt),
 				},
 			},
 		},
