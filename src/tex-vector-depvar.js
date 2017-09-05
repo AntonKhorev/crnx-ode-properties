@@ -79,8 +79,8 @@ class TexVectorDepvar extends TexDepvar {
 			)
 			return [
 				`\\begin{aligned} `+
-					`${this} ${eq} ${k1} ${exp1} ${nt.vec2(c11,c21)} ${br}`+
-						`${pl} ${k2} ${exp2} ${nt.vec2(c12,c22)} \\\\`+
+					`${this} ${eq} ${k1} ${nt.vec2(c11,c21)} ${exp1} ${br}`+
+						`${pl} ${k2} ${nt.vec2(c12,c22)} ${exp2} \\\\`+
 						`${eq} ${mat(...mata)} `+(matb!==undefined ? mat(...matb)+' ' : '')+`${kexp}`+
 				`\\end{aligned}`
 			]
