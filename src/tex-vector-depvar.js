@@ -56,17 +56,7 @@ class TexVectorDepvar extends TexDepvar {
 		]
 	}
 	generalLinearSolution([k1,k2],[exp1,exp2],mata,matb) {
-		let c11,c12,c21,c22
-		if (matb!==undefined) {
-			const [a11,a12,a21,a22]=mata
-			const [b11,b12,b21,b22]=matb
-			c11=tex.sum([a11,b11,'+',a12,b21],o=>'{'+o+'}')
-			c12=tex.sum([a11,b12,'+',a12,b22],o=>'{'+o+'}')
-			c21=tex.sum([a21,b11,'+',a22,b21],o=>'{'+o+'}')
-			c22=tex.sum([a21,b12,'+',a22,b22],o=>'{'+o+'}')
-		} else {
-			[c11,c12,c21,c22]=mata
-		}
+		const [c11,c12,c21,c22]=this.matMul(mata,matb)
 		return (systemLineBreak,vectorLineBreak)=>nt=>{
 			const eq=(vectorLineBreak ? '= \\: &' : '&=')
 			const pl=(vectorLineBreak ? '+ \\: &' : '+')
@@ -78,11 +68,11 @@ class TexVectorDepvar extends TexDepvar {
 				: vec(k1+' '+exp1,k2+' '+exp2)
 			)
 			return [
-				`\\begin{aligned} `+
+				`\\[ \\begin{aligned} `+
 					`${this} ${eq} ${k1} ${nt.vec2(c11,c21)} ${exp1} ${br}`+
 						`${pl} ${k2} ${nt.vec2(c12,c22)} ${exp2} \\\\`+
 						`${eq} ${mat(...mata)} `+(matb!==undefined ? mat(...matb)+' ' : '')+`${kexp}`+
-				`\\end{aligned}`
+				`\\end{aligned} \\]`
 			]
 		}
 	}
