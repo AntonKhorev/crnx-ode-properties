@@ -63,16 +63,16 @@ class TexSystem2Depvar extends TexDepvar {
 			if (s.indexOf('-',1)>0 || s.indexOf('+',1)>0) return '('+s+')' // -a -> -a; a-b -> (a-b)
 			return s
 		})
-		return (systemLineBreak,vectorLineBreak)=>nt=>{
+		return (systemLineBreak,vectorLineBreak,expInFront=false)=>nt=>{
 			const eq=(systemLineBreak ? '= \\: &' : '&=')
 			const pl=(systemLineBreak ? '\\\\ + \\: &' : '+')
 			return [
 				`\\[ \\left\\{ \\begin{aligned}`+
-					`${this.componentX()} ${eq} ${tex.sum([k1,c11,exp1])} `+
-					                     `${pl} ${tex.sum([k2,c12,exp2])} \\\\`+
-					`${this.componentY()} ${eq} ${tex.sum([k1,c21,exp1])} `+
-					                     `${pl} ${tex.sum([k2,c22,exp2])}`+
-				`\\end{aligned} \\right. \\]`
+					`${this.componentX()} ${eq} `+tex.sum(expInFront?[k1,exp1,c11]:[k1,c11,exp1])+
+					                    ` ${pl} `+tex.sum(expInFront?[k2,exp2,c12]:[k2,c12,exp2])+` \\\\ `+
+					`${this.componentY()} ${eq} `+tex.sum(expInFront?[k1,exp1,c21]:[k1,c21,exp1])+
+					                    ` ${pl} `+tex.sum(expInFront?[k2,exp2,c22]:[k2,c22,exp2])+
+				` \\end{aligned} \\right. \\]`
 			]
 		}
 	}

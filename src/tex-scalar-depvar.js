@@ -50,8 +50,11 @@ class TexScalarDepvar extends TexDepvar {
 			if (s.indexOf('-',1)>0 || s.indexOf('+',1)>0) return '('+s+')' // -a -> -a; a-b -> (a-b)
 			return s
 		})
-		return (systemLineBreak,vectorLineBreak)=>(nt)=>[
-			`\\[ ${this} = `+tex.sum([k1,c11,exp1,'+',k2,c12,exp2])+` \\]`
+		return (systemLineBreak,vectorLineBreak,expInFront=false)=>(nt)=>[
+			`\\[ ${this} = `+tex.sum([
+				k1,...(expInFront?[exp1,c11]:[c11,exp1]),'+',
+				k2,...(expInFront?[exp2,c12]:[c12,exp2])
+			])+` \\]`
 		]
 	}
 }

@@ -51,7 +51,7 @@ LhcContent.Base = class {
 	getComplexGeneralSolution(nt) {
 		return this.x.generalLinearSolution(
 			['k_1','k_2'],['e^{α t}','e^{α t}'],[1,0,'α','β'],['\\cos β t','\\sin β t','-\\sin β t','\\cos β t']
-		)(true,true)(nt)
+		)(true,true,true)(nt)
 		/*
 		// scalar
 		return `${nt.x} = k_1 e^{α t} \\cos β t + k_2 e^{α t} \\sin β t`
@@ -73,7 +73,7 @@ LhcContent.Base = class {
 	getImaginaryGeneralSolution(nt) {
 		return this.x.generalLinearSolution(
 			['k_1','k_2'],[1,1],[1,0,0,'β'],['\\cos β t','\\sin β t','-\\sin β t','\\cos β t']
-		)(false,true)(nt)
+		)(false,true,true)(nt)
 		/*
 		// scalar
 		return `${nt.x} = k_1 \\cos β t + k_2 \\sin β t`

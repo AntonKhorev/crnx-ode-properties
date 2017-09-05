@@ -57,21 +57,31 @@ class TexVectorDepvar extends TexDepvar {
 	}
 	generalLinearSolution([k1,k2],[exp1,exp2],mata,matb) {
 		const [c11,c12,c21,c22]=this.matMul(mata,matb)
-		return (systemLineBreak,vectorLineBreak)=>nt=>{
+		return (systemLineBreak,vectorLineBreak,expInFront=false)=>nt=>{
 			const eq=(vectorLineBreak ? '= \\: &' : '&=')
 			const pl=(vectorLineBreak ? '\\\\ + \\: &' : '+')
 			const vec=(vectorLineBreak ? nt.svec2 : nt.vec2)
 			const mat=(vectorLineBreak ? nt.smat2 : nt.mat2)
-			const kexp=(exp1==exp2
-				? tex.sum([vec(k1,k2),exp1])
-				: vec(tex.sum([k1,exp1]),tex.sum([k2,exp2]))
-			)
+			const v1=nt.vec2(c11,c21)
+			const v2=nt.vec2(c12,c22)
+			const lastLineTerms=[mat(...mata)]
+			if (matb!==undefined) lastLineTerms.push(mat(...matb))
+			if (exp1==exp2) {
+				lastLineTerms.push(vec(k1,k2))
+				if (expInFront) {
+					lastLineTerms.unshift(exp1)
+				} else {
+					lastLineTerms.push(exp1)
+				}
+			} else {
+				lastLineTerms.push(vec(tex.sum([k1,exp1]),tex.sum([k2,exp2])))
+			}
 			return [
 				`\\[ \\begin{aligned} `+
-					`${this} ${eq} ${tex.sum([k1,nt.vec2(c11,c21),exp1])} `+
-						`${pl} ${tex.sum([k2,nt.vec2(c12,c22),exp2])} \\\\`+
-						`${eq} ${mat(...mata)} `+(matb!==undefined ? mat(...matb)+' ' : '')+`${kexp}`+
-				`\\end{aligned} \\]`
+					`${this} ${eq} `+tex.sum(expInFront?[k1,exp1,v1]:[k1,v1,exp1])+
+					       ` ${pl} `+tex.sum(expInFront?[k2,exp2,v2]:[k2,v2,exp2])+` \\\\`+
+					       ` ${eq} `+tex.sum(lastLineTerms)+
+				` \\end{aligned} \\]`
 			]
 		}
 	}
