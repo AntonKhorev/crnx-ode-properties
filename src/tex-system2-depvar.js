@@ -58,9 +58,12 @@ class TexSystem2Depvar extends TexDepvar {
 		]
 	}
 	generalLinearSolution([k1,k2],[exp1,exp2],mata,matb) {
-		const [c11,c12,c21,c22]=this.matMul(mata,matb).map(s=>(
-			(''+s).indexOf('-')>=0 || (''+s).indexOf('+')>=0 ? '('+s+')' : s
-		))
+		const [c11,c12,c21,c22]=this.matMul(mata,matb).map(s=>{
+			s=''+s
+			if (s=='1') return ''
+			if (s.indexOf('-')>=0 || s.indexOf('+')>=0) return '('+s+')'
+			return s
+		})
 		return (systemLineBreak,vectorLineBreak)=>nt=>{
 			return [
 				`\\[ \\left\\{ \\begin{aligned}`+
