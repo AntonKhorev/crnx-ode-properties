@@ -65,12 +65,14 @@ class TexSystem2Depvar extends TexDepvar {
 			return s
 		})
 		return (systemLineBreak,vectorLineBreak)=>nt=>{
+			const eq=(systemLineBreak ? '= \\: &' : '&=')
+			const pl=(systemLineBreak ? '\\\\ + \\: &' : '+')
 			return [
 				`\\[ \\left\\{ \\begin{aligned}`+
-					`${this.componentX()} = \\: & ${k1} ${c11} ${exp1} \\\\`+
-					                     `+ \\: & ${k2} ${c12} ${exp2} \\\\`+
-					`${this.componentY()} = \\: & ${k1} ${c21} ${exp1} \\\\`+
-					                     `+ \\: & ${k2} ${c22} ${exp2}`+
+					`${this.componentX()} ${eq} ${k1} ${c11} ${exp1} `+
+					                     `${pl} ${k2} ${c12} ${exp2} \\\\`+
+					`${this.componentY()} ${eq} ${k1} ${c21} ${exp1} `+
+					                     `${pl} ${k2} ${c22} ${exp2}`+
 				`\\end{aligned} \\right. \\]`
 			]
 		}

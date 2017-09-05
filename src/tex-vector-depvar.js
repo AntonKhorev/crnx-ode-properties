@@ -59,8 +59,7 @@ class TexVectorDepvar extends TexDepvar {
 		const [c11,c12,c21,c22]=this.matMul(mata,matb)
 		return (systemLineBreak,vectorLineBreak)=>nt=>{
 			const eq=(vectorLineBreak ? '= \\: &' : '&=')
-			const pl=(vectorLineBreak ? '+ \\: &' : '+')
-			const br=(vectorLineBreak ? '\\\\' : '')
+			const pl=(vectorLineBreak ? '\\\\ + \\: &' : '+')
 			const vec=(vectorLineBreak ? nt.svec2 : nt.vec2)
 			const mat=(vectorLineBreak ? nt.smat2 : nt.mat2)
 			const kexp=(exp1==exp2
@@ -69,7 +68,7 @@ class TexVectorDepvar extends TexDepvar {
 			)
 			return [
 				`\\[ \\begin{aligned} `+
-					`${this} ${eq} ${k1} ${nt.vec2(c11,c21)} ${exp1} ${br}`+
+					`${this} ${eq} ${k1} ${nt.vec2(c11,c21)} ${exp1} `+
 						`${pl} ${k2} ${nt.vec2(c12,c22)} ${exp2} \\\\`+
 						`${eq} ${mat(...mata)} `+(matb!==undefined ? mat(...matb)+' ' : '')+`${kexp}`+
 				`\\end{aligned} \\]`
