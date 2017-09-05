@@ -57,21 +57,19 @@ class TexVectorDepvar extends TexDepvar {
 	}
 	generalLinearSolution([k1,k2],[exp1,exp2],mata,matb) {
 		const [c11,c12,c21,c22]=this.matMul(mata,matb)
-		exp1=(exp1==1 ? '' : ' '+exp1)
-		exp2=(exp2==1 ? '' : ' '+exp2)
 		return (systemLineBreak,vectorLineBreak)=>nt=>{
 			const eq=(vectorLineBreak ? '= \\: &' : '&=')
 			const pl=(vectorLineBreak ? '\\\\ + \\: &' : '+')
 			const vec=(vectorLineBreak ? nt.svec2 : nt.vec2)
 			const mat=(vectorLineBreak ? nt.smat2 : nt.mat2)
 			const kexp=(exp1==exp2
-				? vec(k1,k2)+exp1
-				: vec(k1+exp1,k2+exp2)
+				? tex.sum([vec(k1,k2),exp1])
+				: vec(tex.sum([k1,exp1]),tex.sum([k2,exp2]))
 			)
 			return [
 				`\\[ \\begin{aligned} `+
-					`${this} ${eq} ${k1} ${nt.vec2(c11,c21)}${exp1} `+
-						`${pl} ${k2} ${nt.vec2(c12,c22)}${exp2} \\\\`+
+					`${this} ${eq} ${tex.sum([k1,nt.vec2(c11,c21),exp1])} `+
+						`${pl} ${tex.sum([k2,nt.vec2(c12,c22),exp2])} \\\\`+
 						`${eq} ${mat(...mata)} `+(matb!==undefined ? mat(...matb)+' ' : '')+`${kexp}`+
 				`\\end{aligned} \\]`
 			]
