@@ -60,19 +60,21 @@ class TexVectorDepvar extends TexDepvar {
 		const c12=tex.sum([a11,b12,'+',a12,b22],o=>'{'+o+'}')
 		const c21=tex.sum([a21,b11,'+',a22,b21],o=>'{'+o+'}')
 		const c22=tex.sum([a21,b12,'+',a22,b22],o=>'{'+o+'}')
-		const kexp=(exp1==exp2
-			? nt=>nt.svec2(k1,k2)+' '+exp1
-			: nt=>nt.svec2(k1+' '+exp1,k2+' '+exp2)
-		)
-		return (systemLineBreak,vectorLineBreak)=>{
+		return (systemLineBreak,vectorLineBreak)=>nt=>{
 			const eq=(vectorLineBreak ? '= \\: &' : '&=')
 			const pl=(vectorLineBreak ? '+ \\: &' : '+')
 			const br=(vectorLineBreak ? '\\\\' : '')
-			return nt=>[
+			const vec=(vectorLineBreak ? nt.svec2 : nt.vec2)
+			const mat=(vectorLineBreak ? nt.smat2 : nt.mat2)
+			const kexp=(exp1==exp2
+				? vec(k1,k2)+' '+exp1
+				: vec(k1+' '+exp1,k2+' '+exp2)
+			)
+			return [
 				`\\begin{aligned} `+
 					`${this} ${eq} ${k1} ${exp1} ${nt.vec2(c11,c21)} ${br}`+
 						`${pl} ${k2} ${exp2} ${nt.vec2(c12,c22)} \\\\`+
-						`${eq} ${nt.smat2(a11,a12,a21,a22)} ${nt.smat2(b11,b12,b21,b22)} ${kexp(nt)}`+
+						`${eq} ${mat(a11,a12,a21,a22)} ${mat(b11,b12,b21,b22)} ${kexp}`+
 				`\\end{aligned}`
 			]
 		}
