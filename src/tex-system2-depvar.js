@@ -58,14 +58,16 @@ class TexSystem2Depvar extends TexDepvar {
 		]
 	}
 	generalLinearSolution([k1,k2],[exp1,exp2],mata,matb) {
-		const [c11,c12,c21,c22]=this.matMul(mata,matb)
+		const [c11,c12,c21,c22]=this.matMul(mata,matb).map(s=>(
+			(''+s).indexOf('-')>=0 || (''+s).indexOf('+')>=0 ? '('+s+')' : s
+		))
 		return (systemLineBreak,vectorLineBreak)=>nt=>{
 			return [
 				`\\[ \\left\\{ \\begin{aligned}`+
-					`${this.componentX()} = \\: & ${k1} (${c11}) ${exp1} \\\\`+
-					                     `+ \\: & ${k2} (${c12}) ${exp2} \\\\`+
-					`${this.componentY()} = \\: & ${k1} (${c21}) ${exp1} \\\\`+
-					                     `+ \\: & ${k2} (${c22}) ${exp2}`+
+					`${this.componentX()} = \\: & ${k1} ${c11} ${exp1} \\\\`+
+					                     `+ \\: & ${k2} ${c12} ${exp2} \\\\`+
+					`${this.componentY()} = \\: & ${k1} ${c21} ${exp1} \\\\`+
+					                     `+ \\: & ${k2} ${c22} ${exp2}`+
 				`\\end{aligned} \\right. \\]`
 			]
 		}
