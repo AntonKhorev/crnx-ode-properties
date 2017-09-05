@@ -44,8 +44,8 @@ class TexScalarDepvar extends TexDepvar {
 			`\\end{aligned}`,
 		]
 	}
-	generalLinearSolution([k1,k2],[exp1,exp2],[a11,a12,a21,a22],[b11,b12,b21,b22]) {
-		return (systemLineBreak,scalarLineBreak)=>(nt)=>[
+	generalLinearSolution([k1,k2],[exp1,exp2],mata,matb) {
+		return (systemLineBreak,vectorLineBreak)=>(nt)=>[
 			`TODO`
 		]
 	}

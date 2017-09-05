@@ -31,7 +31,7 @@ LhcContent.Base = class {
 	}
 	getRealGeneralSolution(nt) {
 		return this.x.generalLinearSolution(
-			['k_1','k_2'],['e^{λ_1 t}','e^{λ_2 t}'],[1,1,'λ_1','λ_2'],[1,0,0,1]
+			['k_1','k_2'],['e^{λ_1 t}','e^{λ_2 t}'],[1,1,'λ_1','λ_2']
 		)(false,false)(nt)
 		/*
 		// scalar
