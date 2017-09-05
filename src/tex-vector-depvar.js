@@ -48,8 +48,8 @@ class TexVectorDepvar extends TexDepvar {
 		]
 	}
 	ICLinearSystemSolution([a,b,c,d],[k1,k2]) {
-		const detFraction=tex.frac([1],[a,d,'-',b,c])
-		const matrixPrefix=(detFraction=='1' ? '' : detFraction+' ')
+		const det=tex.sum([a,d,'-',b,c],o=>'{'+o+'}')
+		const matrixPrefix=(det=='1' ? '' : `\\frac1{${det}} `)
 		return nt=>[
 			`\\[ ${nt.mat2(a,b,c,d)} ${nt.vec2(k1,k2)} = ${this}(0) \\]`,
 			`\\[ ${nt.vec2(k1,k2)} = ${matrixPrefix}${nt.mat2(d,tex.sum(['-',b]),tex.sum(['-',c]),a)} ${this}(0) \\]`,
