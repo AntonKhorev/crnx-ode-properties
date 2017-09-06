@@ -6,6 +6,7 @@ const TexVectorDepvar=require('../tex-vector-depvar')
 const O2LinearEquationFormSuite=require('../o2-linear-equation-form-suite')
 const OscillatorLinearEquationFormSuite=require('../oscillator-linear-equation-form-suite')
 const LinearEquation=require('../linear-equation')
+const LinearConstantEquation=require('../linear-constant-equation') // TODO replace with O2*
 const O2LinearHomogeneousConstantSolution=require('../o2-linear-homogeneous-constant-solution.js')
 
 const ivp="<a href='https://en.wikipedia.org/wiki/Initial_value_problem'>initial value problem</a>"
@@ -143,7 +144,42 @@ module.exports={
 		forms: o2_formSuite.getForms(true,false),
 		traits: {
 			associatedHomogeneousEquation: o2_formSuite.getAssociatedHomogeneousEquationTrait(true,false),
-			// TODO generalSolutionMethod
+			generalSolutionMethod: {
+				contents: {
+					linear_o2_linearConstant: nt=>new LinearConstantEquation(
+						new TexScalarDepvar(nt.x),'f',o2_formSuite.linear(true)
+					).getContentFor_generalSolutionMethod(
+						new O2LinearHomogeneousConstantSolution(
+							new TexScalarDepvar(nt.x)._('h'),
+							o2_formSuite.linear(true)
+						).getSolution(false)(nt)
+					)(nt),
+					resolved_o2_linearConstant: nt=>new LinearConstantEquation(
+						new TexScalarDepvar(nt.x),'g',o2_formSuite.resolved(true)
+					).getContentFor_generalSolutionMethod(
+						new O2LinearHomogeneousConstantSolution(
+							new TexScalarDepvar(nt.x)._('h'),
+							o2_formSuite.resolved(true)
+						).getSolution(false)(nt)
+					)(nt),
+					system_o2_linearConstant: nt=>new LinearConstantEquation(
+						new TexSystem2Depvar(nt.x,nt.y),'g',o2_formSuite.system(true)
+					).getContentFor_generalSolutionMethod(
+						new O2LinearHomogeneousConstantSolution(
+							new TexSystem2Depvar(nt.x,nt.y)._('h'),
+							o2_formSuite.system(true)
+						).getSolution(false)(nt)
+					)(nt),
+					vector_o2_linearConstant: nt=>new LinearConstantEquation(
+						new TexVectorDepvar(nt.X,nt.x),'g',o2_formSuite.vector(true)
+					).getContentFor_generalSolutionMethod(
+						new O2LinearHomogeneousConstantSolution(
+							new TexVectorDepvar(nt.X,nt.x)._('h'),
+							o2_formSuite.vector(true)
+						).getSolution(false)(nt)
+					)(nt),
+				},
+			},
 		},
 	},
 	o2_linearHomogeneousConstant: {
