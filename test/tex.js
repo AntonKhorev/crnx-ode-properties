@@ -96,6 +96,18 @@ describe("tex.sum",()=>{
 		const s=tex.sum(["-a","^2"])
 		assert.equal(s,"a^2")
 	})
+	it("flips sign of single negative term equality to 0",()=>{
+		const s=tex.sum(["-a","=","0"])
+		assert.equal(s,"a = 0")
+	})
+	it("flips sign of single negative term inequality to 0",()=>{
+		const s=tex.sum(["-a","≠","0"])
+		assert.equal(s,"a ≠ 0")
+	})
+	it("doesn't flip sign of non-single term equality to 0",()=>{
+		const s=tex.sum(["-a","+","b","=","0"])
+		assert.equal(s,"-a + b = 0")
+	})
 })
 
 describe("tex.frac",()=>{

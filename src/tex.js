@@ -60,22 +60,33 @@ const renderTerms=(terms,wrapOp=o=>' '+o+' ')=>{
 }
 
 const sum=(items,wrapOp=o=>' '+o+' ')=>{
-	let result=''
+	let equalityItems=[]
 	let sumSide=[]
 	const doSumSide=()=>{
+		equalityItems.push(makeTerms(sumSide))
 		const r=renderTerms(makeTerms(sumSide),wrapOp)
 		sumSide=[]
 		return r
 	}
 	for (let item of items) {
 		if (item=='=' || item=='≠') {
-			result+=doSumSide()+wrapOp(item)
+			doSumSide()
+			equalityItems.push(item)
 		} else {
 			sumSide.push(item)
 		}
 	}
-	result+=doSumSide()
-	return result
+	doSumSide()
+	if (equalityItems.length==3 && equalityItems[0].length==1 && equalityItems[2].length==0) { // single-term (in)equality to 0
+		equalityItems[0][0][0]=true // set sign to positive
+	}
+	return equalityItems.map(equalityItem=>{
+		if (Array.isArray(equalityItem)) {
+			return renderTerms(equalityItem,wrapOp)
+		} else {
+			return wrapOp(equalityItem)
+		}
+	}).join('')
 }
 
 const blockSum=(...args)=>`\\[ `+sum(...args)+` \\]`

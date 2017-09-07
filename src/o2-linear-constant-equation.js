@@ -52,13 +52,13 @@ class O2LinearConstantEquation extends LinearConstantEquation {
 				{type:'switch',title:`\\( ${f}(t) \\) is`,content:[
 					{type:'case',title:`\\( ${f}(t) = 1 \\)`,content:[
 						{type:'switch',title:`coefficients satisfy`,content:[
-							{type:'case',title:`\\( ${a0} ≠ 0 \\)`,content:[
+							{type:'case',title:`\\( `+expr(a0,'≠',0)+` \\)`,content:[
 								`\\[ ${xp} = \\frac1{${a0}} \\]`,
 							]},
-							{type:'case',title:`\\( ${a0} = 0 \\) and \\( ${a1} ≠ 0 \\)`,content:[
+							{type:'case',title:`\\( `+expr(a0,'=',0)+` \\) and \\( `+expr(a1,'≠',0)+` \\)`,content:[
 								`\\[ ${xp} = \\frac{t}{${a1}} \\]`,
 							]},
-							{type:'case',title:`\\( ${a0} = 0 \\) and \\( ${a1} = 0 \\)`,content:[
+							{type:'case',title:`\\( `+expr(a0,'=',0)+` \\) and \\( `+expr(a1,'=',0)+` \\)`,content:[
 								`\\[ ${xp} = \\frac{t^2}{`+expr(2,a2)+`} \\]`,
 							]},
 						]},
