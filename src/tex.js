@@ -2,11 +2,21 @@
 
 const makeTerms=(items)=>{
 	const terms=[[true,[]]]
+	const lastFactors=()=>terms[terms.length-1][1]
 	for (let item of items) {
 		if (item=='+' || item=='-') {
 			terms.push([item=='+',[]])
+		} else if (item=='^2') {
+			const factor=lastFactors().pop()
+			if (factor=='1') {
+				lastFactors().push(factor)
+			} else if (factor[0]=='-') {
+				lastFactors().push(factor.slice(1)+'^2')
+			} else {
+				lastFactors().push(factor+'^2')
+			}
 		} else {
-			terms[terms.length-1][1].push(''+item)
+			lastFactors().push(''+item)
 		}
 	}
 	return terms.map(([isPositive,factors])=>{ // merge signs
@@ -58,10 +68,10 @@ const sum=(items,wrapOp=o=>' '+o+' ')=>{
 		return r
 	}
 	for (let item of items) {
-		if (item!='=') {
-			sumSide.push(item)
+		if (item=='=' || item=='≠') {
+			result+=doSumSide()+wrapOp(item)
 		} else {
-			result+=doSumSide()+wrapOp('=')
+			sumSide.push(item)
 		}
 	}
 	result+=doSumSide()

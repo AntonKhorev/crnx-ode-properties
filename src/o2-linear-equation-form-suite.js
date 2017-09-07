@@ -16,36 +16,52 @@ class O2LinearEquationFormSuite extends LinearEquationFormSuite {
 		this.b0=initBi(b0,a0); this.b1=initBi(b1,a1)
 	}
 	get linear() {
-		return this.makeForm(isConstant=>input=>nt=>{
-			const t=(isConstant?``:`(t)`)
-			return tex.sum(
-				[this.a2+t,nt.dd(nt.x,'t',2),'+',this.a1+t,nt.dxdt,'+',this.a0+t,nt.x,'=',input?`${input}(t)`:0],
-				isConstant?(o=>' '+o+' '):(o=>' {'+o+'} ')
-			)
-		},nt=>tex.sum([this.a2,`λ^2`,'+',this.a1,`λ`,'+',this.a0]))
+		return this.makeForm(
+			isConstant=>input=>nt=>{
+				const t=(isConstant?``:`(t)`)
+				return tex.sum(
+					[this.a2+t,nt.dd(nt.x,'t',2),'+',this.a1+t,nt.dxdt,'+',this.a0+t,nt.x,'=',input?`${input}(t)`:0],
+					isConstant?(o=>' '+o+' '):(o=>' {'+o+'} ')
+				)
+			},
+			nt=>tex.sum([this.a2,`λ^2`,'+',this.a1,`λ`,'+',this.a0]),
+			[this.a0,this.a1,this.a2]
+		)
 	}
 	get resolved() {
-		return this.makeForm(isConstant=>input=>nt=>{
-			const t=(isConstant?``:`(t)`)
-			return tex.sum([nt.dd(nt.x,'t','2'),'=',this.b1+t,nt.dxdt,'+',this.b0+t,nt.x,'+',input?`${input}(t)`:0])
-		},nt=>tex.sum([`λ^2`,'-',this.b1,`λ`,'-',this.b0]))
+		return this.makeForm(
+			isConstant=>input=>nt=>{
+				const t=(isConstant?``:`(t)`)
+				return tex.sum([nt.dd(nt.x,'t','2'),'=',this.b1+t,nt.dxdt,'+',this.b0+t,nt.x,'+',input?`${input}(t)`:0])
+			},
+			nt=>tex.sum([`λ^2`,'-',this.b1,`λ`,'-',this.b0]),
+			[tex.sum(['-',this.b0]),tex.sum(['-',this.b1]),1]
+		)
 	}
 	get system() {
-		return this.makeForm(isConstant=>input=>nt=>{
-			const t=(isConstant?``:`(t)`)
-			return nt.sys2(
-				`${nt.dd(nt.x)} &= ${nt.y}`,
-				`${nt.dd(nt.y)} &= `+tex.sum([this.b0+t,nt.x,'+',this.b1+t,nt.y,'+',input?`${input}(t)`:0])
-			)
-		},nt=>tex.sum([`λ^2`,'-',this.b1,`λ`,'-',this.b0]))
+		return this.makeForm(
+			isConstant=>input=>nt=>{
+				const t=(isConstant?``:`(t)`)
+				return nt.sys2(
+					`${nt.dd(nt.x)} &= ${nt.y}`,
+					`${nt.dd(nt.y)} &= `+tex.sum([this.b0+t,nt.x,'+',this.b1+t,nt.y,'+',input?`${input}(t)`:0])
+				)
+			},
+			nt=>tex.sum([`λ^2`,'-',this.b1,`λ`,'-',this.b0]),
+			[tex.sum(['-',this.b0]),tex.sum(['-',this.b1]),1]
+		)
 	}
 	get vector() {
-		return this.makeForm(isConstant=>input=>nt=>{
-			const t=(isConstant?``:`(t)`)
-			const pl=(isConstant||!input?`+`:`{+}`)
-			const eq=(isConstant||!input?`=`:`{=}`)
-			return `${nt.dd(nt.X)} ${eq} `+nt.mat2(0,1,this.b0+t,this.b1+t)+` ${nt.X} `+(input?` ${pl} `+nt.vec2(0,`${input}(t)`):``)
-		},nt=>`\\det\\left(${nt.mat2('-λ',1,this.b0,tex.sum([this.b1,'-','λ']))}\\right)`)
+		return this.makeForm(
+			isConstant=>input=>nt=>{
+				const t=(isConstant?``:`(t)`)
+				const pl=(isConstant||!input?`+`:`{+}`)
+				const eq=(isConstant||!input?`=`:`{=}`)
+				return `${nt.dd(nt.X)} ${eq} `+nt.mat2(0,1,this.b0+t,this.b1+t)+` ${nt.X} `+(input?` ${pl} `+nt.vec2(0,`${input}(t)`):``)
+			},
+			nt=>`\\det\\left(${nt.mat2('-λ',1,this.b0,tex.sum([this.b1,'-','λ']))}\\right)`,
+			[tex.sum(['-',this.b0]),tex.sum(['-',this.b1]),1]
+		)
 	}
 	get classIdPrefix() {
 		return 'o2'

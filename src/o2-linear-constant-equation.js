@@ -5,13 +5,21 @@ const LinearConstantEquation=require('./linear-constant-equation')
 
 class O2LinearConstantEquation extends LinearConstantEquation {
 	erfContent() {
+		const a0=this.equation.equationCoefs[0]
+		const a1=this.equation.equationCoefs[1]
+		const a2=this.equation.equationCoefs[2]
 		const x=this.x
 		const f=this.f
+		const sexpr=(...args)=>tex.sum(args,o=>'{'+o+'}')
 		const cosCase=(xp,fa,fb,op)=>(
 			{type:'case',title:`\\( ${f}(t) = \\${fa} ω t \\), \\( ω ≠ 0 \\)`,content:[
 				{type:'switch',title:`coefficients satisfy`,content:[
-					{type:'case',title:`\\( a_1 ≠ 0 \\) or \\( a_0 ≠ a_2 ω^2 \\)`,content:[
-						`\\[ ${xp} {=} \\frac{(a_0 {-} a_2 ω^2) \\${fa} ω t {${op}} a_1 ω \\${fb} ω t}{a_2^2 ω^4 {+} (a_1^2 {-} 2 a_0 a_2) ω^2 {+} a_0^2} \\]`,
+					{type:'case',title:`\\( `+tex.sum([a1,'≠',0])+` \\) or \\( `+tex.sum([a0,'≠',a2,'ω^2'])+` \\)`,content:[
+						`\\[ ${xp} {=} \\frac{`+
+							sexpr('('+sexpr(a0,'-',a2,'ω^2')+')',`\\${fa} ω t`,op,a1,'ω',`\\${fb} ω t`)+
+						`}{`+
+							sexpr(a2,'^2','ω^4','+','('+sexpr(a1,'^2','-',2,a0,a2)+')','ω^2','+',a0,'^2')+
+						`} \\]`,
 					]},
 					{type:'case',title:`\\( a_1 = 0 \\) and \\( a_0 = a_2 ω^2 \\)`,content:[
 						tex.blockSum([xp,'=',op,`\\frac{t \\${fb} ω t}{2 a_2 ω}`]),

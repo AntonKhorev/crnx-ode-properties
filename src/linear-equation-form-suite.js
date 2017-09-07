@@ -3,16 +3,17 @@
 // const characteristicEquationContent=require('./characteristic-equation-content')
 
 class LinearEquationFormSuite {
-	makeConstantForm(equationFn,characteristicPolynomialFn) {
+	makeConstantForm(equationFn,characteristicPolynomialFn,equationCoefs) {
 		const form1=input=>equationFn(true)(input)
+		form1.equationCoefs=equationCoefs
 		form1.characteristicPolynomial=characteristicPolynomialFn
 		form1.characteristicEquation=nt=>characteristicPolynomialFn(nt)+` = 0`
 		return form1
 	}
-	makeForm(equationFn,characteristicPolynomialFn) {
+	makeForm(equationFn,characteristicPolynomialFn,equationCoefs) {
 		return isConstant=>{
 			if (isConstant) {
-				return this.makeConstantForm(equationFn,characteristicPolynomialFn)
+				return this.makeConstantForm(equationFn,characteristicPolynomialFn,equationCoefs)
 			} else {
 				return equationFn(false)
 			}

@@ -80,6 +80,22 @@ describe("tex.sum",()=>{
 		const s=tex.sum(["a","+","b"],o=>'???'+o+'!!!')
 		assert.equal(s,"a???+!!!b")
 	})
+	it("handles inequality of terms",()=>{
+		const s=tex.sum(["a","≠","+","b"])
+		assert.equal(s,"a ≠ b")
+	})
+	it("handles square",()=>{
+		const s=tex.sum(["a","^2"])
+		assert.equal(s,"a^2")
+	})
+	it("handles square of 1",()=>{
+		const s=tex.sum([1,"^2"])
+		assert.equal(s,"1")
+	})
+	it("handles square of negative",()=>{
+		const s=tex.sum(["-a","^2"])
+		assert.equal(s,"a^2")
+	})
 })
 
 describe("tex.frac",()=>{
