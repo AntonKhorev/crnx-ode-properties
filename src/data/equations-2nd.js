@@ -2,7 +2,7 @@
 
 const TexScalarDepvar=require('../tex-scalar-depvar')
 const TexSystem2Depvar=require('../tex-system2-depvar')
-const TexVectorDepvar=require('../tex-vector-depvar')
+const TexVector2Depvar=require('../tex-vector2-depvar')
 const O2LinearEquationFormSuite=require('../o2-linear-equation-form-suite')
 const OscillatorLinearEquationFormSuite=require('../oscillator-linear-equation-form-suite')
 const LinearEquation=require('../linear-equation')
@@ -30,7 +30,7 @@ const harmonicOscillatorType=(type,discriminantRelation,solutionMethodName)=>({
 				linear_o2_harmonicOscillator:   nt=>new O2LinearHomogeneousConstantSolution(new TexScalarDepvar(nt.x),      osc_formSuite.linear(true)  )[solutionMethodName](true)(nt),
 				resolved_o2_harmonicOscillator: nt=>new O2LinearHomogeneousConstantSolution(new TexScalarDepvar(nt.x),      osc_formSuite.resolved(true))[solutionMethodName](true)(nt),
 				system_o2_harmonicOscillator:   nt=>new O2LinearHomogeneousConstantSolution(new TexSystem2Depvar(nt.x,nt.y),osc_formSuite.system(true)  )[solutionMethodName](true)(nt),
-				vector_o2_harmonicOscillator:   nt=>new O2LinearHomogeneousConstantSolution(new TexVectorDepvar(nt.X,nt.x), osc_formSuite.vector(true)  )[solutionMethodName](true)(nt),
+				vector_o2_harmonicOscillator:   nt=>new O2LinearHomogeneousConstantSolution(new TexVector2Depvar(nt.X,nt.x),osc_formSuite.vector(true)  )[solutionMethodName](true)(nt),
 			},
 		},
 	},
@@ -110,7 +110,7 @@ module.exports={
 					linear_o2_linear:   nt=>new LinearEquation(new TexScalarDepvar(nt.x)      ,'f',o2_formSuite.linear(false)  ).getContentFor_generalSolutionMethod()(nt),
 					resolved_o2_linear: nt=>new LinearEquation(new TexScalarDepvar(nt.x)      ,'g',o2_formSuite.resolved(false)).getContentFor_generalSolutionMethod()(nt),
 					system_o2_linear:   nt=>new LinearEquation(new TexSystem2Depvar(nt.x,nt.y),'g',o2_formSuite.system(false)  ).getContentFor_generalSolutionMethod()(nt),
-					vector_o2_linear:   nt=>new LinearEquation(new TexVectorDepvar(nt.X,nt.x) ,'g',o2_formSuite.vector(false)  ).getContentFor_generalSolutionMethod()(nt),
+					vector_o2_linear:   nt=>new LinearEquation(new TexVector2Depvar(nt.X,nt.x),'g',o2_formSuite.vector(false)  ).getContentFor_generalSolutionMethod()(nt),
 				},
 			},
 		},
@@ -171,10 +171,10 @@ module.exports={
 						).getSolution(false)(nt)
 					)(nt),
 					vector_o2_linearConstant: nt=>new O2LinearConstantEquation(
-						new TexVectorDepvar(nt.X,nt.x),'g',o2_formSuite.vector(true)
+						new TexVector2Depvar(nt.X,nt.x),'g',o2_formSuite.vector(true)
 					).getContentFor_generalSolutionMethod(
 						new O2LinearHomogeneousConstantSolution(
-							new TexVectorDepvar(nt.X,nt.x)._('h'),
+							new TexVector2Depvar(nt.X,nt.x)._('h'),
 							o2_formSuite.vector(true)
 						).getSolution(false)(nt)
 					)(nt),
@@ -203,7 +203,7 @@ module.exports={
 					linear_o2_linearHomogeneousConstant:   nt=>new O2LinearHomogeneousConstantSolution(new TexScalarDepvar(nt.x),      o2_formSuite.linear(true)  ).getSolution(true)(nt),
 					resolved_o2_linearHomogeneousConstant: nt=>new O2LinearHomogeneousConstantSolution(new TexScalarDepvar(nt.x),      o2_formSuite.resolved(true)).getSolution(true)(nt),
 					system_o2_linearHomogeneousConstant:   nt=>new O2LinearHomogeneousConstantSolution(new TexSystem2Depvar(nt.x,nt.y),o2_formSuite.system(true)  ).getSolution(true)(nt),
-					vector_o2_linearHomogeneousConstant:   nt=>new O2LinearHomogeneousConstantSolution(new TexVectorDepvar(nt.X,nt.x), o2_formSuite.vector(true)  ).getSolution(true)(nt),
+					vector_o2_linearHomogeneousConstant:   nt=>new O2LinearHomogeneousConstantSolution(new TexVector2Depvar(nt.X,nt.x),o2_formSuite.vector(true)  ).getSolution(true)(nt),
 				},
 			},
 			equilibriumSolutionMethod: o2_formSuite.getEquilibriumSolutionMethodTrait(true),
@@ -225,7 +225,7 @@ module.exports={
 					linear_o2_harmonicOscillator:   nt=>new O2LinearHomogeneousConstantSolution(new TexScalarDepvar(nt.x),      osc_formSuite.linear(true)  ).getSolution(true)(nt),
 					resolved_o2_harmonicOscillator: nt=>new O2LinearHomogeneousConstantSolution(new TexScalarDepvar(nt.x),      osc_formSuite.resolved(true)).getSolution(true)(nt),
 					system_o2_harmonicOscillator:   nt=>new O2LinearHomogeneousConstantSolution(new TexSystem2Depvar(nt.x,nt.y),osc_formSuite.system(true)  ).getSolution(true)(nt),
-					vector_o2_harmonicOscillator:   nt=>new O2LinearHomogeneousConstantSolution(new TexVectorDepvar(nt.X,nt.x), osc_formSuite.vector(true)  ).getSolution(true)(nt),
+					vector_o2_harmonicOscillator:   nt=>new O2LinearHomogeneousConstantSolution(new TexVector2Depvar(nt.X,nt.x),osc_formSuite.vector(true)  ).getSolution(true)(nt),
 				},
 			},
 			equilibriumSolutionMethod: osc_formSuite.getEquilibriumSolutionMethodTrait(true),
@@ -262,7 +262,7 @@ module.exports={
 					linear_o2_simpleHarmonicOscillator:   nt=>new O2LinearHomogeneousConstantSolution(new TexScalarDepvar(nt.x),      osc0_formSuite.linear(true)  ).getSolution_Imaginary(true)(nt),
 					resolved_o2_simpleHarmonicOscillator: nt=>new O2LinearHomogeneousConstantSolution(new TexScalarDepvar(nt.x),      osc0_formSuite.resolved(true)).getSolution_Imaginary(true)(nt),
 					system_o2_simpleHarmonicOscillator:   nt=>new O2LinearHomogeneousConstantSolution(new TexSystem2Depvar(nt.x,nt.y),osc0_formSuite.system(true)  ).getSolution_Imaginary(true)(nt),
-					vector_o2_simpleHarmonicOscillator:   nt=>new O2LinearHomogeneousConstantSolution(new TexVectorDepvar(nt.X,nt.x), osc0_formSuite.vector(true)  ).getSolution_Imaginary(true)(nt),
+					vector_o2_simpleHarmonicOscillator:   nt=>new O2LinearHomogeneousConstantSolution(new TexVector2Depvar(nt.X,nt.x),osc0_formSuite.vector(true)  ).getSolution_Imaginary(true)(nt),
 				},
 			},
 		},
