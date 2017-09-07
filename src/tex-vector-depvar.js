@@ -32,7 +32,7 @@ class TexVectorDepvar extends TexDepvar {
 	}
 	firstComponentExpression(template) {
 		const x=new TexScalarDepvar(this.x,this.subscripts)
-		return `\\[ ${template(x)} \\]`
+		return template(x)
 	}
 	restDiffComponentExpressionContent() {
 		const x=new TexScalarDepvar(this.x,this.subscripts)

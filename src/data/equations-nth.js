@@ -23,12 +23,12 @@ const on_linearHomogeneousConstant_generalSolutionMethod_content=(x,form)=>nt=>[
 		c=>`${c}general solution (with arbitrary constants \\( K_{ij} \\), \\( A_{ij} \\), \\( B_{ij} \\)):`
 	),
 	x.firstComponentExpression(
-		x1=>`\\begin{aligned}`+
+		x1=>`\\[ \\begin{aligned}`+
 			`${x1}`+
 			` = \\: & \\sum_{i=1}^r \\sum_{j=1}^{p_i} K_{ij} \\, t^{j-1} \\, e^{λ_i t} + \\\\`+
 			` + \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} A_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\cos β_i t \\\\`+
 			` + \\: & \\sum_{i=1}^s \\sum_{j=1}^{q_i} B_{ij} \\, t^{j-1} \\, e^{α_i t} \\, \\sin β_i t`+
-		`\\end{aligned}`
+		`\\end{aligned} \\]`
 	),
 	...x.restDiffComponentExpressionContent()(nt),
 ]

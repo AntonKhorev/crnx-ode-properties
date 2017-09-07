@@ -28,7 +28,7 @@ class TexScalarDepvar extends TexDepvar {
 		return template(``,this)
 	}
 	firstComponentExpression(template) {
-		return `\\[ ${template(this)} \\]`
+		return template(this)
 	}
 	restDiffComponentExpressionContent() {
 		return nt=>[]

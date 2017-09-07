@@ -38,7 +38,7 @@ class TexSystem2Depvar extends TexDepvar {
 		return template(`first component of `,this.componentX())
 	}
 	firstComponentExpression(template) {
-		return `\\[ ${template(this.componentX())} \\]`
+		return template(this.componentX())
 	}
 	restDiffComponentExpressionContent() {
 		return nt=>[
