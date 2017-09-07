@@ -14,7 +14,7 @@ class LinearConstantEquation extends LinearEquation {
 				`particular solution of the original equation is:`,
 				x._('p').parallelExpression(xp=>`${xp}(t) &= ${xp._(1)}(t+t_1)`),
 			]},
-			{type:'case',title:`using exponential response formula when \\( ${f}(t) = e^{α t} \\), \\( \\cos(ω t) \\), \\( \\sin(ω t) \\), \\( e^{α t} \\cos(ω t) \\) or \\( e^{α t} \\sin(ω t) \\)`,
+			{type:'case',title:`using exponential response formula when \\( ${f}(t) = e^{α t} \\), \\( \\cos ω t \\), \\( \\sin ω t \\), \\( e^{α t} \\cos ω t \\) or \\( e^{α t} \\sin ω t \\)`,
 				content:this.erfContent()(nt)
 			},
 		]
@@ -30,10 +30,10 @@ class LinearConstantEquation extends LinearEquation {
 				`${f}(t) & r \\\\[1em] `+
 				`\\hline `+
 				`e^{α t} & α \\\\`+
-				`\\cos(ω t) & i ω \\\\ `+
-				`\\sin(ω t) & i ω \\\\ `+
-				`e^{α t} \\cos(ω t) & α + i ω \\\\ `+
-				`e^{α t} \\sin(ω t) & α + i ω `+
+				`\\cos ω t & i ω \\\\ `+
+				`\\sin ω t & i ω \\\\ `+
+				`e^{α t} \\cos ω t & α + i ω \\\\ `+
+				`e^{α t} \\sin ω t & α + i ω `+
 			`\\end{array} \\]`,
 			{type:'derivation',content:[
 				x.firstComponentExpressionPreamble(
@@ -118,10 +118,10 @@ class LinearConstantEquation extends LinearEquation {
 					`${f}(t) & ${x1} \\\\[1em] `+
 					`\\hline `+
 					`e^{α t} & \\frac{\\displaystyle t^m \\cdot e^{α t}}{\\displaystyle P^{(m)}(α)} \\\\`+
-					`\\cos(ω t) & \\operatorname{Re}\\left(\\! \\frac{\\displaystyle t^m \\cdot e^{i ω t}}{\\displaystyle P^{(m)}(i ω)} \\!\\right) \\\\ `+
-					`\\sin(ω t) & \\operatorname{Im}\\left(\\! \\frac{\\displaystyle t^m \\cdot e^{i ω t}}{\\displaystyle P^{(m)}(i ω)} \\!\\right) \\\\ `+
-					`e^{α t} \\cos(ω t) & \\operatorname{Re}\\left(\\! \\frac{\\displaystyle t^m \\cdot e^{(α {+} i ω) t}}{\\displaystyle P^{(m)}(α {+} i ω)} \\!\\right) \\\\ `+
-					`e^{α t} \\sin(ω t) & \\operatorname{Im}\\left(\\! \\frac{\\displaystyle t^m \\cdot e^{(α {+} i ω) t}}{\\displaystyle P^{(m)}(α {+} i ω)} \\!\\right) `+
+					`\\cos ω t & \\operatorname{Re}\\left(\\! \\frac{\\displaystyle t^m \\cdot e^{i ω t}}{\\displaystyle P^{(m)}(i ω)} \\!\\right) \\\\ `+
+					`\\sin ω t & \\operatorname{Im}\\left(\\! \\frac{\\displaystyle t^m \\cdot e^{i ω t}}{\\displaystyle P^{(m)}(i ω)} \\!\\right) \\\\ `+
+					`e^{α t} \\cos ω t & \\operatorname{Re}\\left(\\! \\frac{\\displaystyle t^m \\cdot e^{(α {+} i ω) t}}{\\displaystyle P^{(m)}(α {+} i ω)} \\!\\right) \\\\ `+
+					`e^{α t} \\sin ω t & \\operatorname{Im}\\left(\\! \\frac{\\displaystyle t^m \\cdot e^{(α {+} i ω) t}}{\\displaystyle P^{(m)}(α {+} i ω)} \\!\\right) `+
 				`\\end{array} \\]`
 			),
 			...x._('p').restDiffComponentExpressionContent()(nt),
