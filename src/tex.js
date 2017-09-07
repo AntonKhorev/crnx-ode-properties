@@ -64,9 +64,7 @@ const sum=(items,wrapOp=o=>' '+o+' ')=>{
 	let sumSide=[]
 	const doSumSide=()=>{
 		equalityItems.push(makeTerms(sumSide))
-		const r=renderTerms(makeTerms(sumSide),wrapOp)
 		sumSide=[]
-		return r
 	}
 	for (let item of items) {
 		if (item=='=' || item=='≠') {

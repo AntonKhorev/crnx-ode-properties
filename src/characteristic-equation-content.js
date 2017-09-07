@@ -37,7 +37,7 @@ module.exports=(...terms)=>{
 		}
 	}
 	const mapTerms=(nt,terms,mapper)=>tex.blockSum([].concat(
-		terms.map(term=>{
+		...terms.map(term=>{
 			if (Array.isArray(term)) {
 				const [order,factor]=term
 				return mapper(nt,order,factor)
