@@ -127,4 +127,12 @@ describe("tex.frac",()=>{
 		const r=tex.frac(["a","b","+","a"],["a"])
 		assert.equal(r,"b + 1")
 	})
+	it("pulls out minus from single-term denominator",()=>{
+		const r=tex.frac(["a","+","b"],["-c"])
+		assert.equal(r,"-\\frac{a + b}{c}")
+	})
+	it("pulls out minus from single-term denominator equal to -1",()=>{
+		const r=tex.frac(["a","+","b"],["-1"])
+		assert.equal(r,"-(a + b)")
+	})
 })

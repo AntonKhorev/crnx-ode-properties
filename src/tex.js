@@ -98,9 +98,14 @@ const isOne=(terms)=>{
 }
 
 const frac=(numer,denom)=>{
+	let leadNegation=false
 	let numerTerms=makeTerms(numer)
 	let denomTerms=makeTerms(denom)
 	if (denomTerms.length==1) {
+		if (!denomTerms[0][0]) {
+			denomTerms[0][0]=true
+			leadNegation=true
+		}
 		denomTerms[0][1]=denomTerms[0][1].filter(denomFactor=>{
 			const canSimplify=numerTerms.every(([isPositive,factors])=>factors.indexOf(denomFactor)>=0)
 			if (!canSimplify) return true
@@ -114,9 +119,9 @@ const frac=(numer,denom)=>{
 		})
 	}
 	if (isOne(denomTerms)) {
-		return renderTerms(numerTerms)
+		return (leadNegation?'-(':'')+renderTerms(numerTerms)+(leadNegation?')':'')
 	} else {
-		return `\\frac{${renderTerms(numerTerms)}}{${renderTerms(denomTerms)}}`
+		return (leadNegation?'-':'')+`\\frac{${renderTerms(numerTerms)}}{${renderTerms(denomTerms)}}`
 	}
 }
 
