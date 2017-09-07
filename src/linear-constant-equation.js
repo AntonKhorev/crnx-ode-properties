@@ -14,7 +14,7 @@ class LinearConstantEquation extends LinearEquation {
 				`particular solution of the original equation is:`,
 				x._('p').parallelExpression(xp=>`${xp}(t) &= ${xp._(1)}(t+t_1)`),
 			]},
-			{type:'case',title:`using exponential response formula when \\( ${f}(t) = e^{α t} \\), \\( \\cos ω t \\), \\( \\sin ω t \\), \\( e^{α t} \\cos ω t \\) or \\( e^{α t} \\sin ω t \\)`,
+			{type:'case',title:`using exponential response formula when \\( ${f}(t) = 1 \\), \\( e^{α t} \\), \\( \\cos ω t \\), \\( \\sin ω t \\), \\( e^{α t} \\cos ω t \\) or \\( e^{α t} \\sin ω t \\)`,
 				content:this.erfContent()(nt)
 			},
 		]
@@ -29,6 +29,7 @@ class LinearConstantEquation extends LinearEquation {
 			`\\[ \\begin{array}{cc} `+
 				`${f}(t) & r \\\\[1em] `+
 				`\\hline `+
+				`1 & 0 \\\\`+
 				`e^{α t} & α \\\\`+
 				`\\cos ω t & i ω \\\\ `+
 				`\\sin ω t & i ω \\\\ `+
@@ -104,7 +105,7 @@ class LinearConstantEquation extends LinearEquation {
 			`if`,
 			`\\[ P(r) {=} P'(r) {=} \\cdots {=} P^{(m-1)}(r) {=} 0 \\]`,
 			`and`,
-			`\\[ P^{(m)} \\ne 0 \\]`,
+			`\\[ P^{(m)}(r) \\ne 0 \\]`,
 			{type:'note',content:[
 				`this is equivalent to:`,
 				`if \\( r \\) is a root of \\( P \\) with multiplicity \\( m \\)`,
@@ -117,6 +118,7 @@ class LinearConstantEquation extends LinearEquation {
 				x1=>`\\[ \\begin{array}{cc} `+
 					`${f}(t) & ${x1} \\\\[1em] `+
 					`\\hline `+
+					`1 & \\frac{\\displaystyle t^m}{\\displaystyle P^{(m)}(0)} \\\\`+
 					`e^{α t} & \\frac{\\displaystyle t^m \\cdot e^{α t}}{\\displaystyle P^{(m)}(α)} \\\\`+
 					`\\cos ω t & \\operatorname{Re}\\left(\\! \\frac{\\displaystyle t^m \\cdot e^{i ω t}}{\\displaystyle P^{(m)}(i ω)} \\!\\right) \\\\ `+
 					`\\sin ω t & \\operatorname{Im}\\left(\\! \\frac{\\displaystyle t^m \\cdot e^{i ω t}}{\\displaystyle P^{(m)}(i ω)} \\!\\right) \\\\ `+

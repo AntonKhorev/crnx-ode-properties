@@ -12,6 +12,19 @@ class O2LinearConstantEquation extends LinearConstantEquation {
 			),
 			x._('p').firstComponentExpression(xp=>(
 				{type:'switch',title:`\\( ${f}(t) \\) is`,content:[
+					{type:'case',title:`\\( ${f}(t) = 1 \\)`,content:[
+						{type:'switch',title:`coefficients satisfy`,content:[
+							{type:'case',title:`\\( a_0 ≠ 0 \\)`,content:[
+								`\\[ ${xp} = \\frac1{a_0} \\]`,
+							]},
+							{type:'case',title:`\\( a_0 = 0 \\) and \\( a_1 ≠ 0 \\)`,content:[
+								`\\[ ${xp} = \\frac{t}{a_1} \\]`,
+							]},
+							{type:'case',title:`\\( a_0 = 0 \\) and \\( a_1 = 0 \\)`,content:[
+								`\\[ ${xp} = \\frac{t^2}{2 a_2} \\]`,
+							]},
+						]},
+					]},
 					{type:'case',title:`\\( ${f}(t) = e^{α t} \\)`,content:[
 						{type:'switch',title:`coefficients satisfy`,content:[
 							{type:'case',title:`\\( a_2 α^2 + a_1 α + a_0 ≠ 0 \\)`,content:[
