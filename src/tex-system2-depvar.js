@@ -35,14 +35,14 @@ class TexSystem2Depvar extends TexDepvar {
 		`\\end{aligned} \\right. \\]`
 	}
 	firstComponentExpressionPreamble(template) {
-		return template(``,this.componentX())
+		return template(`first component of `,this.componentX())
 	}
 	firstComponentExpression(template) {
 		return `\\[ ${template(this.componentX())} \\]`
 	}
 	restDiffComponentExpressionContent() {
 		return nt=>[
-			`find ${this.componentY()} by differentiating \\( ${this.componentX()} \\):`,
+			`find \\( ${this.componentY()} \\) by differentiating \\( ${this.componentX()} \\):`,
 			`\\[ ${this.componentY()} = ${nt.dd(this.componentX(),'t',1)} \\]`,
 		]
 	}
