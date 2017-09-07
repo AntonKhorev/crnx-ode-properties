@@ -118,12 +118,12 @@ class LinearConstantEquation extends LinearEquation {
 				x1=>`\\[ \\begin{array}{cc} `+
 					`${f}(t) & ${x1} \\\\[1em] `+
 					`\\hline `+
-					`1 & \\frac{\\displaystyle t^m}{\\displaystyle P^{(m)}(0)} \\\\`+
-					`e^{α t} & \\frac{\\displaystyle t^m \\cdot e^{α t}}{\\displaystyle P^{(m)}(α)} \\\\`+
-					`\\cos ω t & \\operatorname{Re}\\left(\\! \\frac{\\displaystyle t^m \\cdot e^{i ω t}}{\\displaystyle P^{(m)}(i ω)} \\!\\right) \\\\ `+
-					`\\sin ω t & \\operatorname{Im}\\left(\\! \\frac{\\displaystyle t^m \\cdot e^{i ω t}}{\\displaystyle P^{(m)}(i ω)} \\!\\right) \\\\ `+
-					`e^{α t} \\cos ω t & \\operatorname{Re}\\left(\\! \\frac{\\displaystyle t^m \\cdot e^{(α {+} i ω) t}}{\\displaystyle P^{(m)}(α {+} i ω)} \\!\\right) \\\\ `+
-					`e^{α t} \\sin ω t & \\operatorname{Im}\\left(\\! \\frac{\\displaystyle t^m \\cdot e^{(α {+} i ω) t}}{\\displaystyle P^{(m)}(α {+} i ω)} \\!\\right) `+
+					`1 & \\dfrac{t^m}{P^{(m)}(0)} \\\\`+
+					`e^{α t} & \\dfrac{t^m \\cdot e^{α t}}{P^{(m)}(α)} \\\\`+
+					`\\cos ω t & \\operatorname{Re}\\left(\\! \\dfrac{t^m \\cdot e^{i ω t}}{P^{(m)}(i ω)} \\!\\right) \\\\ `+
+					`\\sin ω t & \\operatorname{Im}\\left(\\! \\dfrac{t^m \\cdot e^{i ω t}}{P^{(m)}(i ω)} \\!\\right) \\\\ `+
+					`e^{α t} \\cos ω t & \\operatorname{Re}\\left(\\! \\dfrac{t^m \\cdot e^{(α {+} i ω) t}}{P^{(m)}(α {+} i ω)} \\!\\right) \\\\ `+
+					`e^{α t} \\sin ω t & \\operatorname{Im}\\left(\\! \\dfrac{t^m \\cdot e^{(α {+} i ω) t}}{P^{(m)}(α {+} i ω)} \\!\\right) `+
 				`\\end{array} \\]`
 			),
 			...x._('p').restDiffComponentExpressionContent()(nt),
